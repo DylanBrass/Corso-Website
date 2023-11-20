@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+actor Sec_Admin #Red
+actor  "Admin" as Admin #Red
+actor  "Customer" as User #Green
+rectangle "Corso System"{
+  rectangle "LLUC4 : View orders Use case" as Orders #line.dashed {
+      usecase "4.1 : View Orders" as UC8
+      usecase "4.2 : View Customer Orders history" as UC9
+      usecase "4.3 : Request Order" as UC10
+      usecase "4.4 : Manage Order" as UC11
+      usecase "4.5 : Cancel Order" as UC12
+
+      User -[#green]-> UC9
+      User -[#green]-> UC10
+      Admin -[#red]-> UC8
+      Admin -[#red]-> UC9
+      Admin -[#red]-> UC11
+      UC11 -[dashed]-> UC8 : <<includes>>
+      UC10 <-[#red]- Sec_Admin
+
+      UC11 -[dashed]-> UC12 : <<includes>>
+      UC8 -[dashed]> UC9 : <<includes>>
+      UC12 -[dashed]-> UC8  : <<extends>>
+
+      UC8 -[hidden]-> Sec_Admin
+      UC9 -[hidden]-> Sec_Admin
+  }
+}
+@endpuml

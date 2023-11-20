@@ -1,0 +1,42 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Guest User" as Anonymous #Blue
+actor  "Admin" as Admin #Red
+actor  "Customer" as User #Green
+rectangle "Corso System"{
+rectangle "LLUC5 : View reviews Use case" as Reviews #line.dashed {
+    usecase "5.1 : View reviews" as UC13
+    usecase "5.2 : Leave a review on Service" as UC14
+    usecase "5.3 : Manage Review" as UC15
+    usecase "5.4 : Modify review Section" as UC16
+
+    Anonymous -[#blue]-> UC13
+    Admin -[#red]-> UC16
+    User -[#green]-> UC15
+    User -[#green]-> UC14
+
+    UC16 -[dashed]-> UC13 : <<includes>>
+
+    note "Show only users review" as N1
+    (UC14) -[dashed]- N1
+    N1 -[dashed]-> (UC13) : <<extends>>
+
+    UC15 -[hidden]- UC16
+  }
+}
+
+
+Anonymous -[hidden]-> UC14
+User --|> Anonymous
+Admin --|> User
+@endpuml

@@ -1,0 +1,85 @@
+@startuml
+
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor DarkSeaGreen
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Guest User" as Anonymous #Blue
+actor  "Customer" as User #Green
+actor  "Admin" as Admin #Red
+actor  "Admin" as Admin_Support #Red
+
+rectangle "Corso System" {
+    usecase "1.1 : Access Order Tracking feature" as UC7
+    usecase "1.2 : Modify Profile Information" as UC8
+    usecase "1.3 : See Profile Details" as UC9 
+
+    usecase "2.1 : View all FAQ" as UC10
+    usecase "2.2 : Modify FAQ section" as UC11
+
+    usecase "3.1 : View carousel" as UC12
+    usecase "3.2 : Modify carousel in gallery" as UC13
+
+    usecase "4.1 : View Orders" as UC14
+    usecase "4.2 : View Customer Orders history" as UC15
+    usecase "4.3 : Request Order" as UC16
+    usecase "4.4 : Manage Order" as UC17
+    usecase "4.5 : Cancel Order" as UC18
+
+    usecase "5.1 : View reviews" as UC19
+    usecase "5.2 : Leave a review on Service" as UC20
+    usecase "5.3 : Manage Review" as UC21
+    usecase "5.4 : Modify review Section" as UC22
+
+    usecase "6.1 : View service section" as UC23
+    usecase "6.2 : Modify service section" as UC24
+    usecase "6.3 : View service reports" as UC25
+
+    }
+
+
+
+User -[#DarkGreen]-> UC7
+User -[#DarkGreen]-> UC8
+User -[#DarkGreen]-> UC9
+
+Anonymous -[#Blue]-> UC10
+Admin -[#Red]-> UC11
+
+Anonymous -[#Blue]-> UC12
+
+Admin -[#Red]-> UC13
+
+User -[#DarkGreen]-> UC15
+User -[#DarkGreen]-> UC16
+User -[#DarkGreen]-> UC18
+
+UC16 <-[#Red]- Admin_Support
+Admin -[#Red]-> UC14
+Admin -[#Red]-> UC17
+Admin -[#Red]-> UC18
+Admin -[#Red]-> UC15
+
+User -[#Green]-> UC20
+User -[#Green]-> UC21
+
+Anonymous -[#Blue]-> UC19
+
+Admin -[#Red]-> UC22
+Admin -[#Red]-> UC19
+
+Anonymous -[#Blue]-> UC23
+
+
+Admin -[#Red]-> UC24
+Admin -[#Red]-> UC25
+
+
+@enduml

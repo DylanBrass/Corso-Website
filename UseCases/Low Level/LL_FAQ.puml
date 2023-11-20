@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Guest User" as Anonymous #Blue
+actor  "Admin" as Admin #Red
+actor  "Customer" as User #Green
+rectangle "Corso System"{
+rectangle "LLUC2 : View FAQ Use case" as FAQ #line.dashed {
+    usecase "2.1 : View all FAQ" as UC4
+    usecase "2.2 : Modify FAQ section" as UC5
+
+    UC4 <-[dashed] UC5 : <<includes>>
+
+
+    Anonymous -[#blue]-> UC4
+    Admin -[#red]-> UC5
+  }
+}
+  User --|> Anonymous
+  Admin --|> User
+@endpuml

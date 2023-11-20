@@ -1,0 +1,68 @@
+@startuml
+|Electrician|
+|Client|
+|Paper|
+|Electrician|
+start
+:Gather list of parts needed;
+
+|Paper|
+:Write down price of parts;
+
+|Electrician|
+:Gather tools needed;
+
+if (Any new tools needed?) is ([no]) then
+|Electrician|
+else ([yes])
+
+    |Paper|
+  :Write down price of tools;
+endif
+
+|Electrician|
+:Estimate time needed;
+
+|Paper|
+:Note down time needed;
+
+|Electrician|
+:Estimate number of electricians needed;
+
+|Paper|
+:Note down number of electricians needed;
+:Calculate salary cost;
+:Calculate total cost;
+|Electrician|
+:Give quote to client;
+|Client|
+:Analyse quote;
+
+if (Accepts quote ?) is ([yes]) then
+  fork
+  |Electrician|
+    :Prepare for job;
+    :Order parts;
+
+    if (Need new tools ?) is ([yes]) then
+      :Order tools;
+    else ([no])
+    endif
+    |Client|
+    :Give availabilities;
+    |Electrician|
+    :schedule workers;
+    |Paper|
+    :Note employees working on job;
+    :Note employees schedule;
+    fork again
+    |Client|
+    :Prepare location to be worked on;
+    end fork
+else ([no])
+  stop;
+endif
+|Electrician|
+:Start job;
+stop
+@enduml

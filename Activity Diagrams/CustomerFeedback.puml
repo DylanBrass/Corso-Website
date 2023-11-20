@@ -1,0 +1,46 @@
+@startuml
+|Electrician|
+
+start
+
+    :Contact Previous Client;
+
+    |Electrician|
+    :Ask for review;
+    |Client|
+    if (Accepts?) is ([yes]) then
+    else ([no])
+        stop
+    endif
+
+    :Talk about experience;
+    if (Encountered any issues ?) is ([no]) then
+
+    else ([yes])
+        |Client|
+        :Tell about issues;
+        |Paper|
+        :Write down issues;
+        |Client|
+    endif
+fork
+  |Electrician|
+
+if (Anything to fix ?) is ([yes]) then
+  :Take steps to fix issues;
+else ([no])
+endif
+
+
+fork again
+    |Client|
+              if (Want to write review?) is ([yes]) then
+                      |Google|
+                        :Write review;
+                      else ([no])
+                        |Client|
+                        stop
+                      endif
+end fork
+stop
+@enduml

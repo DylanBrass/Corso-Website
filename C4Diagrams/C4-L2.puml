@@ -1,0 +1,111 @@
+@startuml
+!include <archimate/Archimate>
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!include DEVICONS/java.puml
+!include DEVICONS/mysql.puml
+!include DEVICONS/react.puml
+!include DEVICONS/html5.puml
+
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+!includeurl SPRITESURL/auth0.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+
+!include DEVICONS2/google.puml
+
+!include DEVICONS2/npm_original_wordmark.puml
+
+!define RECTANGLE_BORDER_COLOR white  
+skinparam rectangle {
+    BorderColor <<RECTANGLE_BORDER_COLOR>>
+}
+SetDefaultLegendEntries("")
+
+
+AddElementTag("service", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="API \neight sided")
+AddElementTag("ext_service", $shape=EightSidedShape(), $bgColor="Gray", $fontColor="white" ,$legendText="External Services\neight sided")
+AddElementTag("My SQL Database", $shape=RoundedBoxShape(), $bgColor="DarkCyan",$borderColor="Black", $fontColor="white", $legendText="Database")
+AddElementTag("webSite", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="Single-Page Application")
+AddElementTag("webApp", $shape=RoundedBoxShape(), $bgColor="OrangeRed", $fontColor="white", $legendText="Web Application")
+AddRelTag("external_rel", $lineColor="HotPink",$legendText="External relationships")
+AddRelTag("database_rel", $lineColor="Green",$legendText="Database Relationships")
+AddRelTag("s_rel", $lineColor="Blue",$legendText="Application Relationships")
+AddRelTag("email_rel", $lineColor="orange",$legendText="Email Relationships")
+AddRelTag("user_rel", $lineColor="Purple",$legendText="User Relationships")
+AddRelTag("render_rel", $lineColor="Turquoise",$legendText="Rendering Relationships")
+
+AddRelTag("invisible_rel", $lineColor="white", $legendText=" ")
+
+
+SHOW_PERSON_OUTLINE()
+
+Person(admin, "Admin", "A CEO of the Corso company.")
+
+Person(customer, "Customer", "A customer that has an account on the website.")
+
+Person(anonymous, "Guest User","An anonymous user on the website.")
+
+rectangle " " as external{
+    rectangle " " as stack{
+    Container_Ext(cloudinary, "Cloudinary Service", "REST API", "Cloudinary's image hosting service and API.", $sprite="npm_original_wordmark", $tags="ext_service")
+
+    Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable authentication and authorization platform.", $sprite="auth0", $tags="ext_service")
+
+    Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
+
+    }
+}
+
+System_Boundary(corso_boundaryContext, "Corso System") {
+    Container(application, "Web Application", "HTML", "Delivers the static content for the Single Page Application.", $sprite="html5", $tags="webApp")
+
+    Container(webPage, "Single-Page Application", "REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
+
+    Container(api, "API", "Spring boot: Java", "Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
+
+    ContainerDb(database, "Database", "MySQL", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
+}
+
+
+
+
+Rel_D(customer, application, "Visits https//:corso.com using", "HTTPS", $tags="user_rel")
+Rel_D(customer, webPage,"View services, view orders and track them using", $tags="user_rel")
+Rel_D(admin, application, "Visits https//:corso.com using", "HTTPS", $tags="user_rel")
+Rel_D(admin, webPage,"Track orders and contact customers using", $tags="user_rel")
+Rel_R(application, webPage,"Delivers the HTML page to the browser using","React", $tags="render_rel")
+
+Rel_D(webPage, api, "Requests data from", "HTTPS/JSON", $tags="s_rel")
+Rel_L(api, email, " ", $tags="invisible_rel")
+
+Rel(email, customer, "Sends email to","SMTP/TCP/IP", $tags="email_rel")
+Rel(email, admin, "Sends email to","SMTP/TCP/IP", $tags="email_rel")
+Rel_L(api, auth, "Authenticates users using", "SRP", $tags="external_rel")
+Rel_L(api, cloudinary, "Uploads and fetches images using", "HTTPS/JSON", $tags="external_rel")
+Rel_L(api, database, "SQL/TCP", "JDBC", $tags="database_rel")
+
+Rel_D(anonymous, application,"Visits https//:corso.com using", "HTTPS", $tags="user_rel")
+Rel_D(anonymous, webPage,"View services, FAQ's and past work.", "HTTPS", $tags="user_rel")
+
+admin -[hidden]> anonymous
+
+
+anonymous -[hidden]> email
+cloudinary <-[hidden]- auth
+email <-[hidden]- cloudinary
+
+webPage -[hidden]> cloudinary
+
+
+email -[hidden]> anonymous
+
+
+api -[hidden]> email
+api -[hidden]> auth
+api -[hidden]> cloudinary
+Rel_L(api, email, "Send Email Using", "SMTP/TCP/IP", $tags="external_rel")
+
+
+SHOW_LEGEND()
+@enduml

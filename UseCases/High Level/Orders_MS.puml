@@ -1,0 +1,39 @@
+@startuml
+
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor DarkSeaGreen
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Customer" as User #Green
+actor  "Admin" as Admin #Red
+actor  "Admin" as Admin_Support #Red
+
+rectangle System {
+  rectangle "Orders Subsystem" as Orders {
+    usecase "4.1 : View Orders" as UC1
+    usecase "4.2 : View Customer Orders history" as UC2
+    usecase "4.3 : Request Order" as UC3
+    usecase "4.4 : Manage Order" as UC4
+    usecase "4.5 : Cancel Order" as UC5
+  }
+}
+User -[#DarkGreen]-> UC2
+User -[#DarkGreen]-> UC3
+User -[#DarkGreen]-> UC5
+
+
+UC3 <-[#Red]- Admin_Support
+Admin -[#Red]-> UC1
+Admin -[#Red]-> UC4
+Admin -[#Red]-> UC5
+Admin -[#Red]-> UC2
+
+
+@enduml

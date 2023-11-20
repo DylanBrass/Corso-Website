@@ -1,0 +1,415 @@
+@startuml
+    !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+    !include DEVICONS/java.puml
+    !include DEVICONS/mysql.puml
+    !include DEVICONS/react.puml
+    !include DEVICONS/html5.puml
+    !include DEVICONS/aws.puml
+
+    !define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+    !include DEVICONS2/google.puml
+    !include DEVICONS2/npm_original_wordmark.puml
+
+    !include DEVICONS2/typescript.puml
+    !include DEVICONS2/javascript.puml
+
+    allowmixing
+    SetDefaultLegendEntries("")
+
+
+    AddRelTag("http_rel", $lineColor="Blue",$legendText="HTTPS Call")
+    !define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+    !includeurl SPRITESURL/auth0.puml
+
+    !theme vibrant
+    hide empty methods
+
+    !procedure $schema($name, $slug)
+    package "$name" as $slug <<Rectangle>>
+    !endprocedure
+
+    !procedure $table($name, $slug)
+    entity "<b>$name</b>" as $slug << (T, Orange) table >>
+    !endprocedure
+
+    !procedure $pk($name)
+    <color:#GoldenRod><&key></color> <b>$name</b>
+    !endprocedure
+
+    !procedure $fk($name)
+    <color:#Silver><&key></color> $name
+    !endprocedure
+
+    !procedure $column($name)
+    {field} $name
+    !endprocedure
+
+
+
+
+    AddElementTag("java", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="Java File \neight sided")
+    AddElementTag("ext_service", $shape=EightSidedShape(), $bgColor="Gray", $fontColor="white" ,$legendText="External Services\neight sided")
+    AddElementTag("typescript", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="TSX File")
+    AddElementTag("html", $shape=RoundedBoxShape(), $bgColor="OrangeRed", $fontColor="white", $legendText="HTML Files")
+    AddElementTag("npm_libraries", $shape=EightSidedShape(), $bgColor="Red", $fontColor="white" ,$legendText="NPM Libraries\neight sided")
+    AddElementTag("TSX_component", $shape=EightSidedShape(), $bgColor="Blue", $fontColor="white" ,$legendText="TSX Component\neight sided")
+
+
+        rectangle "React Application" as frontend #line.dashed {
+            Container(indexHtml, "Index.html", "HTML", "React Landing page for the user, contains all the scripts.", $sprite="html5", $tags="html")
+
+            Container(indexJs, "Index.js", "Component: React Component", "React entry point, contains all the components.", $sprite="javascript", $tags="typescript")
+
+            Container(appJs, "App.js", "Component: React Component", "Main component, contains will be empty because of React Router.", $sprite="javascript", $tags="typescript")
+
+            Container(nav, "nav.tsx", "Component: React Component", "Navigation bar component.", $sprite="typescript", $tags="TSX_component")
+
+            Container(footer, "footer.tsx", "Component: React Component", "Footer component.", $sprite="typescript", $tags="TSX_component")
+
+
+
+            Container(layout, "layout.tsx", "Component: React Component", "Layout director.", $sprite="typescript", $tags="typescript")
+
+            indexHtml -[dashed,#OrangeRed]-> indexJs  : **Imports**
+            indexJs -[dashed,#Purple]-> layout  : **Imports**
+            indexJs -[dashed,#Purple]-> appJs  : **Imports**
+            layout -[dashed,#Purple]-> nav  : **Imports**
+            layout -[dashed,#Purple]-> footer  : **Imports**
+
+
+            Container(reactRouter, "React Router", "Library: NPM Library", "Allows the user to navigate through the website.", $sprite="npm_original_wordmark", $tags="npm_libraries")
+            Container(axios, "Axios", "Library: NPM Library", "Allows the user to make HTTP requests.", $sprite="npm_original_wordmark", $tags="npm_libraries")
+
+            Container(home, "home.tsx", "Component: React Component", "Home page.", $sprite="typescript", $tags="typescript")
+
+            Container(login, "login.tsx", "Component: React Component", "Login page.", $sprite="typescript", $tags="typescript")
+            Container(register, "register.tsx", "Component: React Component", "Register page.", $sprite="typescript", $tags="typescript")
+
+            indexJs -[dashed,#Blue]-> login  : **Imports**
+            indexJs -[dashed,#Blue]-> register  : **Imports**
+
+            login -[dashed,#DarkCyan]-> axios  : **Imports**
+            register -[dashed,#DarkCyan]-> axios  : **Imports**
+
+            Container(serviceList, "serviceList.tsx", "Component: React Component", "Service component.", $sprite="typescript", $tags="TSX_component")
+            Container(galleryList, "galleryList.tsx", "Component: React Component", "Gallery component.", $sprite="typescript", $tags="TSX_component")
+            Container(reviewList, "reviewList.tsx", "Component: React Component", "Review component.", $sprite="typescript", $tags="TSX_component")
+            Container(faqList, "faqList.tsx", "Component: React Component", "FAQ component.", $sprite="typescript", $tags="TSX_component")
+            
+            
+            
+            
+            home -[dashed,#Purple]-> faqList  : **Imports**
+            home -[dashed,#Purple]-> serviceList  : **Imports**
+            home -[dashed,#Purple]-> galleryList  : **Imports**
+            home -[dashed,#Purple]-> reviewList  : **Imports**
+
+            indexJs -[dashed,#DarkCyan]-> reactRouter  : **Imports**
+            layout -[dashed,#DarkCyan]-> reactRouter  : **Imports**
+
+            indexJs -[dashed,#Blue]-> home  : **Imports**
+
+            serviceList -[dashed,#DarkCyan]-> axios  : **Imports**
+            galleryList -[dashed,#DarkCyan]-> axios  : **Imports**
+            reviewList -[dashed,#DarkCyan]-> axios  : **Imports**
+            faqList -[dashed,#DarkCyan]-> axios  : **Imports**
+
+            Container(service, "service.tsx", "Component: React Component", "Service page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed,#Blue]-> service  : **Imports**
+
+            Container(faq, "faq.tsx", "Component: React Component", "FAQ page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed,#Blue]-> faq  : **Imports**
+
+
+            Container(customerOrderSubmit, "customerOrderSubmit.tsx", "Component: React Component", "Customer order submit page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed,#Blue]-> customerOrderSubmit  : **Imports**
+'
+            faq -[dashed,#DarkCyan]-> axios : **Imports**
+            service -[dashed,#DarkCyan]-> axios : **Imports**
+            customerOrderSubmit -[dashed,#DarkCyan]> axios : **Imports**
+
+            Container(adminDashboard, "adminDashboard.tsx", "Component: React Component", "Admin dashboard page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed,#Blue]-> adminDashboard  : **Imports**
+            adminDashboard -[dashed,#DarkCyan]-> reactRouter  : **Imports**
+
+            Container(adminService, "adminService.tsx", "Component: React Component", "Admin service page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminGallery, "adminGallery.tsx", "Component: React Component", "Admin gallery page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminReview, "adminReview.tsx", "Component: React Component", "Admin review page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminFAQ, "adminFAQ.tsx", "Component: React Component", "Admin FAQ page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminCurrentOrders, "adminCurrentOrders.tsx", "Component: React Component", "Admin current orders page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminPastOrders, "adminPastOrders.tsx", "Component: React Component", "Admin past orders page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminOrderRequests, "adminOrderRequests.tsx", "Component: React Component", "Admin order requests page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminManageOrderRequest, "adminManageOrderRequest.tsx", "Component: React Component", "Admin manage order request page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed,#Blue]-> adminService  : **Imports**
+            indexJs -[dashed,#Blue]-> adminGallery  : **Imports**
+            indexJs -[dashed,#Blue]-> adminReview  : **Imports**
+            indexJs -[dashed,#Blue]-> adminFAQ  : **Imports**
+            indexJs -[dashed,#Blue]-> adminCurrentOrders  : **Imports**
+            indexJs -[dashed,#Blue]-> adminPastOrders  : **Imports**
+            indexJs -[dashed,#Blue]-> adminOrderRequests  : **Imports**
+            indexJs -[dashed,#Blue]-> adminManageOrderRequest  : **Imports**
+
+
+        }
+    Container_Ext(cloudinary, "Cloudinary Service", "REST API", "Cloudinary's image hosting service and API.", $sprite="npm_original_wordmark", $tags="ext_service")
+
+    Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable authentication and authorization platform.", $sprite="auth0", $tags="ext_service")
+
+    Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
+
+
+        rectangle "API" as API #line.dashed{
+
+                Container(securityFilter, "Security Filter", "Component: Spring Security Filter", "Filters all the requests to the API.", $sprite="java", $tags="java")
+
+
+                package "Galleries"{
+                            Container(galleryController, "Gallery Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view and the admin to view, create, modify or delete a gallery.", $sprite="java", $tags="java")
+                            Container(galleryService, "Gallery Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                            Container(galleryRepo, "Gallery Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                            galleryController -[dashed,#LimeGreen]-> galleryService  : **Uses**
+                            galleryService -[dashed,#LimeGreen]-> galleryRepo  : **Uses**
+
+                 }
+
+                package "Customers" {
+                    Container(customerController, "Customer Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view, edit and create a profile. The customer can also choose to disable their account", $sprite="java", $tags="java")
+                    Container(customerService, "Customer Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(customerRepo, "Customer Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    customerController -[dashed,#LimeGreen]-> customerService  : **Uses**
+                    customerService -[dashed,#LimeGreen]-> customerRepo  : **Uses**
+                }
+
+
+
+                package "Services"{
+                    Container(serviceController, "Service Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view and the admin to view, create, modify or delete a service.", $sprite="java", $tags="java")
+                    Container(serviceService, "Service Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(serviceRepo, "Service Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    serviceController -[dashed,#LimeGreen]-> serviceService  : **Uses**
+                    serviceService -[dashed,#LimeGreen]-> serviceRepo  : **Uses**
+                }
+
+
+
+                package "Orders"{
+                    Container(orderController, "Order Controller", "Component: Spring Boot Rest Controller", "Allows the customer and the admin to view, create (request for the customer), modify or delete an order.", $sprite="java", $tags="java")
+                    Container(orderService, "Order Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(orderRepo, "Order Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    orderController -[dashed,#LimeGreen]-> orderService  : **Uses**
+                    orderService -[dashed,#LimeGreen]-> orderRepo  : **Uses**
+
+                    orderService -[dashed,#LimeGreen]> customerService  : **Uses**
+                    orderService -[dashed,#LimeGreen]> serviceService  : **Uses**
+
+
+                }
+
+                package "Reviews"{
+                    Container(reviewController, "Review Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view, create, modify or delete a review.", $sprite="java", $tags="java")
+                    Container(reviewService, "Review Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(reviewRepo, "Review Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    reviewController -[dashed,#LimeGreen]-> reviewService  : **Uses**
+                    reviewService -[dashed,#LimeGreen]-> reviewRepo  : **Uses**
+
+                    reviewService -[dashed,#LimeGreen]> customerService  : **Uses**
+                    reviewService -[dashed,#LimeGreen]> orderService  : **Uses**
+
+                }
+
+                package "FAQs"{
+                    Container(faqController, "FAQ Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view, create, modify or delete a FAQ.", $sprite="java", $tags="java")
+                    Container(faqService, "FAQ Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(faqRepo, "FAQ Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    faqController -[dashed,#LimeGreen]-> faqService  : **Uses**
+                    faqService -[dashed,#LimeGreen]-> faqRepo  : **Uses**
+
+                }
+
+                package "Util"{
+                    Container(mailerService,"Mailer Service", "Component: Spring Boot Service", "Sends emails to the target address.", $sprite="java", $tags="java")
+                }
+                package "Configuration"{
+                    package "Security"{
+                        Container(securityConfig,"Spring Security Configuration", "Component: Spring Boot Configuration Bean", "Configures Amazon Cognito usage in the system.", $sprite="java", $tags="java")
+                    }
+                }
+                orderService -[dashed]-> mailerService  : **Sends Email using**
+                reviewService -[dashed]-> mailerService  : **Sends Email using**
+
+
+
+                mailerService -[dashed]-> email  : **Send Email Using**\n[SMTP/TCP/IP]
+
+                securityFilter -[dashed,#RoyalBlue]-> customerController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> serviceController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> orderController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> reviewController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> faqController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> galleryController  : **Direct Request**
+                securityFilter -[dashed,#Crimson]-> securityConfig  : **Is Configured By**
+
+                securityConfig -[dashed,#Crimson]-> auth  : **Uses**\n[HTTPS/JSON]
+
+        }
+
+        database  "MySQL Database" as Database #DarkCyan {
+                  $table("Customers", "cust_tb") {
+                    $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                    ---
+                    $column("customer_id"): VARCHAR(36) NOT NULL
+
+                    $column("first_name"): VARCHAR(50) NOT NULL
+
+                    $column("last_name"): VARCHAR(50) NOT NULL
+
+                    $column("email"): VARCHAR(50) NOT NULL
+
+                    $column("phoneNumber"): VARCHAR(50) NOT NULL
+
+                    $column("street_address"): VARCHAR(50) NOT NULL
+
+                    $column("city"): VARCHAR(50) NOT NULL
+
+                    $column("province"): VARCHAR(50) NOT NULL
+
+                    $column("postal_code"): VARCHAR(50) NOT NULL
+                  }
+
+                  $table("Orders", "order_tb") {
+                        $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                        ---
+                        $fk("customer_id"): VARCHAR(36) NOT NULL
+
+                        $fk("service_id"): VARCHAR(36) NOT NULL
+                        ---
+                        $column("order_id"): VARCHAR(36) NOT NULL
+
+                        $column("order_date"): DATE NOT NULL
+
+                        $column("order_status"): VARCHAR(50) NOT NULL
+                  }
+
+                  $table("Services", "service_tb") {
+                            $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                            ---
+                            $column("service_id"): VARCHAR(36) NOT NULL
+
+                            $column("service_name"): VARCHAR(50) NOT NULL
+
+                            $column("service_description"): TEXT NOT NULL
+
+                            $column("service_icon"): VARCHAR(255) NOT NULL
+
+                            $column("service_image"): VARCHAR(255) NOT NULL
+                  }
+
+                    $table("Gallery", "gallery_tb") {
+                                $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                                $column("gallery_id"): VARCHAR(36) NOT NULL
+
+                                $column("description"): VARCHAR(255) NOT NULL
+
+                                $column("photo"): VARCHAR(255) NOT NULL
+
+                                $column("image_position") : INT NOT NULL
+                    }
+
+                    $table("Reviews", "review_tb") {
+                                $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                                $fk("customer_id"): VARCHAR(36) NOT NULL
+                                ---
+                                $column("review_id"): VARCHAR(36) NOT NULL
+
+                                $column("review_date"): DATE NOT NULL
+
+                                $column("message"): TEXT NOT NULL
+
+                                $column("review_rating"): INT CHECK (review_rating BETWEEN 0 and 5)) NOT NULL
+                    }
+
+                    $table("FAQs", "faq_tb") {
+                                $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                                $column("faq_id"): VARCHAR(36) NOT NULL
+
+                                $column("question"): TEXT NOT NULL
+
+                                $column("answer"): TEXT NOT NULL
+                    }
+
+                 "cust_tb" |o--o{ "order_tb"
+                 "service_tb" |o--o{ "order_tb"
+                 "cust_tb" |o--o{ "review_tb"
+                
+    }
+
+        orderRepo -[dashed,#Red]-> order_tb  : **SQL/TCP**\n[JDBC]
+        customerRepo -[dashed,#Red]-> cust_tb  : **SQL/TCP**\n[JDBC]
+        serviceRepo -[dashed,#Red]-> service_tb  : **SQL/TCP**\n[JDBC]
+        galleryRepo -[dashed,#Red]-> gallery_tb  : **SQL/TCP**\n[JDBC]
+        reviewRepo -[dashed,#Red]-> review_tb  : **SQL/TCP**\n[JDBC]
+        faqRepo -[dashed,#Red]-> faq_tb  : **SQL/TCP**\n[JDBC]
+
+        
+
+
+        frontend -[hidden]-> API
+
+        API -[hidden]-> Database
+
+        serviceList -[dashed,#Crimson]----> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+        galleryList -[dashed,#Crimson]-----> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+        faqList -[dashed,#Crimson]-----> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+        reviewList -[dashed,#Crimson]-------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+        service -[dashed,#Crimson]-------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+        faq -[dashed,#Crimson]-------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+        customerOrderSubmit -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+
+        adminService -[dashed,#Turquoise]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+        adminGallery -[dashed,#Turquoise]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+        service -[dashed,#Turquoise]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+        galleryList -[dashed,#Turquoise]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+
+        login -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        register -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+
+        adminService -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminGallery -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminReview -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminFAQ -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminCurrentOrders -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminPastOrders -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminOrderRequests -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        adminManageOrderRequest -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+
+        login -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+        register -[dashed,#Crimson]------> securityFilter  : **Makes API Call**\n[HTTPS/JSON]
+
+
+
+    SHOW_LEGEND()
+    @enduml

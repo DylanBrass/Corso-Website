@@ -1,0 +1,238 @@
+@startuml
+hide circle
+
+!define ENTITY(entityName) class entityName <<Entity>> #Pink
+!define AGGREGATE_ROOT(aggregateRootName) class aggregateRootName <<Aggregate Root>> #LightGreen
+!define VALUE_OBJECT(valueObjectName) class valueObjectName <<Value Object>> #LightCyan
+
+skinparam packageStyle rectangle
+skinparam rectangle {
+    BackgroundColor LightGrey
+    BorderColor Black
+}
+rectangle "Bounded Context" as BoundedContextCorso #line.dashed {
+    rectangle "Customer Subdomain" #LightBlue {
+        AGGREGATE_ROOT(Customer) {
+          -firstName: String
+          -lastName: String
+
+        }
+
+        VALUE_OBJECT(CustomerIdentifier) {
+            -customerId: UUID
+        }
+
+        VALUE_OBJECT(Address) {
+            -streetAddress: String
+            -city: String
+            -province: String
+            -postalCode: String
+        }
+
+        VALUE_OBJECT(ContactInformation) {
+            -email: String
+            -phoneNumber: String
+        }
+
+        Customer  *-->  Address
+        Customer  *-->  ContactInformation
+        CustomerIdentifier  <--  Customer
+
+        note "Invariant: [Emails are unique]" as N1
+    }
+    rectangle "Material Subdomain" #LightYellow {
+        AGGREGATE_ROOT(Material){
+            -materialName: String
+            -materialDescription: String
+            -materialCost: Double
+        }
+
+        VALUE_OBJECT(MaterialIdentifier) {
+            -materialId: UUID
+        }
+
+        Material  --up>  MaterialIdentifier
+
+        note "Invariant: [Material cost can't be negative]" as materialInvariant1
+    }
+
+    rectangle "Service Subdomain" #LightBlue {
+        ENTITY(Service) {
+            -serviceName: String
+            -serviceDescription: String
+            -serviceImage: byte[]
+            -serviceIcon: byte[]
+        }
+
+        VALUE_OBJECT(ServiceIdentifier) {
+            -serviceId: UUID
+        }
+
+        Service  -down->  ServiceIdentifier #Green
+        AGGREGATE_ROOT(Service)
+
+        note "Invariant: [Service icon size must be 24x24]" as serviceInvariant1
+    }
+
+    rectangle "Order Subdomain" #LightBlue {
+        ENTITY(Order) {
+          -orderDate: Date
+          -orderStatus: Enum<Status>
+        }
+
+        VALUE_OBJECT(OrderIdentifier) {
+            -orderId: UUID
+        }
+
+        Order  -down->  CustomerIdentifier #Blue
+        Order  -down->  ServiceIdentifier #Red
+        OrderIdentifier <--  Order
+        AGGREGATE_ROOT(Order)
+
+        note "Invariant: [Order must be related to a existing customer]" as orderInvariant1
+        note "Invariant: [Order must be related to an existing service]" as orderInvariant2
+        note "Invariant: [Order must be related to an existing electrician]" as orderInvariant3
+    }
+    rectangle "Review Subdomain" #LightBlue {
+        AGGREGATE_ROOT(Review) {
+         -reviewDate: Date
+         -grade: int
+         -message: String
+        }
+        note "Invariant: [Customer must have an order]" as reviewInvariant1
+
+        VALUE_OBJECT(ReviewIdentifier) {
+            -reviewId: UUID
+        }
+
+        Review  --up>  CustomerIdentifier
+        Review  --up>  ReviewIdentifier
+    }
+    rectangle "FAQ Subdomain" #LightBlue {
+        AGGREGATE_ROOT(FAQ) {
+            -question: String
+            -answer: String
+        }
+        VALUE_OBJECT(FAQIdentifier) {
+            -faqId: UUID
+        }
+
+        FAQ  --up>  FAQIdentifier
+
+        note "Invariant: [FAQ must be deleted when service cease to exist]" as faqInvariant2
+    }
+    rectangle "Gallery Subdomain" #LightBlue {
+        AGGREGATE_ROOT(Gallery) {
+          -description: String
+          -photo: byte[]
+          -imagePosition: int
+        }
+
+        VALUE_OBJECT(GalleryIdentifier) {
+            -galleryId: UUID
+        }
+
+        Gallery  --up>  ServiceIdentifier
+        Gallery  --up>  GalleryIdentifier
+        note "Invariant: [Gallery must be related to an existing service]" as galleryInvariant1
+        note "Invariant: [Gallery images must be 1920x1080]" as galleryInvariant2
+    }
+    rectangle "Electrician Subdomain" #LightYellow {
+        AGGREGATE_ROOT(Electrician){
+            -firstName: String
+            -lastName: String
+            -electricianNumber: String
+            -electricianJoinDate: Date
+            -electricianStatus: Enum<Status>
+        }
+        VALUE_OBJECT(ElectricianContactInformation) {
+            -email: String
+            -phoneNumber: String
+        }
+        VALUE_OBJECT(ElectricianIdentifier) {
+            -electricianId: UUID
+        }
+
+        Electrician  --up>  ElectricianIdentifier #Black
+        Electrician  o-->  ElectricianContactInformation #Black
+
+        note "Invariant: [Electrician number must be unique]" as electricianInvariant1
+        note "Invariant: [Electrician join date must not be greater then the current date]" as electricianInvariant2
+    }
+    rectangle "Payroll Subdomain" #LightYellow {
+        ENTITY(Payroll){
+            -payrollDate: Date
+            -payrollStatus: Enum<Status>
+            -forOrder: OrderIdentifier
+        }
+
+        VALUE_OBJECT(PayrollIdentifier) {
+            -payrollId: UUID
+        }
+
+        Payroll  -down->  PayrollIdentifier #Green
+        Payroll  -down->  ElectricianIdentifier #Blue
+        Payroll  -down->  OrderIdentifier #Red
+
+        note "Invariant: [Payroll can't be created without one or more electrician assigned]" as payrollInvariant2
+    }
+    rectangle "Invoice Subdomain" #LightCyan {
+        AGGREGATE_ROOT(Invoice){
+            -invoiceDate: Date
+            -invoiceStatus: Enum<Status>
+            -electricians: List<ElectricianIdentifier>
+            -materialsUsed: List<MaterialIdentifier>
+        }
+
+        VALUE_OBJECT(InvoiceIdentifier) {
+            -invoiceId: UUID
+        }
+
+        Invoice  --up>  MaterialIdentifier #Black
+        Invoice  --up>  ElectricianIdentifier #Black
+        Invoice  --up>  InvoiceIdentifier #Black
+        Invoice  --up>  OrderIdentifier #Blue
+        Invoice  --up>  CustomerIdentifier #Red
+
+        note "Invariant: [Invoice is linked to an existing order]" as invoiceInvariant1
+    }
+    rectangle "Inventory Subdomain" #LightYellow {
+        AGGREGATE_ROOT(Inventory){
+            -inventoryNumber: String
+            -inventoryDate: Date
+        }
+        ENTITY(Item){
+            -itemName: String
+            -itemDescription: String
+        }
+        ENTITY(InventoryItem) {
+            -quantity: Int
+        }
+
+        InventoryItem  --up>  ItemIdentifier #Black
+        InventoryItem  --up>  InventoryIdentifier #Black
+
+        VALUE_OBJECT(ItemIdentifier) {
+            -itemId: UUID
+        }
+
+        Item  --up>  ItemIdentifier #Black
+
+        VALUE_OBJECT(Location){
+            -streetAddress: String
+            -city: String
+            -province: String
+            -postalCode: String
+        }
+
+        VALUE_OBJECT(InventoryIdentifier) {
+            -inventoryId: UUID
+        }
+
+        Inventory  *--up>  Location #Black
+        Inventory  --up>  InventoryIdentifier #Black
+
+        note "Invariant: [Item quantity can't be negative]" as clientInvariant1
+    }
+}
+@enduml

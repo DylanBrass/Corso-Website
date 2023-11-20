@@ -1,0 +1,23 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+!includeurl SPRITESURL/auth0.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+
+!include DEVICONS2/google.puml
+
+
+Person(client, "Customer", "A user with an account on the website.")
+Person(anonymous, "Guest User", "A user without an account on the website.")
+Person(admin, "Admin", "A user with an account on the website. That is an employee of the company, in this case the CEO and CO-CEO.")
+System(system, "Corso Website", "Allows the client to track and view orders. Allows the client to learn more about the company’s purpose and see examples of completed services. They can also view reviews and contact the company.")
+System_Ext(auth,"Auth0", "Allows for the client to login and register an account.", $sprite="auth0")
+System_Ext(email,"gmail SMTP", "Allows for the client to receive emails from the company.", $sprite="google")
+
+Rel(anonymous, system, "View the companies information. View the FAQ, Gallery and offered services.")
+Rel(admin, system, "View all orders and track the progress. View the companies information. Can modify integral part of the website such as the FAQ, Gallery and offered services.")
+Rel(client, system, "View their orders and track the progress. View the companies information.")
+Rel_L(system, auth, "Login and register an account.")
+Rel_R(system, email, "Make request to send email.")
+@enduml

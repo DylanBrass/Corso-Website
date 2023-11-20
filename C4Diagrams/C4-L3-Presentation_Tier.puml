@@ -1,0 +1,182 @@
+ @startuml
+    !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+    !include DEVICONS/java.puml
+    !include DEVICONS/mysql.puml
+    !include DEVICONS/react.puml
+    !include DEVICONS/html5.puml
+    !include DEVICONS/aws.puml
+
+    !define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+    !include DEVICONS2/google.puml
+    !include DEVICONS2/npm_original_wordmark.puml
+
+    !include DEVICONS2/typescript.puml
+    !include DEVICONS2/javascript.puml
+
+    allowmixing
+    SetDefaultLegendEntries("")
+
+!theme plain
+hide empty methods
+
+!procedure $schema($name, $slug)
+package "$name" as $slug <<Rectangle>>
+!endprocedure
+
+!procedure $table($name, $slug)
+entity "<b>$name</b>" as $slug << (T, Orange) table >>
+!endprocedure
+
+!procedure $pk($name)
+<color:#GoldenRod><&key></color> <b>$name</b>
+!endprocedure
+
+!procedure $fk($name)
+<color:#Silver><&key></color> $name
+!endprocedure
+
+!procedure $column($name)
+{field} $name
+!endprocedure
+
+
+
+
+    AddElementTag("java", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="Java File \neight sided")
+    AddElementTag("ext_service", $shape=EightSidedShape(), $bgColor="Gray", $fontColor="white" ,$legendText="External Services\neight sided")
+    AddElementTag("typescript", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="TSX File")
+    AddElementTag("html", $shape=RoundedBoxShape(), $bgColor="OrangeRed", $fontColor="white", $legendText="HTML Files")
+    AddElementTag("npm_libraries", $shape=EightSidedShape(), $bgColor="Red", $fontColor="white" ,$legendText="NPM Libraries\neight sided")
+    AddElementTag("TSX_component", $shape=EightSidedShape(), $bgColor="Blue", $fontColor="white" ,$legendText="TSX Component\neight sided")
+
+
+        rectangle "React Application" as frontend #line.dashed {
+            Container(indexHtml, "Index.html", "HTML", "React Landing page for the user, contains all the scripts.", $sprite="html5", $tags="html")
+
+            Container(indexJs, "Index.js", "Component: React Component", "React entry point, contains all the components.", $sprite="javascript", $tags="typescript")
+
+            Container(appJs, "App.js", "Component: React Component", "Main component, contains will be empty because of React Router.", $sprite="javascript", $tags="typescript")
+
+            Container(nav, "nav.tsx", "Component: React Component", "Navigation bar component.", $sprite="typescript", $tags="TSX_component")
+
+            Container(footer, "footer.tsx", "Component: React Component", "Footer component.", $sprite="typescript", $tags="TSX_component")
+
+
+
+            Container(layout, "layout.tsx", "Component: React Component", "Layout director.", $sprite="typescript", $tags="typescript")
+
+            indexHtml -[dashed]-> indexJs  : **Imports**
+            indexJs -[dashed]-> layout  : **Imports**
+            indexJs -[dashed]-> appJs  : **Imports**
+            layout -[dashed]-> nav  : **Imports**
+            layout -[dashed]-> footer  : **Imports**
+
+
+            Container(reactRouter, "React Router", "Library: NPM Library", "Allows the user to navigate through the website.", $sprite="npm_original_wordmark", $tags="npm_libraries")
+            Container(axios, "Axios", "Library: NPM Library", "Allows the user to make HTTP requests.", $sprite="npm_original_wordmark", $tags="npm_libraries")
+
+            Container(home, "home.tsx", "Component: React Component", "Home page.", $sprite="typescript", $tags="typescript")
+
+            Container(login, "login.tsx", "Component: React Component", "Login page.", $sprite="typescript", $tags="typescript")
+            Container(register, "register.tsx", "Component: React Component", "Register page.", $sprite="typescript", $tags="typescript")
+
+            indexJs -[dashed]-> login  : **Imports**
+            indexJs -[dashed]-> register  : **Imports**
+
+            login -[dashed]-> axios  : **Imports**
+            register -[dashed]-> axios  : **Imports**
+
+            Container(serviceList, "serviceList.tsx", "Component: React Component", "Service component.", $sprite="typescript", $tags="TSX_component")
+            Container(galleryList, "galleryList.tsx", "Component: React Component", "Gallery component.", $sprite="typescript", $tags="TSX_component")
+            Container(reviewList, "reviewList.tsx", "Component: React Component", "Review component.", $sprite="typescript", $tags="TSX_component")
+            Container(faqList, "faqList.tsx", "Component: React Component", "FAQ component.", $sprite="typescript", $tags="TSX_component")
+            home -[dashed]-> faqList  : **Imports**
+            home -[dashed]-> serviceList  : **Imports**
+            home -[dashed]-> galleryList  : **Imports**
+            home -[dashed]-> reviewList  : **Imports**
+
+            indexJs -[dashed]-> reactRouter  : **Imports**
+            layout -[dashed]-> reactRouter  : **Imports**
+
+            indexJs -[dashed]-> home  : **Imports**
+
+            serviceList -[dashed]-> axios  : **Imports**
+            galleryList -[dashed]-> axios  : **Imports**
+            reviewList -[dashed]-> axios  : **Imports**
+            faqList -[dashed]-> axios  : **Imports**
+
+            Container(service, "service.tsx", "Component: React Component", "Service page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed]-> service  : **Imports**
+
+            Container(faq, "faq.tsx", "Component: React Component", "FAQ page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed]-> faq  : **Imports**
+
+
+            Container(customerOrderSubmit, "customerOrderSubmit.tsx", "Component: React Component", "Customer order submit page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed]-> customerOrderSubmit  : **Imports**
+'
+            faq -[dashed]-> axios : **Imports**
+            service -[dashed]-> axios : **Imports**
+            customerOrderSubmit -[dashed]> axios : **Imports**
+
+            Container(adminDashboard, "adminDashboard.tsx", "Component: React Component", "Admin dashboard page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed]-> adminDashboard  : **Imports**
+            adminDashboard -[dashed]-> reactRouter  : **Imports**
+
+            Container(adminService, "adminService.tsx", "Component: React Component", "Admin service page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminGallery, "adminGallery.tsx", "Component: React Component", "Admin gallery page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminReview, "adminReview.tsx", "Component: React Component", "Admin review page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminFAQ, "adminFAQ.tsx", "Component: React Component", "Admin FAQ page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminCurrentOrders, "adminCurrentOrders.tsx", "Component: React Component", "Admin current orders page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminPastOrders, "adminPastOrders.tsx", "Component: React Component", "Admin past orders page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminOrderRequests, "adminOrderRequests.tsx", "Component: React Component", "Admin order requests page.", $sprite="typescript", $tags="TypeScript")
+            Container(adminManageOrderRequest, "adminManageOrderRequest.tsx", "Component: React Component", "Admin manage order request page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed]-> adminService  : **Imports**
+            indexJs -[dashed]-> adminGallery  : **Imports**
+            indexJs -[dashed]-> adminReview  : **Imports**
+            indexJs -[dashed]-> adminFAQ  : **Imports**
+            indexJs -[dashed]-> adminCurrentOrders  : **Imports**
+            indexJs -[dashed]-> adminPastOrders  : **Imports**
+            indexJs -[dashed]-> adminOrderRequests  : **Imports**
+            indexJs -[dashed]-> adminManageOrderRequest  : **Imports**
+
+
+        }
+    Container_Ext(cloudinary, "Cloudinary Service", "REST API", "Cloudinary's image hosting service and API.", $sprite="npm_original_wordmark", $tags="ext_service")
+
+    adminService -[dashed]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+        adminGallery -[dashed]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+        service -[dashed]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+        galleryList -[dashed]------> cloudinary  : **Makes API Call**\n[HTTPS/JSON]
+
+    AddElementTag("service", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="API \neight sided")
+
+    Container(api, "API", "REST API", "API for the Corso System.", $sprite="java", $tags="service")
+    
+    adminCurrentOrders -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminPastOrders -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminOrderRequests -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminManageOrderRequest -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminService -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminGallery -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminReview -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    adminFAQ -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    service -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    galleryList -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    reviewList -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    faqList -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    customerOrderSubmit -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    faq -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    serviceList -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    galleryList -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON]
+    reviewList -[dashed]------> api  : **Makes API Call**\n[HTTPS/JSON] 
+
+
+SHOW_LEGEND()
+@enduml

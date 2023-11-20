@@ -1,0 +1,35 @@
+@startuml
+
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor DarkSeaGreen
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Guest User" as anonymous #Blue
+actor  "Customer" as User #Green
+actor  "Admin User" as Admin #Red
+
+rectangle System {
+  rectangle "Services Subsystem" as Services {
+    usecase "6.1 : View service section" as UC1
+    usecase "6.2 : Modify service section" as UC2
+    usecase "6.3 : View service reports" as UC3
+  }
+
+}
+
+anonymous -[#Blue]-> UC1
+User --|> anonymous
+
+Admin --|> User
+
+Admin -[#Red]-> UC2
+Admin -[#Red]-> UC3
+
+@enduml

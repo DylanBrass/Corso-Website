@@ -1,0 +1,166 @@
+@startuml
+!include <archimate/Archimate>
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!include DEVICONS/java.puml
+!include DEVICONS/mysql.puml
+!include DEVICONS/react.puml
+!include DEVICONS/html5.puml
+
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+!includeurl SPRITESURL/auth0.puml
+!include DEVICONS/aws.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+
+!include DEVICONS2/google.puml
+
+!include DEVICONS2/npm_original_wordmark.puml
+
+!define RECTANGLE_BORDER_COLOR white
+skinparam rectangle {
+    BorderColor <<RECTANGLE_BORDER_COLOR>>
+}
+SetDefaultLegendEntries("")
+
+
+
+
+
+    AddElementTag("java", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="Java File \neight sided")
+    AddElementTag("ext_service", $shape=EightSidedShape(), $bgColor="Gray", $fontColor="white" ,$legendText="External Services\neight sided")
+    AddElementTag("typescript", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="TSX File")
+    AddElementTag("html", $shape=RoundedBoxShape(), $bgColor="OrangeRed", $fontColor="white", $legendText="HTML Files")
+    AddElementTag("npm_libraries", $shape=EightSidedShape(), $bgColor="Red", $fontColor="white" ,$legendText="NPM Libraries\neight sided")
+    AddElementTag("TSX_component", $shape=EightSidedShape(), $bgColor="Blue", $fontColor="white" ,$legendText="TSX Component\neight sided")
+    Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable authentication and authorization platform.", $sprite="auth0", $tags="ext_service")
+
+    Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
+
+        rectangle "API" as API #line.dashed{
+
+                Container(securityFilter, "Security Filter", "Component: Spring Security Filter", "Filters all the requests to the API.", $sprite="java", $tags="java")
+
+
+                package "Galleries"{
+                            Container(galleryController, "Gallery Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view and the admin to view, create, modify or delete a gallery.", $sprite="java", $tags="java")
+                            Container(galleryService, "Gallery Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                            Container(galleryRepo, "Gallery Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                            galleryController -[dashed,#LimeGreen]-> galleryService  : **Uses**
+                            galleryService -[dashed,#LimeGreen]-> galleryRepo  : **Uses**
+
+                 }
+
+                package "Customers" {
+                    Container(customerController, "Customer Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view, edit and create a profile. The customer can also choose to disable their account", $sprite="java", $tags="java")
+                    Container(customerService, "Customer Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(customerRepo, "Customer Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    customerController -[dashed,#LimeGreen]-> customerService  : **Uses**
+                    customerService -[dashed,#LimeGreen]-> customerRepo  : **Uses**
+                }
+
+
+
+                package "Services"{
+                    Container(serviceController, "Service Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view and the admin to view, create, modify or delete a service.", $sprite="java", $tags="java")
+                    Container(serviceService, "Service Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(serviceRepo, "Service Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    serviceController -[dashed,#LimeGreen]-> serviceService  : **Uses**
+                    serviceService -[dashed,#LimeGreen]-> serviceRepo  : **Uses**
+                }
+
+
+
+                package "Orders"{
+                    Container(orderController, "Order Controller", "Component: Spring Boot Rest Controller", "Allows the customer and the admin to view, create (request for the customer), modify or delete an order.", $sprite="java", $tags="java")
+                    Container(orderService, "Order Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(orderRepo, "Order Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    orderController -[dashed,#LimeGreen]-> orderService  : **Uses**
+                    orderService -[dashed,#LimeGreen]-> orderRepo  : **Uses**
+
+                    orderService -[dashed,#LimeGreen]> customerService  : **Uses**
+                    orderService -[dashed,#LimeGreen]> serviceService  : **Uses**
+
+
+                }
+
+                package "Reviews"{
+                    Container(reviewController, "Review Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view, create, modify or delete a review.", $sprite="java", $tags="java")
+                    Container(reviewService, "Review Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(reviewRepo, "Review Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    reviewController -[dashed,#LimeGreen]-> reviewService  : **Uses**
+                    reviewService -[dashed,#LimeGreen]-> reviewRepo  : **Uses**
+
+                    reviewService -[dashed,#LimeGreen]> customerService  : **Uses**
+                    reviewService -[dashed,#LimeGreen]> orderService  : **Uses**
+
+                }
+
+                package "FAQs"{
+                    Container(faqController, "FAQ Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view, create, modify or delete a FAQ.", $sprite="java", $tags="java")
+                    Container(faqService, "FAQ Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
+                    Container(faqRepo, "FAQ Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
+
+                    faqController -[dashed,#LimeGreen]-> faqService  : **Uses**
+                    faqService -[dashed,#LimeGreen]-> faqRepo  : **Uses**
+
+                }
+
+                package "Util"{
+                    Container(mailerService,"Mailer Service", "Component: Spring Boot Service", "Sends emails to the customer.", $sprite="java", $tags="java")
+                }
+                package "Configuration"{
+                    package "Security"{
+                        Container(securityConfig,"Spring Security Configuration", "Component: Spring Boot Configuration Bean", "Configures Amazon Cognito usage in the system.", $sprite="java", $tags="java")
+                    }
+                }
+                orderService -[dashed]-> mailerService  : **Sends Email using**
+                reviewService -[dashed]-> mailerService  : **Sends Email using**
+
+
+
+                mailerService -[dashed]-> email  : **Send Email Using**\n[SMTP/TCP/IP]
+
+                securityFilter -[dashed,#RoyalBlue]-> customerController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> serviceController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> orderController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> reviewController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> faqController  : **Direct Request**
+                securityFilter -[dashed,#RoyalBlue]-> galleryController  : **Direct Request**
+                securityFilter -[dashed,#Crimson]-> securityConfig  : **Is Configured By**
+
+                securityConfig -[dashed,#Crimson]-> auth  : **Uses**\n[HTTPS/JSON]
+        SHOW_LEGEND()
+        }
+
+        ContainerDb(db, "Database", "Database: MySQL", "Stores all the data for the system.", $sprite="mysql", $tags="database")
+
+        orderRepo -[dashed,#LimeGreen]-> db  : **SQL/TCP**\n[JBDC]
+
+        customerRepo -[dashed,#LimeGreen]-> db  : **SQL/TCP**\n[JBDC]
+
+        serviceRepo -[dashed,#LimeGreen]-> db  : **SQL/TCP**\n[JBDC]
+
+        reviewRepo -[dashed,#LimeGreen]-> db  : **SQL/TCP**\n[JBDC]
+
+        faqRepo -[dashed,#LimeGreen]-> db  : **SQL/TCP**\n[JBDC]
+
+        galleryRepo -[dashed,#LimeGreen]-> db  : **SQL/TCP**\n[JBDC]
+
+AddElementTag("webSite", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="Single-Page Application")
+AddElementTag("webApp", $shape=RoundedBoxShape(), $bgColor="OrangeRed", $fontColor="white", $legendText="Web Application")
+
+ Container(application, "Web Application", "HTML", "Delivers the static content for the Single Page Application.", $sprite="html5", $tags="webApp")
+
+    Container(webPage, "Single-Page Application", "REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
+
+application -[dashed]> webPage  : **Renders**
+
+webPage -[dashed]-> securityFilter  : **Makes API calls**\n[HTTPS/JSON]
+
+@enduml

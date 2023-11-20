@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Guest User" as Anonymous #Blue
+actor  "Admin" as Admin #Red
+actor  "Customer" as User #Green
+rectangle "Corso System"{
+  rectangle "LLUC3 : View Carousel Use case" as Gallery #line.dashed{
+    usecase "3.1 : View carousel" as UC6
+    usecase "3.2 : Modify carousel in gallery" as UC7
+    Admin -[#red]-> UC7
+    Anonymous -[#blue]-> UC6
+    User --|> Anonymous
+    Admin --|> User
+    UC7 -[dashed]> UC6 : <<includes>>
+  }
+}
+
+@endpuml

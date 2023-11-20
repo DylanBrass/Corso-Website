@@ -1,0 +1,145 @@
+ @startuml
+    !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+    !include DEVICONS/java.puml
+    !include DEVICONS/mysql.puml
+    !include DEVICONS/react.puml
+    !include DEVICONS/html5.puml
+    !include DEVICONS/aws.puml
+
+    !define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+    !include DEVICONS2/google.puml
+    !include DEVICONS2/npm_original_wordmark.puml
+
+    !include DEVICONS2/typescript.puml
+    !include DEVICONS2/javascript.puml
+
+    allowmixing
+    SetDefaultLegendEntries("")
+
+!theme plain
+hide empty methods
+
+!procedure $schema($name, $slug)
+package "$name" as $slug <<Rectangle>>
+!endprocedure
+
+!procedure $table($name, $slug)
+entity "<b>$name</b>" as $slug << (T, Orange) table >>
+!endprocedure
+
+!procedure $pk($name)
+<color:#GoldenRod><&key></color> <b>$name</b>
+!endprocedure
+
+!procedure $fk($name)
+<color:#Silver><&key></color> $name
+!endprocedure
+
+!procedure $column($name)
+{field} $name
+!endprocedure
+
+   database  "MySQL Database" as Database #DarkCyan {
+
+
+                  $table("Customers", "cust_tb") {
+                      $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                    ---
+                      $column("customer_id"): VARCHAR(36) NOT NULL
+
+                      $column("first_name"): VARCHAR(50) NOT NULL
+
+                      $column("last_name"): VARCHAR(50) NOT NULL
+
+                      $column("email"): VARCHAR(50) NOT NULL
+
+                      $column("phoneNumber"): VARCHAR(50) NOT NULL
+
+                      $column("street_address"): VARCHAR(50) NOT NULL
+
+                      $column("city"): VARCHAR(50) NOT NULL
+
+                      $column("province"): VARCHAR(50) NOT NULL
+
+                      $column("postal_code"): VARCHAR(50) NOT NULL
+                  }
+
+                  $table("Orders", "order_tb") {
+                          $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                        ---
+                          $fk("customer_id"): VARCHAR(36) NOT NULL
+
+                          $fk("service_id"): VARCHAR(36) NOT NULL
+                        ---
+                          $column("order_id"): VARCHAR(36) NOT NULL
+
+                          $column("order_date"): DATE NOT NULL
+
+                          $column("order_status"): VARCHAR(50) NOT NULL
+                  }
+
+                  $table("Services", "service_tb") {
+                              $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                            ---
+                              $column("service_id"): VARCHAR(36) NOT NULL
+
+                              $column("service_name"): VARCHAR(50) NOT NULL
+
+                              $column("service_description"): TEXT NOT NULL
+
+                              $column("service_icon"): VARCHAR(255) NOT NULL
+ 
+                              $column("service_image"): VARCHAR(255) NOT NULL
+                  }
+
+                    $table("Gallery", "gallery_tb") {
+                              $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                              $column("gallery_id"): VARCHAR(36) NOT NULL
+
+                              $column("description"): VARCHAR(255) NOT NULL
+
+                              $column("photo"): VARCHAR(255) NOT NULL
+
+                              $column("image_position") : INT NOT NULL
+                    }
+
+                    $table("Reviews", "review_tb") {
+                              $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                              $fk("customer_id"): VARCHAR(36) NOT NULL
+                                ---
+                              $column("review_id"): VARCHAR(36) NOT NULL
+
+                              $column("review_date"): DATE NOT NULL
+
+                              $column("message"): TEXT NOT NULL
+
+                              $column("review_rating"): INT CHECK (review_rating BETWEEN 0 and 5)) NOT NULL
+
+                              $column("pinned") : BOOL NOT NULL
+                    }
+
+                    $table("FAQs", "faq_tb") {
+                              $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                              $column("faq_id"): VARCHAR(36) NOT NULL
+
+                              $column("question"): TEXT NOT NULL
+
+                              $column("answer"): TEXT NOT NULL
+
+                              $column("prefered"): BOOL NOT NULL
+                    }
+
+                 "cust_tb" |o--o{ "order_tb"
+                 "service_tb" |o--o{ "order_tb"
+                 "cust_tb" |o--o{ "review_tb"
+}
+ AddElementTag("service", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="API \neight sided")
+
+    Container(api, "API", "REST API", "API for the Corso System.", $sprite="java", $tags="service")
+    
+    api -[dashed]-> Database : **SQL/TCP** \n[JBDC]
+@enduml

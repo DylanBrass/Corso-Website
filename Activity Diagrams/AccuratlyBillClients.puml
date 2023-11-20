@@ -1,0 +1,43 @@
+@startuml
+|Electrician|
+
+start
+         |Electrician|
+         :Contact Client when job is finished;
+
+         :Inspect Job Site;
+         :Test all electrical systems;
+         fork
+         :Inspect for any discrepancies from what was agreed;
+         fork again
+         |Client|
+         :Inspect for any discrepancies from what was agreed;
+         |Electrician|
+         end fork
+  while (Problems found ?) is ([Yes])
+          |Electrician|
+          :Fix the problem;
+          |Electrician|
+          :Inspect Job Site;
+          :Test all electrical systems;
+           fork
+                  :Inspect for any discrepancies from what was agreed;
+                  fork again
+                  |Client|
+                  :Inspect for any discrepancies from what was agreed;
+                  |Electrician|
+                  end fork
+  endwhile ([No]);
+    |paper|
+    :Calculate cost of all bought parts used;
+    :Calculate number of hours worked on the job;
+    :Calculate salary for each employee;
+    :Calculate total cost of the job;
+
+    |Client|
+    :Pay for the job;
+
+
+
+stop
+@enduml

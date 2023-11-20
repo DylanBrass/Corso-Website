@@ -1,0 +1,36 @@
+@startuml
+
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor DarkSeaGreen
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor "Guest User" as Anonymous #Blue
+actor  "Customer" as User #Green
+actor "Admin" as Admin #Red
+rectangle System {
+  rectangle "Reviews Subsystem" as Reviews {
+    usecase "5.1 : View reviews" as UC1
+    usecase "5.2 : Leave a review on Service" as  UC2
+    usecase "5.3 : Manage Review" as UC3
+    usecase "5.4 : Modify review Section" as UC4
+  }
+
+}
+User -[#Green]-> UC2
+User -[#Green]->  UC3
+User --|> Anonymous
+
+Anonymous -[#Blue]-> UC1
+
+Admin -[#Red]-> UC4
+Admin -[#Red]->  UC1
+
+
+@enduml

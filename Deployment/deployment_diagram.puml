@@ -1,0 +1,80 @@
+@startuml
+!include <archimate/Archimate>
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!include DEVICONS/java.puml
+!include DEVICONS/mysql.puml
+!include DEVICONS/react.puml
+!include DEVICONS/html5.puml
+
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+!includeurl SPRITESURL/auth0.puml
+!include DEVICONS/aws.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+
+!include DEVICONS2/google.puml
+
+!include DEVICONS2/npm_original_wordmark.puml
+AddElementTag("service", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="API \neight sided")
+AddElementTag("ext_service", $shape=EightSidedShape(), $bgColor="Gray", $fontColor="white" ,$legendText="External Services\neight sided")
+AddElementTag("My SQL Database", $shape=RoundedBoxShape(), $bgColor="DarkCyan",$borderColor="Black", $fontColor="white", $legendText="Database")
+AddElementTag("webSite", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="Single-Page Application")
+AddElementTag("webApp", $shape=RoundedBoxShape(), $bgColor="OrangeRed", $fontColor="white", $legendText="Web Application")
+
+SetDefaultLegendEntries("")
+
+
+allowmixing
+
+
+rectangle "Users Computer \n[Deployment Node: Windows OS, MacOS, Linux]" as computer{
+    node "Web Browser \n[Deployment Node: Chrome, Firefox, Edge, Safari]"{
+    Container(browser, "Single-Page Application", "Container: Javascript and REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
+
+    }
+}
+
+rectangle "Users Phone \n[Deployment Node: Android, IOS]" as phone{
+    node "Web Browser \n[Deployment Node: Chrome, Firefox, Edge, Safari]" as mobileBrowser{
+        Container(mobileBrowser, "Single-Page Application",  "Container: Javascript and REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
+    }
+}
+
+cloud GCP as "Google Cloud \n[Deployment Node: Google Clouds Standard Environnent]"{
+    node "Google Cloud App Engine \n[Deployment Node: Google Clouds Standard Environnent]" as GCAE{
+        Container(frontend, "Web Application", "Container : HTML, Javascript and React JS", "Delivers the static content for the Single Page Application.", $sprite="html5", $tags="webApp")
+        Container(api, "API", "Container : Spring boot: Java", "Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
+    }
+    database "Google Cloud SQL \n[Deployment Node: Google Clouds Standard Environnent]" as database{
+        ContainerDb(database, "Database", "Container : MySQL", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
+    }
+}
+
+
+
+
+Container_Ext(cloudinary, "Cloudinary Service", "REST API", "Cloudinary's image hosting service and API.", $sprite="npm_original_wordmark", $tags="ext_service")
+Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable authentication and authorization platform.", $sprite="auth0", $tags="ext_service")
+Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
+
+
+
+cloudinary <-[dashed]-- api : Makes API calls to \n[JSON/HTTPS]
+auth <-[dashed]-- api : Makes API calls to \n[JSON/HTTPS]
+email <-[dashed]- api : Sends email to \n[SMTP/TCP/IP]
+
+
+frontend -[dashed]----> browser : Delivers to the users web browser
+frontend -[dashed]----> mobileBrowser : Delivers to the users web browser
+
+database -[hidden]--> auth
+database -[hidden]---> email
+
+browser -[dashed]----> api : Makes API calls to \n[JSON/HTTPS]
+mobileBrowser -[dashed]----> api : Makes API calls to \n[JSON/HTTPS]  
+
+
+api -[dashed]----> database : SQL/TCP\n[JDBC]
+SHOW_LEGEND()
+@endpuml

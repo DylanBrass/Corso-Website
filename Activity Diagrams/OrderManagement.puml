@@ -1,0 +1,46 @@
+@startuml
+|Electrician|
+|Client|
+|Paper|
+|Client|
+start
+:Request Order;
+|Electrician|
+:Gathers information on clients request;
+|Paper|
+:Write down all information found;
+|Electrician|
+if (Is service possible?) is ([no]) then
+stop
+    else ([yes])
+      :Contact client;
+          |Client|
+
+      if (Client accepts cost?) is ([yes]) then
+         |Electrician|
+         :Electrician schedules service;
+         |Paper|
+         :Electrician notes what parts were bought;
+         fork
+         |Electrician|
+         :Work on service;
+         fork again
+         |Paper|
+         :Note how many hours worked;
+         |Electrician|
+         end fork
+         |Electrician|
+         :Complete Service;
+         |Client|
+         :Client pays for service;
+         |Paper|
+         :Electrician fills out paper work to complete job;
+
+         stop
+      else ([no])
+         |Electrician|
+         :End Negotiation;
+         stop
+         endif
+endif
+@enduml

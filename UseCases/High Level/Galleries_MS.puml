@@ -1,0 +1,32 @@
+@startuml
+
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor DarkSeaGreen
+    BorderColor DarkSlateGray
+    ArrowColor Black
+    ActorBorderColor black
+    ActorFontName Courier
+    ActorBackgroundColor<< Human >> Gold
+}
+
+actor  "Guest User" as anonymous #Blue
+actor  "Customer" as User #Green
+actor  "Admin User" as Admin #Red
+
+rectangle System {
+  rectangle "Gallery Subsystem" as Gallery {
+    usecase "3.1 : View carousel" as UC1
+    usecase "3.2 : Modify carousel in gallery" as UC2
+  }
+
+}
+anonymous -[#Blue]-> UC1
+User --|> anonymous
+
+Admin --|> User
+Admin -[#Red]-> UC2
+
+
+@enduml
