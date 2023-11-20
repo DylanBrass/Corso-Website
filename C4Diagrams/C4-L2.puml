@@ -81,7 +81,7 @@ Rel_L(api, email, " ", $tags="invisible_rel")
 
 Rel(email, customer, "Sends email to","SMTP/TCP/IP", $tags="email_rel")
 Rel(email, admin, "Sends email to","SMTP/TCP/IP", $tags="email_rel")
-Rel_L(api, auth, "Authenticates users using", "SRP", $tags="external_rel")
+Rel_L(api, auth, "Authenticates users using", "OAuth2/OpenID", $tags="external_rel")
 Rel_L(api, cloudinary, "Uploads and fetches images using", "HTTPS/JSON", $tags="external_rel")
 Rel_L(api, database, "SQL/TCP", "JDBC", $tags="database_rel")
 

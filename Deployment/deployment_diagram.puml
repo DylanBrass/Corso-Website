@@ -61,7 +61,7 @@ Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emai
 
 
 cloudinary <-[dashed]-- api : Makes API calls to \n[JSON/HTTPS]
-auth <-[dashed]-- api : Makes API calls to \n[JSON/HTTPS]
+auth <-[dashed]-- api : Makes API calls to \n[OAuth2/OpenID]
 email <-[dashed]- api : Sends email to \n[SMTP/TCP/IP]
 
 

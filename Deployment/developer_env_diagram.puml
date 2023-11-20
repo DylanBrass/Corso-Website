@@ -30,17 +30,17 @@ allowmixing
 rectangle "Developer's Laptop \n[Deployment Node: Windows 11 and Linux Fedora 39]" as laptop {
     
     node "Webpack Developement Server \n[Deployment Node : webpack-dev-server/^4.6.0]" as react {   
-        Container(react, "Web Application", "A single-page application built with React.js.","Delivers the static content for the Single Page Application.",  $tags="webApp")
+        Container(react, "Web Application", "Container: Html and React JS","Delivers the static content for the Single Page Application.",  $tags="webApp")
     }
     
     node "Docker Container - API \n[Deployment Node : Docker]" as backend {
         node "Apache Tomcat\n[Deployment Node : Apache Tomcat/10.1.13]" as tom {
-            Container(java, "Java Spring Boot", "A Java Spring Boot application.","Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
+            Container(java, "Java Spring Boot", "Container: Java and Spring Boot","Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
         }
     }
     node "Docker Container - Database \n[Deployment Node : Docker]" as db {
         node "MySQL Server \n[Deployment Node : MySQL Server/5.7.44]" as sql{
-            Container(mysql, "MySQL Database", "A MySQL database.","Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
+            Container(mysql, "MySQL Database", "Container: MySQL Schema.","Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
         }
     }
     node "Web Browser \n[Deployment Node : Chrome and Firefox]" as browser {
@@ -58,7 +58,7 @@ browser_cont -[dashed]-> java : Makes API calls to \n[JSON/HTTP]
 java -[dashed]> mysql : SQL/TCP\n[JBDC]
 
 java -[dashed]-> cloudinary : Makes API calls to \n[JSON/HTTPS]
-java -[dashed]-> auth : Makes API calls to \n[JSON/HTTPS]
+java -[dashed]-> auth : Makes API calls to \n[OAuth2/OpenID]
 java -[dashed]-> email : Sends email to \n[SMTP/TCP/IP]
 SHOW_LEGEND()
 @endpuml

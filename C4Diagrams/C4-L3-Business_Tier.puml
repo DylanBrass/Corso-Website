@@ -134,7 +134,7 @@ SetDefaultLegendEntries("")
                 securityFilter -[dashed,#RoyalBlue]-> galleryController  : **Direct Request**
                 securityFilter -[dashed,#Crimson]-> securityConfig  : **Is Configured By**
 
-                securityConfig -[dashed,#Crimson]-> auth  : **Uses**\n[HTTPS/JSON]
+                securityConfig -[dashed,#Crimson]-> auth  : **Uses**\n[OAuth2/OpenID]
         SHOW_LEGEND()
         }
 
