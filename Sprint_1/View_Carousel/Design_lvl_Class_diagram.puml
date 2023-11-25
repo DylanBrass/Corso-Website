@@ -1,0 +1,118 @@
+@startuml
+
+class "<<controller>>\nGalleryController" as controller {
+    - galleryService : GalleryService
+    ---
+    + getGallery() : ResponseEntity<List<GalleryResponse>>
+    + getGalleryById() : ResponseEntity<GalleryResponse>
+    + addGallery() : ResponseEntity<GalleryResponse>
+    + deleteGallery() : ResponseEntity<Void>
+    + editGallery() : ResponseEntity<GalleryResponse>
+}
+
+interface "GalleryService" as service{
+    ---
+    + getGallery() : List<GalleryResponse>
+    + getGalleryById() : GalleryResponse
+    + addGallery() : GalleryResponse
+    + deleteGallery() : void
+    + editGallery() : GalleryResponse
+}
+
+class "<<service>>\nGalleryServiceImpl" as serviceImpl{
+    - galleryRepository : GalleryRepository
+    - galleryRequestMapper : GalleryRequestMapper
+    - galleryResponseMapper : GalleryResponseMapper
+    ---
+    + getGallery() : List<GalleryResponse>
+    + getGalleryById() : GalleryResponse
+    + addGallery() : GalleryResponse
+    + deleteGallery() : void
+    + editGallery() : GalleryResponse
+}
+
+class serviceImpl extends service
+
+interface "<<repository>>\nGalleryRepository" as repository{
+    ---
+    + getGalleryById() : Gallery
+}
+
+class GalleryIdentifier{
+    - galleryId : String
+    ---
+    + setGalleryId(galleryId : String) : void
+    + getGalleryId() : String
+
+}
+
+class "Gallery" as gallery{
+    - id : int
+    - galleryId : GalleryIdentifier
+    - description : String
+    - image : String
+    - orderInGallery : int
+    ---
+  
+}
+
+class "GalleryResponse" as galleryResponse{
+    - galleryId : String
+    - description : String
+    - image : String
+    - orderInGallery : int
+    ---
+  
+}
+
+class "GalleryRequest" as galleryRequest{
+    - description : String
+    - image : String
+    - orderInGallery : int
+    ---
+  
+}
+
+
+requestMapper --> galleryRequest
+
+responseMapper --> galleryResponse
+
+galleryRequest --> gallery
+
+galleryResponse --> gallery
+
+serviceImpl --> gallery
+
+repository --> gallery
+
+serviceImpl --> responseMapper
+serviceImpl --> requestMapper
+
+
+interface "GalleryRequestMapper" as requestMapper{
+    ---
+    + toGallery(galleryRequest : GalleryRequest) : Gallery
+    + toGalleries(galleryRequests : List<GalleryRequest>) : List<Gallery>
+}
+
+interface "GalleryResponseMapper" as responseMapper{
+    ---
+    + toGalleryResponse(gallery : Gallery) : GalleryResponse
+    + toGalleryResponses(galleries : List<Gallery>) : List<GalleryResponse>
+}
+
+
+controller --> galleryResponse
+controller --> galleryRequest
+
+
+interface repository extends JpaRepository
+
+controller --> serviceImpl
+
+serviceImpl --> repository
+
+gallery --> GalleryIdentifier
+
+@endpuml

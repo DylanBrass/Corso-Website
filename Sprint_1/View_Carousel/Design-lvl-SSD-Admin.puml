@@ -1,0 +1,191 @@
+@startuml
+
+actor Admin 
+
+activate ReactApplication
+
+Admin -> ReactApplication : GET /
+
+activate Dashboard
+
+participant EditGalleryPage
+Admin -> ReactApplication : GET /dashboard
+
+ReactApplication -> Dashboard : render()
+
+activate GalleryController
+
+Dashboard -> GalleryController : GET /gallery
+
+activate GalleryService
+
+GalleryController -> GalleryService : getGalleries()
+
+activate GalleryRepository
+
+GalleryService -> GalleryRepository : findAll()
+
+activate Database
+
+GalleryRepository -> Database : SELECT * FROM gallery
+
+Database --> GalleryRepository : Gallery
+
+deactivate Database
+
+GalleryRepository --> GalleryService : List<Gallery>
+
+deactivate GalleryRepository
+
+activate GalleryResonseMapper
+
+GalleryService -> GalleryResonseMapper : ToGalleryResponses(List<Gallery>)
+
+GalleryResonseMapper --> GalleryService : List<GalleryResponse>
+
+deactivate GalleryResonseMapper
+
+GalleryService --> GalleryController : List<GalleryResponse>
+
+deactivate GalleryService
+
+GalleryController --> Dashboard : List<GalleryResponse>
+
+deactivate GalleryController
+
+
+Dashboard --> Admin : ShowListOfGalleries()
+
+Admin -> Dashboard : ClickEditGalleryButton(String {id})
+
+
+
+    Dashboard -> ReactApplication : GET /Dashboard/edit-gallery
+
+    ReactApplication -> EditGalleryPage : render()
+
+    activate EditGalleryPage
+
+
+    activate GalleryController
+
+    EditGalleryPage -> GalleryController : GET /gallery/{id}
+
+    activate GalleryService
+
+    GalleryController -> GalleryService : getGallery(String {id})
+
+    activate GalleryRepository
+
+    GalleryService -> GalleryRepository : findGalleryByGalleryId(String galleryId)
+
+    activate Database
+
+    GalleryRepository -> Database : SELECT * FROM gallery WHERE galleryId = {id}
+
+    Database --> GalleryRepository : Gallery
+
+    deactivate Database
+
+    GalleryRepository --> GalleryService : Gallery
+
+    deactivate GalleryRepository
+
+    activate GalleryResonseMapper
+
+    GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery gallery)
+
+    GalleryResonseMapper --> GalleryService : GalleryResponse
+
+    deactivate GalleryResonseMapper
+
+    GalleryService --> GalleryController : GalleryResponse
+
+    deactivate GalleryService
+
+    GalleryController --> EditGalleryPage : GalleryResponse
+
+    deactivate GalleryController
+
+
+
+    EditGalleryPage --> Admin : EditGalleryForm()
+
+    Admin -> EditGalleryPage : SubmitEditGalleryForm()
+
+    EditGalleryPage -> GalleryController : PUT /gallery/{id}
+
+    activate GalleryController
+
+
+    activate GalleryService
+
+    GalleryController -> GalleryService : updateGallery(String {id}, GalleryRequest galleryRequest)
+
+    activate GalleryRepository
+
+    GalleryService -> GalleryService : getGallery(String galleryId)
+
+    GalleryService -> GalleryRepository : findGalleryByGalleryId(String galleryId)
+
+    activate Database
+
+    GalleryRepository -> Database : SELECT * FROM gallery WHERE galleryId = {id}
+
+    Database --> GalleryRepository : Gallery
+
+    deactivate Database
+
+    GalleryRepository --> GalleryService : Gallery
+
+    deactivate GalleryRepository
+
+    activate GalleryRequestMapper
+
+    GalleryService -> GalleryRequestMapper : ToGallery(GalleryRequest galleryRequest)
+
+
+    GalleryRequestMapper --> GalleryService : Gallery
+
+    deactivate GalleryRequestMapper
+    
+
+    activate GalleryResonseMapper
+
+    GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery)
+
+    GalleryResonseMapper --> GalleryService : GalleryResponse
+
+    deactivate GalleryResonseMapper
+
+    GalleryService --> GalleryController : GalleryResponse
+
+    deactivate GalleryService
+
+    GalleryController --> EditGalleryPage : GalleryResponse
+
+    deactivate GalleryController
+
+    EditGalleryPage --> Admin : ShowSavedAlert()
+
+
+
+
+
+
+
+    deactivate EditGalleryPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+@endpuml

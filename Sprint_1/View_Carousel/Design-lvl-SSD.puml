@@ -1,0 +1,62 @@
+@startuml
+
+
+actor User 
+
+activate ReactApplication
+
+User -> ReactApplication : GET /
+
+activate HomePage
+
+ReactApplication -> HomePage : render()
+
+activate GalleryController 
+
+
+HomePage -> GalleryController : GET /gallery
+
+
+activate Service 
+
+
+
+GalleryController -> Service : getGallery()
+
+activate Repository
+
+Service -> Repository : findAll()
+
+activate Database
+
+Repository -> Database : SELECT * FROM gallery
+
+Database --> Service : Galleries
+
+deactivate Repository
+
+deactivate Database
+
+activate GalleryResponseMapper
+
+
+Service -> GalleryResponseMapper : toGalleryResponse(Galleries)
+
+GalleryResponseMapper --> Service : GalleryResponse
+
+deactivate GalleryResponseMapper
+
+Service --> GalleryController : GalleryResponse
+
+deactivate Service
+
+GalleryController --> HomePage : GalleryResponse
+
+deactivate GalleryController
+
+HomePage --> User : Carousel
+
+deactivate HomePage
+
+
+@endpuml
