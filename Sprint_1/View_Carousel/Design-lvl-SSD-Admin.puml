@@ -6,28 +6,41 @@ activate ReactApplication
 
 Admin -> ReactApplication : GET /
 
-activate Dashboard
+participant Dashboard
+
+participant GalleryAdminPage
 
 participant EditGalleryPage
+
 Admin -> ReactApplication : GET /dashboard
 
 ReactApplication -> Dashboard : render()
+activate Dashboard
+Admin -> Dashboard : ManageGalleries()
 
+
+
+Dashboard -> ReactApplication : GET /ManageGalleries
+
+deactivate Dashboard
+
+ReactApplication -> GalleryAdminPage : render()
+activate GalleryAdminPage
+
+GalleryAdminPage -> GalleryController : GET /galleries
 activate GalleryController
 
-Dashboard -> GalleryController : GET /gallery
-
-activate GalleryService
 
 GalleryController -> GalleryService : getGalleries()
+activate GalleryService
 
-activate GalleryRepository
 
 GalleryService -> GalleryRepository : findAll()
+activate GalleryRepository
 
-activate Database
 
 GalleryRepository -> Database : SELECT * FROM gallery
+activate Database
 
 Database --> GalleryRepository : Gallery
 
@@ -37,9 +50,9 @@ GalleryRepository --> GalleryService : List<Gallery>
 
 deactivate GalleryRepository
 
-activate GalleryResonseMapper
 
 GalleryService -> GalleryResonseMapper : ToGalleryResponses(List<Gallery>)
+activate GalleryResonseMapper
 
 GalleryResonseMapper --> GalleryService : List<GalleryResponse>
 
@@ -49,7 +62,7 @@ GalleryService --> GalleryController : List<GalleryResponse>
 
 deactivate GalleryService
 
-GalleryController --> Dashboard : List<GalleryResponse>
+GalleryController --> GalleryAdminPage : List<GalleryResponse>
 
 deactivate GalleryController
 
@@ -60,28 +73,30 @@ Admin -> Dashboard : ClickEditGalleryButton(String {id})
 
 
 
-    Dashboard -> ReactApplication : GET /Dashboard/edit-gallery
+    GalleryAdminPage -> ReactApplication : GET /Dashboard/edit-gallery
 
-    ReactApplication -> EditGalleryPage : render()
+    GalleryAdminPage -> EditGalleryPage : render()
+
+    deactivate GalleryAdminPage
 
     activate EditGalleryPage
 
 
+
+    EditGalleryPage -> GalleryController : GET /galleries/{id}
     activate GalleryController
 
-    EditGalleryPage -> GalleryController : GET /gallery/{id}
-
-    activate GalleryService
 
     GalleryController -> GalleryService : getGallery(String {id})
+    activate GalleryService
 
-    activate GalleryRepository
 
     GalleryService -> GalleryRepository : findGalleryByGalleryId(String galleryId)
+    activate GalleryRepository
 
-    activate Database
 
     GalleryRepository -> Database : SELECT * FROM gallery WHERE galleryId = {id}
+    activate Database
 
     Database --> GalleryRepository : Gallery
 
@@ -91,9 +106,9 @@ Admin -> Dashboard : ClickEditGalleryButton(String {id})
 
     deactivate GalleryRepository
 
-    activate GalleryResonseMapper
 
     GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery gallery)
+    activate GalleryResonseMapper
 
     GalleryResonseMapper --> GalleryService : GalleryResponse
 
@@ -113,24 +128,24 @@ Admin -> Dashboard : ClickEditGalleryButton(String {id})
 
     Admin -> EditGalleryPage : SubmitEditGalleryForm()
 
-    EditGalleryPage -> GalleryController : PUT /gallery/{id}
+    EditGalleryPage -> GalleryController : PUT /galleries/{id}
 
     activate GalleryController
 
 
-    activate GalleryService
 
     GalleryController -> GalleryService : updateGallery(String {id}, GalleryRequest galleryRequest)
+    activate GalleryService
 
-    activate GalleryRepository
 
     GalleryService -> GalleryService : getGallery(String galleryId)
 
     GalleryService -> GalleryRepository : findGalleryByGalleryId(String galleryId)
+    activate GalleryRepository
 
-    activate Database
 
     GalleryRepository -> Database : SELECT * FROM gallery WHERE galleryId = {id}
+    activate Database
 
     Database --> GalleryRepository : Gallery
 
@@ -140,9 +155,9 @@ Admin -> Dashboard : ClickEditGalleryButton(String {id})
 
     deactivate GalleryRepository
 
-    activate GalleryRequestMapper
 
     GalleryService -> GalleryRequestMapper : ToGallery(GalleryRequest galleryRequest)
+    activate GalleryRequestMapper
 
 
     GalleryRequestMapper --> GalleryService : Gallery
@@ -150,9 +165,9 @@ Admin -> Dashboard : ClickEditGalleryButton(String {id})
     deactivate GalleryRequestMapper
     
 
-    activate GalleryResonseMapper
 
     GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery)
+    activate GalleryResonseMapper
 
     GalleryResonseMapper --> GalleryService : GalleryResponse
 
