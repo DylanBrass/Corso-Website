@@ -1,54 +1,55 @@
 @startuml
 
+title View Carousel Use Case Squence Diagram
 
 actor User 
 
-activate ReactApplication
 
 User -> ReactApplication : GET /
+activate ReactApplication
 
-activate HomePage
 
 ReactApplication -> HomePage : render()
+activate HomePage
 
+
+
+HomePage -> GalleryController : GET /galleries
 activate GalleryController 
 
 
-HomePage -> GalleryController : GET /gallery
-
-
-activate Service 
 
 
 
-GalleryController -> Service : getGallery()
+GalleryController -> GalleryService : getGallery()
+activate GalleryService 
 
-activate Repository
 
-Service -> Repository : findAll()
+GalleryService -> GalleryRepository : findAll()
+activate GalleryRepository
 
+
+GalleryRepository -> Database : SELECT * FROM gallery
 activate Database
 
-Repository -> Database : SELECT * FROM gallery
+Database --> GalleryService : Galleries
 
-Database --> Service : Galleries
-
-deactivate Repository
+deactivate GalleryRepository
 
 deactivate Database
 
+
+
+GalleryService -> GalleryResponseMapper : toGalleryResponse(Galleries)
 activate GalleryResponseMapper
 
-
-Service -> GalleryResponseMapper : toGalleryResponse(Galleries)
-
-GalleryResponseMapper --> Service : GalleryResponse
+GalleryResponseMapper --> GalleryService : GalleryResponse
 
 deactivate GalleryResponseMapper
 
-Service --> GalleryController : GalleryResponse
+GalleryService --> GalleryController : GalleryResponse
 
-deactivate Service
+deactivate GalleryService
 
 GalleryController --> HomePage : GalleryResponse
 

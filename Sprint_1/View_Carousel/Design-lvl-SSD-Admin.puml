@@ -67,9 +67,9 @@ GalleryController --> GalleryAdminPage : List<GalleryResponse>
 deactivate GalleryController
 
 
-Dashboard --> Admin : ShowListOfGalleries()
+GalleryAdminPage -> Admin : ShowListOfGalleries()
 
-Admin -> Dashboard : ClickEditGalleryButton(String {id})
+Admin -> GalleryAdminPage : ClickEditGalleryButton(String {id})
 
 
 
@@ -183,14 +183,53 @@ Admin -> Dashboard : ClickEditGalleryButton(String {id})
 
     EditGalleryPage --> Admin : ShowSavedAlert()
 
+    Admin -> EditGalleryPage : ClickDeleteGalleryButton(String {id})
+
+    EditGalleryPage -> GalleryController : DELETE /galleries/{id}
+
+    activate GalleryController
+
+    GalleryController -> GalleryService : deleteGallery(String {id})
+
+    activate GalleryService
+
+    GalleryService -> GalleryRepository : deleteGalleryByGalleryId(String galleryId)
+
+    activate GalleryRepository
+
+    GalleryRepository -> Database : DELETE FROM gallery WHERE galleryId = {id}
+
+    activate Database
+
+    Database --> GalleryRepository : Gallery
+
+    deactivate Database
+
+    GalleryRepository --> GalleryService : Gallery
+
+    deactivate GalleryRepository
 
 
+    GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery gallery)
+
+    activate GalleryResonseMapper
+
+    GalleryResonseMapper --> GalleryService : GalleryResponse
+
+    deactivate GalleryResonseMapper
+
+    GalleryService --> GalleryController : GalleryResponse
+
+    deactivate GalleryService
 
 
+    GalleryController --> EditGalleryPage : GalleryResponse
 
+    deactivate GalleryController
+
+    EditGalleryPage --> Admin : ShowDeletedAlert()
 
     deactivate EditGalleryPage
-
 
 
 
