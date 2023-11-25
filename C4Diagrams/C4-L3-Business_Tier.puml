@@ -23,10 +23,6 @@ skinparam rectangle {
 }
 SetDefaultLegendEntries("")
 
-
-
-
-
     AddElementTag("java", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="Java File \neight sided")
     AddElementTag("ext_service", $shape=EightSidedShape(), $bgColor="Gray", $fontColor="white" ,$legendText="External Services\neight sided")
     AddElementTag("typescript", $shape=RoundedBoxShape(), $bgColor="DodgerBlue", $fontColor="white", $legendText="TSX File")
