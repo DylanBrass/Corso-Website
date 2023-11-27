@@ -1,6 +1,5 @@
 name: CI/CD Pipeline Gradle
 
-
 on:
   workflow_dispatch:
   pull_request:
@@ -10,7 +9,6 @@ on:
       - 'releases/*'
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     permissions:
@@ -18,13 +16,16 @@ jobs:
       pull-requests: write
       checks: write
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - name: Print Current directory and switch
+
+      - name: Print Current directory
         run: |
-            pwd | cd ./corso_website_springboot | pwd
+          pwd
+          ls
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -32,7 +33,14 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: 'gradle'
-      - name: Change directory
-        run: cd corso_website_springboot/ | pwd | ls 
-      - name: Run Build
+
+      - name: Change to the Spring Boot directory
+        run: cd corso_website_springboot
+
+      - name: Print Current directory and list files
+        run: |
+          pwd
+          ls
+
+      - name: Run Gradle Build
         run: ./gradlew build
