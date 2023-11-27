@@ -51,7 +51,7 @@ spring:
     activate:
       on-profile: docker
   datasource:
-    url: jdbc:mysql:///test-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
+    url: jdbc:mysql:///corso-dev-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
     username: corso-dev-website-user
     password: f#CoFJh*p\gaL+t)
 
