@@ -33,6 +33,6 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
       - name: Change directory
-        run: cd corso_website_springboot
+        run: cd corso_website_springboot | pwd
       - name: Run Build
         run: ./gradlew build
