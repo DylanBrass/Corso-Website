@@ -34,4 +34,4 @@ jobs:
           cache: 'gradle'
 
       - name: Run Build
-        run: ./corso_website_springboot/gradlew build
+        run: ./gradlew build
