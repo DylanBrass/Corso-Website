@@ -38,7 +38,7 @@ interface "<<repository>>\nGalleryRepository" as repository{
     + getGalleryById() : Gallery
 }
 
-class GalleryIdentifier{
+class GalleryIdentifier {
     - galleryId : String
     ---
     + setGalleryId(galleryId : String) : void
@@ -78,9 +78,7 @@ requestMapper --> galleryRequest
 
 responseMapper --> galleryResponse
 
-galleryRequest --> gallery
 
-galleryResponse --> gallery
 
 serviceImpl --> gallery
 
@@ -90,13 +88,13 @@ serviceImpl --> responseMapper
 serviceImpl --> requestMapper
 
 
-interface "GalleryRequestMapper" as requestMapper{
+interface "<<Mapper>>\nGalleryRequestMapper" as requestMapper{
     ---
     + toGallery(galleryRequest : GalleryRequest) : Gallery
     + toGalleries(galleryRequests : List<GalleryRequest>) : List<Gallery>
 }
 
-interface "GalleryResponseMapper" as responseMapper{
+interface "<<Mapper>>\nGalleryResponseMapper" as responseMapper{
     ---
     + toGalleryResponse(gallery : Gallery) : GalleryResponse
     + toGalleryResponses(galleries : List<Gallery>) : List<GalleryResponse>

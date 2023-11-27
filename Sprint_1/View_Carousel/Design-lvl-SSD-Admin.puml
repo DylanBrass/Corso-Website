@@ -67,7 +67,7 @@ GalleryController --> GalleryAdminPage : List<GalleryResponse>
 deactivate GalleryController
 
 
-GalleryAdminPage -> Admin : ShowListOfGalleries()
+GalleryAdminPage --> Admin : ShowListOfGalleries()
 
 Admin -> GalleryAdminPage : ClickEditGalleryButton(String {id})
 

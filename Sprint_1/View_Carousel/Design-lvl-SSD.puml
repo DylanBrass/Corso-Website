@@ -4,10 +4,21 @@ title View Carousel Use Case Squence Diagram
 
 actor User 
 
+participant ReactApplication as "<<View>>\nReactApplication"
+participant HomePage as "<<View>>\nHomePage"
+
+participant GalleryController as "<<Controller>>\nGalleryController"
+
+participant GalleryService as "<<Service>>\nGalleryService"
+
+participant GalleryRepository as "<<Repository>>\nGalleryRepository"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant GalleryResponseMapper as "<<Mapper>>\nGalleryResponseMapper"
 
 User -> ReactApplication : GET /
 activate ReactApplication
-
 
 ReactApplication -> HomePage : render()
 activate HomePage
