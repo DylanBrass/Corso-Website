@@ -1,1 +1,1 @@
-include 'corso-website-springboot'
+rootProject.name = 'corso-website'
