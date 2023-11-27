@@ -1,0 +1,68 @@
+# Default Spring Profile
+spring:
+  profiles:
+    active: mysql
+server:
+  error:
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+    com.dylan: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+---
+# for test
+
+# for h2
+spring:
+  config:
+    activate:
+      on-profile: h2
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:inventory-db;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      #let jpa create the schema
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        auto-quote-keyword: true
+
+    #defer-datasource-initialization: true
+  sql:
+    init:
+      platform: h2
+      mode: always
+---
+# for docker
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:mysql:///test-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
+    username: corso-dev-website-user
+    password: f#CoFJh*p\gaL+t)
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+      init:
+        platform: mysql
+        mode: always
+
+server.port: 8080
+spring.datasource.hikari.initializationFailTimeout: 60000
