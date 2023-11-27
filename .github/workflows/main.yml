@@ -1,4 +1,7 @@
 name: CI/CD Pipeline Gradle
+
+cd ./corso_website_springboot
+
 on:
   workflow_dispatch:
   pull_request:
@@ -28,4 +31,4 @@ jobs:
           cache: 'gradle'
 
       - name: Run Build
-        run: ./corso_website_springboot/gradlew build
+        run: ./gradlew build
