@@ -29,7 +29,6 @@ repositories {
 
 dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
-    testImplementation 'org.yaml:snakeyaml:2.2'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter-sql-mysql', version: '1.2.8.RELEASE'
     implementation group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.34.1'
 
@@ -44,6 +43,9 @@ dependencies {
             "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('com.h2database:h2')
+    testImplementation 'org.yaml:snakeyaml:2.2'
+
 }
 
 tasks.named('bootBuildImage') {
