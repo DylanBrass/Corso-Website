@@ -10,11 +10,13 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface GalleryRequestMapper {
-
+/*
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "galleryId", ignore = true)
     })
     Gallery toGallery(GalleryRequest galleryRequest);
     List<Gallery> toGalleries(List<GalleryRequest> galleryRequests);
+
+ */
 }
