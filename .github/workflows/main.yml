@@ -34,13 +34,12 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
 
-      - name: Change to the Spring Boot directory
-        run: cd corso_website_springboot
 
       - name: Print Current directory and list files
         run: |
           pwd
           ls
-
       - name: Run Gradle Build
+        working-directory: corso_website_springboot
         run: ./gradlew build
+
