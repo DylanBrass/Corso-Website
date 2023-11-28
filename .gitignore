@@ -1,1 +1,6 @@
 corso_website_fe/node_modules
+.gradle
+.vscode
+corso_website_springboot/.idea
+corso_website_springboot/.gradle
+corso_website_fe/.idea
