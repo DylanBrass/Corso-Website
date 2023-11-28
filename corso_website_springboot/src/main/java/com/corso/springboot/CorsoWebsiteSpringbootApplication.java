@@ -2,6 +2,7 @@ package com.corso.springboot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class CorsoWebsiteSpringbootApplication {
@@ -9,5 +10,6 @@ public class CorsoWebsiteSpringbootApplication {
     public static void main(String[] args) {
         SpringApplication.run(CorsoWebsiteSpringbootApplication.class, args);
     }
+    
 
 }
