@@ -21,14 +21,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+
       - name: npm install, build, and test
         working-directory: corso_website_fe
         run: |
-         npm ci
+          npm ci
           npm run build --if-present
           npm start & npx wait-on http://127.0.0.1:3000
-          env:
-            CI: true 
+        env:
+          CI: true
+
       - name: Print Current directory
         run: |
           pwd
@@ -41,12 +43,11 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
 
-
       - name: Print Current directory and list files
         run: |
           pwd
           ls
+
       - name: Run Gradle Build
         working-directory: corso_website_springboot
         run: ./gradlew build
-
