@@ -1,0 +1,59 @@
+@media (min-width: 100px) and (max-width: 1100px) {
+    .carousel-item {
+        height: 200px;
+    }
+
+    .carousel-inner {
+        max-height: 200px;
+    }
+
+    .d-block.w-75 {
+        height: 200px !important;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%;
+        height: 90%;
+    }
+
+    .carousel-indicators {
+        bottom: 5px;
+    }
+}
+
+.carousel-caption {
+    bottom: 0;
+}
+
+.carousel-indicators {
+    bottom: 10px;
+}
+
+h1 {
+    text-align: center;
+}
+
+h3 {
+    background-color: dimgrey;
+    opacity: 0.8;
+    padding: 15px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 10%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: grey;
+    color: black;
+    border-radius: 50%;
+}
+
+
+
+
