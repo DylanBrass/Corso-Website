@@ -48,20 +48,16 @@ jobs:
         env:
           CI: true
 
-      - name: Print Current directory
-        run: |
-          pwd
-          ls
       - name: Show Chrome versions
         run: |
           echo "Chromedriver version: $(chromedriver --version)"
           echo "Chrome version: $(google-chrome --version)"
-            - name: Set up JDK 17
-              uses: actions/setup-java@v2
-              with:
-                java-version: '17'
-                distribution: 'adopt'
-                cache: 'gradle'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+            java-version: '17'
+            distribution: 'adopt'
+            cache: 'gradle'
 
       - name: Print Current directory and list files
         run: |
