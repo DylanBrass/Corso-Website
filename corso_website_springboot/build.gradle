@@ -79,7 +79,7 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
-    exclude '/src/test/java/com/corso/website/springboot/selenium_tests/**'
+    exclude '**/ViewCarouselTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
