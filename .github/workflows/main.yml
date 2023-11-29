@@ -23,12 +23,14 @@ jobs:
           fetch-depth: 0
 
       - name: 'setup-chromedriver'
-        with:
-          chromedriver-version: '88.0.4324.96' # Optional: do not specify to match Chrome's version
-      - run: |
-          export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+        steps:
+          - uses: browser-actions/setup-chrome@v1
+            with:
+              chrome-version: beta
+            id: setup-chrome
+          - run: |
+              echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
+              ${{ steps.setup-chrome.outputs.chrome-path }} --version
 
       - name: npm install, build, and test
         working-directory: corso_website_fe
