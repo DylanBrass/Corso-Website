@@ -21,7 +21,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-
+      - name: Set up Xvfb
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -ac -screen 0 1280x1024x16 &
+          export DISPLAY=:99
       - name: Install Chrome
         run: |
           sudo apt-get update
@@ -48,13 +52,16 @@ jobs:
         run: |
           pwd
           ls
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-          cache: 'gradle'
+      - name: Show Chrome versions
+        run: |
+          echo "Chromedriver version: $(chromedriver --version)"
+          echo "Chrome version: $(google-chrome --version)"
+            - name: Set up JDK 17
+              uses: actions/setup-java@v2
+              with:
+                java-version: '17'
+                distribution: 'adopt'
+                cache: 'gradle'
 
       - name: Print Current directory and list files
         run: |
