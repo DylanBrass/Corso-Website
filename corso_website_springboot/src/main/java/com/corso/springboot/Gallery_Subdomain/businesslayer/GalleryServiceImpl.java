@@ -1,9 +1,9 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.businesslayer;
+package com.corso.springboot.Gallery_Subdomain.businesslayer;
 
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer.GalleryRepository;
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datamapperlayer.GalleryRequestMapper;
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datamapperlayer.GalleryResponseMapper;
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.presentationlayer.GalleryResponse;
+import com.corso.springboot.Gallery_Subdomain.datalayer.GalleryRepository;
+import com.corso.springboot.Gallery_Subdomain.datamapperlayer.GalleryRequestMapper;
+import com.corso.springboot.Gallery_Subdomain.datamapperlayer.GalleryResponseMapper;
+import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

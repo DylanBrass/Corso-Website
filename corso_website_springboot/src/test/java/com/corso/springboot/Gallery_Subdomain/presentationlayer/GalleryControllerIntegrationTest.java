@@ -1,6 +1,6 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.presentationlayer;
+package com.corso.springboot.Gallery_Subdomain.presentationlayer;
 
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer.GalleryRepository;
+import com.corso.springboot.Gallery_Subdomain.datalayer.GalleryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

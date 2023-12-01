@@ -1,7 +1,7 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.datamapperlayer;
+package com.corso.springboot.Gallery_Subdomain.datamapperlayer;
 
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer.Gallery;
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.presentationlayer.GalleryResponse;
+import com.corso.springboot.Gallery_Subdomain.datalayer.Gallery;
+import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import java.util.List;

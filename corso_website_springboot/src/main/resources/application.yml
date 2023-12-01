@@ -50,6 +50,9 @@ spring:
   config:
     activate:
       on-profile: docker
+  web:
+    resources:
+      add-mappings: false
   datasource:
     url: jdbc:mysql:///corso-dev-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
     username: corso-dev-website-user
@@ -64,5 +67,17 @@ spring:
         platform: mysql
         mode: always
 
-server.port: 8080
+server:
+  error:
+    whitelabel:
+      enabled: false
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.corso: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 spring.datasource.hikari.initializationFailTimeout: 60000

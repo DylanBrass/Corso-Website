@@ -3,6 +3,7 @@ import { Navbar, Container, Nav} from 'react-bootstrap';
 import logoImage from "../images/logo.png";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NavigationBar.css';
+import LoginLogout from "./Auth0/loginLogout";
 
 function NavigationBar() {
     return (
@@ -30,6 +31,9 @@ function NavigationBar() {
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link href="#">FRANÇAIS</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <LoginLogout />
                         </Nav.Item>
                     </Nav>
                 </Navbar.Collapse>

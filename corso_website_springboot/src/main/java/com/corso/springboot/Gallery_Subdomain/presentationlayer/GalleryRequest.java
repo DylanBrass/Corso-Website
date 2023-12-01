@@ -1,6 +1,5 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.presentationlayer;
+package com.corso.springboot.Gallery_Subdomain.presentationlayer;
 
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer.GalleryIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer;
+package com.corso.springboot.Gallery_Subdomain.datalayer;
 
 import jakarta.persistence.Embeddable;
 

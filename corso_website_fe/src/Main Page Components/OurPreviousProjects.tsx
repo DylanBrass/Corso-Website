@@ -4,6 +4,7 @@ import { CCarousel, CCarouselItem, CCarouselCaption, CImage } from "@coreui/reac
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import axios from "axios";
+import {useAuth0} from "@auth0/auth0-react";
 
 interface ImageData {
     galleryId: string;
@@ -16,18 +17,50 @@ interface ImageData {
 
 function OurPreviousProjects() {
     const [images, setImages] = useState<ImageData[]>([]);
+    const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+    const [userMetadata, setUserMetadata] = useState(null);
+    let accessToken = "";
+    const getUserMetadata = async () => {
+        const domain = "dev-7k6npylc7qks07rv.us.auth0.com";
+
+        try {
+            accessToken = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: `https://${domain}/api/v2/`,
+                    scope: "read:current_user",
+                },
+            });
+
+            // @ts-ignore
+            const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+
+            const metadataResponse = await fetch(userDetailsByIdUrl, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            const { user_metadata } = await metadataResponse.json();
+
+            setUserMetadata(user_metadata);
+        } catch (e:any) {
+            console.log(e.message);
+        }
+    };
+
 
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/corso/galleries/carousel');
+                await getUserMetadata();
+                const response = await axios.get('http://localhost:8080/api/v1/corso/galleries/carousel');
                 console.log('Response:', response.data)
                 setImages(response.data);
             } catch (error) {
                 console.error('Error fetching images:', error);
             }
         };
-        fetchImages();
+        fetchImages().then(r => console.log('Images fetched'));
     }, []);
 
     return (
