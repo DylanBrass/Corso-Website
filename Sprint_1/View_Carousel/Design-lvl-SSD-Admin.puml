@@ -2,23 +2,34 @@
 
 actor Admin 
 
+participant ReactApplication as "<<View>> ReactApplication"
 activate ReactApplication
 
 Admin -> ReactApplication : GET /
 
-participant Dashboard
+participant Dashboard as "<<View>> Dashboard"
 
-participant GalleryAdminPage
+participant GalleryAdminPage as "<<View>> GalleryAdminPage"
 
-participant EditGalleryPage
+participant EditGalleryPage as "<<View>> EditGalleryPage"
+
+participant GalleryController as "<<Controller>> GalleryController"
+
+participant GalleryService as "<<Service>> GalleryService"
+
+participant GalleryRepository as "<<Repository>> GalleryRepository"
+
+participant Database as "<<Database>> Database"
+
+participant GalleryRequestMapper as "<<Mapper>> GalleryRequestMapper"
+
+participant GalleryResponseMapper as "<<Mapper>> GalleryResponseMapper"
 
 Admin -> ReactApplication : GET /dashboard
 
 ReactApplication -> Dashboard : render()
 activate Dashboard
 Admin -> Dashboard : ManageGalleries()
-
-
 
 Dashboard -> ReactApplication : GET /ManageGalleries
 
@@ -51,12 +62,12 @@ GalleryRepository --> GalleryService : List<Gallery>
 deactivate GalleryRepository
 
 
-GalleryService -> GalleryResonseMapper : ToGalleryResponses(List<Gallery>)
-activate GalleryResonseMapper
+GalleryService -> GalleryResponseMapper : ToGalleryResponses(List<Gallery>)
+activate GalleryResponseMapper
 
-GalleryResonseMapper --> GalleryService : List<GalleryResponse>
+GalleryResponseMapper --> GalleryService : List<GalleryResponse>
 
-deactivate GalleryResonseMapper
+deactivate GalleryResponseMapper
 
 GalleryService --> GalleryController : List<GalleryResponse>
 
@@ -107,12 +118,12 @@ Admin -> GalleryAdminPage : ClickEditGalleryButton(String {id})
     deactivate GalleryRepository
 
 
-    GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery gallery)
-    activate GalleryResonseMapper
+    GalleryService -> GalleryResponseMapper : ToGalleryResponse(Gallery gallery)
+    activate GalleryResponseMapper
 
-    GalleryResonseMapper --> GalleryService : GalleryResponse
+    GalleryResponseMapper --> GalleryService : GalleryResponse
 
-    deactivate GalleryResonseMapper
+    deactivate GalleryResponseMapper
 
     GalleryService --> GalleryController : GalleryResponse
 
@@ -166,12 +177,12 @@ Admin -> GalleryAdminPage : ClickEditGalleryButton(String {id})
     
 
 
-    GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery)
-    activate GalleryResonseMapper
+    GalleryService -> GalleryResponseMapper : ToGalleryResponse(Gallery)
+    activate GalleryResponseMapper
 
-    GalleryResonseMapper --> GalleryService : GalleryResponse
+    GalleryResponseMapper --> GalleryService : GalleryResponse
 
-    deactivate GalleryResonseMapper
+    deactivate GalleryResponseMapper
 
     GalleryService --> GalleryController : GalleryResponse
 
@@ -210,13 +221,13 @@ Admin -> GalleryAdminPage : ClickEditGalleryButton(String {id})
     deactivate GalleryRepository
 
 
-    GalleryService -> GalleryResonseMapper : ToGalleryResponse(Gallery gallery)
+    GalleryService -> GalleryResponseMapper : ToGalleryResponse(Gallery gallery)
 
-    activate GalleryResonseMapper
+    activate GalleryResponseMapper
 
-    GalleryResonseMapper --> GalleryService : GalleryResponse
+    GalleryResponseMapper --> GalleryService : GalleryResponse
 
-    deactivate GalleryResonseMapper
+    deactivate GalleryResponseMapper
 
     GalleryService --> GalleryController : GalleryResponse
 
@@ -230,16 +241,5 @@ Admin -> GalleryAdminPage : ClickEditGalleryButton(String {id})
     EditGalleryPage --> Admin : ShowDeletedAlert()
 
     deactivate EditGalleryPage
-
-
-
-
-
-
-
-
-
-
-
 
 @endpuml

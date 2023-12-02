@@ -1,0 +1,247 @@
+@startuml
+
+actor Admin
+
+participant ReactApplication as "<<View>>\nReactApplication"
+activate ReactApplication
+
+Admin -> ReactApplication : GET /
+
+participant Dashboard as "<<View>>\nDashboard"
+
+participant ServiceAdminPage as "<<View>>\nServiceAdminPage"
+
+participant EditServicePage as "<<View>>\nEditServicePage"
+
+participant ServiceReportsPage as "<<View>>\nServiceReportsPage"
+
+participant ServiceController as "<<Controller>>\nServiceController"
+
+participant ServiceService as "<<Service>>\nServiceService"
+
+participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant ServiceResponseMapper as "<<Mapper>>\nServiceResponseMapper"
+
+participant ServiceRequestMapper as "<<Mapper>>\nServiceRequestMapper"
+
+Admin -> ReactApplication : GET /dashboard
+
+ReactApplication -> Dashboard : render()
+activate Dashboard
+Admin -> Dashboard : ManageServices()
+
+
+
+Dashboard -> ReactApplication : GET /ManageServices
+
+deactivate Dashboard
+
+ReactApplication -> ServiceAdminPage : render()
+activate ServiceAdminPage
+
+ServiceAdminPage -> ServiceController : GET /services
+activate ServiceController
+
+
+ServiceController -> ServiceService : getServices()
+activate ServiceService
+
+
+ServiceService -> ServiceRepository : findAll()
+activate ServiceRepository
+
+
+ServiceRepository -> Database : SELECT * FROM Services
+activate Database
+
+Database --> ServiceRepository : Services
+
+deactivate Database
+
+ServiceRepository --> ServiceService : List<Service>
+
+deactivate ServiceRepository
+
+
+ServiceService -> ServiceResponseMapper : ToServiceResponses(List<Service>)
+activate ServiceResponseMapper
+
+ServiceResponseMapper --> ServiceService : List<ServiceResponse>
+
+deactivate ServiceResponseMapper
+
+ServiceService --> ServiceController : List<ServiceResponse>
+
+deactivate ServiceService
+
+ServiceController --> ServiceAdminPage : List<ServiceResponse>
+
+deactivate ServiceController
+
+
+ServiceAdminPage --> Admin : ShowListOfServices()
+
+Admin -> ServiceAdminPage : ClickEditServiceButton(String {id})
+
+
+
+    ServiceAdminPage -> ReactApplication : GET /Dashboard/edit-service
+
+    ServiceAdminPage -> EditServicePage : render()
+
+    deactivate ServiceAdminPage
+
+    activate EditServicePage
+
+
+
+    EditServicePage -> ServiceController : GET /services/{id}
+    activate ServiceController
+
+
+    ServiceController -> ServiceService : getService(String {id})
+    activate ServiceService
+
+
+    ServiceService -> ServiceRepository : findServiceByServiceId(String ServiceId)
+    activate ServiceRepository
+
+
+    ServiceRepository -> Database : SELECT * FROM Service WHERE ServiceId = {id}
+    activate Database
+
+    Database --> ServiceRepository : Service
+
+    deactivate Database
+
+    ServiceRepository --> ServiceService : Service
+
+    deactivate ServiceRepository
+
+
+    ServiceService -> ServiceResponseMapper : ToServiceResponse(Service Service)
+    activate ServiceResponseMapper
+
+    ServiceResponseMapper --> ServiceService : ServiceResponse
+
+    deactivate ServiceResponseMapper
+
+    ServiceService --> ServiceController : ServiceResponse
+
+    deactivate ServiceService
+
+    ServiceController --> EditServicePage : ServiceResponse
+
+    deactivate ServiceController
+
+
+
+    EditServicePage --> Admin : EditServiceForm()
+
+    Admin -> EditServicePage : SubmitEditServiceForm()
+
+    EditServicePage -> ServiceController : PUT /services/{id}
+
+    activate ServiceController
+
+
+
+    ServiceController -> ServiceService : updateService(String {id}, ServiceRequest ServiceRequest)
+    activate ServiceService
+
+
+    ServiceService -> ServiceService : getService(String ServiceId)
+
+    ServiceService -> ServiceRepository : findServiceByServiceId(String ServiceId)
+    activate ServiceRepository
+
+
+    ServiceRepository -> Database : SELECT * FROM services WHERE serviceId = {id}
+    activate Database
+
+    Database --> ServiceRepository : Service
+
+    deactivate Database
+
+    ServiceRepository --> ServiceService : Service
+
+    deactivate ServiceRepository
+
+
+    ServiceService -> ServiceRequestMapper : ToService(ServiceRequest ServiceRequest)
+    activate ServiceRequestMapper
+
+
+    ServiceRequestMapper --> ServiceService : Service
+
+    deactivate ServiceRequestMapper
+
+
+
+    ServiceService -> ServiceResponseMapper : ToServiceResponse(Service)
+    activate ServiceResponseMapper
+
+    ServiceResponseMapper --> ServiceService : ServiceResponse
+
+    deactivate ServiceResponseMapper
+
+    ServiceService --> ServiceController : ServiceResponse
+
+    deactivate ServiceService
+
+    ServiceController --> EditServicePage : ServiceResponse
+
+    deactivate ServiceController
+
+    EditServicePage --> Admin : ShowSavedAlert()
+
+    Admin -> EditServicePage : ClickDeleteServiceButton(String {id})
+
+    EditServicePage -> ServiceController : DELETE /services/{id}
+
+    activate ServiceController
+
+    ServiceController -> ServiceService : deleteService(String {id})
+
+    activate ServiceService
+
+    ServiceService -> ServiceRepository : deleteServiceByServiceId(String ServiceId)
+
+    activate ServiceRepository
+
+    ServiceRepository -> Database : DELETE FROM services WHERE ServiceId = {id}
+
+    activate Database
+
+    Database --> ServiceRepository : Service
+
+    deactivate Database
+
+    ServiceRepository --> ServiceService : Service
+
+    deactivate ServiceRepository
+
+
+    ServiceService -> ServiceResponseMapper : ToServiceResponse(Service Service)
+
+    activate ServiceResponseMapper
+
+    ServiceResponseMapper --> ServiceService : ServiceResponse
+
+    deactivate ServiceResponseMapper
+
+    ServiceService --> ServiceController : ServiceResponse
+
+    deactivate ServiceService
+
+
+    ServiceController --> EditServicePage : ServiceResponse
+
+    deactivate ServiceController
+
+    EditServicePage --> Admin : ShowDeletedAlert()
+
+@endpuml

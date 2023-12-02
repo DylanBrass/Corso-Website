@@ -1,0 +1,285 @@
+@startuml
+
+actor Admin
+
+participant ReactApplication as "<<View>>\nReactApplication"
+
+activate ReactApplication
+
+Admin -> ReactApplication : GET /
+
+participant Dashboard as "<<View>>\nDashboard"
+
+participant AllOrdersPage as "<<View>>\nAllOrdersPage"
+
+participant OrderDetailsPage as "<<View>>\nOrderDetailsPage"
+
+participant OrderController as "<<Controller>>\nOrderController"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResonseMapper as "<<Mapper>>\nOrderResonseMapper"
+
+participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+
+Admin -> ReactApplication : GET /dashboard
+
+ReactApplication -> Dashboard : render()
+activate Dashboard
+Admin -> Dashboard : ManageOrders()
+
+
+
+Dashboard -> ReactApplication : GET /orders
+
+deactivate Dashboard
+
+ReactApplication -> AllOrdersPage : render()
+activate AllOrdersPage
+
+AllOrdersPage -> OrderController : GET /orders
+activate OrderController
+
+
+OrderController -> OrderService : getOrders()
+activate OrderService
+
+
+OrderService -> OrderRepository : findAll()
+activate OrderRepository
+
+
+OrderRepository -> Database : SELECT * FROM Orders
+activate Database
+
+Database --> OrderRepository : Orders
+
+deactivate Database
+
+OrderRepository --> OrderService : List<Order>
+
+deactivate OrderRepository
+
+
+OrderService -> OrderResonseMapper : ToOrderResponses(List<Order>)
+activate OrderResonseMapper
+
+OrderResonseMapper --> OrderService : List<OrderResponse>
+
+deactivate OrderResonseMapper
+
+OrderService --> OrderController : List<OrderResponse>
+
+deactivate OrderService
+
+OrderController --> AllOrdersPage : List<OrderResponse>
+
+deactivate OrderController
+
+AllOrdersPage --> Admin : ShowListOfOrders()
+
+Admin -> AllOrdersPage : ViewCustomerOrderHistory()
+AllOrdersPage -> OrderController : GET /orders/customers?name=name
+activate OrderController
+
+OrderController -> OrderService : getOrdersByCustomerName(String name)
+activate OrderService
+
+OrderService -> OrderRepository : findAllByCustomerName(String name)
+activate OrderRepository
+
+OrderRepository -> Database : SELECT * FROM Orders WHERE customer_name = {name}
+activate Database
+
+Database --> OrderRepository : Orders
+
+deactivate Database
+
+OrderRepository --> OrderService : List<Order>
+
+deactivate OrderRepository
+
+OrderService -> OrderResonseMapper : ToOrderResponses(List<Order>)
+activate OrderResonseMapper
+
+OrderResonseMapper --> OrderService : List<OrderResponse>
+
+deactivate OrderResonseMapper
+
+OrderService --> OrderController : List<OrderResponse>
+
+deactivate OrderService
+
+OrderController --> AllOrdersPage : List<OrderResponse>
+
+deactivate OrderController
+
+AllOrdersPage --> Admin : ShowListOfCustomerOrders()
+
+
+Admin -> AllOrdersPage : ClickEditOrderButton(String {id})
+
+
+
+    AllOrdersPage -> ReactApplication : GET /Dashboard/edit-Order
+
+    AllOrdersPage -> OrderDetailsPage : render()
+
+    deactivate AllOrdersPage
+
+    activate OrderDetailsPage
+
+
+
+    OrderDetailsPage -> OrderController : GET /orders/{id}
+    activate OrderController
+
+
+    OrderController -> OrderService : getOrder(String {id})
+    activate OrderService
+
+
+    OrderService -> OrderRepository : findOrderByOrderId(String OrderId)
+    activate OrderRepository
+
+
+    OrderRepository -> Database : SELECT * FROM Orders WHERE OrderId = {id}
+    activate Database
+
+    Database --> OrderRepository : Order
+
+    deactivate Database
+
+    OrderRepository --> OrderService : Order
+
+    deactivate OrderRepository
+
+
+    OrderService -> OrderResonseMapper : ToOrderResponse(Order Order)
+    activate OrderResonseMapper
+
+    OrderResonseMapper --> OrderService : OrderResponse
+
+    deactivate OrderResonseMapper
+
+    OrderService --> OrderController : OrderResponse
+
+    deactivate OrderService
+
+    OrderController --> OrderDetailsPage : OrderResponse
+
+    deactivate OrderController
+
+
+
+    OrderDetailsPage --> Admin : EditOrderForm()
+
+    Admin -> OrderDetailsPage : SubmitEditOrderForm()
+
+    OrderDetailsPage -> OrderController : PUT /orders/{id}
+
+    activate OrderController
+
+
+
+    OrderController -> OrderService : updateOrder(String {id}, OrderRequest OrderRequest)
+    activate OrderService
+
+
+    OrderService -> OrderService : getOrder(String OrderId)
+
+    OrderService -> OrderRepository : findOrderByOrderId(String OrderId)
+    activate OrderRepository
+
+
+    OrderRepository -> Database : SELECT * FROM Orders WHERE OrderId = {id}
+    activate Database
+
+    Database --> OrderRepository : Order
+
+    deactivate Database
+
+    OrderRepository --> OrderService : Order
+
+    deactivate OrderRepository
+
+
+    OrderService -> OrderRequestMapper : ToOrder(OrderRequest OrderRequest)
+    activate OrderRequestMapper
+
+
+    OrderRequestMapper --> OrderService : Order
+
+    deactivate OrderRequestMapper
+
+
+
+    OrderService -> OrderResonseMapper : ToOrderResponse(Order)
+    activate OrderResonseMapper
+
+    OrderResonseMapper --> OrderService : OrderResponse
+
+    deactivate OrderResonseMapper
+
+    OrderService --> OrderController : OrderResponse
+
+    deactivate OrderService
+
+    OrderController --> OrderDetailsPage : OrderResponse
+
+    deactivate OrderController
+
+    OrderDetailsPage --> Admin : ShowSavedAlert()
+
+    Admin -> OrderDetailsPage : ClickCancelOrderButton(String {id})
+
+    OrderDetailsPage -> OrderController : DELETE /orders/{id}
+
+    activate OrderController
+
+    OrderController -> OrderService : deleteOrder(String {id})
+
+    activate OrderService
+
+    OrderService -> OrderRepository : deleteOrderByOrderId(String OrderId)
+
+    activate OrderRepository
+
+    OrderRepository -> Database : DELETE FROM Orders WHERE OrderId = {id}
+
+    activate Database
+
+    Database --> OrderRepository : Order
+
+    deactivate Database
+
+    OrderRepository --> OrderService : Order
+
+    deactivate OrderRepository
+
+
+    OrderService -> OrderResonseMapper : ToOrderResponse(Order Order)
+
+    activate OrderResonseMapper
+
+    OrderResonseMapper --> OrderService : OrderResponse
+
+    deactivate OrderResonseMapper
+
+    OrderService --> OrderController : OrderResponse
+
+    deactivate OrderService
+
+
+    OrderController --> OrderDetailsPage : OrderResponse
+
+    deactivate OrderController
+
+    OrderDetailsPage --> Admin : ShowDeletedAlert()
+
+    deactivate OrderDetailsPage
+@endpuml

@@ -1,0 +1,122 @@
+@startuml
+
+title View Carousel Use Case Sequence Diagram
+
+actor User
+
+participant ReactApplication as "<<View>>\nReactApplication"
+participant HomePage as "<<View>>\nHomePage"
+participant ServiceDetailsPage as "<<View>>\nServiceDetailsPage"
+
+participant ServiceController as "<<Controller>>\nServiceController"
+
+participant ServiceService as "<<Service>>\nServiceService"
+
+participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant ServiceResponseMapper as "<<Mapper>>\nServiceResponseMapper"
+
+User -> ReactApplication : GET /
+activate ReactApplication
+
+ReactApplication -> HomePage : render()
+activate HomePage
+
+
+
+HomePage -> ServiceController : GET /services
+activate ServiceController
+
+
+
+
+
+ServiceController -> ServiceService : getServices()
+activate ServiceService
+
+
+ServiceService -> ServiceRepository : findAll()
+activate ServiceRepository
+
+
+ServiceRepository -> Database : SELECT * FROM services
+activate Database
+
+Database --> ServiceService : Services
+
+deactivate ServiceRepository
+
+deactivate Database
+
+
+
+ServiceService -> ServiceResponseMapper : toServiceResponse(Services)
+activate ServiceResponseMapper
+
+ServiceResponseMapper --> ServiceService : ServiceResponse
+
+deactivate ServiceResponseMapper
+
+ServiceService --> ServiceController : ServiceResponse
+
+deactivate ServiceService
+
+ServiceController --> HomePage : ServiceResponse
+
+deactivate ServiceController
+
+HomePage --> User : showAllServices()
+
+deactivate HomePage
+
+User -> HomePage : viewServiceDetails()
+activate HomePage
+HomePage -> User : GET /services/{service_id}
+
+HomePage -> ServiceDetailsPage : render()
+activate ServiceDetailsPage
+
+ServiceDetailsPage -> ServiceController : GET /services/{service_id}
+activate ServiceController
+
+ServiceController -> ServiceService : getServiceByServiceId(String service_id)
+activate ServiceService
+
+ServiceService -> ServiceRepository : findByServiceId(String service_id)
+activate ServiceRepository
+
+ServiceRepository -> Database : SELECT * FROM services WHERE service_id = {service_id}
+activate Database
+
+Database --> ServiceRepository : Service
+
+deactivate Database
+
+ServiceRepository --> ServiceService : Service
+
+ServiceService -> ServiceResponseMapper : toServiceResponse(Service)
+activate ServiceResponseMapper
+
+ServiceResponseMapper --> ServiceService : ServiceResponse
+
+deactivate ServiceResponseMapper
+
+ServiceService --> ServiceController : ServiceResponse
+
+deactivate ServiceService
+
+ServiceController --> ServiceDetailsPage : ServiceResponse
+
+deactivate ServiceController
+
+ServiceDetailsPage --> HomePage : ServiceResponse
+
+deactivate ServiceDetailsPage
+
+HomePage --> User : showServiceDetails()
+
+deactivate HomePage
+
+@endpuml

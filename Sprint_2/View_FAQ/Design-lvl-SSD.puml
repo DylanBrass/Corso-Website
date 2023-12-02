@@ -1,0 +1,71 @@
+@startuml
+
+title View FAQ Use Case Sequence Diagram
+
+actor User
+
+participant ReactApplication as "<<View>>\nReactApplication"
+participant HomePage as "<<View>>\nHomePage"
+
+participant FaqController as "<<Controller>>\nFaqController"
+
+participant FaqService as "<<Service>>\nFaqService"
+
+participant FaqRepository as "<<Repository>>\nFaqRepository"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant FaqResponseMapper as "<<Mapper>>\nFaqResponseMapper"
+
+User -> ReactApplication : GET /
+activate ReactApplication
+
+ReactApplication -> HomePage : render()
+activate HomePage
+
+
+
+HomePage -> FaqController : GET /faqs
+activate FaqController
+
+
+FaqController -> FaqService : getFaqs()
+activate FaqService
+
+
+FaqService -> FaqRepository : findAll()
+activate FaqRepository
+
+
+FaqRepository -> Database : SELECT * FROM faqs
+activate Database
+
+Database --> FaqService : Faqs
+
+deactivate FaqRepository
+
+deactivate Database
+
+
+
+FaqService -> FaqResponseMapper : toFaqResponse(Faqs)
+activate FaqResponseMapper
+
+FaqResponseMapper --> FaqService : FaqResponse
+
+deactivate FaqResponseMapper
+
+FaqService --> FaqController : FaqResponse
+
+deactivate FaqService
+
+FaqController --> HomePage : FaqResponse
+
+deactivate FaqController
+
+HomePage --> User : Faqs
+
+deactivate HomePage
+
+
+@endpuml

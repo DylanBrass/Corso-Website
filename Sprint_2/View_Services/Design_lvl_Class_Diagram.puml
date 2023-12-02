@@ -1,0 +1,119 @@
+@startuml
+
+class "<<controller>>\nServicesController" as controller {
+    - serviceService : ServiceService
+    ---
+    + getServices() : ResponseEntity<List<ServiceResponse>>
+    + getServiceById() : ResponseEntity<ServiceResponse>
+    + addService() : ResponseEntity<ServiceResponse>
+    + deleteService() : ResponseEntity<Void>
+    + editService() : ResponseEntity<ServiceResponse>
+}
+
+interface "ServiceService" as service{
+    ---
+    + getServices() : List<ServiceResponse>
+    + getServicesById() : ServiceResponse
+    + addService() : ServiceResponse
+    + deleteService() : void
+    + editService() : ServiceResponse
+}
+
+class "<<service>>\nServiceServiceImpl" as serviceImpl{
+    - serviceRepository : ServiceRepository
+    - serviceRequestMapper : ServiceRequestMapper
+    - serviceResponseMapper : ServiceResponseMapper
+    ---
+    + getServices() : List<ServiceResponse>
+    + getServiceById() : ServiceResponse
+    + addService() : ServiceResponse
+    + deleteService() : void
+    + editService() : ServiceResponse
+}
+
+class serviceImpl extends service
+
+interface "<<repository>>\nServiceRepository" as repository{
+    ---
+    + getServiceById() : Service
+}
+
+class ServiceIdentifier {
+    - serviceId : String
+    ---
+    + setServiceId(serviceId : String) : void
+    + getServiceId() : String
+
+}
+
+class "Service" as service{
+    - id : int
+    - serviceId : ServiceIdentifier
+    - serviceName: String
+    - serviceDescription : String
+    - serviceIcon : String
+    - serviceImage : String
+    ---
+
+}
+
+class "ServiceResponse" as serviceResponse{
+     - serviceId : ServiceIdentifier
+     - serviceName: String
+     - serviceDescription : String
+     - serviceIcon : String
+     - serviceImage : String
+    ---
+
+}
+
+class "ServiceRequest" as serviceRequest{
+    - serviceName: String
+    - serviceDescription : String
+    - serviceIcon : String
+    - serviceImage : String
+    ---
+
+}
+
+
+requestMapper --> serviceRequest
+
+responseMapper --> serviceResponse
+
+
+
+serviceImpl --> service
+
+repository --> service
+
+serviceImpl --> responseMapper
+serviceImpl --> requestMapper
+
+
+interface "<<Mapper>>\nServiceRequestMapper" as requestMapper{
+    ---
+    + toService(serviceRequest : ServiceRequest) : Service
+    + toServices(serviceRequests : List<ServiceRequest>) : List<Service>
+}
+
+interface "<<Mapper>>\nServiceResponseMapper" as responseMapper{
+    ---
+    + toServiceResponse(service : Service) : ServiceResponse
+    + toServiceResponses(services : List<Services>) : List<ServiceResponse>
+}
+
+
+controller --> serviceResponse
+controller --> serviceRequest
+
+
+interface repository extends JpaRepository
+
+controller --> serviceImpl
+
+serviceImpl --> repository
+
+service --> ServiceIdentifier
+
+@endpuml

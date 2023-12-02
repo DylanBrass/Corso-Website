@@ -1,0 +1,256 @@
+@startuml
+
+actor Admin
+
+participant ReactApplication as "<<View>> ReactApplication"
+activate ReactApplication
+
+Admin -> ReactApplication : GET /
+
+participant Dashboard as "<<View>> Dashboard"
+
+participant FaqAdminPage as "<<View>> FaqAdminPage"
+
+participant EditFaqPage as "<<View>> EditFaqPage"
+
+participant FaqController as "<<Controller>> FaqController"
+
+participant FaqService as "<<Service>> FaqService"
+
+participant FaqRepository as "<<Repository>> FaqRepository"
+
+participant Database as "<<Database>> Database"
+
+participant FaqRequestMapper as "<<Mapper>> FaqRequestMapper"
+
+participant FaqResonseMapper as "<<Mapper>> FaqResonseMapper"
+
+Admin -> ReactApplication : GET /dashboard
+
+ReactApplication -> Dashboard : render()
+activate Dashboard
+Admin -> Dashboard : ManageFaqs()
+
+Dashboard -> ReactApplication : GET /ManageFaqs
+
+deactivate Dashboard
+
+ReactApplication -> FaqAdminPage : render()
+activate FaqAdminPage
+
+FaqAdminPage -> FaqController : GET /faqs
+activate FaqController
+
+
+FaqController -> FaqService : getFaqs()
+activate FaqService
+
+
+FaqService -> FaqRepository : findAll()
+activate FaqRepository
+
+
+FaqRepository -> Database : SELECT * FROM faqs
+activate Database
+
+Database --> FaqRepository : Faq
+
+deactivate Database
+
+FaqRepository --> FaqService : List<Faq>
+
+deactivate FaqRepository
+
+
+FaqService -> FaqResonseMapper : ToFaqResponses(List<Faq>)
+activate FaqResonseMapper
+
+FaqResonseMapper --> FaqService : List<FaqResponse>
+
+deactivate FaqResonseMapper
+
+FaqService --> FaqController : List<FaqResponse>
+
+deactivate FaqService
+
+FaqController --> FaqAdminPage : List<FaqResponse>
+
+deactivate FaqController
+
+
+FaqAdminPage --> Admin : ShowListOfFaqs()
+
+Admin -> FaqAdminPage : ClickEditFaqButton(String {id})
+
+
+
+    FaqAdminPage -> ReactApplication : GET /Dashboard/edit-faq
+
+    FaqAdminPage -> EditFaqPage : render()
+
+    deactivate FaqAdminPage
+
+    activate EditFaqPage
+
+
+
+    EditFaqPage -> FaqController : GET /faqs/{id}
+    activate FaqController
+
+
+    FaqController -> FaqService : getFaq(String {id})
+    activate FaqService
+
+
+    FaqService -> FaqRepository : findFaqByFaqId(String FaqId)
+    activate FaqRepository
+
+
+    FaqRepository -> Database : SELECT * FROM faqs WHERE FaqId = {id}
+    activate Database
+
+    Database --> FaqRepository : Faq
+
+    deactivate Database
+
+    FaqRepository --> FaqService : Faq
+
+    deactivate FaqRepository
+
+
+    FaqService -> FaqResonseMapper : ToFaqResponse(Faq Faq)
+    activate FaqResonseMapper
+
+    FaqResonseMapper --> FaqService : FaqResponse
+
+    deactivate FaqResonseMapper
+
+    FaqService --> FaqController : FaqResponse
+
+    deactivate FaqService
+
+    FaqController --> EditFaqPage : FaqResponse
+
+    deactivate FaqController
+
+
+
+    EditFaqPage --> Admin : EditFaqForm()
+
+    Admin -> EditFaqPage : SubmitEditFaqForm()
+
+    EditFaqPage -> FaqController : PUT /faqs/{id}
+
+    activate FaqController
+
+
+
+    FaqController -> FaqService : updateFaq(String {id}, FaqRequest FaqRequest)
+    activate FaqService
+
+
+    FaqService -> FaqService : getFaq(String FaqId)
+
+    FaqService -> FaqRepository : findFaqByFaqId(String FaqId)
+    activate FaqRepository
+
+
+    FaqRepository -> Database : SELECT * FROM faqs WHERE FaqId = {id}
+    activate Database
+
+    Database --> FaqRepository : Faq
+
+    deactivate Database
+
+    FaqRepository --> FaqService : Faq
+
+    deactivate FaqRepository
+
+
+    FaqService -> FaqRequestMapper : ToFaq(FaqRequest FaqRequest)
+    activate FaqRequestMapper
+
+
+    FaqRequestMapper --> FaqService : Faq
+
+    deactivate FaqRequestMapper
+
+
+
+    FaqService -> FaqResonseMapper : ToFaqResponse(Faq)
+    activate FaqResonseMapper
+
+    FaqResonseMapper --> FaqService : FaqResponse
+
+    deactivate FaqResonseMapper
+
+    FaqService --> FaqController : FaqResponse
+
+    deactivate FaqService
+
+    FaqController --> EditFaqPage : FaqResponse
+
+    deactivate FaqController
+
+    EditFaqPage --> Admin : ShowSavedAlert()
+
+    Admin -> EditFaqPage : ClickDeleteFaqButton(String {id})
+
+    EditFaqPage -> FaqController : DELETE /faqs/{id}
+
+    activate FaqController
+
+    FaqController -> FaqService : deleteFaq(String {id})
+
+    activate FaqService
+
+    FaqService -> FaqRepository : deleteFaqByFaqId(String FaqId)
+
+    activate FaqRepository
+
+    FaqRepository -> Database : DELETE FROM faqs WHERE FaqId = {id}
+
+    activate Database
+
+    Database --> FaqRepository : Faq
+
+    deactivate Database
+
+    FaqRepository --> FaqService : Faq
+
+    deactivate FaqRepository
+
+
+    FaqService -> FaqResonseMapper : ToFaqResponse(Faq Faq)
+
+    activate FaqResonseMapper
+
+    FaqResonseMapper --> FaqService : FaqResponse
+
+    deactivate FaqResonseMapper
+
+    FaqService --> FaqController : FaqResponse
+
+    deactivate FaqService
+
+
+    FaqController --> EditFaqPage : FaqResponse
+
+    deactivate FaqController
+
+    EditFaqPage --> Admin : ShowDeletedAlert()
+
+    deactivate EditFaqPage
+
+
+
+
+
+
+
+
+
+
+
+
+@endpuml
