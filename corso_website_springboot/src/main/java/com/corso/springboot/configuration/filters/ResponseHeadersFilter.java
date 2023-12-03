@@ -1,4 +1,4 @@
-package com.corso.springboot.configuration.authentication.Filters;
+package com.corso.springboot.configuration.filters;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,16 +25,8 @@ public class ResponseHeadersFilter implements Filter {
     ) throws IOException, ServletException {
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        httpResponse.setIntHeader("X-XSS-Protection", 0);
-        httpResponse.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-        httpResponse.setHeader("X-Frame-Options", "deny");
-        httpResponse.setHeader("X-Content-Type-Options", "nosniff");
-        httpResponse.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
-        httpResponse.setHeader("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none';");
-        httpResponse.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, max-age=0, must-revalidate");
-        httpResponse.setHeader(HttpHeaders.PRAGMA, "no-cache");
-        httpResponse.setIntHeader(HttpHeaders.EXPIRES, 0);
-
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
         chain.doFilter(request, response);
     }
 

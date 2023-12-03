@@ -73,11 +73,6 @@ server:
       enabled: false
   port: 8080
 
-logging:
-  level:
-    root: INFO
-    com.corso: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 
 spring.datasource.hikari.initializationFailTimeout: 60000

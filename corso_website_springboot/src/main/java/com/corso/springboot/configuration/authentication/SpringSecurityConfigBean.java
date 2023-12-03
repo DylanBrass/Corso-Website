@@ -3,7 +3,6 @@ package com.corso.springboot.configuration.authentication;
 
 import com.corso.springboot.configuration.authentication.models.ErrorMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -43,11 +43,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SpringSecurityConfigBean {
-//    @Value("${okta.oauth2.issuer}")
-//    private String issuer;
+    @Value("${okta.oauth2.issuer}")
+    private String issuer;
 
-//    @Value("${okta.oauth2.client-id}")
-//    private String clientId;
+    @Value("${okta.oauth2.client-id}")
+    private String clientId;
     private final String frontendDomain = "http://localhost:3000";
 
     private final ObjectMapper mapper;
@@ -62,10 +62,23 @@ public class SpringSecurityConfigBean {
                 .exceptionHandling(exceptionHandling -> {
                     exceptionHandling.authenticationEntryPoint(authenticationEntryPoint());
                 })
-                .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
-                .cors(cors -> {
-                    cors.configurationSource(corsConfigurationSource());
+                .oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
+                    httpSecurityOAuth2LoginConfigurer.loginPage("/login/oauth2/code/okta")
+                            .defaultSuccessUrl("http://localhost:8080/api/v1/corso/security/redirect", true)
+                            .permitAll();
                 })
+                .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
+                .logout(logout -> {
+                    logout.logoutUrl("/api/v1/corso/logout")
+                            .addLogoutHandler(logoutHandler())
+                            .logoutSuccessHandler((request, response, authentication) -> {
+                                response.setStatus(HttpStatus.OK.value());
+                            });
+                })
+                .cors(AbstractHttpConfigurer::disable)
+//                .cors(cors -> {
+//                    cors.configurationSource(corsConfigurationSource());
+//                })
                 .csrf(httpSecurityCsrfConfigurer -> {
                     httpSecurityCsrfConfigurer.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/api/v1/corso/logout"));
                 });
@@ -82,29 +95,13 @@ public class SpringSecurityConfigBean {
         config.addAllowedMethod("PUT");
         config.addAllowedMethod("POST");
         config.addAllowedMethod("DELETE");
-//        config.addAllowedHeader("*");
-        config.addAllowedHeader("Authorization");
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);
         return source;
     }
     private AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
-            log.error("Authentication error: {}", authException.getMessage());
-            log.error("Authentication error: {}", authException.getLocalizedMessage());
-            String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String jwtToken = authorizationHeader.substring(7); // Assuming "Bearer " prefix
-                log.info("JWT Token: {}", jwtToken);
-            }
-
-            // Retrieve cookies from the request
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    log.info("Cookie - Name: {}, Value: {}", cookie.getName(), cookie.getValue());
-                }
-            }
-
             final ErrorMessage errorMessage = ErrorMessage.from("Requires authentication");
             final String json = mapper.writeValueAsString(errorMessage);
 
@@ -115,13 +112,13 @@ public class SpringSecurityConfigBean {
         };
     }
 
-//    private LogoutHandler logoutHandler() {
-//        return (request, response, authentication) -> {
-//            try {
-//                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        };
-//    }
+    private LogoutHandler logoutHandler() {
+        return (request, response, authentication) -> {
+            try {
+                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
 }

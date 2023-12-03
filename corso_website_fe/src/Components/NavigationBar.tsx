@@ -3,7 +3,6 @@ import { Navbar, Container, Nav} from 'react-bootstrap';
 import logoImage from "../images/logo.png";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NavigationBar.css';
-import LoginLogout from "./Auth0/loginLogout";
 
 function NavigationBar() {
     return (
@@ -33,7 +32,12 @@ function NavigationBar() {
                             <Nav.Link href="#">FRANÇAIS</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <LoginLogout />
+                            <a href="http://localhost:8080/oauth2/authorization/okta">Login</a>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
+                                <button type={"submit"}>Logout</button>
+                            </form>
                         </Nav.Item>
                     </Nav>
                 </Navbar.Collapse>
