@@ -3,7 +3,7 @@
 class "<<controller>>\nGalleryController" as controller {
     - galleryService : GalleryService
     ---
-    + getGallery() : ResponseEntity<List<GalleryResponse>>
+    + getGalleries() : ResponseEntity<List<GalleryResponse>>
     + getGalleryById() : ResponseEntity<GalleryResponse>
     + addGallery() : ResponseEntity<GalleryResponse>
     + deleteGallery() : ResponseEntity<Void>
@@ -12,7 +12,7 @@ class "<<controller>>\nGalleryController" as controller {
 
 interface "GalleryService" as service{
     ---
-    + getGallery() : List<GalleryResponse>
+    + getGalleries() : List<GalleryResponse>
     + getGalleryById() : GalleryResponse
     + addGallery() : GalleryResponse
     + deleteGallery() : void
@@ -24,7 +24,7 @@ class "<<service>>\nGalleryServiceImpl" as serviceImpl{
     - galleryRequestMapper : GalleryRequestMapper
     - galleryResponseMapper : GalleryResponseMapper
     ---
-    + getGallery() : List<GalleryResponse>
+    + getGalleries() : List<GalleryResponse>
     + getGalleryById() : GalleryResponse
     + addGallery() : GalleryResponse
     + deleteGallery() : void

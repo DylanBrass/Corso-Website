@@ -1,6 +1,6 @@
 @startuml
 
-title View Carousel Use Case Squence Diagram
+title View Carousel Use Case Sequence Diagram
 
 actor User 
 
