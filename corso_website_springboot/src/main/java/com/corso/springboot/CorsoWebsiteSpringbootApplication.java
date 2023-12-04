@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @Slf4j
 @SpringBootApplication
-@ConfigurationPropertiesScan
 public class CorsoWebsiteSpringbootApplication {
 
 

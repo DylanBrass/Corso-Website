@@ -1,6 +1,5 @@
-package com.corso.springboot.configuration.authentication.controller;
+package com.corso.springboot.configuration.security.controller;
 
-import jakarta.servlet.http.Cookie;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/v1/corso/security")
 public class SecurityController {

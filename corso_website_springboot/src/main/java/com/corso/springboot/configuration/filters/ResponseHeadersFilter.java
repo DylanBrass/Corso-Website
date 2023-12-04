@@ -5,8 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Value;
-import org.apache.http.HttpHeaders;
 
 import java.io.IOException;
 import jakarta.servlet.Filter;
@@ -27,6 +25,7 @@ public class ResponseHeadersFilter implements Filter {
 
         httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
         chain.doFilter(request, response);
     }
 

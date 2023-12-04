@@ -4,9 +4,6 @@ import com.corso.springboot.Gallery_Subdomain.businesslayer.GalleryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +14,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @Slf4j
@@ -38,21 +34,18 @@ public class GalleryController {
 
     @PostMapping
     public String CreateGallery(){
-        return "Testing authentication and authorization";
+        return "Testing security and authorization";
     }
 
     @PutMapping
     public String UpdateGallery(){
-        return "Testing authentication";
+        return "Testing security";
     }
 
     @GetMapping
-    public String GetGalleryById(@AuthenticationPrincipal OidcUser user){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Set authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+    public String GetGalleryById(){
 
-        return "Hello, " + user.getFullName() + "!<br/><br/>Authorities: " + authorities;
+        return "Hello World";
     }
 
     @GetMapping("/test")
@@ -61,6 +54,6 @@ public class GalleryController {
         log.info(principal.getClaims().toString());
         log.info(principal.getAuthorities().toString());
 
-        return "Testing authentication and authorization <a href='http://localhost:8080/logout'>Logout</a>";
+        return "Testing security and authorization";
     }
 }

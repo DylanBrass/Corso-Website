@@ -1,39 +1,32 @@
-package com.corso.springboot.configuration.authentication;
+package com.corso.springboot.configuration.security;
 
 
-import com.corso.springboot.configuration.authentication.models.ErrorMessage;
+import com.corso.springboot.configuration.security.models.ErrorMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.http.*;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -69,40 +62,33 @@ public class SpringSecurityConfigBean {
                 })
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> {
-                    logout.logoutUrl("/api/v1/corso/logout")
+
+                    logout
+                            .logoutUrl("/api/v1/corso/logout")
                             .addLogoutHandler(logoutHandler())
                             .logoutSuccessHandler((request, response, authentication) -> {
+
+                                Arrays.stream(request.getCookies()).toList().forEach(cookie -> {
+                                    if (!cookie.getName().equals("JSESSIONID")) {
+                                       Cookie newCookie = new Cookie(cookie.getName(), "");
+                                        newCookie.setMaxAge(0);
+                                        newCookie.setPath("/");
+                                        response.addCookie(newCookie);
+                                        
+                                    }
+                                });
                                 response.setStatus(HttpStatus.OK.value());
                             });
                 })
-                .cors(AbstractHttpConfigurer::disable)
-//                .cors(cors -> {
-//                    cors.configurationSource(corsConfigurationSource());
-//                })
                 .csrf(httpSecurityCsrfConfigurer -> {
                     httpSecurityCsrfConfigurer.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/api/v1/corso/logout"));
                 });
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin(Arrays.toString(new String[]{"http://localhost:3000","http://localhost:8080"}));
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("OPTIONS");
-        config.addAllowedHeader("*");
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
     private AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
-            final ErrorMessage errorMessage = ErrorMessage.from("Requires authentication");
+            final ErrorMessage errorMessage = ErrorMessage.from("Requires security");
             final String json = mapper.writeValueAsString(errorMessage);
 
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -114,8 +100,10 @@ public class SpringSecurityConfigBean {
 
     private LogoutHandler logoutHandler() {
         return (request, response, authentication) -> {
+
             try {
                 response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain);
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
