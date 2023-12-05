@@ -1,0 +1,84 @@
+@startuml
+
+title View Customer Orders history Use Case
+
+actor Admin
+
+participant View as "<<View>> Dashboard"
+
+participant viewAllActiveOrders as "<<View>> viewAllActiveOrders"
+
+participant OrderController as "<<Controller>> OrderController"
+
+participant OrderService as "<<Service>> OrderService"
+
+participant allResponse as "all: List<OrderResponse>"
+
+participant OrderRepository as "<<Repository>> OrderRepository"
+
+participant allOrders as "all: List<Order>"
+
+participant Database as "<<Database>> Database"
+
+participant OrderResponseMapper as "<<Mapper>> OrderResponseMapper"
+
+Admin -> View: viewActiveOrders()
+activate View
+View -> viewAllActiveOrders: render()
+activate viewAllActiveOrders
+viewAllActiveOrders -> OrderController: GET /api/v1/corso/orders?customer_id={id} HTTP/1.1
+activate OrderController
+OrderController -> OrderService: getOrders(Map<String, String> params)
+
+activate OrderService
+
+OrderService -> OrderRepository: getOrdersByCustomer_Id_customer_id(String customer_id)
+
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE user_id = {id}
+
+activate Database
+
+Database --> OrderRepository: List<Order>
+
+deactivate Database
+
+OrderRepository --> allOrders : List<Order>
+activate allOrders
+allOrders --> OrderService: all: List<Order>
+
+destroy OrderRepository
+
+OrderService -> OrderResponseMapper: mapToOrderResponseList(all)
+
+activate OrderResponseMapper
+
+OrderResponseMapper --> allResponse: List<OrderResponse>
+destroy allOrders
+
+activate allResponse
+
+destroy OrderResponseMapper
+
+allResponse --> OrderService : all: List<OrderResponse>
+
+OrderService --> OrderController : all: List<OrderResponse>
+
+destroy OrderService
+
+OrderController --> viewAllActiveOrders : all: List<OrderResponse>
+
+destroy allResponse
+destroy OrderController
+
+Admin -> viewAllActiveOrders: Back()
+
+viewAllActiveOrders --> View: render()
+destroy viewAllActiveOrders
+
+
+
+
+
+@endpuml

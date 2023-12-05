@@ -26,17 +26,17 @@ Admin -> View: viewActiveOrders()
 activate View
 View -> viewAllActiveOrders: render()
 activate viewAllActiveOrders
-viewAllActiveOrders -> OrderController: GET /api/v1/corso/orders?status=ACTIVE HTTP/1.1
+viewAllActiveOrders -> OrderController: GET /api/v1/corso/orders?status={status} HTTP/1.1
 activate OrderController
-OrderController -> OrderService: getOrdersByStatus(Map<String, String> params)
+OrderController -> OrderService: getOrders(Map<String, String> params)
 
 activate OrderService
 
-OrderService -> OrderRepository: getOrdersByStatus(Map<String, String> params)
+OrderService -> OrderRepository: getOrdersByStatus(status)
 
 activate OrderRepository
 
-OrderRepository -> Database: SELECT * FROM orders WHERE status = 'ACTIVE'
+OrderRepository -> Database: SELECT * FROM orders WHERE status = {status}
 
 activate Database
 

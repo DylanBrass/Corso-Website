@@ -57,9 +57,14 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
 
                           $column("order_date"): DATE NOT NULL
 
-                          $column("days_left"): INT NOT NULL
+                          $column("due_date"): DATE 
+
+                          $column("days_left"): INT 
+
+                          $column("estimated_num_days"): INT
 
                           $column("order_status"): VARCHAR(50) NOT NULL
+                          
 
                           $column("order_description"): TEXT NOT NULL
 
@@ -67,7 +72,7 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
 
                           $column("customer_email") : VARCHAR(255) NOT NULL
 
-                          $column("customer_phone") : VARCHAR(255) NOT NULL
+                          $column("customer_phone") : VARCHAR(255) 
 
                           $column("customer_address") : VARCHAR(255) NOT NULL
 

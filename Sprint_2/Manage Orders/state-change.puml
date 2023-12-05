@@ -1,0 +1,33 @@
+@startuml
+title  State Transition Diagram for Manage Order Use Case
+hide empty description
+
+[*] --> CreateOrder
+
+CreateOrder --> OrderCreated : Create by admin
+
+state OrderCreated {
+    [*] --> OrderIsSetToActive : Update to active by system
+
+    OrderIsSetToActive --> AddCustomerIdToOrder : Customer exists
+
+    OrderIsSetToActive --> SetCustomerIdToNaN : Customer does not exist
+
+    SetCustomerIdToNaN --> DayLeftSetToEstimatedDays
+
+
+    AddCustomerIdToOrder --> DayLeftSetToEstimatedDays
+
+
+
+    DayLeftSetToEstimatedDays --> [*] : Update by system
+
+
+}
+
+
+OrderCreated --> [*] : Send by system
+
+
+
+@endpuml
