@@ -25,6 +25,7 @@ public class SecurityController {
                 .sameSite("None")
                 .build();
 
-        return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.SET_COOKIE,cookie.toString()).location(URI.create("http://localhost:3000")).build();
+        return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.SET_COOKIE,cookie.toString())
+                .location(URI.create("http://localhost:3000")).build();
     }
 }

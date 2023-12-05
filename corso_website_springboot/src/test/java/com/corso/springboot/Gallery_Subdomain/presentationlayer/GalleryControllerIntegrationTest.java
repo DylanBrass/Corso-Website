@@ -35,42 +35,7 @@ class GalleryControllerIntegrationTest {
 
     @Autowired
     GalleryRepository galleryRepository;
-
-
-    @Before
-    public void setUp() {
-        galleryRepository.save(Gallery.builder()
-                .description("gallery1")
-                .photo("photo1")
-                .image_position(1)
-                .build());
-
-        galleryRepository.save(Gallery.builder()
-                .description("gallery2")
-                .photo("photo2")
-                .image_position(2)
-                .build());
-
-        galleryRepository.save(Gallery.builder()
-                .description("gallery3")
-                .photo("photo3")
-                .image_position(3)
-                .build());
-
-        galleryRepository.save(Gallery.builder()
-                .description("gallery4")
-                .photo("photo4")
-                .image_position(4)
-                .build());
-
-        galleryRepository.save(Gallery.builder()
-                .description("gallery5")
-                .photo("photo5")
-                .image_position(5)
-                .build());
-
-
-    }
+    
 
     @Test
     public void whenGalleryExists_thenReturnAllGalleries() {
