@@ -1,122 +1,143 @@
 @startuml
 
-title View Carousel Use Case Sequence Diagram
+title View Service Section Use Case Sequence Diagram
 
 actor User
 
-participant ReactApplication as "<<View>>\nReactApplication"
 participant HomePage as "<<View>>\nHomePage"
+
 participant ServiceDetailsPage as "<<View>>\nServiceDetailsPage"
 
 participant ServiceController as "<<Controller>>\nServiceController"
 
 participant ServiceService as "<<Service>>\nServiceService"
 
+participant all as "all:List<Service>"
+
+participant Service as "service:Service"
+
 participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant allResponse as "allResponse:List<ServiceResponse>"
+
+participant ServiceResponse as "response:ServiceResponse"
 
 participant Database as "<<Database>>\nDatabase"
 
 participant ServiceResponseMapper as "<<Mapper>>\nServiceResponseMapper"
 
-User -> ReactApplication : GET /
-activate ReactApplication
-
-ReactApplication -> HomePage : render()
+User -> HomePage:ViewServiceCard()
 activate HomePage
-
-
-
-HomePage -> ServiceController : GET /services
+ 
+HomePage -> ServiceController: GET /api/v1/corso/services/card HTTP/1.1
 activate ServiceController
 
+ServiceController -> ServiceService: getServicesCard()
 
-
-
-
-ServiceController -> ServiceService : getServices()
 activate ServiceService
 
+ServiceService -> ServiceRepository: findAll()
 
-ServiceService -> ServiceRepository : findAll()
 activate ServiceRepository
 
+ServiceRepository -> Database: SELECT * FROM service
 
-ServiceRepository -> Database : SELECT * FROM services
 activate Database
 
-Database --> ServiceService : Services
-
-deactivate ServiceRepository
+Database --> ServiceRepository: List<Service>
 
 deactivate Database
 
+ServiceRepository --> all : List<Service>
+destroy ServiceRepository
+activate all
 
+all --> ServiceService: all:List<Service>
 
-ServiceService -> ServiceResponseMapper : toServiceResponse(Services)
+ServiceService -> ServiceResponseMapper: mapToResponse(all)
+destroy all
 activate ServiceResponseMapper
+ServiceResponseMapper --> allResponse: List<ServiceResponse>
+activate allResponse
+destroy ServiceResponseMapper
+allResponse --> ServiceService: allResponse:List<ServiceResponse>
+ServiceService --> ServiceController: allResponse:List<ServiceResponse>
+destroy ServiceService
 
-ServiceResponseMapper --> ServiceService : ServiceResponse
+ServiceController --> HomePage: allResponse:List<ServiceResponse>
 
-deactivate ServiceResponseMapper
+destroy allResponse
+destroy ServiceController
 
-ServiceService --> ServiceController : ServiceResponse
+User -> HomePage:ViewServiceDetails()
 
-deactivate ServiceService
+HomePage -> ServiceDetailsPage: render()
 
-ServiceController --> HomePage : ServiceResponse
-
-deactivate ServiceController
-
-HomePage --> User : showAllServices()
-
-deactivate HomePage
-
-User -> HomePage : viewServiceDetails()
-activate HomePage
-HomePage -> User : GET /services/{service_id}
-
-HomePage -> ServiceDetailsPage : render()
 activate ServiceDetailsPage
 
-ServiceDetailsPage -> ServiceController : GET /services/{service_id}
+ServiceDetailsPage -> ServiceController: GET /api/v1/corso/services/{id} HTTP/1.1
+
 activate ServiceController
 
-ServiceController -> ServiceService : getServiceByServiceId(String service_id)
+ServiceController -> ServiceService: getServiceById(id)
+
 activate ServiceService
 
-ServiceService -> ServiceRepository : findByServiceId(String service_id)
+ServiceService -> ServiceRepository: findById(id)
+
 activate ServiceRepository
 
-ServiceRepository -> Database : SELECT * FROM services WHERE service_id = {service_id}
+ServiceRepository -> Database: SELECT * FROM service WHERE id = ?
+
 activate Database
 
-Database --> ServiceRepository : Service
+Database --> ServiceRepository: Service
 
 deactivate Database
 
-ServiceRepository --> ServiceService : Service
+ServiceRepository --> Service: Service
+destroy ServiceRepository
 
-ServiceService -> ServiceResponseMapper : toServiceResponse(Service)
+activate Service
+
+Service --> ServiceService: service:Service
+
+
+
+
+
+
+ServiceService -> ServiceResponseMapper: mapToResponse(Service)
+
+
+destroy Service
 activate ServiceResponseMapper
 
-ServiceResponseMapper --> ServiceService : ServiceResponse
+ServiceResponseMapper --> ServiceResponse: ServiceResponse
 
-deactivate ServiceResponseMapper
+activate ServiceResponse
 
-ServiceService --> ServiceController : ServiceResponse
+destroy ServiceResponseMapper
 
-deactivate ServiceService
+ServiceResponse --> ServiceService: response:ServiceResponse
 
-ServiceController --> ServiceDetailsPage : ServiceResponse
+ServiceService --> ServiceController: response:ServiceResponse
 
-deactivate ServiceController
+destroy ServiceService
 
-ServiceDetailsPage --> HomePage : ServiceResponse
+ServiceController --> ServiceDetailsPage: response:ServiceResponse
+destroy ServiceResponse
+destroy ServiceController
 
-deactivate ServiceDetailsPage
 
-HomePage --> User : showServiceDetails()
+User -> ServiceDetailsPage:Back()
 
-deactivate HomePage
+ServiceDetailsPage -> HomePage: render()
+
+destroy ServiceDetailsPage
+
+
+
+
 
 @endpuml
