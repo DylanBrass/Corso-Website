@@ -91,6 +91,11 @@ public class SpringSecurityConfigBean {
             final ErrorMessage errorMessage = ErrorMessage.from("Requires security");
             final String json = mapper.writeValueAsString(errorMessage);
 
+            log.error("Error: {}", json);
+            log.error("Error: {}", authException.getMessage());
+            log.error("Error: {}", authException.getLocalizedMessage());
+
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(json);

@@ -1,7 +1,4 @@
 # Default Spring Profile
-spring:
-  profiles:
-    active: mysql
 server:
   error:
     include-message: always
@@ -19,30 +16,39 @@ logging:
 spring:
   config:
     activate:
-      on-profile: h2
+      on-profile: test
+
   h2:
     console:
       enabled: true
+
   datasource:
-    url: jdbc:h2:mem:corso-dev-db;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:corso-dev-db;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
-      #let jpa create the schema
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        globally_quoted_identifiers: true
         auto-quote-keyword: true
+        format_sql: true
 
-    #defer-datasource-initialization: true
+    defer-datasource-initialization: true
   sql:
     init:
       platform: h2
       mode: always
+
+logging:
+  level:
+    org.springframework.data.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+
 ---
 # for docker
 
