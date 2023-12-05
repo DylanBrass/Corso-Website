@@ -4,6 +4,7 @@ import { CCarousel, CCarouselItem, CCarouselCaption, CImage } from "@coreui/reac
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import axios from "axios";
+//axios.defaults.withCredentials = true;
 
 interface ImageData {
     galleryId: string;
@@ -20,14 +21,14 @@ function OurPreviousProjects() {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/corso/galleries/carousel');
+                const response = await axios.get('http://localhost:8080/api/v1/corso/galleries/carousel');
                 console.log('Response:', response.data)
                 setImages(response.data);
             } catch (error) {
                 console.error('Error fetching images:', error);
             }
         };
-        fetchImages();
+        fetchImages().then(r => console.log('Images fetched'));
     }, []);
 
     return (

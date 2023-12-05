@@ -1,8 +1,6 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer;
+package com.corso.springboot.Gallery_Subdomain.datalayer;
 
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.presentationlayer.GalleryResponse;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 

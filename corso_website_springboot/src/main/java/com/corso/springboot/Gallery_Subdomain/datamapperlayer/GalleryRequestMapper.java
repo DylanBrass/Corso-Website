@@ -1,12 +1,6 @@
-package com.corso.springboot.Gallery_Subdomain.PresentationLayer.datamapperlayer;
+package com.corso.springboot.Gallery_Subdomain.datamapperlayer;
 
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.datalayer.Gallery;
-import com.corso.springboot.Gallery_Subdomain.PresentationLayer.presentationlayer.GalleryRequest;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface GalleryRequestMapper {

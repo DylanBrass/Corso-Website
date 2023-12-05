@@ -1,0 +1,34 @@
+package com.corso.springboot.configuration.filters;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import jakarta.servlet.Filter;
+import lombok.Generated;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+@Component
+@Generated
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class ResponseHeadersFilter implements Filter {
+    @Override
+    public void doFilter(
+            final ServletRequest request,
+            final ServletResponse response,
+            final FilterChain chain
+    ) throws IOException, ServletException {
+        final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+        chain.doFilter(request, response);
+    }
+
+}
