@@ -1,71 +1,142 @@
 @startuml
 
-title View FAQ Use Case Sequence Diagram
+title View FAQ Section Use Case Sequence Diagram
 
 actor User
 
-participant ReactApplication as "<<View>>\nReactApplication"
 participant HomePage as "<<View>>\nHomePage"
+
+participant ViewAllFaqPage as "<<View>>\nViewAllFaqPage"
 
 participant FaqController as "<<Controller>>\nFaqController"
 
 participant FaqService as "<<Service>>\nFaqService"
 
+participant allFaq as "all:List<Faq>"
+
 participant FaqRepository as "<<Repository>>\nFaqRepository"
+
+participant allResponse as "allResponse:List<FaqResponse>"
 
 participant Database as "<<Database>>\nDatabase"
 
 participant FaqResponseMapper as "<<Mapper>>\nFaqResponseMapper"
 
-User -> ReactApplication : GET /
-activate ReactApplication
-
-ReactApplication -> HomePage : render()
+User -> HomePage: viewTopFaq()
 activate HomePage
+HomePage -> FaqController: GET /api/v1/faq/pinned HTTP/1.1
+activate FaqController
+FaqController -> FaqService: getTopPinnedFaq()
+activate FaqService
+FaqService -> FaqRepository: findByPreferedTrue()
+activate FaqRepository
+FaqRepository -> Database: SELECT * FROM faq WHERE prefered = true
+activate Database
+Database --> FaqRepository: List<Faq>
+deactivate Database
+FaqRepository --> allFaq: List<Faq>
+activate allFaq
+
+allFaq --> FaqService: all:List<Faq>
+
+destroy FaqRepository
+
+FaqService -> FaqResponseMapper: mapToResponse(all)
+destroy allFaq
+activate FaqResponseMapper
+
+FaqResponseMapper --> allResponse: List<FaqResponse>
+
+activate allResponse
+
+allResponse --> FaqService: allResponse:List<FaqResponse>
+destroy FaqResponseMapper
+
+FaqService --> FaqController: allResponse:List<FaqResponse>
+
+destroy FaqService
+
+FaqController --> HomePage: allResponse:List<FaqResponse>
+destroy allResponse
+
+destroy FaqController
 
 
+User -> HomePage: viewAllFaq()
 
-HomePage -> FaqController : GET /faqs
+HomePage -> ViewAllFaqPage: render()
+
+activate ViewAllFaqPage
+
+ViewAllFaqPage -> FaqController: GET /api/v1/corso/faq HTTP/1.1
+
 activate FaqController
 
+FaqController -> FaqService: getAllFaq()
 
-FaqController -> FaqService : getFaqs()
 activate FaqService
 
+FaqService -> FaqRepository: findAll()
 
-FaqService -> FaqRepository : findAll()
 activate FaqRepository
 
+FaqRepository -> Database: SELECT * FROM faq
 
-FaqRepository -> Database : SELECT * FROM faqs
 activate Database
 
-Database --> FaqService : Faqs
-
-deactivate FaqRepository
+Database --> FaqRepository: List<Faq>
 
 deactivate Database
 
+FaqRepository --> allFaq: List<Faq>
 
+activate allFaq
 
-FaqService -> FaqResponseMapper : toFaqResponse(Faqs)
+allFaq --> FaqService: all:List<Faq>
+
+destroy FaqRepository
+
+FaqService -> FaqResponseMapper: mapToResponse(all)
+
+destroy allFaq
+
 activate FaqResponseMapper
 
-FaqResponseMapper --> FaqService : FaqResponse
+FaqResponseMapper --> allResponse: List<FaqResponse>
 
-deactivate FaqResponseMapper
+activate allResponse
 
-FaqService --> FaqController : FaqResponse
+allResponse --> FaqService: allResponse:List<FaqResponse>
 
-deactivate FaqService
 
-FaqController --> HomePage : FaqResponse
+destroy FaqResponseMapper
 
-deactivate FaqController
+FaqService --> FaqController: allResponse:List<FaqResponse>
 
-HomePage --> User : Faqs
+destroy FaqService
 
-deactivate HomePage
+FaqController --> ViewAllFaqPage: allResponse:List<FaqResponse>
+destroy allResponse
+
+destroy FaqController
+
+User -> ViewAllFaqPage: back()
+ViewAllFaqPage -> HomePage: render()
+deactivate ViewAllFaqPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @endpuml

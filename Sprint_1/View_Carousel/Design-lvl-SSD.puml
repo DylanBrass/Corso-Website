@@ -4,71 +4,78 @@ title View Carousel Use Case Sequence Diagram
 
 actor User 
 
-participant ReactApplication as "<<View>>\nReactApplication"
 participant HomePage as "<<View>>\nHomePage"
 
 participant GalleryController as "<<Controller>>\nGalleryController"
 
 participant GalleryService as "<<Service>>\nGalleryService"
 
+participant all as "all: List<Gallery>"
+
 participant GalleryRepository as "<<Repository>>\nGalleryRepository"
+
+participant allResponse as "allResponse: List<GalleryResponse>"
 
 participant Database as "<<Database>>\nDatabase"
 
 participant GalleryResponseMapper as "<<Mapper>>\nGalleryResponseMapper"
 
-User -> ReactApplication : GET /
-activate ReactApplication
-
-ReactApplication -> HomePage : render()
+User -> HomePage: viewCarousel()
 activate HomePage
-
-
-
-HomePage -> GalleryController : GET /galleries
-activate GalleryController 
-
-
-
-
-
-GalleryController -> GalleryService : getGallery()
-activate GalleryService 
-
-
-GalleryService -> GalleryRepository : findAll()
+HomePage -> GalleryController: GET /api/v1/corso/galleries/carousel HTTP/1.1
+activate GalleryController
+GalleryController -> GalleryService: getCarousel()
+activate GalleryService
+GalleryService -> GalleryRepository: findAllByCarouselTrue()
 activate GalleryRepository
 
+GalleryRepository -> Database: SELECT * FROM gallery
 
-GalleryRepository -> Database : SELECT * FROM gallery
 activate Database
 
-Database --> GalleryService : Galleries
-
-deactivate GalleryRepository
+Database --> GalleryRepository: List<Gallery>
 
 deactivate Database
 
+GalleryRepository --> all: List<Gallery>
+destroy GalleryRepository
+
+activate all
+all --> GalleryService: List<Gallery>
 
 
-GalleryService -> GalleryResponseMapper : toGalleryResponse(Galleries)
+GalleryService -> GalleryResponseMapper: toGalleriesResponse(all)
+
+destroy all
+
 activate GalleryResponseMapper
 
-GalleryResponseMapper --> GalleryService : GalleryResponse
+GalleryResponseMapper --> allResponse: List<GalleryResponse>
+destroy GalleryResponseMapper
+activate allResponse
 
-deactivate GalleryResponseMapper
+allResponse --> GalleryService: allResponses:List<GalleryResponse>
 
-GalleryService --> GalleryController : GalleryResponse
 
-deactivate GalleryService
+GalleryService --> GalleryController: allResponses:List<GalleryResponse>
 
-GalleryController --> HomePage : GalleryResponse
+destroy GalleryService
 
-deactivate GalleryController
+GalleryController --> HomePage: allResponses:List<GalleryResponse>
+destroy allResponse
 
-HomePage --> User : Carousel
 
-deactivate HomePage
+destroy GalleryController
+
+
+
+
+
+
+
+
+
+
 
 
 @endpuml

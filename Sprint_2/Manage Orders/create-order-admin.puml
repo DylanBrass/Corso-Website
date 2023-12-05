@@ -1,0 +1,103 @@
+@startuml
+
+title Manage Order use case DLSD
+
+actor Admin 
+
+participant Dashboard as "<<view>>\nDashboard"
+
+participant AddOrder as "<<view>>\nAddExternalOrder"
+
+participant OrderRequest as "orderRequest: OrderRequest"
+
+participant OrderController as "<<Controller>>\nOrderController"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant Response as "response: OrderResponse"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant Order as "order: Order"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+
+participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+
+Admin -> Dashboard : AddOrder()
+activate Dashboard
+Dashboard -> AddOrder : render()
+activate AddOrder
+Admin -> AddOrder : SubmitOrderForm()
+
+AddOrder -> OrderRequest : POST /api/v1/corso/orders
+
+activate OrderRequest
+
+OrderRequest -> OrderController : orderRequest: OrderRequest
+
+activate OrderController
+
+
+OrderController -> OrderService : createOrder(orderRequest)
+
+activate OrderService
+
+OrderService -> OrderRequestMapper : toEntity(orderRequest)
+
+activate OrderRequestMapper
+
+
+OrderRequestMapper -> Order : order: Order
+activate Order
+
+Order --> OrderService : order: Order
+destroy OrderRequest
+destroy OrderRequestMapper
+
+OrderService -> OrderRepository : save(order)
+activate OrderRepository
+
+OrderRepository -> Database : INSERT INTO orders (id, service_id, order_id, user_id, order_date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
+destroy Order 
+activate Database
+
+Database --> OrderRepository : Order
+
+deactivate Database
+
+OrderRepository --> Order : Order
+destroy OrderRepository
+activate Order
+
+Order --> OrderService : order: Order
+
+OrderService -> OrderResponseMapper : toResponse(order)
+destroy Order
+activate OrderResponseMapper
+
+OrderResponseMapper -> Response : OrderResponse
+destroy OrderResponseMapper
+
+activate Response
+Response --> OrderService : response: OrderResponse
+
+OrderService --> OrderController : response: OrderResponse
+
+destroy OrderService
+
+
+OrderController --> AddOrder : response: OrderResponse
+
+destroy Response
+destroy OrderController
+
+Admin -> AddOrder : BackToDashboard()
+
+AddOrder -> Dashboard : render()
+
+
+
+@endpuml

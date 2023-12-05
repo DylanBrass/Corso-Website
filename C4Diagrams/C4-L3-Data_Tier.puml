@@ -43,40 +43,39 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
    database  "MySQL Database" as Database #DarkCyan {
 
 
-                  $table("Customers", "cust_tb") {
-                      $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
-                    ---
-                      $column("customer_id"): VARCHAR(36) NOT NULL
-
-                      $column("first_name"): VARCHAR(50) NOT NULL
-
-                      $column("last_name"): VARCHAR(50) NOT NULL
-
-                      $column("email"): VARCHAR(50) NOT NULL
-
-                      $column("phoneNumber"): VARCHAR(50) NOT NULL
-
-                      $column("street_address"): VARCHAR(50) NOT NULL
-
-                      $column("city"): VARCHAR(50) NOT NULL
-
-                      $column("province"): VARCHAR(50) NOT NULL
-
-                      $column("postal_code"): VARCHAR(50) NOT NULL
-                  }
+                  
 
                   $table("Orders", "order_tb") {
                           $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
                         ---
-                          $fk("customer_id"): VARCHAR(36) NOT NULL
 
                           $fk("service_id"): VARCHAR(36) NOT NULL
                         ---
                           $column("order_id"): VARCHAR(36) NOT NULL
 
+                          $column("user_id"): VARCHAR(60) NOT NULL
+
                           $column("order_date"): DATE NOT NULL
 
+                          $column("due_date"): DATE 
+
+                          $column("days_left"): INT 
+
+                          $column("estimated_num_days"): INT
+
                           $column("order_status"): VARCHAR(50) NOT NULL
+                          
+
+                          $column("order_description"): TEXT NOT NULL
+
+                          $column("customer_fullname") : VARCHAR(255) NOT NULL
+
+                          $column("customer_email") : VARCHAR(255) NOT NULL
+
+                          $column("customer_phone") : VARCHAR(255) 
+
+                          $column("customer_address") : VARCHAR(255) NOT NULL
+
                   }
 
                   $table("Services", "service_tb") {
@@ -108,9 +107,12 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
                     $table("Reviews", "review_tb") {
                               $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
                                 ---
-                              $fk("customer_id"): VARCHAR(36) NOT NULL
-                                ---
+                            
                               $column("review_id"): VARCHAR(36) NOT NULL
+
+                              $column("user_id"): VARCHAR(60) NOT NULL
+
+                              $column("user_fullname"): VARCHAR(255) NOT NULL
 
                               $column("review_date"): DATE NOT NULL
 
@@ -133,9 +135,7 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
                               $column("prefered"): BOOL NOT NULL
                     }
 
-                 "cust_tb" |o--o{ "order_tb"
                  "service_tb" |o--o{ "order_tb"
-                 "cust_tb" |o--o{ "review_tb"
 }
  AddElementTag("service", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="API \neight sided")
 
