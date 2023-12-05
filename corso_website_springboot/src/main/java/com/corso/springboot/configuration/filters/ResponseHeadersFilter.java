@@ -8,11 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import jakarta.servlet.Filter;
+import lombok.Generated;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Generated
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ResponseHeadersFilter implements Filter {
     @Override

@@ -4,6 +4,7 @@ package com.corso.springboot.configuration.security;
 import com.corso.springboot.configuration.security.models.ErrorMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ import java.util.List;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Slf4j
+@Generated
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
