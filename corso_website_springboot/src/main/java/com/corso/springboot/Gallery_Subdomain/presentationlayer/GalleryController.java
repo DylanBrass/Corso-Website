@@ -32,28 +32,28 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGallery());
     }
 
-    @PostMapping
-    public String CreateGallery(){
-        return "Testing security and authorization";
-    }
-
-    @PutMapping
-    public String UpdateGallery(){
-        return "Testing security";
-    }
-
-    @GetMapping
-    public String GetGalleryById(){
-
-        return "Hello World";
-    }
-
-    @GetMapping("/test")
-    @PreAuthorize("hasAuthority('Admin')")
-    public String Test(@AuthenticationPrincipal OidcUser principal){
-        log.info(principal.getClaims().toString());
-        log.info(principal.getAuthorities().toString());
-
-        return "Testing security and authorization";
-    }
+//    @PostMapping
+//    public String CreateGallery(){
+//        return "Testing security and authorization";
+//    }
+//
+//    @PutMapping
+//    public String UpdateGallery(){
+//        return "Testing security";
+//    }
+//
+//    @GetMapping
+//    public String GetGalleryById(){
+//
+//        return "Hello World";
+//    }
+//
+//    @GetMapping("/test")
+//    @PreAuthorize("hasAuthority('Admin')")
+//    public String Test(@AuthenticationPrincipal OidcUser principal){
+//        log.info(principal.getClaims().toString());
+//        log.info(principal.getAuthorities().toString());
+//
+//        return "Testing security and authorization";
+//    }
 }
