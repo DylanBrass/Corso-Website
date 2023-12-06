@@ -1,6 +1,8 @@
 package com.corso.springboot.configuration.security;
 
 
+import com.corso.springboot.configuration.csrf.SpaCsrfToken;
+import com.corso.springboot.configuration.filters.CsrfCustomFilter;
 import com.corso.springboot.configuration.security.models.ErrorMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
@@ -14,20 +16,15 @@ import org.springframework.http.*;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -76,15 +73,17 @@ public class SpringSecurityConfigBean {
                                         newCookie.setMaxAge(0);
                                         newCookie.setPath("/");
                                         response.addCookie(newCookie);
-                                        
                                     }
                                 });
                                 response.setStatus(HttpStatus.OK.value());
                             });
                 })
-                .csrf(httpSecurityCsrfConfigurer -> {
-                    httpSecurityCsrfConfigurer.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/api/v1/corso/logout"));
-                });
+                .csrf((csrf) -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new SpaCsrfToken())
+                )
+                .cors().and()
+                .addFilterAfter(new CsrfCustomFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
 
@@ -105,6 +104,8 @@ public class SpringSecurityConfigBean {
         };
     }
 
+
+
     private LogoutHandler logoutHandler() {
         return (request, response, authentication) -> {
 
@@ -117,3 +118,5 @@ public class SpringSecurityConfigBean {
         };
     }
 }
+
+

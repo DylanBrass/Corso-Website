@@ -1,3 +1,16 @@
 @startuml
 
+title Login State Diagram
+hide empty description
+
+[*] --> CredentialsEntered
+
+CredentialsEntered --> SucessfullLogin : [Correct Credentials]
+CredentialsEntered --> IncorrectLogin : [Incorrect Credentials]
+IncorrectLogin --> CredentialsEntered : [Try Again]
+IncorrectLogin --> NotLoggedIn : [Cancel]
+NotLoggedIn --> [*]
+SucessfullLogin --> [*] 
+
+
 @endpuml

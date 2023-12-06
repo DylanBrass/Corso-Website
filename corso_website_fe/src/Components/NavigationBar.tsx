@@ -23,16 +23,13 @@ function NavigationBar() {
                             <Nav.Link href="#">FAQ</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href="#">LOGIN</Nav.Link>
+                            <Nav.Link href="http://localhost:8080/oauth2/authorization/okta">LOGIN</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link href="#">REGISTER</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link href="#">FRANÇAIS</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <a href="http://localhost:8080/oauth2/authorization/okta">Login</a>
                         </Nav.Item>
                         <Nav.Item>
                             <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
