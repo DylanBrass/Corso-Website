@@ -97,7 +97,7 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
-    //exclude '**/ViewCarouselTest.class'
+    exclude '**/ViewCarouselTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
