@@ -21,24 +21,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - name: Set up Xvfb
-        run: |
-          sudo apt-get install -y xvfb
-          Xvfb :99 -ac -screen 0 1280x1024x16 &
-          export DISPLAY=:99
-      - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-      - name: Install Chromedriver
-        run: |
-          LATEST_CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          curl -L "https://chromedriver.storage.googleapis.com/${LATEST_CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -o chromedriver.zip
-          unzip chromedriver.zip
-          sudo mv chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
-
       - name: npm install, build, and test
         working-directory: corso_website_fe
         run: |
@@ -47,22 +29,12 @@ jobs:
           npm start & npx wait-on http://127.0.0.1:3000
         env:
           CI: true
-
-      - name: Show Chrome versions
-        run: |
-          echo "Chromedriver version: $(chromedriver --version)"
-          echo "Chrome version: $(google-chrome --version)"
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
             java-version: '17'
             distribution: 'adopt'
             cache: 'gradle'
-
-      - name: Print Current directory and list files
-        run: |
-          pwd
-          ls
 
       - name: Run Gradle Build
         working-directory: corso_website_springboot
