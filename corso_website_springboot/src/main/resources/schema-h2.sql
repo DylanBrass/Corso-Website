@@ -16,9 +16,8 @@ CREATE TABLE IF NOT EXISTS services
     service_name VARCHAR(255) NOT NULL,
     service_description TEXT NOT NULL,
     service_icon VARCHAR(255) NOT NULL,
-    service_image VARCHAR(255) NOT NULL,
-    INDEX (service_id)
-    );
+    service_image VARCHAR(255) NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS orders
 (
@@ -33,8 +32,7 @@ CREATE TABLE IF NOT EXISTS orders
     customer_fullname VARCHAR(255) NOT NULL,
     customer_email VARCHAR(255) NOT NULL,
     customer_phone VARCHAR(255),
-    customer_address TEXT NOT NULL,
-    FOREIGN KEY (service_id) REFERENCES services(service_id)
+    customer_address TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS  FAQs(
