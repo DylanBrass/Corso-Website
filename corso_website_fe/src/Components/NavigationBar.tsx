@@ -65,7 +65,7 @@ function NavigationBar() {
                                        // @ts-ignore
                                 <Link to={"/profile"}>
                          <img src={Cookies.get("picture")}
-                                        alt="Profile Picture" id={"profile-image"} className={"d-none d-lg-block"} />
+                                        alt="See Profile" id={"profile-image"} className={"d-none d-lg-block"} />
                                 </Link>
                             }
                     </Nav.Item>
