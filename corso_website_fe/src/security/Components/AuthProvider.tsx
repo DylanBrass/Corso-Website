@@ -22,7 +22,7 @@ const AuthProvider = ({ children }) => {
             setIsAuthenticated(Boolean(Cookies.get("isAuthenticated")))
         }
         console.log("isAuthenticated: " + isAuthenticated)
-    }, [Cookies.get("isAuthenticated"), isAuthenticated])
+    }, [isAuthenticated])
 
     const login = () => {
         window.location.href = "http://localhost:8080/oauth2/authorization/okta"
