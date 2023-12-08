@@ -1,0 +1,14 @@
+.logoutRedirect{
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    background-image: url('https://res.cloudinary.com/dszhbawv7/image/upload/v1701099346/test-image-carousel-1_xd1nwu.jpg');
+}
+
+.logoutRedirect p{
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+}
+

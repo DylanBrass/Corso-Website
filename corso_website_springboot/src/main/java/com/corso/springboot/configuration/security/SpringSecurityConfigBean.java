@@ -22,9 +22,11 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -61,9 +63,7 @@ public class SpringSecurityConfigBean {
                 })
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> {
-
-                    logout
-                            .logoutUrl("/api/v1/corso/logout")
+                    logout.logoutUrl("/api/v1/corso/logout")
                             .addLogoutHandler(logoutHandler())
                             .logoutSuccessHandler((request, response, authentication) -> {
 
@@ -81,8 +81,19 @@ public class SpringSecurityConfigBean {
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfToken())
+                        .ignoringRequestMatchers(
+                                new AntPathRequestMatcher("/api/v1/corso/logout", HttpMethod.POST.toString())
+                        )
                 )
-                .cors().and()
+                .cors(httpSecurityCorsConfigurer -> {
+                        final var cors = new CorsConfiguration();
+                        cors.setAllowedOrigins(List.of(frontendDomain));
+                        cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                        cors.setAllowedHeaders(Arrays.asList("authorization", "content-type", "xsrf-token"));
+                        cors.setExposedHeaders(List.of("xsrf-token"));
+                        cors.setAllowCredentials(true);
+                        cors.setMaxAge(3600L);
+                    })
                 .addFilterAfter(new CsrfCustomFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
@@ -109,8 +120,29 @@ public class SpringSecurityConfigBean {
     private LogoutHandler logoutHandler() {
         return (request, response, authentication) -> {
 
+            List<Cookie> cookies = List.of(request.getCookies());
+
+            cookies.forEach(cookie -> {
+                    Cookie newCookie = new Cookie(cookie.getName(), "");
+                    newCookie.setMaxAge(0);
+                    newCookie.setPath("/");
+                    response.addCookie(newCookie);
+            });
+
+            boolean isSignup = Boolean.parseBoolean(request.getParameter("isLogoutSignUp"));
+            boolean isVerify = Boolean.parseBoolean(request.getParameter("isLogoutVerify"));
+            boolean isExternal = Boolean.parseBoolean(request.getParameter("isLogoutExternal"));
+
             try {
-                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain);
+
+                if (isSignup)
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=http://localhost:8080/oauth2/authorization/okta");
+                else if (isVerify)
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "/verify");
+                else if (isExternal)
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "/external");
+                else
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain);
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

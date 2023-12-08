@@ -1,63 +1,95 @@
 package com.corso.springboot.configuration.security.controller;
 
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
+import com.corso.springboot.configuration.security.service.Auth0Service;
+
+import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.URI;
 
 @Slf4j
 @Generated
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/security")
 public class SecurityController {
+
+
+    private final Auth0Service auth0Service;
+
     @GetMapping("/redirect")
-    public ResponseEntity<Void> redirectAfterLogin(HttpServletRequest request, @AuthenticationPrincipal OidcUser principal){
+    public ResponseEntity<Void> redirectAfterLogin(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException, UnirestException {
+        String accessToken;
+        if (principal == null) {
+            log.info("Principal is null");
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("http://localhost:8080/oauth2/authorization/okta")).build();
+        }
 
-        ResponseCookie cookie = ResponseCookie.from("id_token",principal.getIdToken().getTokenValue())
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite("None")
-                .build();
 
-        ResponseCookie authCookie = ResponseCookie.from("isAuthenticated", "true")
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite("None")
-                .build();
+        //handle apple and google login
+        if(principal.getSubject().contains("apple") || principal.getSubject().contains("google-oauth2")
+                || principal.getSubject().contains("facebook")){
+            return auth0Service.handleExternalLogin(principal);
+        }
 
-        ResponseCookie accessPermissionCookie = ResponseCookie.from("accessPermission", principal.getAuthorities().toString().replace(",","-").replace(" ",""))
-                .httpOnly(false)
-                .secure(true)
-                .path("/")
-                .sameSite("Lax")
-                .build();
+        if(principal.getSubject().contains("auth0")) {
+
+            accessToken = auth0Service.getAccessToken();
+
+
+            boolean isVerified;
+            try {
+                isVerified = principal.getClaim("email_verified");
+            } catch (NullPointerException e) {
+                isVerified = true;
+            }
+
+            if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
+                    || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
+                log.info("No roles found, adding default role");
+
+                String userId = principal.getSubject().replace("|", "%7C");
+
+                auth0Service.addRoleToUser(userId, accessToken);
+
+                if (!isVerified) {
+                    log.info("User not verified, redirecting to verification page");
+                    auth0Service.sendVerificationEmail(principal.getSubject(), accessToken);
+                    return ResponseEntity.status(HttpStatus.FOUND)
+                            .location(URI.create("http://localhost:3000/verify")).build();
+                }
+
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create("http://localhost:3000/logout")).build();
+
+            }
+
+            if (!isVerified) {
+                log.info("User not verified, redirecting to verification page");
+                auth0Service.sendVerificationEmail(principal.getSubject(), accessToken);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create("http://localhost:3000/verify")).build();
+            }
+        }
+
+
+
+
+
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-        headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());
-        headers.add(HttpHeaders.SET_COOKIE, accessPermissionCookie.toString());
-
-        return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
-                .location(URI.create("http://localhost:3000")).build();
+        return auth0Service.getVoidResponseEntity(principal);
     }
 
-
+    //todo: remove this method
     @PostMapping("/test")
     public ResponseEntity<TestDTO> test(@AuthenticationPrincipal OidcUser principal, @RequestBody TestDTO body){
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
@@ -65,15 +97,17 @@ public class SecurityController {
     }
 
 
+    //todo: remove this method
     @PostMapping("/test/admin")
     @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<Void> testAdmin(@AuthenticationPrincipal OidcUser principal){
+    public ResponseEntity<TestDTO> testAdmin(@AuthenticationPrincipal OidcUser principal, @RequestBody TestDTO body){
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 
 }
 
+//todo: remove this class
 @EqualsAndHashCode(callSuper=false)
 @Data
 @AllArgsConstructor

@@ -1,36 +1,68 @@
 import OurPreviousProjects from "../Main Page Components/OurPreviousProjects";
 import NavigationBar from "../Components/NavigationBar";
 import axios from "axios";
-import {useState} from "react";
+import {useAuth} from "../security/Components/AuthProvider";
 
 
 function MainPage() {
-    const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-    const [data, setData] = useState("")
+    const auth = useAuth();
+
 
     const postTest = async (event: any) => {
         event.preventDefault();
-        const response = await axios.post("http://localhost:8080/api/v1/corso/security/test", {
+        await axios.post("http://localhost:8080/api/v1/corso/security/test", {
             "name": "test",
             "surname": "test"
         }, {
             headers: {
-                'X-XSRF-TOKEN': csrfToken
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
             }
         })
             .then(r => console.log('Response:', r))
-            .catch(e => console.error('Error fetching test:', e));
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status);
+            })
     }
 
+    const adminPostTest = async (event: any) => {
+        event.preventDefault();
+        // @ts-ignore
+        await axios.post("http://localhost:8080/api/v1/corso/security/test/admin", {
+            "name": "test",
+            "surname": "test"
+        }, {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => console.log('Response:', r))
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status);
+            })
+    }
     return (
         <div>
             <NavigationBar />
             <h1>Main Page</h1>
             <OurPreviousProjects />
+            {
+                // @ts-ignore
+                //suppress when u get red error on isAuthenticated
+                auth.isAuthenticated &&
+                <>
             <form onSubmit={postTest}>
-                <button type="submit">Get test</button>
+                <button type="submit">Post test</button>
             </form>
 
+            <form onSubmit={adminPostTest}>
+                <button type={"submit"}>Admin test</button>
+            </form>
+                </>
+}
 
         </div>
     );
