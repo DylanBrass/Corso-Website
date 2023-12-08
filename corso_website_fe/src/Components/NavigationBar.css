@@ -5,6 +5,7 @@ CNavbar {
 
 .navbar-custom {
     background-color: #24252A;
+    justify-content: center;
 }
 
 .navbar-custom img {
@@ -12,6 +13,36 @@ CNavbar {
 }
 
 .navbar-custom .navbar-nav .nav-link {
+    color: white;
+    margin-right: 50px;
+}
+
+#profile-image {
+    border-radius: 50%;
+    max-height: 6vh;
+    margin-left: 15px;
+}
+
+#profile-image:hover {
+    cursor: pointer;
+}
+
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+#logout-btn{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
     color: white;
     margin-right: 50px;
 }

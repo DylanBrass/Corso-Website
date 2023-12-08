@@ -1,44 +1,74 @@
 import React from 'react';
 import { Navbar, Container, Nav} from 'react-bootstrap';
-import logoImage from "../images/logo.png";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NavigationBar.css';
+import Cookies from "js-cookie";
+import {useAuth} from "../security/Components/AuthProvider";
+import {Link} from "react-router-dom";
 
 function NavigationBar() {
+    const auth = useAuth()
     return (
         <Navbar expand="lg" className="navbar-custom">
             <Container fluid>
                 <Navbar.Brand href="#">
-                    <img src={logoImage} alt="Logo"/>
+                    <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1701844105/customcolor_logo_transparent_background_x5ensc.png" alt="Logo"/>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarNav" />
                 <Navbar.Collapse id="navbarNav" className="navbar-collapse">
                     <Nav className="ms-auto">
-                        <Nav.Item>
+                        {
+                            // @ts-ignore
+                            auth.userRoles().includes("Admin") &&
+                            <Nav.Item className={"item"}>
+                                <Nav.Link href="#">DASHBOARD</Nav.Link>
+                            </Nav.Item>
+                        }
+                        {
+                            // @ts-ignore
+                            (auth.userRoles().includes("Customer") || !auth.isAuthenticated) &&
+
+                            <Nav.Item className={"item"}>
+                                <Nav.Link href="#">FAQ</Nav.Link>
+                            </Nav.Item>
+                        }
+                        <Nav.Item className={"item"}>
+
                             <Nav.Link href="#" active>
                                 HOME
                             </Nav.Link>
                         </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#">FAQ</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#">LOGIN</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#">REGISTER</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
+                        <Nav.Item className={"item"}>
                             <Nav.Link href="#">FRANÇAIS</Nav.Link>
                         </Nav.Item>
-                        <Nav.Item>
-                            <a href="http://localhost:8080/oauth2/authorization/okta">Login</a>
+
+
+                        {
+                            //@ts-ignore
+                            !auth.isAuthenticated &&
+                        <Nav.Item className={"item"}>
+                            <Nav.Link href="http://localhost:8080/oauth2/authorization/okta">LOGIN</Nav.Link>
                         </Nav.Item>
-                        <Nav.Item>
-                            <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
-                                <button type={"submit"}>Logout</button>
-                            </form>
-                        </Nav.Item>
+                        }
+                        {
+                            //@ts-ignore
+                            auth.isAuthenticated &&
+                            <Nav.Item className={"item"}>
+                                <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
+                                    <button id={"logout-btn"} type={"submit"}>LOGOUT</button>
+                                </form>
+                            </Nav.Item>
+                        }
+                        <Nav.Item className={"item"}>
+                            {
+                                            Cookies.get("picture") != null &&
+                                       // @ts-ignore
+                                <Link to={"/profile"}>
+                         <img src={Cookies.get("picture")}
+                                        alt="See Profile" id={"profile-image"} className={"d-none d-lg-block"} />
+                                </Link>
+                            }
+                    </Nav.Item>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

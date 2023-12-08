@@ -1,31 +1,69 @@
 import OurPreviousProjects from "../Main Page Components/OurPreviousProjects";
 import NavigationBar from "../Components/NavigationBar";
 import axios from "axios";
-import {useState} from "react";
+import {useAuth} from "../security/Components/AuthProvider";
 
 
 function MainPage() {
+    const auth = useAuth();
 
-    const [data, setData] = useState("")
 
-    const fetchTest = async (event: any) => {
+    const postTest = async (event: any) => {
         event.preventDefault();
-        const response = await axios.get("http://localhost:8080/api/v1/corso/galleries/test")
-            .then(r => setData(r.data))
-            .catch(e => console.error('Error fetching test:', e));
-        console.log('Response:', response)
-        
-    };
+        await axios.post("http://localhost:8080/api/v1/corso/security/test", {
+            "name": "test",
+            "surname": "test"
+        }, {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => console.log('Response:', r))
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status);
+            })
+    }
 
+    const adminPostTest = async (event: any) => {
+        event.preventDefault();
+        // @ts-ignore
+        await axios.post("http://localhost:8080/api/v1/corso/security/test/admin", {
+            "name": "test",
+            "surname": "test"
+        }, {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => console.log('Response:', r))
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status);
+            })
+    }
     return (
         <div>
             <NavigationBar />
             <h1>Main Page</h1>
             <OurPreviousProjects />
-            <form onSubmit={fetchTest}>
-                <button type="submit">Get test</button>
+            {
+                // @ts-ignore
+                //suppress when u get red error on isAuthenticated
+                auth.isAuthenticated &&
+                <>
+            <form onSubmit={postTest}>
+                <button type="submit">Post test</button>
             </form>
-            <p>{data}</p>
+
+            <form onSubmit={adminPostTest}>
+                <button type={"submit"}>Admin test</button>
+            </form>
+                </>
+}
+
         </div>
     );
 }
