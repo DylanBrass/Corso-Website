@@ -110,6 +110,7 @@ public class SecurityController {
 //todo: remove this class
 @EqualsAndHashCode(callSuper=false)
 @Data
+@Generated
 @AllArgsConstructor
 class TestDTO{
     private String name;

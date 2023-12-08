@@ -2,6 +2,7 @@ package com.corso.springboot.configuration.security.service;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,7 @@ import java.net.http.HttpResponse;
 
 @Slf4j
 @Service
+@Generated
 public class Auth0Service {
 
     @Value("${okta.oauth2.issuer}")
