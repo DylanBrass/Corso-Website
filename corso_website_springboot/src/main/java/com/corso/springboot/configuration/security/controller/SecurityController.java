@@ -3,12 +3,14 @@ package com.corso.springboot.configuration.security.controller;
 import com.corso.springboot.configuration.security.service.Auth0Service;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -91,8 +93,10 @@ public class SecurityController {
 
     //todo: remove this method
     @PostMapping("/test")
-    public ResponseEntity<TestDTO> test(@AuthenticationPrincipal OidcUser principal, @RequestBody TestDTO body){
+    public ResponseEntity<TestDTO> test(@AuthenticationPrincipal OidcUser principal, @RequestBody TestDTO body, HttpServletRequest request){
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
+        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+        log.info("CSRF Token: " + token.getToken());
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 

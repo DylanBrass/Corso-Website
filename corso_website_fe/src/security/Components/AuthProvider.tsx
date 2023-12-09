@@ -9,6 +9,14 @@ const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] =
         useState(() =>{return Boolean(Cookies.get("isAuthenticated") )|| false})
 
+    const [csrfToken, setCsrfToken] = useState(() => {return document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1')
+    || "invalid"})
+
+    useEffect(() => {
+        console.log("XSRF-TOKEN: " + Cookies.get("XSRF-TOKEN"))
+        setCsrfToken(document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1'))
+    }, [csrfToken]);
+
     useEffect(() => {
         setIsAuthenticated(Boolean(Cookies.get("isAuthenticated")))
     }, [isAuthenticated])
@@ -47,8 +55,7 @@ const AuthProvider = ({ children }) => {
     }
 
     const getXsrfToken = () => {
-        return document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1');
-
+       return  csrfToken
     }
 
 

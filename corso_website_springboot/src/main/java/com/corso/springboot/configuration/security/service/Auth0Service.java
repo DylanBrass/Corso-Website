@@ -86,11 +86,11 @@ public class Auth0Service {
 
     public ResponseEntity<Void> handleExternalLogin(OidcUser principal) throws IOException, InterruptedException {
         log.info("Handling Apple Login");
-        String accessToken = getAccessToken();
 
         if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
                 || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
             log.info("No roles found, adding default role");
+            String accessToken = getAccessToken();
 
             String userId = principal.getSubject().replace("|", "%7C");
 
@@ -146,6 +146,8 @@ public class Auth0Service {
                 .path("/")
                 .sameSite("none")
                 .build();
+
+
         log.info("Subject: " + principal.getSubject());
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());
