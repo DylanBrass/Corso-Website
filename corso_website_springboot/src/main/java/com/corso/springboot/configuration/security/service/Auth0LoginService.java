@@ -3,6 +3,7 @@ package com.corso.springboot.configuration.security.service;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.Generated;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,8 @@ import java.net.http.HttpResponse;
 @Slf4j
 @Service
 @Generated
-public class Auth0Service {
+@RequiredArgsConstructor
+public class Auth0LoginService {
 
     @Value("${okta.oauth2.issuer}")
     private String issuer;
@@ -33,22 +35,8 @@ public class Auth0Service {
     @Value("${okta.oauth2.client-secret}")
     private String clientSecret;
 
-    public String getAccessToken() throws IOException, InterruptedException {
-        log.info("Getting Access Token");
+    private final Auth0ManagementService auth0ManagementService;
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(issuer + "oauth/token"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(
-                        "{\"client_id\":\"" + clientId + "\",\"client_secret\":\"" + clientSecret + "\",\"audience\":\"" + issuer + "api/v2/\",\"grant_type\":\"client_credentials\"}"))
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        log.info("Access Token: " + extractToken(response.body()));
-        return extractToken(response.body());
-    }
 
     public void addRoleToUser(String userId, String accessToken) throws UnirestException {
         log.info("Adding role to user");
@@ -80,9 +68,6 @@ public class Auth0Service {
     }
 
 
-    private String extractToken(String response) {
-        return response.split(",")[0].split(":")[1].replace("\"", "");
-    }
 
     public ResponseEntity<Void> handleExternalLogin(OidcUser principal) throws IOException, InterruptedException {
         log.info("Handling Apple Login");
@@ -90,7 +75,7 @@ public class Auth0Service {
         if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
                 || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
             log.info("No roles found, adding default role");
-            String accessToken = getAccessToken();
+            String accessToken = auth0ManagementService.getAccessToken();
 
             String userId = principal.getSubject().replace("|", "%7C");
 
@@ -146,8 +131,6 @@ public class Auth0Service {
                 .path("/")
                 .sameSite("none")
                 .build();
-
-
         log.info("Subject: " + principal.getSubject());
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());

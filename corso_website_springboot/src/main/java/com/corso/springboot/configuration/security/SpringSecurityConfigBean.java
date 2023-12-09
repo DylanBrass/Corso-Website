@@ -49,7 +49,7 @@ public class SpringSecurityConfigBean {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/corso/logout")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/auth0/manage/**")).hasAuthority("Admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/galleries/carousel")).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -82,7 +82,8 @@ public class SpringSecurityConfigBean {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfToken())
                         .ignoringRequestMatchers(
-                                new AntPathRequestMatcher("/api/v1/corso/logout", HttpMethod.POST.toString())
+                                new AntPathRequestMatcher("/api/v1/corso/logout", HttpMethod.POST.toString()),
+                                new AntPathRequestMatcher("/api/v1/corso/security/redirect", HttpMethod.GET.toString())
                         )
                 )
                 .cors(httpSecurityCorsConfigurer -> {
