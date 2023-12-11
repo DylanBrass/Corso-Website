@@ -33,7 +33,8 @@ function LogoutRedirect() {
                             display: "none",
                             visibility: "hidden"
                         }
-                    }>Logout
+                    }>
+                        Logout
                     </button>
 
                 </form>

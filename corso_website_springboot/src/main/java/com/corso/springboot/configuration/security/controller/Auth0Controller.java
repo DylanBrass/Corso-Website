@@ -3,13 +3,13 @@ package com.corso.springboot.configuration.security.controller;
 import com.corso.springboot.configuration.security.models.UserRequest;
 import com.corso.springboot.configuration.security.models.UserResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @Generated
@@ -22,12 +22,20 @@ public class Auth0Controller {
     private final Auth0ManagementService auth0ManagementService;
 
     @PostMapping("/add-admin")
-    public ResponseEntity<UserResponse> addAdmin(@RequestBody UserRequest userRequest) throws UnirestException {
+    public ResponseEntity<UserResponse> addAdmin(@RequestBody UserRequest userRequest) throws IOException, InterruptedException {
         return auth0ManagementService.addAdmin(userRequest);
     }
 
     @GetMapping("/get-userinfo")
-    public ResponseEntity<UserResponse> getUserInfo() throws UnirestException {
+    public ResponseEntity<UserResponse> getUserInfo() {
         return null;
+    }
+
+
+
+
+    @GetMapping("/get-total-admins")
+    public ResponseEntity<Integer> getTotalAdmins() throws IOException, InterruptedException {
+        return auth0ManagementService.getTotalOfRole("rol_5AZt4iZ6HOc5TMa5");
     }
 }

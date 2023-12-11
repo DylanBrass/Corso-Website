@@ -1,0 +1,9 @@
+h1{
+    margin-top: 15px;
+}/* Dashboard.css */
+
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+}
+

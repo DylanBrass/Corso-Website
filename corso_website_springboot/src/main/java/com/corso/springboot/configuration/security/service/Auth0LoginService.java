@@ -1,7 +1,5 @@
 package com.corso.springboot.configuration.security.service;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,42 +27,45 @@ public class Auth0LoginService {
     @Value("${okta.oauth2.issuer}")
     private String issuer;
 
-    @Value("${okta.oauth2.client-id}")
-    private String clientId;
-
-    @Value("${okta.oauth2.client-secret}")
-    private String clientSecret;
 
     private final Auth0ManagementService auth0ManagementService;
 
 
-    public void addRoleToUser(String userId, String accessToken) throws UnirestException {
+    public void addRoleToUser(String userId, String accessToken) {
         log.info("Adding role to user");
-        com.mashape.unirest.http.HttpResponse<String> response = Unirest.post(issuer + "/api/v2/users/" + userId + "/roles")
-                .header("content-type", "application/json")
-                .header("authorization", "Bearer " + accessToken)
-                .header("cache-control", "no-cache")
-                .body("{ \"roles\": [ \"rol_9AIxt3Pgft1HDi9B\"] }")
-                .asString();
-        log.info("Response: " + response.getBody());
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(issuer + "/api/v2/users/" + userId + "/roles"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + accessToken)
+                .POST(HttpRequest.BodyPublishers.ofString("{ \"roles\": [\"rol_9AIxt3Pgft1HDi9B\"] }"))
+                .build();
+
+        HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
+
+        log.info("Response: " + response.body());
     }
 
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
-        com.mashape.unirest.http.HttpResponse<String> response = null;
-        try {
-            response = Unirest.post(issuer + "/api/v2/jobs/verification-email")
-                    .header("content-type", "application/json")
-                    .header("authorization", "Bearer " + accessToken)
-                    .header("cache-control", "no-cache")
-                    .body("{ \"user_id\": \"" + userId + "\" }")
-                    .asString();
-            log.info("Response: " + response.getBody());
-        } catch (UnirestException e) {
-            log.error(e.getMessage());
-        }
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(issuer + "/api/v2/jobs/verification-email"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + accessToken)
+                .POST(HttpRequest.BodyPublishers.ofString("{ \"user_id\": \"" + userId + "\" }"))
+                .build();
+
+        log.info("Request: " + request.toString());
+
+        HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
+
         assert response != null;
-        log.info("Response: " + response.getBody());
+        log.info("Response: " + response.body());
     }
 
 
@@ -79,20 +80,13 @@ public class Auth0LoginService {
 
             String userId = principal.getSubject().replace("|", "%7C");
 
-            try {
                 addRoleToUser(userId, accessToken);
-            } catch (UnirestException e) {
-                log.error(e.getMessage());
-            }
-
 
 
             return ResponseEntity.status(302)
                     .location(URI.create("http://localhost:3000/external")).build();
 
         }
-
-
 
         return getVoidResponseEntity(principal);
     }
@@ -131,6 +125,8 @@ public class Auth0LoginService {
                 .path("/")
                 .sameSite("none")
                 .build();
+
+
         log.info("Subject: " + principal.getSubject());
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());

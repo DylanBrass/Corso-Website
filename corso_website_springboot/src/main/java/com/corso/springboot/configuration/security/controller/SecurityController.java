@@ -1,18 +1,14 @@
 package com.corso.springboot.configuration.security.controller;
 
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0LoginService;
 
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -31,7 +27,7 @@ public class SecurityController {
     private final Auth0ManagementService auth0ManagementService;
 
     @GetMapping("/redirect")
-    public ResponseEntity<Void> redirectAfterLogin(@AuthenticationPrincipal OidcUser principal, HttpServletRequest request) throws IOException, InterruptedException, UnirestException {
+    public ResponseEntity<Void> redirectAfterLogin(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException {
         String accessToken;
 
 
@@ -90,6 +86,19 @@ public class SecurityController {
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
         return auth0LoginService.getVoidResponseEntity(principal);
     }
+
+    @GetMapping("/user-info")
+    public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException {
+
+        if(principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+
+        String userId = principal.getSubject();
+
+        return ResponseEntity.ok().body(auth0ManagementService.getUserInfo(userId));
+    }
+
 
 
 }

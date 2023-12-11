@@ -53,14 +53,11 @@ public class SpringSecurityConfigBean {
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/galleries/carousel")).permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exceptionHandling -> {
-                    exceptionHandling.authenticationEntryPoint(authenticationEntryPoint());
-                })
-                .oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
-                    httpSecurityOAuth2LoginConfigurer.loginPage("/login/oauth2/code/okta")
-                            .defaultSuccessUrl("http://localhost:8080/api/v1/corso/security/redirect", true)
-                            .permitAll();
-                })
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()))
+                .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
+                        .loginPage("/login/oauth2/code/okta")
+                        .defaultSuccessUrl("http://localhost:8080/api/v1/corso/security/redirect", false)
+                        .permitAll())
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> {
                     logout.logoutUrl("/api/v1/corso/logout")
@@ -75,6 +72,7 @@ public class SpringSecurityConfigBean {
                                         response.addCookie(newCookie);
                                     }
                                 });
+
                                 response.setStatus(HttpStatus.OK.value());
                             });
                 })
@@ -101,7 +99,7 @@ public class SpringSecurityConfigBean {
 
     private AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
-            final ErrorMessage errorMessage = ErrorMessage.from("Requires security");
+            final ErrorMessage errorMessage = ErrorMessage.from(authException.getMessage());
             final String json = mapper.writeValueAsString(errorMessage);
 
             log.error("Error: {}", json);
