@@ -1,0 +1,74 @@
+.banner-box{
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5em;
+    min-height: 600px;
+}
+
+.anonymous-banner-title{
+    color: #FFF;
+    text-align: center;
+    text-shadow: 7px 7px 4px rgba(0, 0, 0, 0.25);
+    font-family: Pathway Gothic One;
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.banner-box button{
+    border-radius: 40px;
+    border: 5px solid #FFF;
+    background: none;
+    color: #FFF;
+    font-family: Nunito;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: uppercase;
+    padding: 10px 30px 10px 30px;
+
+    &:hover{
+        background: #FFF;
+        color: #000;
+    }
+
+    &:active{
+        background-color: #FFF;
+        color: #000;
+        transform: translateY(4px);
+    }
+}
+
+.banner-box h1{
+    color: #FFF;
+    text-align: center;
+    text-shadow: 7px 7px 4px rgba(0, 0, 0, 0.25);
+    font-family: Pathway Gothic One;
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.banner-box h3{
+    color: #FFF;
+    text-align: center;
+    text-shadow: 7px 7px 4px rgba(0, 0, 0, 0.25);
+    font-family: Pathway Gothic One;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+    background: none;
+}

@@ -60,7 +60,7 @@ function CreateAdminPage() {
                                 <h5>Create Admin Account</h5>
                             </div>
                             <div className={"row form-admin-box w-75 m-auto"}>
-                                <form onSubmit={addAdmin} style={{
+                                <form id={"add-admin-form"} onSubmit={addAdmin} style={{
 
                                 }}>
                                     <div className="mt-4">

@@ -56,7 +56,7 @@ public class SpringSecurityConfigBean {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()))
                 .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
                         .loginPage("/login/oauth2/code/okta")
-                        .defaultSuccessUrl("http://localhost:8080/api/v1/corso/security/redirect", false)
+                        .defaultSuccessUrl("http://localhost:8080/api/v1/corso/security/redirect", true)
                         .permitAll())
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> {
