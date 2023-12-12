@@ -17,7 +17,7 @@ public class Service {
     private String id;
 
     @Embedded
-    private ServiceIdentifier serviceId;
+    private ServiceIdentifier serviceIdentifier;
 
     private String serviceName;
     private String serviceDescription;
@@ -25,7 +25,7 @@ public class Service {
     private String serviceImage;
 
     public Service(String serviceName, String serviceDescription, String serviceIcon, String serviceImage) {
-        this.serviceId = new ServiceIdentifier();
+        this.serviceIdentifier = new ServiceIdentifier();
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
         this.serviceIcon = serviceIcon;
