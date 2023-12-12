@@ -1,69 +1,28 @@
 import OurPreviousProjects from "../Main Page Components/OurPreviousProjects";
 import NavigationBar from "../Components/NavigationBar";
-import axios from "axios";
+import BannerMainPage from "../Main Page Components/BannerMainPage";
 import {useAuth} from "../security/Components/AuthProvider";
+import BannerMainPageAnonymous from "../Main Page Components/BannerMainPageAnonymous";
 
 
 function MainPage() {
+
     const auth = useAuth();
 
-
-    const postTest = async (event: any) => {
-        event.preventDefault();
-        await axios.post("http://localhost:8080/api/v1/corso/security/test", {
-            "name": "test",
-            "surname": "test"
-        }, {
-            headers: {
-                // @ts-ignore
-                'X-XSRF-TOKEN': auth.getXsrfToken()
-            }
-        })
-            .then(r => console.log('Response:', r))
-            .catch(e => {
-                // @ts-ignore
-                auth.authError(e.response.status);
-            })
-    }
-
-    const adminPostTest = async (event: any) => {
-        event.preventDefault();
-        // @ts-ignore
-        await axios.post("http://localhost:8080/api/v1/corso/security/test/admin", {
-            "name": "test",
-            "surname": "test"
-        }, {
-            headers: {
-                // @ts-ignore
-                'X-XSRF-TOKEN': auth.getXsrfToken()
-            }
-        })
-            .then(r => console.log('Response:', r))
-            .catch(e => {
-                // @ts-ignore
-                auth.authError(e.response.status);
-            })
-    }
     return (
         <div>
             <NavigationBar />
-            <h1>Main Page</h1>
-            <OurPreviousProjects />
             {
                 // @ts-ignore
-                //suppress when u get red error on isAuthenticated
-                auth.isAuthenticated &&
-                <>
-            <form onSubmit={postTest}>
-                <button type="submit">Post test</button>
-            </form>
-
-            <form onSubmit={adminPostTest}>
-                <button type={"submit"}>Admin test</button>
-            </form>
-                </>
-}
-
+                auth.isAuthenticated ?
+            <BannerMainPage
+                image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702345020/banner-img-2_bgodwz.png"}
+            />
+                :
+                <BannerMainPageAnonymous
+                    image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702332049/banner_cqmadc.png"}/>
+            }
+            <OurPreviousProjects />
         </div>
     );
 }

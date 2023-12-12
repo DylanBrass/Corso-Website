@@ -1,12 +1,12 @@
 package com.corso.springboot.configuration.security.controller;
 
-import com.corso.springboot.configuration.security.service.Auth0Service;
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
+import com.corso.springboot.configuration.security.service.Auth0LoginService;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +23,14 @@ import java.net.URI;
 public class SecurityController {
 
 
-    private final Auth0Service auth0Service;
+    private final Auth0LoginService auth0LoginService;
+    private final Auth0ManagementService auth0ManagementService;
 
     @GetMapping("/redirect")
-    public ResponseEntity<Void> redirectAfterLogin(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException, UnirestException {
+    public ResponseEntity<Void> redirectAfterLogin(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException {
         String accessToken;
+
+
         if (principal == null) {
             log.info("Principal is null");
             return ResponseEntity.status(HttpStatus.FOUND)
@@ -35,22 +38,22 @@ public class SecurityController {
         }
 
 
-        //handle apple and google login
+        //handle apple, google and facebook login
         if(principal.getSubject().contains("apple") || principal.getSubject().contains("google-oauth2")
                 || principal.getSubject().contains("facebook")){
-            return auth0Service.handleExternalLogin(principal);
+            return auth0LoginService.handleExternalLogin(principal);
         }
 
         if(principal.getSubject().contains("auth0")) {
 
-            accessToken = auth0Service.getAccessToken();
+            accessToken = auth0ManagementService.getAccessToken();
 
 
             boolean isVerified;
             try {
                 isVerified = principal.getClaim("email_verified");
             } catch (NullPointerException e) {
-                isVerified = true;
+                isVerified = false;
             }
 
             if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
@@ -59,11 +62,10 @@ public class SecurityController {
 
                 String userId = principal.getSubject().replace("|", "%7C");
 
-                auth0Service.addRoleToUser(userId, accessToken);
+                auth0LoginService.addRoleToUser(userId, accessToken);
 
                 if (!isVerified) {
                     log.info("User not verified, redirecting to verification page");
-                    auth0Service.sendVerificationEmail(principal.getSubject(), accessToken);
                     return ResponseEntity.status(HttpStatus.FOUND)
                             .location(URI.create("http://localhost:3000/verify")).build();
                 }
@@ -75,44 +77,28 @@ public class SecurityController {
 
             if (!isVerified) {
                 log.info("User not verified, redirecting to verification page");
-                auth0Service.sendVerificationEmail(principal.getSubject(), accessToken);
+                auth0LoginService.sendVerificationEmail(principal.getSubject(), accessToken);
                 return ResponseEntity.status(HttpStatus.FOUND)
                         .location(URI.create("http://localhost:3000/verify")).build();
             }
         }
 
-
-
-
-
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
-        return auth0Service.getVoidResponseEntity(principal);
+        return auth0LoginService.getVoidResponseEntity(principal);
     }
 
-    //todo: remove this method
-    @PostMapping("/test")
-    public ResponseEntity<TestDTO> test(@AuthenticationPrincipal OidcUser principal, @RequestBody TestDTO body){
-        log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
-        return ResponseEntity.status(HttpStatus.CREATED).body(body);
+    @GetMapping("/user-info")
+    public ResponseEntity<UserInfoResponse> getUserInfo(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException {
+
+        if(principal == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+
+        String userId = principal.getSubject();
+
+        return ResponseEntity.ok().body(auth0ManagementService.getUserInfo(userId));
     }
 
 
-    //todo: remove this method
-    @PostMapping("/test/admin")
-    @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<TestDTO> testAdmin(@AuthenticationPrincipal OidcUser principal, @RequestBody TestDTO body){
-        log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));
-        return ResponseEntity.status(HttpStatus.OK).body(body);
-    }
 
-}
-
-//todo: remove this class
-@EqualsAndHashCode(callSuper=false)
-@Data
-@Generated
-@AllArgsConstructor
-class TestDTO{
-    private String name;
-    private String surname;
 }

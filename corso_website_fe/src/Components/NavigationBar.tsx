@@ -21,7 +21,7 @@ function NavigationBar() {
                             // @ts-ignore
                             auth.userRoles().includes("Admin") &&
                             <Nav.Item className={"item"}>
-                                <Nav.Link href="#">DASHBOARD</Nav.Link>
+                                <Nav.Link href="/dashboard">DASHBOARD</Nav.Link>
                             </Nav.Item>
                         }
                         {
@@ -34,7 +34,7 @@ function NavigationBar() {
                         }
                         <Nav.Item className={"item"}>
 
-                            <Nav.Link href="#" active>
+                            <Nav.Link href="/" active>
                                 HOME
                             </Nav.Link>
                         </Nav.Item>

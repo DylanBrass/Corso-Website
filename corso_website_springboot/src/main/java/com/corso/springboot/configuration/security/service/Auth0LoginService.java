@@ -1,8 +1,7 @@
 package com.corso.springboot.configuration.security.service;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.Generated;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -22,92 +21,72 @@ import java.net.http.HttpResponse;
 @Slf4j
 @Service
 @Generated
-public class Auth0Service {
+@RequiredArgsConstructor
+public class Auth0LoginService {
 
     @Value("${okta.oauth2.issuer}")
     private String issuer;
 
-    @Value("${okta.oauth2.client-id}")
-    private String clientId;
 
-    @Value("${okta.oauth2.client-secret}")
-    private String clientSecret;
+    private final Auth0ManagementService auth0ManagementService;
 
-    public String getAccessToken() throws IOException, InterruptedException {
-        log.info("Getting Access Token");
+
+    public void addRoleToUser(String userId, String accessToken) {
+        log.info("Adding role to user");
 
         HttpClient client = HttpClient.newHttpClient();
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(issuer + "oauth/token"))
+                .uri(URI.create(issuer + "/api/v2/users/" + userId + "/roles"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(
-                        "{\"client_id\":\"" + clientId + "\",\"client_secret\":\"" + clientSecret + "\",\"audience\":\"" + issuer + "api/v2/\",\"grant_type\":\"client_credentials\"}"))
+                .header("Authorization", "Bearer " + accessToken)
+                .POST(HttpRequest.BodyPublishers.ofString("{ \"roles\": [\"rol_9AIxt3Pgft1HDi9B\"] }"))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
 
-        log.info("Access Token: " + extractToken(response.body()));
-        return extractToken(response.body());
-    }
-
-    public void addRoleToUser(String userId, String accessToken) throws UnirestException {
-        log.info("Adding role to user");
-        com.mashape.unirest.http.HttpResponse<String> response = Unirest.post(issuer + "/api/v2/users/" + userId + "/roles")
-                .header("content-type", "application/json")
-                .header("authorization", "Bearer " + accessToken)
-                .header("cache-control", "no-cache")
-                .body("{ \"roles\": [ \"rol_9AIxt3Pgft1HDi9B\"] }")
-                .asString();
-        log.info("Response: " + response.getBody());
+        log.info("Response: " + response.body());
     }
 
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
-        com.mashape.unirest.http.HttpResponse<String> response = null;
-        try {
-            response = Unirest.post(issuer + "/api/v2/jobs/verification-email")
-                    .header("content-type", "application/json")
-                    .header("authorization", "Bearer " + accessToken)
-                    .header("cache-control", "no-cache")
-                    .body("{ \"user_id\": \"" + userId + "\" }")
-                    .asString();
-            log.info("Response: " + response.getBody());
-        } catch (UnirestException e) {
-            log.error(e.getMessage());
-        }
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(issuer + "/api/v2/jobs/verification-email"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + accessToken)
+                .POST(HttpRequest.BodyPublishers.ofString("{ \"user_id\": \"" + userId + "\" }"))
+                .build();
+
+        log.info("Request: " + request.toString());
+
+        HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
+
         assert response != null;
-        log.info("Response: " + response.getBody());
+        log.info("Response: " + response.body());
     }
 
 
-    private String extractToken(String response) {
-        return response.split(",")[0].split(":")[1].replace("\"", "");
-    }
 
     public ResponseEntity<Void> handleExternalLogin(OidcUser principal) throws IOException, InterruptedException {
         log.info("Handling Apple Login");
-        String accessToken = getAccessToken();
 
         if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
                 || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
             log.info("No roles found, adding default role");
+            String accessToken = auth0ManagementService.getAccessToken();
 
             String userId = principal.getSubject().replace("|", "%7C");
 
-            try {
                 addRoleToUser(userId, accessToken);
-            } catch (UnirestException e) {
-                log.error(e.getMessage());
-            }
-
 
 
             return ResponseEntity.status(302)
                     .location(URI.create("http://localhost:3000/external")).build();
 
         }
-
-
 
         return getVoidResponseEntity(principal);
     }
@@ -146,6 +125,8 @@ public class Auth0Service {
                 .path("/")
                 .sameSite("none")
                 .build();
+
+
         log.info("Subject: " + principal.getSubject());
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());

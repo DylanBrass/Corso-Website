@@ -20,7 +20,7 @@ VALUES
     ('953a8b11-3c0a-4a9b-900d-2ab3395d5d81', 'Emergency Services', '24/7 emergency electrical services', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg');
 
 -- Insert dummy data into `orders` table
-INSERT INTO `orders` (order_id, service_id, user_id, order_date, due_date, order_status, order_description, customer_fullname, customer_email, customer_phone, customer_address)
+INSERT INTO `orders` (order_id, service_id, user_id, order_date, due_date, order_status, order_description, customer_full_name, customer_email, customer_phone, customer_address)
 VALUES
     ('ac5ca2b4-d53c-4516-8d4b-17665b46f411', '982577e6-1909-46b8-8583-e08c9daa4e9b', 'auth0|65702e81e9661e14ab3aac89', '2023-01-01', '2023-02-01', 'In Progress', 'Custom web development project', 'John Doe', 'john@example.com', '1234567890', '123 Main St'),
     ('10f906fe-e014-453d-ab83-4ea523646e1e', 'b581b538-d6d5-44f1-b288-b45824e4dd4c', 'auth0|65702e81e9661e14ab3aac89', '2023-02-01', '2023-03-01', 'Completed', 'Logo design for new brand', 'Jane Smith', 'jane@example.com', '9876543210', '456 Oak St'),
@@ -38,7 +38,7 @@ VALUES
     ('753a87e5-201e-4d4d-bd67-8393bc9b88f7', 'How can I contact customer support?', 'You can contact our customer support team through the contact form on our website or by emailing support@example.com.', true);
 
 -- Insert dummy data into `reviews` table
-INSERT INTO `reviews` (review_id, user_id, customer_fullname, review_date, message, review_rating, pinned)
+INSERT INTO `reviews` (review_id, user_id, customer_full_name, review_date, message, review_rating, pinned)
 VALUES
     ('e2d2cb36-5a3e-4180-afdd-b416b66a4546', 'auth0|65702e81e9661e14ab3aac89', 'John Doe', '2023-02-15', 'Excellent service and communication throughout the project!', 5, true),
     ('bb8a5754-c79b-4156-802d-704b90da3320', 'auth0|65702e81e9661e14ab3aac89', 'Jane Smith', '2023-03-15', 'The graphic design work exceeded my expectations. Very satisfied!', 4, false),

@@ -1,6 +1,7 @@
 package com.corso.springboot.configuration.csrf;
 
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Generated;
@@ -11,6 +12,7 @@ import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -20,6 +22,8 @@ public final class SpaCsrfToken extends CsrfTokenRequestAttributeHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
+        log.info("CSRF Token in handle: " + csrfToken.get().getToken());
+
 
         this.delegate.handle(request, response, csrfToken);
     }
@@ -34,7 +38,10 @@ public final class SpaCsrfToken extends CsrfTokenRequestAttributeHandler {
             return super.resolveCsrfTokenValue(request, csrfToken);
         }
 
+
+
         log.info("CSRF Token in resolveCsrfMethod 2: " + csrfToken.getToken());
         return this.delegate.resolveCsrfTokenValue(request, csrfToken);
     }
+
 }

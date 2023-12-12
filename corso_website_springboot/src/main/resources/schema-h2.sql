@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS orders
     due_date DATE,
     order_status VARCHAR(50) NOT NULL,
     order_description TEXT NULL,
-    customer_fullname VARCHAR(255) NOT NULL,
+    customer_full_name VARCHAR(255) NOT NULL,
     customer_email VARCHAR(255) NOT NULL,
     customer_phone VARCHAR(255),
     customer_address TEXT NOT NULL
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS reviews
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     review_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
-    customer_fullname VARCHAR(255) NOT NULL,
+    customer_full_name VARCHAR(255) NOT NULL,
     review_date DATE NOT NULL,
     message TEXT NOT NULL,
     review_rating INT CHECK ( review_rating >= 1 AND review_rating <= 5 ) NOT NULL,
