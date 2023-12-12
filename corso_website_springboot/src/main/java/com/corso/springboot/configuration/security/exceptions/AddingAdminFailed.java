@@ -14,6 +14,6 @@ public class AddingAdminFailed extends RuntimeException{
     public AddingAdminFailed(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
-    }@Generated
+    }
 
 }
