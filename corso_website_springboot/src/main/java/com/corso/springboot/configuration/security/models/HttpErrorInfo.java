@@ -1,5 +1,6 @@
 package com.corso.springboot.configuration.security.models;
 
+import lombok.Generated;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -8,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
+@Generated
 public class HttpErrorInfo {
 
     private final String timestamp;
