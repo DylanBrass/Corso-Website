@@ -1,0 +1,72 @@
+.services-container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    background: #F4F4F4;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.service-header {
+    width: auto;
+}
+
+.service-title {
+    color: #FFF;
+    text-align: center;
+    font-size: 70px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.error {
+    color: red;
+}
+
+.service-card {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 20px;
+    padding-top: 80px;
+    border-radius: 4px;
+    transition: box-shadow 0.3s ease-in-out;
+    background: #FFF;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.00);
+    margin-top: 50px;
+}
+
+.service-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.service-icon-container {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.service-icon {
+    border-radius: 50%;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.service-name {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+.details-hyperlink{
+    color: #14ACED;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+}
