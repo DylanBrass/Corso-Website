@@ -1,6 +1,8 @@
-export {};
+
 import React from 'react';
 import './OrderTile.css';
+
+export {};
 
 export class Order {
     orderTrackingNumber: string;
