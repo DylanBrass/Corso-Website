@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@coreui/react": "^4.11.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.20",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -49,6 +52,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@mui/types": "^7.2.10",
     "@types/js-cookie": "^3.0.6",
     "@types/selenium-webdriver": "^4.1.20"
   }

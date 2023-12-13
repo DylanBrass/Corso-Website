@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS orders
 (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id VARCHAR(36) NOT NULL,
+    order_tracking_number VARCHAR(255) NOT NULL,
     service_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
     order_date DATE NOT NULL,

@@ -1,0 +1,79 @@
+.orders-tile {
+    width: 50%;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    background-color: #F7F7F7;
+    flex-direction: column;
+    margin: 10px;
+    padding: 20px 20px 20px 10px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 20px;
+
+        & .box-body {
+            grid-template-columns: 1fr;
+        }
+
+        & .order-service {
+            margin-left: 0;
+        }
+
+        & .order-status {
+            margin-left: 0;
+            padding-top: 0;
+        }
+    }
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    .box-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns: left and right */
+        grid-template-rows: auto auto; /* Two rows: top and bottom */
+        gap: 10px; /* Gap between grid items */
+        padding: 10px;
+    }
+
+    & p {
+        font-size: 16px;
+        color: #666;
+        text-align: left;
+        margin: 0;
+    }
+
+    & .order-id,
+    & .customer-full-name {
+        font-size: 23px;
+    }
+
+    & .order-id {
+        grid-area: 1 / 1 / 2 / 2; /* Place order-id in the top-left grid cell */
+        color: black;
+    }
+
+    & .customer-full-name {
+        grid-area: 2 / 1 / 3 / 2; /* Place customer-full-name in the bottom-left grid cell */
+        padding-top: 30px;
+        color: black;
+    }
+
+    & .order-service {
+        grid-area: 1 / 2 / 2 / 3; /* Place order-service in the top-right grid cell */
+        margin-left: 90px; /* Add margin-left to the second box */
+        font-size: 20px;
+        color: black;
+    }
+
+    & .order-status {
+        grid-area: 2 / 2 / 3 / 3; /* Place order-status in the bottom-right grid cell */
+        margin-left: 100px;
+        font-size: 19px;
+        padding-top: 30px;
+        color: black;
+    }
+}

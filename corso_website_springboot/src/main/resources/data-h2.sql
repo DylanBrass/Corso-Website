@@ -20,13 +20,13 @@ VALUES
     ('953a8b11-3c0a-4a9b-900d-2ab3395d5d81', 'Emergency Services', '24/7 emergency electrical services', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg');
 
 -- Insert dummy data into `orders` table
-INSERT INTO `orders` (order_id, service_id, user_id, order_date, due_date, order_status, order_description, customer_full_name, customer_email, customer_phone, customer_address)
+INSERT INTO `orders` (order_id, order_tracking_number, service_id, user_id, order_date, due_date, order_status, order_description, customer_full_name, customer_email, customer_phone, customer_address)
 VALUES
-    ('ac5ca2b4-d53c-4516-8d4b-17665b46f411', '982577e6-1909-46b8-8583-e08c9daa4e9b', 'auth0|65702e81e9661e14ab3aac89', '2023-01-01', '2023-02-01', 'In Progress', 'Custom web development project', 'John Doe', 'john@example.com', '1234567890', '123 Main St'),
-    ('10f906fe-e014-453d-ab83-4ea523646e1e', 'b581b538-d6d5-44f1-b288-b45824e4dd4c', 'auth0|65702e81e9661e14ab3aac89', '2023-02-01', '2023-03-01', 'Completed', 'Logo design for new brand', 'Jane Smith', 'jane@example.com', '9876543210', '456 Oak St'),
-    ('a0119367-4963-4019-b433-ba639fdf6b41', '14e10861-5472-4e33-bb7b-b6e7ba2a83f6', 'auth0|65702e81e9661e14ab3aac89', '2023-03-01', '2023-04-01', 'Pending', 'Social media marketing campaign', 'Bob Johnson', 'bob@example.com', NULL, '789 Pine St'),
-    ('1ab0b0bb-9a49-44d3-a171-188a303ebc8d', '7bf6a544-b34d-478a-898a-a64603100fcf', 'auth0|65702e81e9661e14ab3aac89', '2023-04-01', '2023-05-01', 'In Progress', 'iOS app development', 'Alice Williams', 'alice@example.com', '5432109876', '101 Elm St'),
-    ('0a44b38b-08af-4321-8117-9a5c32ff3a29', '953a8b11-3c0a-4a9b-900d-2ab3395d5d81', 'auth0|65702e81e9661e14ab3aac89', '2023-05-01', '2023-06-01', 'Completed', 'SEO optimization for website', 'David Brown', 'david@example.com', '9876123450', '202 Maple St');
+    ('ac5ca2b4-d53c-4516-8d4b-17665b46f411', 'T1YX4S', '982577e6-1909-46b8-8583-e08c9daa4e9b', 'auth0|65702e81e9661e14ab3aac89', '2023-01-01', '2023-02-01', 'IN_PROGRESS', 'Custom web development project', 'John Doe', 'john@example.com', '1234567890', '123 Main St'),
+    ('10f906fe-e014-453d-ab83-4ea523646e1e', 'J0ZW6D', 'b581b538-d6d5-44f1-b288-b45824e4dd4c', 'auth0|65702e81e9661e14ab3aac89', '2023-02-01', '2023-03-01', 'COMPLETED', 'Logo design for new brand', 'Jane Smith', 'jane@example.com', '9876543210', '456 Oak St'),
+    ('a0119367-4963-4019-b433-ba639fdf6b41', 'P4G87V', '14e10861-5472-4e33-bb7b-b6e7ba2a83f6', 'auth0|65702e81e9661e14ab3aac89', '2023-03-01', '2023-04-01', 'PENDING', 'Social media marketing campaign', 'Bob Johnson', 'bob@example.com', NULL, '789 Pine St'),
+    ('1ab0b0bb-9a49-44d3-a171-188a303ebc8d', 'LRM3KT', '7bf6a544-b34d-478a-898a-a64603100fcf', 'auth0|65702e81e9661e14ab3aac89', '2023-04-01', '2023-05-01', 'CANCELLED', 'iOS app development', 'Alice Williams', 'alice@example.com', '5432109876', '101 Elm St'),
+    ('0a44b38b-08af-4321-8117-9a5c32ff3a29', '1E92BF', '953a8b11-3c0a-4a9b-900d-2ab3395d5d81', 'auth0|65702e81e9661e14ab3aac89', '2023-05-01', '2023-06-01', 'COMPLETED', 'SEO optimization for website', 'David Brown', 'david@example.com', '9876123450', '202 Maple St');
 
 -- Insert dummy data into `FAQs` table
 INSERT INTO `FAQs` (faq_id, question, answer, preference)
