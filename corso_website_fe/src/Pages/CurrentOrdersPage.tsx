@@ -23,7 +23,7 @@ function CurrentOrdersPage() {
             const responseData = response.data;
 
             const newOrders = await Promise.all(responseData.map(async (order: any) => {
-                const serviceResponse = await axios.get("http://localhost:8080/api/v1/corso/services" + "/" + order.serviceId);
+                const serviceResponse = await axios.get("http://localhost:8080/api/v1/corso/services/" + order.serviceId);
                 console.log("SERVICES " + serviceResponse.data);
                 const serviceName = serviceResponse.data.serviceName;
 
@@ -46,13 +46,6 @@ function CurrentOrdersPage() {
     const handlePageChange = (pageNumber: number, size: number) => {
         setPage(pageNumber);
         fetchOrders(pageNumber, size);
-    };
-
-    const handlePageSizeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const newSize = Number(event.target.value);
-        setPageSize(newSize);
-        setPage(1);
-        fetchOrders(1, newSize);
     };
 
     useEffect(() => {
