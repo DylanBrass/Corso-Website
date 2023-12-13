@@ -7,6 +7,7 @@ import {AuthProvider} from "./security/Components/AuthProvider";
 import ExternalHandling from "./security/externalProvidersHandling/externalHandling";
 import Dashboard from "./Pages/Dashboard";
 import CreateAdminPage from "./Pages/CreateAdminPage";
+import CurrentOrdersPage from "./Pages/CurrentOrdersPage";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/orders/current" element={<CurrentOrdersPage/>} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
