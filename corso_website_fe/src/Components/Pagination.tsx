@@ -1,4 +1,4 @@
-// CustomPagination.tsx
+export {};
 import * as React from 'react';
 import Pagination from '@mui/material/Pagination';
 
