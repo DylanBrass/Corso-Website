@@ -1,8 +1,10 @@
 
-export {};
+
 
 import * as React from 'react';
 import Pagination from '@mui/material/Pagination';
+
+export {};
 
 interface CustomPaginationProps {
     onPageChange: (pageNumber: number, pageSize: number) => void;
