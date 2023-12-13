@@ -6,7 +6,7 @@ function ExternalHandling() {
         // @ts-ignore
         console.log(document.cookie)
         // @ts-ignore
-        if (document.cookie.includes("isAuthenticat=true")) {
+        if (document.cookie.includes("isAuthenticated=true")) {
             // @ts-ignore
             document.getElementById('submit').click();
         }else{

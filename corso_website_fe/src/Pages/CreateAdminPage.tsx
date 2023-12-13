@@ -3,6 +3,7 @@ import {useAuth} from "../security/Components/AuthProvider";
 import axios from "axios";
 import {useEffect} from "react";
 import "./CreateAdmin.css"
+import swal from "sweetalert";
 function CreateAdminPage() {
     const auth = useAuth();
 
@@ -28,15 +29,20 @@ function CreateAdminPage() {
         })
             .then(r => {
                 if (r.status === 201) {
-                    alert("Admin Created Successfully")
-                    window.location.href = "http://localhost:3000/dashboard";
+
+                    swal("Admin created!", "Admin has been created successfully!", "success")
+                        .then(() => {
+                            window.location.href = "http://localhost:3000/dashboard"
+                        })
 
                 }
             })
             .catch(e => {
-                alert(e.response.data.message)
-                // @ts-ignore
-                auth.authError(e.response.status)
+                swal("Error!", e.response.data.message, "error")
+                    .then(() => {
+                        // @ts-ignore
+                        auth.authError(e.response.status)
+                    })
             })
     }
     return (

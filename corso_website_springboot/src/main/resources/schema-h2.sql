@@ -1,5 +1,5 @@
 
-CREATE TABLE IF NOT EXISTS gallery (
+CREATE TABLE IF NOT EXISTS "gallery" (
                                        id INT NOT NULL AUTO_INCREMENT,
                                        gallery_id VARCHAR(36) UNIQUE NOT NULL,
                                        description VARCHAR(255) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS gallery (
 );
 
 
-CREATE TABLE IF NOT EXISTS services
+CREATE TABLE IF NOT EXISTS "services"
 (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     service_id VARCHAR(36) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS services
     service_image VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orders
+CREATE TABLE IF NOT EXISTS "orders"
 (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id VARCHAR(36) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS orders
     customer_address TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS  FAQs(
+CREATE TABLE IF NOT EXISTS  "FAQs"(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     faq_id VARCHAR(36) NOT NULL,
     question TEXT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS  FAQs(
     preference BOOL NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS reviews
+CREATE TABLE IF NOT EXISTS "reviews"
 (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     review_id VARCHAR(36) NOT NULL,
@@ -54,4 +54,17 @@ CREATE TABLE IF NOT EXISTS reviews
     message TEXT NOT NULL,
     review_rating INT CHECK ( review_rating >= 1 AND review_rating <= 5 ) NOT NULL,
     pinned BOOL
+);
+
+create table if not exists "customers"
+(
+    id int auto_increment primary key,
+    user_id          varchar(40)  not null unique,
+    name             varchar(100) null,
+    email            varchar(100) not null,
+    phone            varchar(100) null,
+    address          varchar(100) not null,
+    postal_code      varchar(10)  not null,
+    apartment_number varchar(15)  null,
+    city             varchar(60)  not null
 );

@@ -1,7 +1,7 @@
 package com.corso.springboot.configuration.security.controller;
 
 import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
-import com.corso.springboot.configuration.security.models.HttpErrorInfo;
+import com.corso.springboot.utils.HttpErrorInfo;
 import lombok.Generated;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
