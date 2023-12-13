@@ -13,5 +13,4 @@ public interface ServiceResponseMapper {
 
     @Mapping(expression = "java(service.getServiceIdentifier().getServiceId())", target = "serviceId")
     ServiceResponse toServiceResponse(Service service);
-    List<ServiceResponse> toServicesResponse(List<Service> services);
 }
