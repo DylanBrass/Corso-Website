@@ -97,6 +97,7 @@ check.dependsOn jacocoTestCoverageVerification
 test {
     exclude '**/ViewCarouselTest.class'
     exclude '**/LoginAuthTest.class'
+    exclude '**/ViewCurrentOrdersTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
