@@ -51,7 +51,6 @@ function CustomPagination({ onPageChange, pageSize, totalPages }: CustomPaginati
 }
 
 export default CustomPagination;
-<<<<<<< Updated upstream
 
 
 
@@ -114,5 +113,4 @@ export default CustomPagination;
 // }
 //
 // export default CustomPagination;
-=======
->>>>>>> Stashed changes
+
