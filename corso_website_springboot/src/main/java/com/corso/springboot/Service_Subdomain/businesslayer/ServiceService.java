@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ServiceService {
     ServiceResponse getServiceByServiceId(String serviceId);
+
+    List<ServiceResponse> getAllServices();
 }

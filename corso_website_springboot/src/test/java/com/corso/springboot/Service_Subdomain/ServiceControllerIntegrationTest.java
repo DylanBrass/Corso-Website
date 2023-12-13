@@ -49,4 +49,16 @@ public class ServiceControllerIntegrationTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.serviceId").isEqualTo(serviceId);
     }
+
+    @Test
+    public void whenGetAllServices_thenReturnAllServices() {
+        Integer expectedNumServices = 1;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/allServices")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumServices);
+    }
 }
