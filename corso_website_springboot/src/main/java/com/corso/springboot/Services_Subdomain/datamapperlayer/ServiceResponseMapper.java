@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ServiceResponseMapper {
 
-    @Mapping(expression = "java(service.getServiceId().getServiceId())", target = "serviceId")
+    @Mapping(expression = "java(service.getServiceIdentifier().getServiceId())", target = "serviceId")
     ServiceResponse toServiceResponse(Service service);
     List<ServiceResponse> toServicesResponse(List<Service> services);
 }
