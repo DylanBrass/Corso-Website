@@ -23,4 +23,9 @@ public class ServiceController {
     public ResponseEntity<ServiceResponse> getServiceById(@PathVariable String serviceId) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getServiceByServiceId(serviceId));
     }
+
+    @GetMapping("/allServices")
+    public ResponseEntity<List<ServiceResponse>> getAllServices(){
+        return ResponseEntity.status(HttpStatus.OK).body(serviceService.getAllServices());
+    }
 }

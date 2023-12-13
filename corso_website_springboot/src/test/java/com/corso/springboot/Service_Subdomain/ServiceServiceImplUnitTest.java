@@ -11,6 +11,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -41,5 +44,28 @@ public class ServiceServiceImplUnitTest {
         Mockito.verify(serviceRepository, Mockito.times(1)).findByServiceIdentifier_ServiceId(Mockito.anyString());
         Mockito.verify(serviceResponseMapper, Mockito.times(1)).toServiceResponse(Mockito.any());
 
+    }
+
+    @Test
+    void getAllServices_ShouldSucceed() {
+        // Arrange
+        List<ServiceResponse> mockServiceResponses = Arrays.asList(
+                new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
+                new ServiceResponse("2", "Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")
+        );
+
+        Mockito.when(serviceRepository.findAll()).thenReturn(Arrays.asList(
+                new Service("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
+                new Service("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")));
+
+        Mockito.when(serviceResponseMapper.toServicesResponse(Mockito.anyList())).thenReturn(mockServiceResponses);
+
+        // Act
+        List<ServiceResponse> result = serviceService.getAllServices();
+
+        // Assert
+        assertEquals(mockServiceResponses, result);
+        Mockito.verify(serviceRepository, Mockito.times(1)).findAll();
+        Mockito.verify(serviceResponseMapper, Mockito.times(1)).toServicesResponse(Mockito.anyList());
     }
 }

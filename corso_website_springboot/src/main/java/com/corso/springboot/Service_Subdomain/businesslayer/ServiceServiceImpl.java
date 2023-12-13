@@ -20,4 +20,8 @@ public class ServiceServiceImpl implements ServiceService{
         return serviceResponseMapper.toServiceResponse(serviceRepository.findByServiceIdentifier_ServiceId(serviceId));
     }
 
+    @Override
+    public List<ServiceResponse> getAllServices() {
+        return serviceResponseMapper.toServicesResponse(serviceRepository.findAll());
+    }
 }
