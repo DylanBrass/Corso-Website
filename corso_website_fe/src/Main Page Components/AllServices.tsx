@@ -41,7 +41,7 @@ function AllServices() {
                             </div>
                             <div className="service-info">
                                 <h2 className="service-name">{service.serviceName}</h2>
-                                <a className="details-hyperlink" href="#">View Details</a>
+                                {/* <a className="details-hyperlink" href="#">View Details</a> */}
                             </div>
                         </div>
                     </div>
