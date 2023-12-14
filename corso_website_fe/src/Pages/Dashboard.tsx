@@ -62,6 +62,7 @@ function Dashboard() {
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon1_arlmbi.png"}
                             action={() => {
                                 console.log("test")
+                                window.location.href = "/orders/completed"
                             }}
                         />
                     </div>
