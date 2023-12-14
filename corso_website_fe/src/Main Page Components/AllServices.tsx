@@ -41,7 +41,9 @@ function AllServices() {
                             </div>
                             <div className="service-info">
                                 <h2 className="service-name">{service.serviceName}</h2>
-                                {/* <a className="details-hyperlink" href="#">View Details</a> */}
+                                <a href={`/ViewServiceDetails/${service.serviceId}`} className="details-hyperlink">
+                                    View Details
+                                </a>
                             </div>
                         </div>
                     </div>

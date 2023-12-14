@@ -1,0 +1,57 @@
+.service-details-container {
+    padding: 2rem 0;
+}
+
+.service-details {
+    padding: 2rem;
+    border-radius: 0.3rem;
+}
+
+.title {
+    color: #24252A;
+    text-align: center;
+    font-size: 70px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.service-details p {
+    color: #0A1B44;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+}
+
+@media (max-width: 768px) {
+    .service-details-container {
+        padding: 1rem;
+    }
+
+    .service-details {
+        padding: 1rem;
+    }
+}
+
+.home-hyperlink{
+    color: #14ACED;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+}
+
+.img {
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.custom-row {
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}

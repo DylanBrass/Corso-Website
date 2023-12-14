@@ -10,6 +10,7 @@ import CreateAdminPage from "./Pages/CreateAdminPage";
 import CurrentOrdersPage from "./Pages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import CompletedOrdersPage from "./Pages/CompleteOrdersPage";
+import ServiceDetailsPage from "./Pages/ServiceDetailsPage";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
                     <Route path="/external" element={<ExternalHandling />} />
+                    <Route path="/viewServiceDetails/:serviceId" element={<ServiceDetailsPage />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
