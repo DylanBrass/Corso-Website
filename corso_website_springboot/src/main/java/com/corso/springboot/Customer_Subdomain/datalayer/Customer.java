@@ -3,7 +3,6 @@ package com.corso.springboot.Customer_Subdomain.datalayer;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.mapstruct.Builder;
 
 @Table(name = "customers")
 @Setter
@@ -11,6 +10,7 @@ import org.mapstruct.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Customer {
 
         @Id

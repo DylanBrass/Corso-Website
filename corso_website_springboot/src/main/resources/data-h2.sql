@@ -1,17 +1,17 @@
-
-INSERT INTO "gallery" (gallery_id, description, photo, image_position)
+-- Insert dummy data into `gallery` table
+INSERT INTO `gallery` (gallery_id, description, photo, image_position)
 VALUES ('e8da0dc7-eecc-47af-831e-ae6d5101cc24', 'A example of work for a test', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099346/test-image-carousel-1_xd1nwu.jpg', 1);
-INSERT INTO "gallery" (gallery_id, description, photo, image_position)
+INSERT INTO `gallery` (gallery_id, description, photo, image_position)
 VALUES ('ed948a48-bced-404e-bc55-6f983c1f304b', 'A example of work for a test', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099722/test-image-carousel-2_ah3zfx.png', 2);
-INSERT INTO "gallery" (gallery_id, description, photo, image_position)
+INSERT INTO `gallery` (gallery_id, description, photo, image_position)
 VALUES ('c3711305-3e95-4dce-aec5-c835cb662225', 'A example of work for a test', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099722/test-image-carousel-3_gh3fem.png', 3);
-INSERT INTO "gallery" (gallery_id, description, photo, image_position)
+INSERT INTO `gallery` (gallery_id, description, photo, image_position)
 VALUES ('cae88af2-8dd2-4087-bcd4-d863f60dda47', 'A example of work for a test', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099722/test-image-carousel-4_hyt2w5.jpg', 4);
-INSERT INTO "gallery" (gallery_id, description, photo, image_position)
+INSERT INTO `gallery` (gallery_id, description, photo, image_position)
 VALUES ('62b068a9-ef01-4bfd-8ee4-437deb43c3f6', 'A example of work for a test', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg', 5);
 
 -- Insert dummy data into `services` table
-INSERT INTO "services" (service_id, service_name, service_description, service_icon, service_image)
+INSERT INTO `services` (service_id, service_name, service_description, service_icon, service_image)
 VALUES
     ('982577e6-1909-46b8-8583-e08c9daa4e9b', 'Electrical Repairs', 'Professional electrical repair services', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg'),
     ('b581b538-d6d5-44f1-b288-b45824e4dd4c', 'Lighting Installation', 'Expert lighting installation for homes and businesses', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg'),
@@ -20,7 +20,7 @@ VALUES
     ('953a8b11-3c0a-4a9b-900d-2ab3395d5d81', 'Emergency Services', '24/7 emergency electrical services', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png', 'https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg');
 
 -- Insert dummy data into `orders` table
-INSERT INTO "orders" (order_id, order_tracking_number, service_id, user_id, order_date, due_date, order_status, order_description, customer_full_name, customer_email, customer_phone, customer_address)
+INSERT INTO `orders` (order_id, order_tracking_number, service_id, user_id, order_date, due_date, order_status, order_description, customer_full_name, customer_email, customer_phone, customer_address)
 VALUES
     ('ac5ca2b4-d53c-4516-8d4b-17665b46f411', 'T1YX4S', '982577e6-1909-46b8-8583-e08c9daa4e9b', 'auth0|65702e81e9661e14ab3aac89', '2023-01-01', '2023-02-01', 'IN_PROGRESS', 'Custom web development project', 'John Doe', 'john@example.com', '1234567890', '123 Main St'),
     ('10f906fe-e014-453d-ab83-4ea523646e1e', 'J0ZW6D', 'b581b538-d6d5-44f1-b288-b45824e4dd4c', 'auth0|65702e81e9661e14ab3aac89', '2023-02-01', '2023-03-01', 'COMPLETED', 'Logo design for new brand', 'Jane Smith', 'jane@example.com', '9876543210', '456 Oak St'),
@@ -47,26 +47,25 @@ VALUES
     ('7dcca21e-4d7b-4e8c-8c58-1a044acba519', 'auth0|65702e81e9661e14ab3aac89', 'David Brown', '2023-06-15', 'Noticed a significant improvement in website traffic after SEO optimization. Thank you!', 5, false);
 
 -- Inserting a customer named Dylan Brassard
-INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
 VALUES (16, 'facebook|311881271807762', 'Dylan Brassard', 'dylan.brassard@outlook.com', '', '3333 Street', 'J5R 5J4', '', 'City');
 
 -- Inserting a customer named Alice Doe
-INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
 VALUES (17, 'google|123456789', 'Alice Doe', 'alice.doe@gmail.com', '+1234567890', '123 Main St', 'A1B 2C3', 'Apt 5', 'Cityville');
 
 -- Inserting a customer named John Smith
-INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
 VALUES (18, 'apple|987654321', 'John Smith', 'john.smith@yahoo.com', '+9876543210', '456 Oak St', 'X0X 1Y2', '', 'Towndale');
 
 -- Inserting a customer named Emma Johnson
-INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
 VALUES (19, 'auth0|456789012', 'Emma Johnson', 'emma.johnson@hotmail.com', '+1122334455', '789 Pine St', 'M1N 2P3', 'Apt 10', 'Metrocity');
 
 -- Inserting a customer named Michael Brown
-INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
 VALUES (20, 'auth0|9876543210', 'Michael Brown', 'michael.brown@gmail.com', '+9876543210', '101 Elm St', 'Z9Z 8X7', '', 'Greenville');
 
 -- Inserting a customer named Sophia Lee
-INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
 VALUES (21, 'auth0|6543210987', 'Sophia Lee', 'sophia.lee@outlook.com', '+1122334455', '555 Maple St', 'K4K 7L6', 'Apt 3', 'Techtown');
-

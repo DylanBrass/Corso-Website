@@ -115,7 +115,7 @@ public class Auth0LoginService {
                 .httpOnly(false)
                 .secure(true)
                 .path("/")
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         String picture = principal.getClaim("picture");
@@ -124,7 +124,7 @@ public class Auth0LoginService {
                 .httpOnly(false)
                 .secure(true)
                 .path("/")
-                .sameSite("none")
+                .sameSite("None")
                 .build();
 
 

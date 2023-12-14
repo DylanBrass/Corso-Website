@@ -26,13 +26,6 @@ public class Auth0Controller {
         return auth0ManagementService.addAdmin(userRequest);
     }
 
-    @GetMapping("/get-userinfo")
-    public ResponseEntity<UserResponse> getUserInfo() {
-        return null;
-    }
-
-
-
 
     @GetMapping("/get-total-admins")
     public ResponseEntity<Integer> getTotalAdmins() throws IOException, InterruptedException {
