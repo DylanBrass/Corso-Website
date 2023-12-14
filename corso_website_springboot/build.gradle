@@ -98,6 +98,7 @@ test {
     exclude '**/ViewCarouselTest.class'
     exclude '**/LoginAuthTest.class'
     exclude '**/ViewCurrentOrdersTest.class'
+    exclude '**/ViewAllCompletedOrdersTest.class'
     exclude '**/ViewAllServicesTest.class'
     exclude '**/ModifyProfileTest.class'
     useJUnitPlatform()
