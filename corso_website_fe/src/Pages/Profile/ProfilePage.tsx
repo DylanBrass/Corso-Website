@@ -82,7 +82,7 @@ function ProfilePage() {
         const phoneInput = document.getElementById("phone") as HTMLInputElement;
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
-        if (phoneValue != "" && !phonePattern.test(phoneValue)) {
+        if (phoneValue !== "" && !phonePattern.test(phoneValue)) {
             swal("Invalid Phone Number", "Please enter a valid phone number\n\nValid formats:\n" +
                 "(123) 456-7890\n" +
                 "(123)456-7890\n" +
@@ -190,8 +190,8 @@ function ProfilePage() {
                     Cookies.set("username", r.data.username);
                     Cookies.set("email", r.data.email);
 
-                    document.getElementById("name")!.setAttribute("value", r.data.username == undefined ? "" : r.data.username);
-                    document.getElementById("email")!.setAttribute("value", r.data.email == undefined ? "" : r.data.email);
+                    document.getElementById("name")!.setAttribute("value", r.data.username === undefined ? "" : r.data.username);
+                    document.getElementById("email")!.setAttribute("value", r.data.email === undefined ? "" : r.data.email);
                     document.getElementById("address")!.setAttribute("value", "");
                     document.getElementById("phone")!.setAttribute("value", "");
                     document.getElementById("postalCode")!.setAttribute("value", "");
