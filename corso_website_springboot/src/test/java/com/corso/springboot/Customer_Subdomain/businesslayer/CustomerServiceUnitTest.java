@@ -279,15 +279,20 @@ class CustomerServiceUnitTest {
 
     @Test
     void deleteCustomer() {
-
+        // Given
         String userId = "google|123456789";
 
+        Mockito.when(customerRepository.existsByUserId(userId)).thenReturn(true, false);
+
+        // When
         customerService.deleteCustomer(userId);
 
+        // Then
+        Mockito.verify(customerRepository, Mockito.times(2)).existsByUserId(userId);
         Mockito.verify(customerRepository, Mockito.times(1)).deleteCustomerByUserId(userId);
-
-
     }
+
+
 
     @Test
     void deleteFailsForCustomer() {
