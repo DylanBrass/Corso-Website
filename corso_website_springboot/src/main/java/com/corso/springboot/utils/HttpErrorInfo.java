@@ -1,4 +1,4 @@
-package com.corso.springboot.configuration.security.models;
+package com.corso.springboot.utils;
 
 import lombok.Generated;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-@Generated
 public class HttpErrorInfo {
 
     private final String timestamp;

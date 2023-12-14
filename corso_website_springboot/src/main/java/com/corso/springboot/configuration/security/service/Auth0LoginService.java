@@ -37,11 +37,12 @@ public class Auth0LoginService {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(issuer + "/api/v2/users/" + userId + "/roles"))
+                .uri(URI.create(issuer + "api/v2/users/" + userId + "/roles"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + accessToken)
                 .POST(HttpRequest.BodyPublishers.ofString("{ \"roles\": [\"rol_9AIxt3Pgft1HDi9B\"] }"))
                 .build();
+
 
         HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
 
@@ -54,7 +55,7 @@ public class Auth0LoginService {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(issuer + "/api/v2/jobs/verification-email"))
+                .uri(URI.create(issuer + "api/v2/jobs/verification-email"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + accessToken)
                 .POST(HttpRequest.BodyPublishers.ofString("{ \"user_id\": \"" + userId + "\" }"))
@@ -114,7 +115,7 @@ public class Auth0LoginService {
                 .httpOnly(false)
                 .secure(true)
                 .path("/")
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         String picture = principal.getClaim("picture");
@@ -123,7 +124,7 @@ public class Auth0LoginService {
                 .httpOnly(false)
                 .secure(true)
                 .path("/")
-                .sameSite("none")
+                .sameSite("None")
                 .build();
 
 

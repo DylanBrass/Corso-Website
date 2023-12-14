@@ -4,6 +4,7 @@ import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.models.UserRequest;
 import com.corso.springboot.configuration.security.models.UserResponse;
+import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Generated;
@@ -228,6 +229,7 @@ public class Auth0ManagementService {
         } catch (Exception e) {
             log.error("Error getting access token");
             log.error(e.getMessage());
+            throw new InvalidRequestException("Error getting access token");
         }
 
         HttpClient client = HttpClient.newHttpClient();

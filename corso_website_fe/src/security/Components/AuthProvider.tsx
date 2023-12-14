@@ -45,7 +45,31 @@ const AuthProvider = ({children}) => {
 
     const getUserInfo = async () => {
         if (isAuthenticated) {
-           axios.get("http://localhost:8080/api/v1/corso/security/user-info", {
+            axios.get("http://localhost:8080/api/v1/corso/customers", {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': csrfToken
+                }
+            })
+                .then(r => {
+                    console.log(r)
+                    if (r.status === 200) {
+                        console.log(r.data)
+                        Cookies.set("username", r.data.name)
+                        Cookies.set("email", r.data.email)
+                    }else{
+                        getInfo()
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                    getInfo()
+                })
+
+        }
+
+        const getInfo = async () => {
+            axios.get("http://localhost:8080/api/v1/corso/security/user-info", {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': csrfToken
@@ -98,7 +122,7 @@ const AuthProvider = ({children}) => {
 
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles}}>
+        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles,getUserInfo}}>
             {children}
         </AuthContext.Provider>
     )
