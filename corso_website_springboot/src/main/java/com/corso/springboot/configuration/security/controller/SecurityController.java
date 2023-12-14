@@ -50,6 +50,7 @@ public class SecurityController {
 
 
             boolean isVerified;
+
             try {
                 isVerified = principal.getClaim("email_verified");
             } catch (NullPointerException e) {
@@ -59,10 +60,6 @@ public class SecurityController {
             if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
                     || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
                 log.info("No roles found, adding default role");
-
-                String userId = principal.getSubject().replace("|", "%7C");
-
-                auth0LoginService.addRoleToUser(userId, accessToken);
 
                 if (!isVerified) {
                     log.info("User not verified, redirecting to verification page");
@@ -81,6 +78,11 @@ public class SecurityController {
                 return ResponseEntity.status(HttpStatus.FOUND)
                         .location(URI.create("http://localhost:3000/verify")).build();
             }
+        }else{
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .location(URI.create("http://localhost:3000/")).build();
+
         }
 
         log.info("Authorities: " + principal.getAuthorities().toString().replace(",","-"));

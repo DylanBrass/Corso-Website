@@ -31,17 +31,6 @@ class CustomerControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private CustomerService customerService;
-
-    @BeforeEach
-    public void setUp() {
-        // Any setup if needed
-    }
-
 
     @Test
     void getCustomerByUserIdWithSimpleCheck() throws Exception {

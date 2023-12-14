@@ -42,7 +42,7 @@ function BannerMainPage({image}) {
             backgroundImage: `url(${image})`
         }}>
 
-            <h1 className={"mt-5"}>Hello {name}!</h1>
+            <h1 id={"greeting"} className={"mt-5"}>Hello {name}!</h1>
             <div className={"row"}>
             <div className={"row d-none d-lg-flex"}>
                 <div className={"col-12 col-lg-4 text-center"}>

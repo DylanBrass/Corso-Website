@@ -27,28 +27,6 @@ public class Auth0LoginService {
     @Value("${okta.oauth2.issuer}")
     private String issuer;
 
-
-    private final Auth0ManagementService auth0ManagementService;
-
-
-    public void addRoleToUser(String userId, String accessToken) {
-        log.info("Adding role to user");
-
-        HttpClient client = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(issuer + "api/v2/users/" + userId + "/roles"))
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + accessToken)
-                .POST(HttpRequest.BodyPublishers.ofString("{ \"roles\": [\"rol_9AIxt3Pgft1HDi9B\"] }"))
-                .build();
-
-
-        HttpResponse<String> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).join();
-
-        log.info("Response: " + response.body());
-    }
-
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
 
@@ -71,17 +49,12 @@ public class Auth0LoginService {
 
 
 
-    public ResponseEntity<Void> handleExternalLogin(OidcUser principal) throws IOException, InterruptedException {
+    public ResponseEntity<Void> handleExternalLogin(OidcUser principal) {
         log.info("Handling Apple Login");
 
         if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
                 || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
             log.info("No roles found, adding default role");
-            String accessToken = auth0ManagementService.getAccessToken();
-
-            String userId = principal.getSubject().replace("|", "%7C");
-
-                addRoleToUser(userId, accessToken);
 
 
             return ResponseEntity.status(302)
