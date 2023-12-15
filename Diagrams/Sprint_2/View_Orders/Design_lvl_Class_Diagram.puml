@@ -1,122 +1,4 @@
 @startuml
-
-class "<<controller>>\nGalleryController" as galleryController {
-    - galleryService : GalleryService
-    ---
-    + getGallery() : ResponseEntity<List<GalleryResponse>>
-    + getGalleryById() : ResponseEntity<GalleryResponse>
-    + addGallery() : ResponseEntity<GalleryResponse>
-    + deleteGallery() : ResponseEntity<Void>
-    + editGallery() : ResponseEntity<GalleryResponse>
-}
-
-interface "GalleryService" as galleryService{
-    ---
-    + getGallery() : List<GalleryResponse>
-    + getGalleryById() : GalleryResponse
-    + addGallery() : GalleryResponse
-    + deleteGallery() : void
-    + editGallery() : GalleryResponse
-}
-
-class "<<service>>\nGalleryServiceImpl" as galleryServiceImpl{
-    - galleryRepository : GalleryRepository
-    - galleryRequestMapper : GalleryRequestMapper
-    - galleryResponseMapper : GalleryResponseMapper
-    ---
-    + getGallery() : List<GalleryResponse>
-    + getGalleryById() : GalleryResponse
-    + addGallery() : GalleryResponse
-    + deleteGallery() : void
-    + editGallery() : GalleryResponse
-}
-
-class galleryServiceImpl extends galleryService
-
-interface "<<repository>>\nGalleryRepository" as galleryRepository{
-    ---
-    + getGalleryById() : Gallery
-}
-
-class GalleryIdentifier {
-    - galleryId : String
-    ---
-    + setGalleryId(galleryId : String) : void
-    + getGalleryId() : String
-
-}
-
-class "Gallery" as gallery{
-    - id : int
-    - galleryId : GalleryIdentifier
-    - description : String
-    - image : String
-    - orderInGallery : int
-    ---
-
-}
-
-class "GalleryResponse" as galleryResponse{
-    - galleryId : String
-    - description : String
-    - image : String
-    - orderInGallery : int
-    ---
-
-}
-
-class "GalleryRequest" as galleryRequest{
-    - description : String
-    - image : String
-    - orderInGallery : int
-    ---
-
-}
-
-
-galleryRequestMapper --> galleryRequest
-
-galleryResponseMapper --> galleryResponse
-
-
-
-galleryServiceImpl --> gallery
-
-galleryRepository --> gallery
-
-galleryServiceImpl --> galleryResponseMapper
-galleryServiceImpl --> galleryRequestMapper
-
-
-interface "<<Mapper>>\nGalleryRequestMapper" as galleryRequestMapper{
-    ---
-    + toGallery(galleryRequest : GalleryRequest) : Gallery
-    + toGalleries(galleryRequests : List<GalleryRequest>) : List<Gallery>
-}
-
-interface "<<Mapper>>\nGalleryResponseMapper" as galleryResponseMapper{
-    ---
-    + toGalleryResponse(gallery : Gallery) : GalleryResponse
-    + toGalleryResponses(galleries : List<Gallery>) : List<GalleryResponse>
-}
-
-
-galleryController --> galleryResponse
-galleryController --> galleryRequest
-
-
-interface galleryRepository extends JpaRepository
-
-galleryController --> galleryServiceImpl
-
-galleryServiceImpl --> galleryRepository
-
-gallery --> GalleryIdentifier
-
-
-
-
-
 class "<<controller>>\nServicesController" as serviceController {
     - serviceService : ServiceService
     ---
@@ -163,7 +45,7 @@ class ServiceIdentifier {
 
 }
 
-class "Service" as serviceService{
+class "Service" as service{
     - id : int
     - serviceId : ServiceIdentifier
     - serviceName: String
@@ -173,6 +55,8 @@ class "Service" as serviceService{
     ---
 
 }
+
+serviceServiceImpl --> service
 
 class "ServiceResponse" as serviceResponse{
      - serviceId : ServiceIdentifier
@@ -193,16 +77,11 @@ class "ServiceRequest" as serviceRequest{
 
 }
 
-
 serviceRequestMapper --> serviceRequest
 
 serviceResponseMapper --> serviceResponse
 
-
-
-serviceServiceImpl --> serviceService
-
-serviceRepository --> serviceService
+serviceRepository --> service
 
 serviceServiceImpl --> serviceResponseMapper
 serviceServiceImpl --> serviceRequestMapper
@@ -231,7 +110,7 @@ serviceController --> serviceServiceImpl
 
 serviceServiceImpl --> serviceRepository
 
-serviceService --> ServiceIdentifier
+service --> ServiceIdentifier
 
 
 
@@ -289,12 +168,18 @@ class OrderIdentifier {
 class "Order" as order{
     - id : int
     - orderId : OrderIdentifier
-    - customer_id : CustomerIdentifier
-    - service_id : ServiceIdentifier
-    - orderDate : Date
+    - orderTrackingNumber : OrderTrackingNumber
+    - serviceId : ServiceIdentifier
+    - user_id : String
+    - orderDate : String
+    - dueDate: String
     - orderStatus: Enum<Status>
+    - orderDescription: String
+    - customerFullName : String
+    - customerEmail : String
+    - customerPhone : String
+    - customerAddress : String
     ---
-
 }
 
 class "OrderResponse" as orderResponse{
@@ -357,123 +242,5 @@ orderServiceImpl --> orderRepository
 order --> OrderIdentifier
 
 order --> ServiceIdentifier
-
-order --> CustomerIdentifier
-
-
-
-class "<<controller>>\nFaqController" as faqController {
-    - faqService : FaqService
-    ---
-    + getFaqs() : ResponseEntity<List<FaqResponse>>
-    + getFaqById() : ResponseEntity<FaqResponse>
-    + addFaq() : ResponseEntity<FaqResponse>
-    + deleteFaq() : ResponseEntity<Void>
-    + editFaq() : ResponseEntity<FaqResponse>
-}
-
-interface "FaqService" as faqService{
-    ---
-    + getFaqs() : List<FaqResponse>
-    + getFaqById() : FaqResponse
-    + addFaq() : FaqResponse
-    + deleteFaq() : void
-    + editFaq() : FaqResponse
-}
-
-class "<<service>>\nFaqServiceImpl" as faqServiceImpl{
-    - faqRepository : FaqRepository
-    - faqRequestMapper : FaqRequestMapper
-    - faqResponseMapper : FaqResponseMapper
-    ---
-    + getFaqs() : List<FaqResponse>
-    + getFaqById() : FaqResponse
-    + addFaq() : FaqResponse
-    + deleteFaq() : void
-    + editFaq() : FaqResponse
-}
-
-class faqServiceImpl extends faqService
-
-interface "<<repository>>\nFaqRepository" as faqRepository{
-    ---
-    + getFaqById() : Faq
-}
-
-class FaqIdentifier {
-    - faqId : String
-    ---
-    + setFaqId(faqId : String) : void
-    + getFaqId() : String
-
-}
-
-class "Faq" as faq{
-    - id : int
-    - faqId : FaqIdentifier
-    - question : String
-    - answer : String
-    - preferred : boolean
-    ---
-
-}
-
-class "FaqResponse" as faqResponse{
-    - faqId : FaqIdentifier
-    - question : String
-    - answer : String
-    - preferred : boolean
-    ---
-
-}
-
-class "FaqRequest" as faqRequest{
-    - question : String
-    - answer : String
-    - preferred : boolean
-    ---
-
-}
-
-
-faqRequestMapper --> faqRequest
-
-faqResponseMapper --> faqResponse
-
-
-
-faqServiceImpl --> faq
-
-faqRepository --> faq
-
-faqServiceImpl --> faqResponseMapper
-faqServiceImpl --> faqRequestMapper
-
-
-interface "<<Mapper>>\nFaqRequestMapper" as faqRequestMapper{
-    ---
-    + toFaq(faqRequest : FaqRequest) : Faq
-    + toFaqs(faqRequests : List<FaqRequest>) : List<Faq>
-}
-
-interface "<<Mapper>>\nFaqResponseMapper" as faqResponseMapper{
-    ---
-    + toFaqResponse(faq : Faq) : FaqResponse
-    + toFaqResponses(faqs : List<Faq>) : List<FaqResponse>
-}
-
-
-faqController --> faqResponse
-faqController --> faqRequest
-
-
-interface faqRepository extends JpaRepository
-
-faqController --> faqServiceImpl
-
-faqServiceImpl --> faqRepository
-
-faq --> FaqIdentifier
-
 
 @endpuml
