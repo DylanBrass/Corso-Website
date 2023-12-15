@@ -11,6 +11,7 @@ import CurrentOrdersPage from "./Pages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import CompletedOrdersPage from "./Pages/CompleteOrdersPage";
 import ServiceDetailsPage from "./Pages/ServiceDetailsPage";
+import PendingOrdersPage from "./PendingOrdersPage";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/orders/current" element={<CurrentOrdersPage/>} />
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
+                    <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path={"/profile"} element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
                     <Route path="/logout" element={<LogoutRedirect />} />

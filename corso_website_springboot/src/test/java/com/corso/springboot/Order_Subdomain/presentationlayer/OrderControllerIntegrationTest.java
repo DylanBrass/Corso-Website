@@ -103,4 +103,17 @@ public class OrderControllerIntegrationTest {
                 .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
     }
 
+    @Test
+    public void whenOrderWithStatusFilterAndPaginationExist_thenReturnAllOrders() {
+        //arrange
+        Integer expectedNumOrders = 1;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "?status=pending&pageSize=1&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+    }
+
 }

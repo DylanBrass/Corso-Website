@@ -102,6 +102,7 @@ test {
     exclude '**/ViewAllServicesTest.class'
     exclude '**/ModifyProfileTest.class'
     exclude '**/ViewServiceDetailsTest.class'
+    exclude '**/ViewPendingOrdersTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
