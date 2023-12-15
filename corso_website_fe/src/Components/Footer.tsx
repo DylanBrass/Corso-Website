@@ -4,10 +4,10 @@ import './Footer.css';
 function Footer() {
     return (
         <footer className="footer-container text-white">
-            <div className="container-fluid">
-                <div className="row">
+            <div className="container-fluid container-fluid-footer">
+                <div className="row row-footer">
                     {/* Mission Statement */}
-                    <div className="col-md-4">
+                    <div className="col-md-4 col-md-4-footer">
                         <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1702592644/Logo-color_cdb8cu.png" alt="Company Logo" className="img-fluid logo-img"/>
                         <h5>Our Mission</h5>
                         <p>Elevating Spaces to New Heights of Luxury through Unparalleled Electrical Expertise and Craftsmanship.</p>
@@ -15,7 +15,7 @@ function Footer() {
                     </div>
 
                     {/* Value Statement */}
-                    <div className="col-md-5">
+                    <div className="col-md-5 col-md-5-footer">
                         <h5>Value Statement</h5>
                         <ul>
                             <li>Excellence: We strive for nothing less than excellence in all we do.</li>
@@ -30,7 +30,7 @@ function Footer() {
                     </div>
 
                     {/* Contact Us */}
-                    <div className="col-md-3">
+                    <div className="col-md-3 col-md-3-footer">
                         <h5>Contact Us!</h5>
 
                         <div className="row">

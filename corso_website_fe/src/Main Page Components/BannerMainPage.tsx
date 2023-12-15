@@ -43,7 +43,7 @@ function BannerMainPage({image}) {
         }}>
 
             <h1 id={"greeting"} className={"mt-5"}>Hello {name}!</h1>
-            <div className={"row"}>
+            <div className={"row row-banner"}>
             <div className={"row d-none d-lg-flex"}>
                 <div className={"col-12 col-lg-4 text-center"}>
                     <h3 className={"mt-5"}>View All past orders</h3>
