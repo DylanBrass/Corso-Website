@@ -3,8 +3,8 @@ import NavigationBar from "../Components/NavigationBar";
 import BannerMainPage from "../Main Page Components/Banner/BannerMainPage";
 import {useAuth} from "../security/Components/AuthProvider";
 import AllServices from "../Main Page Components/AllServices";
-import Footer from "../Components/Footer";
 import BannerMainPageAnonymous from "../Main Page Components/Banner/BannerMainPageAnonymous";
+import Footer from "../Components/Footer";
 import FaqPinnedMainPage from "../Main Page Components/FAQ/FaqPinnedMainPage";
 
 
