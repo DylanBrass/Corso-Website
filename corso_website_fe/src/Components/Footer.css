@@ -1,6 +1,8 @@
 .footer-container {
     background-color: #303032;
     padding: 40px 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .footer-container h5 {
@@ -44,3 +46,54 @@
         margin-bottom: 20px;
     }
 }
+
+.col-info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0;
+    gap: 0;
+}
+
+.row-info .col-info {
+    display: flex;
+}
+
+.img-fluid-info {
+    float: left;
+}
+
+.col-info p {
+    margin-top: 0;
+}
+
+
+.logo-img{
+    width: 235px;
+    height: 136px;
+    flex-shrink: 0;
+}
+
+.row{
+    --cui-gutter-x: 0rem;
+}
+
+.container-fluid{
+    padding: 15px;
+}
+
+.col-md-4 {
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.col-md-5 {
+    padding: 30px 20px 20px;
+}
+
+.col-md-3 {
+    padding: 30px 20px 20px;
+}
+
+
