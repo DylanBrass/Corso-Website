@@ -29,7 +29,7 @@ function NavigationBar() {
                             (auth.userRoles().includes("Customer") || !auth.isAuthenticated) &&
 
                             <Nav.Item className={"item"}>
-                                <Nav.Link href="#">FAQ</Nav.Link>
+                                <Nav.Link href="/faq">FAQ</Nav.Link>
                             </Nav.Item>
                         }
                         <Nav.Item className={"item"}>

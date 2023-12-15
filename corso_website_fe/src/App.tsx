@@ -9,6 +9,7 @@ import Dashboard from "./Pages/Dashboard";
 import CreateAdminPage from "./Pages/CreateAdminPage";
 import CurrentOrdersPage from "./Pages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
+import ViewAllFaq from "./Pages/AllFAQs/ViewAllFaq";
 import CompletedOrdersPage from "./Pages/CompleteOrdersPage";
 import ServiceDetailsPage from "./Pages/ServiceDetailsPage";
 import PendingOrdersPage from "./PendingOrdersPage";
@@ -22,6 +23,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<MainPage />} />
+                    <Route path="/faq" element={<ViewAllFaq/>} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/orders/current" element={<CurrentOrdersPage/>} />
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />

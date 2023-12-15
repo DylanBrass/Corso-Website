@@ -1,6 +1,6 @@
-import NavigationBar from "../Components/NavigationBar";
-import {useAuth} from "../security/Components/AuthProvider";
-import AdminDashboardTile from "../Components/AdminDashboardTile";
+import NavigationBar from "../../Components/NavigationBar";
+import {useAuth} from "../../security/Components/AuthProvider";
+import AdminDashboardTile from "../../Components/AdminDashboardTile";
 import "./Dashboard.css"
 import Cookies from "js-cookie";
 import {useEffect, useState} from "react";

@@ -1,0 +1,64 @@
+.question{
+    color: #170F49;
+
+    /* FAQ_Title */
+    font-family: Nunito;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.answer-box{
+    display: flex;
+    align-items: center;
+}
+
+.title-box {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.tile-box{
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .question {
+        font-size: 14px;
+    }
+}
+
+.faq-btn img{
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Add transition property */
+}
+
+.faq-btn img:hover {
+    transform: scale(1.2); /* Optional: Add hover effect */
+}
+
+.answer-box {
+    display: flex;
+    align-items: center;
+
+}
+
+.show{
+    opacity: 0; /* Initially hide the answer */
+    animation: fadeIn 0.5s ease-in-out forwards; /* Apply animation */
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px; /* Adjust as needed */
+    }
+}
+

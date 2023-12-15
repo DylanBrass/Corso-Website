@@ -14,7 +14,7 @@ public class Gallery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private int id;
 
     @Embedded
     private GalleryIdentifier galleryId;

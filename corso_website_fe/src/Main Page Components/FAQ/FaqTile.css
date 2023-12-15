@@ -1,0 +1,26 @@
+.faq-tile-box {
+    h4 {
+        color: #0A1B44;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+    p{
+        margin-top: 2em;
+        color: rgba(0, 0, 0, 0.80);
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+    }
+}
+
+
+.answer-box{
+    display: flex;
+    align-items: center;
+}
