@@ -1,0 +1,478 @@
+@startuml
+
+class "<<controller>>\nGalleryController" as galleryController {
+    - galleryService : GalleryService
+    ---
+    + getGallery() : ResponseEntity<List<GalleryResponse>>
+    + getGalleryById() : ResponseEntity<GalleryResponse>
+    + addGallery() : ResponseEntity<GalleryResponse>
+    + deleteGallery() : ResponseEntity<Void>
+    + editGallery() : ResponseEntity<GalleryResponse>
+}
+
+interface "GalleryService" as galleryService{
+    ---
+    + getGallery() : List<GalleryResponse>
+    + getGalleryById() : GalleryResponse
+    + addGallery() : GalleryResponse
+    + deleteGallery() : void
+    + editGallery() : GalleryResponse
+}
+
+class "<<service>>\nGalleryServiceImpl" as galleryServiceImpl{
+    - galleryRepository : GalleryRepository
+    - galleryRequestMapper : GalleryRequestMapper
+    - galleryResponseMapper : GalleryResponseMapper
+    ---
+    + getGallery() : List<GalleryResponse>
+    + getGalleryById() : GalleryResponse
+    + addGallery() : GalleryResponse
+    + deleteGallery() : void
+    + editGallery() : GalleryResponse
+}
+
+class galleryServiceImpl extends galleryService
+
+interface "<<repository>>\nGalleryRepository" as galleryRepository{
+    ---
+    + getGalleryById() : Gallery
+}
+
+class GalleryIdentifier {
+    - galleryId : String
+    ---
+    + setGalleryId(galleryId : String) : void
+    + getGalleryId() : String
+
+}
+
+class "Gallery" as gallery{
+    - id : int
+    - galleryId : GalleryIdentifier
+    - description : String
+    - image : String
+    - orderInGallery : int
+    ---
+
+}
+
+class "GalleryResponse" as galleryResponse{
+    - galleryId : String
+    - description : String
+    - image : String
+    - orderInGallery : int
+    ---
+
+}
+
+class "GalleryRequest" as galleryRequest{
+    - description : String
+    - image : String
+    - orderInGallery : int
+    ---
+
+}
+
+
+galleryRequestMapper --> galleryRequest
+
+galleryResponseMapper --> galleryResponse
+
+
+
+galleryServiceImpl --> gallery
+
+galleryRepository --> gallery
+
+galleryServiceImpl --> galleryResponseMapper
+galleryServiceImpl --> galleryRequestMapper
+
+
+interface "<<Mapper>>\nGalleryRequestMapper" as galleryRequestMapper{
+    ---
+    + toGallery(galleryRequest : GalleryRequest) : Gallery
+    + toGalleries(galleryRequests : List<GalleryRequest>) : List<Gallery>
+}
+
+interface "<<Mapper>>\nGalleryResponseMapper" as galleryResponseMapper{
+    ---
+    + toGalleryResponse(gallery : Gallery) : GalleryResponse
+    + toGalleryResponses(galleries : List<Gallery>) : List<GalleryResponse>
+}
+
+
+galleryController --> galleryResponse
+galleryController --> galleryRequest
+
+
+interface galleryRepository extends JpaRepository
+
+galleryController --> galleryServiceImpl
+
+galleryServiceImpl --> galleryRepository
+
+gallery --> GalleryIdentifier
+
+
+
+
+
+class "<<controller>>\nServicesController" as serviceController {
+    - serviceService : ServiceService
+    ---
+    + getServices() : ResponseEntity<List<ServiceResponse>>
+    + getServiceById() : ResponseEntity<ServiceResponse>
+    + addService() : ResponseEntity<ServiceResponse>
+    + deleteService() : ResponseEntity<Void>
+    + editService() : ResponseEntity<ServiceResponse>
+}
+
+interface "ServiceService" as serviceService{
+    ---
+    + getServices() : List<ServiceResponse>
+    + getServicesById() : ServiceResponse
+    + addService() : ServiceResponse
+    + deleteService() : void
+    + editService() : ServiceResponse
+}
+
+class "<<service>>\nServiceServiceImpl" as serviceServiceImpl{
+    - serviceRepository : ServiceRepository
+    - serviceRequestMapper : ServiceRequestMapper
+    - serviceResponseMapper : ServiceResponseMapper
+    ---
+    + getServices() : List<ServiceResponse>
+    + getServiceById() : ServiceResponse
+    + addService() : ServiceResponse
+    + deleteService() : void
+    + editService() : ServiceResponse
+}
+
+class serviceServiceImpl extends serviceService
+
+interface "<<repository>>\nServiceRepository" as serviceRepository{
+    ---
+    + getServiceById() : Service
+}
+
+class ServiceIdentifier {
+    - serviceId : String
+    ---
+    + setServiceId(serviceId : String) : void
+    + getServiceId() : String
+
+}
+
+class "Service" as service{
+    - id : int
+    - serviceId : ServiceIdentifier
+    - serviceName: String
+    - serviceDescription : String
+    - serviceIcon : String
+    - serviceImage : String
+    ---
+
+}
+
+serviceServiceImpl --> service
+
+class "ServiceResponse" as serviceResponse{
+     - serviceId : ServiceIdentifier
+     - serviceName: String
+     - serviceDescription : String
+     - serviceIcon : String
+     - serviceImage : String
+    ---
+
+}
+
+class "ServiceRequest" as serviceRequest{
+    - serviceName: String
+    - serviceDescription : String
+    - serviceIcon : String
+    - serviceImage : String
+    ---
+
+}
+
+serviceRequestMapper --> serviceRequest
+
+serviceResponseMapper --> serviceResponse
+
+serviceRepository --> serviceService
+
+serviceServiceImpl --> serviceResponseMapper
+serviceServiceImpl --> serviceRequestMapper
+
+
+interface "<<Mapper>>\nServiceRequestMapper" as serviceRequestMapper{
+    ---
+    + toService(serviceRequest : ServiceRequest) : Service
+    + toServices(serviceRequests : List<ServiceRequest>) : List<Service>
+}
+
+interface "<<Mapper>>\nServiceResponseMapper" as serviceResponseMapper{
+    ---
+    + toServiceResponse(service : Service) : ServiceResponse
+    + toServiceResponses(services : List<Services>) : List<ServiceResponse>
+}
+
+
+serviceController --> serviceResponse
+serviceController --> serviceRequest
+
+
+interface serviceRepository extends JpaRepository
+
+serviceController --> serviceServiceImpl
+
+serviceServiceImpl --> serviceRepository
+
+service --> ServiceIdentifier
+
+
+
+
+
+class "<<controller>>\nOrderController" as orderController {
+    - orderService : OrderService
+    ---
+    + getOrders() : ResponseEntity<List<OrderResponse>>
+    + getOrderById() : ResponseEntity<OrderResponse>
+    + addOrder() : ResponseEntity<OrderResponse>
+    + deleteOrder() : ResponseEntity<Void>
+    + editOrder() : ResponseEntity<OrderResponse>
+}
+
+interface "OrderService" as orderService{
+    ---
+    + getOrders() : List<OrderResponse>
+    + getOrderById() : OrderResponse
+    + addOrder() : OrderResponse
+    + deleteOrder() : void
+    + editOrder() : OrderResponse
+}
+
+class "<<service>>\nOrderServiceImpl" as orderServiceImpl{
+    - orderRepository : OrderRepository
+    - orderRequestMapper : OrderRequestMapper
+    - orderResponseMapper : OrderResponseMapper
+    ---
+    + getOrders() : List<OrderResponse>
+    + getOrderById() : OrderResponse
+    + gerOrdersByCustomerName() : List<OrderResponse>
+    + addOrder() : OrderResponse
+    + deleteOrder() : void
+    + editOrder() : OrderResponse
+}
+
+class orderServiceImpl extends orderService
+
+interface "<<repository>>\nOrderRepository" as orderRepository{
+    ---
+    + findOrderByOrderId(galleryId: String) : Order
+    + findOrdersByCustomerName(customerName: String) : List<Order>
+    + findOrdersByOrderStatus(status: String) : List<Order>
+}
+
+class OrderIdentifier {
+    - orderId : String
+    ---
+    + setOrderId(orderId : String) : void
+    + getOrderId() : String
+
+}
+
+class "Order" as order{
+    - id : int
+    - orderId : OrderIdentifier
+    - orderTrackingNumber : OrderTrackingNumber
+    - serviceId : ServiceIdentifier
+    - user_id : String
+    - orderDate : String
+    - dueDate: String
+    - orderStatus: Enum<Status>
+    - orderDescription: String
+    - customerFullName : String
+    - customerEmail : String
+    - customerPhone : String
+    - customerAddress : String
+    ---
+}
+
+class "OrderResponse" as orderResponse{
+    - orderId : OrderIdentifier
+    - customer_id : CustomerIdentifier
+    - service_id : ServiceIdentifier
+    - orderDate : Date
+    - orderStatus: Enum<Status>
+    ---
+
+}
+
+class "OrderRequest" as orderRequest{
+    - customer_id : CustomerIdentifier
+    - service_id : ServiceIdentifier
+    - orderDate : Date
+    - orderStatus: Enum<Status>
+    ---
+
+}
+
+
+orderRequestMapper --> orderRequest
+
+orderResponseMapper --> orderResponse
+
+
+
+orderServiceImpl --> order
+
+orderRepository --> order
+
+orderServiceImpl --> orderResponseMapper
+orderServiceImpl --> orderRequestMapper
+
+
+interface "<<Mapper>>\nOrderRequestMapper" as orderRequestMapper{
+    ---
+    + toOrder(orderRequest : OrderRequest) : Order
+    + toOrders(orderRequests : List<OrderRequest>) : List<Order>
+}
+
+interface "<<Mapper>>\nOrderResponseMapper" as orderResponseMapper{
+    ---
+    + toOrderResponse(order : Order) : OrderResponse
+    + toOrderResponses(orders : List<Order>) : List<OrderResponse>
+}
+
+
+orderController --> orderResponse
+orderController --> orderRequest
+
+
+interface orderRepository extends JpaRepository
+
+orderController --> orderServiceImpl
+
+orderServiceImpl --> orderRepository
+
+order --> OrderIdentifier
+
+order --> ServiceIdentifier
+
+class "<<controller>>\nFaqController" as faqController {
+    - faqService : FaqService
+    ---
+    + getFaqs() : ResponseEntity<List<FaqResponse>>
+    + getFaqById() : ResponseEntity<FaqResponse>
+    + addFaq() : ResponseEntity<FaqResponse>
+    + deleteFaq() : ResponseEntity<Void>
+    + editFaq() : ResponseEntity<FaqResponse>
+}
+
+interface "FaqService" as faqService{
+    ---
+    + getFaqs() : List<FaqResponse>
+    + getFaqById() : FaqResponse
+    + addFaq() : FaqResponse
+    + deleteFaq() : void
+    + editFaq() : FaqResponse
+}
+
+class "<<service>>\nFaqServiceImpl" as faqServiceImpl{
+    - faqRepository : FaqRepository
+    - faqRequestMapper : FaqRequestMapper
+    - faqResponseMapper : FaqResponseMapper
+    ---
+    + getFaqs() : List<FaqResponse>
+    + getFaqById() : FaqResponse
+    + addFaq() : FaqResponse
+    + deleteFaq() : void
+    + editFaq() : FaqResponse
+}
+
+class faqServiceImpl extends faqService
+
+interface "<<repository>>\nFaqRepository" as faqRepository{
+    ---
+    + getFaqById() : Faq
+}
+
+class FaqIdentifier {
+    - faqId : String
+    ---
+    + setFaqId(faqId : String) : void
+    + getFaqId() : String
+
+}
+
+class "Faq" as faq{
+    - id : int
+    - faqId : FaqIdentifier
+    - question : String
+    - answer : String
+    - preferred : boolean
+    ---
+
+}
+
+class "FaqResponse" as faqResponse{
+    - faqId : FaqIdentifier
+    - question : String
+    - answer : String
+    - preferred : boolean
+    ---
+
+}
+
+class "FaqRequest" as faqRequest{
+    - question : String
+    - answer : String
+    - preferred : boolean
+    ---
+
+}
+
+
+faqRequestMapper --> faqRequest
+
+faqResponseMapper --> faqResponse
+
+
+
+faqServiceImpl --> faq
+
+faqRepository --> faq
+
+faqServiceImpl --> faqResponseMapper
+faqServiceImpl --> faqRequestMapper
+
+
+interface "<<Mapper>>\nFaqRequestMapper" as faqRequestMapper{
+    ---
+    + toFaq(faqRequest : FaqRequest) : Faq
+    + toFaqs(faqRequests : List<FaqRequest>) : List<Faq>
+}
+
+interface "<<Mapper>>\nFaqResponseMapper" as faqResponseMapper{
+    ---
+    + toFaqResponse(faq : Faq) : FaqResponse
+    + toFaqResponses(faqs : List<Faq>) : List<FaqResponse>
+}
+
+
+faqController --> faqResponse
+faqController --> faqRequest
+
+
+interface faqRepository extends JpaRepository
+
+faqController --> faqServiceImpl
+
+faqServiceImpl --> faqRepository
+
+faq --> FaqIdentifier
+
+
+@endpuml
