@@ -72,3 +72,8 @@
     text-transform: uppercase;
     background: none;
 }
+
+.row-banner{
+    --cui-gutter-x: 0rem;
+}
+

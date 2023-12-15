@@ -4,6 +4,7 @@ import BannerMainPage from "../Main Page Components/BannerMainPage";
 import {useAuth} from "../security/Components/AuthProvider";
 import BannerMainPageAnonymous from "../Main Page Components/BannerMainPageAnonymous";
 import AllServices from "../Main Page Components/AllServices";
+import Footer from "../Components/Footer";
 
 
 function MainPage() {
@@ -25,6 +26,7 @@ function MainPage() {
             }
             <OurPreviousProjects />
             <AllServices />
+            <Footer />
         </div>
     );
 }

@@ -5,6 +5,7 @@ import com.corso.springboot.Service_Subdomain.datalayer.Service;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,6 +29,11 @@ public class ServiceServiceImplUnitTest {
     @InjectMocks
     private ServiceServiceImpl serviceService;
 
+    @BeforeEach
+    void setUp() {
+        serviceService = new ServiceServiceImpl(serviceResponseMapper, serviceRepository);
+    }
+
     @Test
     void getServiceByServiceId_ShouldSucceed() {
         // Arrange
@@ -44,6 +50,20 @@ public class ServiceServiceImplUnitTest {
         Mockito.verify(serviceRepository, Mockito.times(1)).findByServiceIdentifier_ServiceId(Mockito.anyString());
         Mockito.verify(serviceResponseMapper, Mockito.times(1)).toServiceResponse(Mockito.any());
 
+    }
+
+    @Test
+    void getServiceByServiceId_ShouldThrowException() {
+        // Arrange
+        Mockito.when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(null);
+
+        // Act & Assert
+        try {
+            serviceService.getServiceByServiceId("1");
+        } catch (Exception e) {
+            assertEquals("Unknown service id : 1", e.getMessage());
+        }
+        Mockito.verify(serviceRepository, Mockito.times(1)).findByServiceIdentifier_ServiceId(Mockito.anyString());
     }
 
     @Test

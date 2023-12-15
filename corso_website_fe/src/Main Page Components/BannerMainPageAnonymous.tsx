@@ -9,7 +9,7 @@ function BannerMainPageAnonymous({image}) {
         <div className={"banner-box"} style={{
             backgroundImage: `url(${image})`
         }}>
-            <div className={"row"}>
+            <div className={"row row-banner"}>
                 <div className={"row d-none d-lg-flex"}>
                     <div className={"col-12 text-center d-none d-lg-block"}>
                         <h1 className={"mt-5 anonymous-banner-title"}>Register today to have us as
