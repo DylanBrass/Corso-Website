@@ -4,6 +4,7 @@ import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +27,13 @@ public class OrderController {
             @RequestParam Map<String, String> queryParams,
             @RequestParam(name = "pageSize") int pageSize,
             @RequestParam(name = "offset") int offset) {
-
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOrdersByStatus(queryParams, pageSize, offset));
     }
 
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PostMapping("/external")
+    public ResponseEntity<OrderResponse> createOrderExternal(@RequestBody OrderRequestExternal orderRequestExternal) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrderExternal(orderRequestExternal));
+    }
 }

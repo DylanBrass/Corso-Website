@@ -30,6 +30,7 @@ function App() {
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path={"/profile"} element={<ProfilePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
                     <Route path={"/profile"} element={<ProfilePage/>} />
                     <Route path="/create/admin" element={<CreateAdminPage/>} />
@@ -41,7 +42,7 @@ function App() {
             </BrowserRouter>
         </AuthProvider>
     </>
-  );
+  )
 }
 
 export default App;
