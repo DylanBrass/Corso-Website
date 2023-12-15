@@ -172,6 +172,7 @@ function ProfilePage() {
                 }
             });
 
+            console.log(response);
             if (response.status === 204) {
                 console.log(response.data);
                 Cookies.remove("username");
@@ -199,18 +200,29 @@ function ProfilePage() {
                     document.getElementById("apartmentNumber")!.setAttribute("value", "");
                 }).catch(e => {
                         console.log(e);
-                        swal("Error!", e.response.data.message, "error")
+                        if (e.response.status === 401 || e.response.status === 403) {
+                            // @ts-ignore
+                            auth.authError(e.response.status);
+                        }else if(e.response.status === 404){
+                            swal("No Profile Found", "You don't have a profile yet!", "warning")
+                        }else {
+                            swal("Error!", e.response.data.message, "error")
+                        }
                     }
                 )
                     setHasProfile(false);
             } else {
                 swal("Error!", "Something went wrong", "error");
             }
-        } catch (error:any) {
-            swal("Error!", error.response?.data?.message || "An unexpected error occurred", "error").then(() => {
+        } catch (e:any) {
+            if (e.response.status === 401 || e.response.status === 403) {
                 // @ts-ignore
-                auth.authError(error.response?.status);
-            });
+                auth.authError(e.response.status);
+            }else if(e.response.status === 404){
+                swal("No Profile Found", "You don't have any information saved !", "warning")
+            }else {
+                swal("Error!", e.response.data.message, "error")
+            }
         }
     };
 
@@ -220,6 +232,11 @@ function ProfilePage() {
             <div className="profile-page">
                 <div className="profile-box mt-5 mb-5">
                     <h1>Profile</h1>
+
+                    <p className={"text-center fs-4 m-3"}>
+                        Please enter your information below. This information will be used to fill in the order form
+                        automatically. This information will be saved and can be modified at any time. If your email is invalid, we will use the email you used to signup.
+                    </p>
 
                     <form onSubmit={handleSubmit} className="container">
                         <div className="row w-75 m-auto">
@@ -276,7 +293,7 @@ function ProfilePage() {
                         </div>
                         <div className="row w-25 m-auto"
                              style={{margin: "auto", width: "50%", marginTop: "20px", marginBottom: "120px"}}>
-                            <button
+                            <button id={"save-btn"}
                                 type="submit"
                                 className="btn btn-primary"
                                 style={{

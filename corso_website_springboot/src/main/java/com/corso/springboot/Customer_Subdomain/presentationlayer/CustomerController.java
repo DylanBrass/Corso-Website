@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,10 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @DeleteMapping
+    @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal OidcUser principal) {
         String userId = principal.getSubject();
+
         log.info("Delete customer with userId: {}", userId);
 
         customerService.deleteCustomer(userId);
@@ -53,6 +56,7 @@ public class CustomerController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<CustomerResponse> createCustomer(@AuthenticationPrincipal OidcUser principal,
                                                           @Valid @RequestBody CustomerRequest customerRequest) {
         String userId = principal.getSubject();
@@ -65,6 +69,7 @@ public class CustomerController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal OidcUser principal,
                                                            @Valid @RequestBody CustomerRequest customerRequest) {
         String userId = principal.getSubject();

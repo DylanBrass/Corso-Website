@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,17 +31,6 @@ class CustomerControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private CustomerService customerService;
-
-    @BeforeEach
-    public void setUp() {
-        // Any setup if needed
-    }
 
 
     @Test
@@ -72,7 +62,7 @@ class CustomerControllerIntegrationTest {
     void deleteCustomer() throws Exception {
 
         mockMvc.perform(delete(BASE_URI_CUSTOMERS)
-                .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789")))
+                .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Customer")))
                 .with(csrf())
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -89,7 +79,7 @@ class CustomerControllerIntegrationTest {
 
 
         mockMvc.perform(post(BASE_URI_CUSTOMERS)
-                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|newuser")))
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|newuser")).authorities(new SimpleGrantedAuthority("Customer")))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
@@ -108,7 +98,7 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.apartmentNumber").value("1"));
 
         mockMvc.perform(get(BASE_URI_CUSTOMERS)
-                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|newuser")))
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|newuser")).authorities(new SimpleGrantedAuthority("Customer")))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.phone").value("4506597338"))
@@ -149,17 +139,18 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Alice Doe"));
 
         mockMvc.perform(put(BASE_URI_CUSTOMERS)
-                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789")))
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Customer")))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "    \"phone\": \"4506597338\",\n" +
-                                "    \"address\": \"123 Main St\",\n" +
-                                "    \"email\": \"email@email.com\",\n" +
-                                "    \"city\": \"New York\",\n" +
-                                "    \"postalCode\": \"J5R 5J4\",\n" +
-                                "    \"apartmentNumber\": \"1\"\n" +
-                                "}"))
+                        .content("""
+                                {
+                                    "phone": "4506597338",
+                                    "address": "123 Main St",
+                                    "email": "email@email.com",
+                                    "city": "New York",
+                                    "postalCode": "J5R 5J4",
+                                    "apartmentNumber": "1"
+                                }"""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.phone").value("4506597338"))
                 .andExpect(jsonPath("$.address").value("123 Main St"))
@@ -180,18 +171,23 @@ class CustomerControllerIntegrationTest {
     @Test
     void updateAlmostNoInfoForCustomer() throws Exception {
         mockMvc.perform(put(BASE_URI_CUSTOMERS)
-                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789")))
                         .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> {
+                            i.subject("google|123456789");
+
+                          }).authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "    \"phone\": \"+1234567890\",\n" +
-                                "    \"address\": \"123 Main St\",\n" +
-                                "    \"email\": \"alice.doe@gmail.com\",\n" +
-                                "    \"city\": \"Cityville\",\n" +
-                                "    \"postalCode\": \"A1B 2C3\",\n" +
-                                "    \"apartmentNumber\": \"Apt 5\",\n" +
-                                "   \"name\": \"Alice Doe\"\n" +
-                                "}"))
+                        .content("""
+                    {
+                        "phone": "+1234567890",
+                        "address": "123 Main St",
+                        "email": "alice.doe@gmail.com",
+                        "city": "Cityville",
+                        "postalCode": "A1B 2C3",
+                        "apartmentNumber": "Apt 5",
+                        "name": "Alice Doe"
+                    }
+                    """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.phone").value("+1234567890"))
                 .andExpect(jsonPath("$.address").value("123 Main St"))
@@ -199,7 +195,6 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.postalCode").value("A1B 2C3"))
                 .andExpect(jsonPath("$.apartmentNumber").value("Apt 5"))
                 .andExpect(jsonPath("$.name").value("Alice Doe"));
-
-
     }
+
 }
