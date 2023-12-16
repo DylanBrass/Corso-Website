@@ -16,7 +16,7 @@ import ServiceDetailsPage from "./Pages/ServiceDetailsPage";
 import PendingOrdersPage from "./PendingOrdersPage";
 
 
-function yApp() {
+function App() {
 
   return (
     <>
@@ -44,4 +44,4 @@ function yApp() {
   );
 }
 
-export default yApp;
+export default App;
