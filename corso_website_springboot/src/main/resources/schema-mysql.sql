@@ -1,6 +1,6 @@
 USE `corso-dev-db`;
 
-CREATE TABLE IF NOT EXISTS gallery (
+CREATE TABLE IF NOT EXISTS `gallery` (
     id INT NOT NULL AUTO_INCREMENT,
     gallery_id VARCHAR(36) UNIQUE NOT NULL,
     description VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `orders`
     FOREIGN KEY (service_id) REFERENCES services(service_id)
     );
 
-CREATE TABLE IF NOT EXISTS  `FAQs`(
+CREATE TABLE IF NOT EXISTS  `faqs`(
                                       id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                       faq_id VARCHAR(36) NOT NULL,
     question TEXT NOT NULL,

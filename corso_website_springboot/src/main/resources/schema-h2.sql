@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `gallery`;
 DROP TABLE IF EXISTS `services`;
 DROP TABLE IF EXISTS `orders`;
-DROP TABLE IF EXISTS `FAQs`;
+DROP TABLE IF EXISTS `faqs`;
 DROP TABLE IF EXISTS `reviews`;
 DROP TABLE IF EXISTS `customers`;
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `orders`
     customer_address TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS  `FAQs`(
+CREATE TABLE IF NOT EXISTS  `faqs`(
                                       id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                       faq_id VARCHAR(36) NOT NULL,
                                       question TEXT NOT NULL,

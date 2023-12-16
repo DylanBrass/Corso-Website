@@ -1,0 +1,31 @@
+.faq-title{
+    color: #0A1B44;
+    font-family: Nunito;
+    font-size: 70px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+
+.tiles-container{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto auto 5em;
+}
+
+a{
+    color: #14ACED;
+    text-align: center;
+    font-family: Nunito;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+}
