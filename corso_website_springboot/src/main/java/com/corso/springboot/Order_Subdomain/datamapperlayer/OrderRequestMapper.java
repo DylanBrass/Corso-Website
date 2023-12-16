@@ -13,6 +13,7 @@ public interface OrderRequestMapper {
     @Mapping(ignore = true, target = "orderTrackingNumber")
     @Mapping(ignore = true, target = "orderStatus")
     @Mapping(ignore = true, target = "serviceId")
+    @Mapping(ignore = true, target = "orderDate")
     Order requestModelToOrder(OrderRequestExternal orderRequestExternal);
 
 

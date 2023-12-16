@@ -26,6 +26,7 @@ function App() {
                     <Route path="/" element={<MainPage />} />
                     <Route path="/faq" element={<ViewAllFaq/>} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/create/orders/external" element={<CreateExternalOrderPage/>} />
                     <Route path="/orders/current" element={<CurrentOrdersPage/>} />
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />

@@ -8,23 +8,37 @@ import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceServiceImpl;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
+import com.corso.springboot.configuration.security.exceptions.Auth0Error;
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
+import com.corso.springboot.configuration.security.models.UserResponse;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
+import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+
     private final OrderResponseMapper orderResponseMapper;
+
     private final OrderRequestMapper orderRequestMapper;
 
     private final ServiceService serviceService;
+
+    private final Auth0ManagementService auth0ManagementService;
 
     @Override
     public List<OrderResponse> getAllOrdersByStatus(Map<String, String> queryParams, int pageSize, int offset) {
@@ -47,13 +61,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) {
+    public OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException {
 
         if (serviceService.getServiceByServiceId(orderRequestExternal.getServiceId()) == null) {
-            throw new RuntimeException("Service not found");
+            throw new ServiceNotFoundException("Service not found");
         }
 
+
+
         Order order = orderRequestMapper.requestModelToOrder(orderRequestExternal);
+
+        if(orderRequestExternal.getUserId() != null){
+            UserInfoResponse user;
+            try {
+                user = auth0ManagementService.getUserInfo(orderRequestExternal.getUserId());
+            } catch (NullPointerException | InterruptedException | Auth0Error e ) {
+                throw new Auth0Error("User not found", HttpStatus.NOT_FOUND);
+            }
+
+            if (user == null) {
+                throw new Auth0Error("User not found", HttpStatus.NOT_FOUND);
+            }
+            order.setUserId(orderRequestExternal.getUserId());
+        }else{
+            order.setUserId("external_client");
+        }
 
         order.setOrderId(new OrderIdentifier());
 
@@ -65,11 +97,6 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
-        if(orderRequestExternal.getUserId() != null){
-            order.setUserId(orderRequestExternal.getUserId());
-        }else{
-            order.setUserId("external_client");
-        }
 
 
 

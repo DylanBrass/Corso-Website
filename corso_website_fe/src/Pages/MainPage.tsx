@@ -1,11 +1,10 @@
-import OurPreviousProjects from "../Main Page Components/Gallery/OurPreviousProjects";
+import OurPreviousProjects from "../Main Page Components/OurPreviousProjects";
 import NavigationBar from "../Components/NavigationBar";
-import BannerMainPage from "../Main Page Components/Banner/BannerMainPage";
+import BannerMainPage from "../Main Page Components/BannerMainPage";
 import {useAuth} from "../security/Components/AuthProvider";
+import BannerMainPageAnonymous from "../Main Page Components/BannerMainPageAnonymous";
 import AllServices from "../Main Page Components/AllServices";
-import BannerMainPageAnonymous from "../Main Page Components/Banner/BannerMainPageAnonymous";
 import Footer from "../Components/Footer";
-import FaqPinnedMainPage from "../Main Page Components/FAQ/FaqPinnedMainPage";
 
 
 function MainPage() {

@@ -1,6 +1,8 @@
 package com.corso.springboot.configuration.security.service;
 
 import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
+import com.corso.springboot.configuration.security.exceptions.Auth0Error;
+import com.corso.springboot.configuration.security.models.Auth0GetUsersResponse;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.models.UserRequest;
 import com.corso.springboot.configuration.security.models.UserResponse;
@@ -19,8 +21,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -35,6 +40,7 @@ public class Auth0ManagementService {
 
     @Value("${okta.oauth2.client-secret}")
     private String clientSecret;
+
 
     public ResponseEntity<UserResponse> addAdmin(UserRequest userRequest) throws IOException, InterruptedException {
 
@@ -61,6 +67,7 @@ public class Auth0ManagementService {
         if (response.statusCode() != 201) {
             throwErrorMessage(response);
         }
+
         log.info("Response: " + response.body());
         List<String> jsonParts = List.of(response.body().split(","));
 
@@ -72,8 +79,7 @@ public class Auth0ManagementService {
                 if (responseOfAddRole != 204) {
                     deleteUser(userId, accessToken);
                     throw new AddingAdminFailed("Adding role failed", HttpStatus.valueOf(responseOfAddRole));
-                }
-                else
+                } else
                     return ResponseEntity.status(HttpStatus.CREATED).build();
             }
         }
@@ -89,20 +95,20 @@ public class Auth0ManagementService {
         String password = userRequest.getPassword();
 
         return """
-        {
-         "connection": "Username-Password-Authentication",
-         "email": "%s",
-         "username": "%s",
-         "password": "%s",
-         "user_metadata": {
-                 "isCreatedAdmin" : "true"
-        },
-        "picture": "https://res.cloudinary.com/dszhbawv7/image/upload/v1702104434/customcolor_icon_customcolor_background_czpfvq.png",
-        "email_verified": false,
-        "verify_email": true,
-        "app_metadata": {}
-        }
-        """.formatted(email, username, password);
+                {
+                 "connection": "Username-Password-Authentication",
+                 "email": "%s",
+                 "username": "%s",
+                 "password": "%s",
+                 "user_metadata": {
+                         "isCreatedAdmin" : "true"
+                },
+                "picture": "https://res.cloudinary.com/dszhbawv7/image/upload/v1702104434/customcolor_icon_customcolor_background_czpfvq.png",
+                "email_verified": false,
+                "verify_email": true,
+                "app_metadata": {}
+                }
+                """.formatted(email, username, password);
     }
 
     private void deleteUser(String userId, String accessToken) {
@@ -164,7 +170,7 @@ public class Auth0ManagementService {
     }
 
 
-    public UserInfoResponse getUserInfo(String id) throws  IOException, InterruptedException {
+    public UserInfoResponse getUserInfo(String id) throws IOException, InterruptedException {
         log.info("Getting user info");
         String accessToken = getAccessToken();
 
@@ -184,7 +190,7 @@ public class Auth0ManagementService {
             log.info("Response: " + response.body());
 
             if (response.statusCode() != 200) {
-                throw new RuntimeException("HTTP error: " + response.statusCode());
+                throw new Auth0Error(response.body(), HttpStatus.valueOf(response.statusCode()));
             }
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -245,10 +251,10 @@ public class Auth0ManagementService {
         assert response != null;
         log.info("Response: " + response.body());
 
-        int totalUserId = response.body().split("user_id",-1).length - 1;
+        int totalUserId = response.body().split("user_id", -1).length - 1;
 
         return ResponseEntity.ok().body(totalUserId);
-        
+
 
     }
 
@@ -265,4 +271,103 @@ public class Auth0ManagementService {
 
         throw new AddingAdminFailed(response.body(), HttpStatus.valueOf(response.statusCode()));
     }
+
+
+    public ResponseEntity<List<Auth0GetUsersResponse>> getMatchingUsers(Map<String, String> requestParams) {
+
+        try {
+            String accessToken = getAccessToken();
+            String url = issuer + "api/v2/users?q=";
+
+            if (requestParams.containsKey("username")) {
+                url += "username%3A" + requestParams.get("username") + "*";
+            }
+
+            if (requestParams.containsKey("email")) {
+                url += "email%3A" + requestParams.get("email") + "*";
+            }
+
+            if (requestParams.containsKey("name")) {
+                url += "name%3A" + requestParams.get("name") + "*";
+            }
+
+            url = url
+                    .replace("\"", "%22")
+                    .replace("*", "%2A")
+                    .replace(" ", "%20")
+                    .replace("|", "%7C");
+
+            log.info("URL: " + url);
+
+            HttpResponse<String> response = sendHttpRequest(accessToken, url);
+
+            if (response.statusCode() != 200) {
+                throw new Auth0Error("Error getting users", HttpStatus.valueOf(response.statusCode()));
+            }
+
+            List<Auth0GetUsersResponse> users = new ArrayList<>();
+
+
+            JsonNode jsonNode = new ObjectMapper().readTree(response.body());
+
+            jsonNode.forEach(node -> {
+                log.info("Node: " + node.toString());
+                users.add(Auth0GetUsersResponse.builder()
+                        .user_id(node.path("user_id").asText())
+                        .name(node.path("name").asText())
+                        .email(node.path("email").asText())
+                        .username(node.path("username").asText())
+                        .build());
+            });
+
+
+            return ResponseEntity.ok().body(users);
+
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+
+    }
+
+
+    public ResponseEntity<Integer> getStatsLast30Days() {
+        try {
+            String accessToken = getAccessToken();
+            String url = issuer + "api/v2/stats/active-users";
+
+            HttpResponse<String> response = sendHttpRequest(accessToken, url);
+
+
+            log.info("Response number : " + response.body());
+
+            Integer total = Integer.parseInt(response.body());
+
+
+            return ResponseEntity.ok().body(total);
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    private HttpResponse<String> sendHttpRequest(String accessToken, String url) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + accessToken)
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assert response != null;
+
+        return response;
+    }
+
 }
