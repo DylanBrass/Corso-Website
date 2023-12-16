@@ -36,7 +36,9 @@ function FaqTileFaqPage(faq: FAQ) {
                     setExpandedState(!isExpanded)
                 }}>
                     {
-                        isExpanded ? <img src={expanded} alt={"Click to hide"} /> : <img src={expand} alt={"Click to expand"}/>
+                        isExpanded ?
+                            <img src={expanded} alt={"Click to hide"} />
+                            : <img src={expand} alt={"Click to expand"}/>
                     }
                 </span>
                     </div>

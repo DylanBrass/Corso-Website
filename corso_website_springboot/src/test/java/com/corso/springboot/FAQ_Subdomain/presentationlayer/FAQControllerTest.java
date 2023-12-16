@@ -24,7 +24,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ActiveProfiles("test")
 class FAQControllerTest {
 
-    private final String BASE_URI_FAQS = "/api/v1/corso/FAQs";
+    private final String BASE_URI_FAQS = "/api/v1/corso/faqs";
 
     @Autowired
     WebTestClient webTestClient;
@@ -34,37 +34,31 @@ class FAQControllerTest {
 
     @BeforeEach
     public void setUp() {
-        faqRepository.deleteAll();
-        faqRepository.save(new FAQ(1, new FAQIdentifier(), "How do I create an account", "Top right corner", true));
-        faqRepository.save(new FAQ(2, new FAQIdentifier(), "How do I create an account", "Top right corner", false));
-        faqRepository.save(new FAQ(3, new FAQIdentifier(), "How do I create an account", "Top right corner", true));
     }
 
     @Test
     void GetAllFAQs_ThenReturnAllFAQS() {
             //act
-            webTestClient.get()
-                    .uri(BASE_URI_FAQS)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                    .expectBodyList(FAQ.class)
-                    .value(faqs -> assertEquals(3, faqs.size()));
-        }
-
-
-        //FAQ by Id
-    @Test
-    void getPreferedFAQsById_ThenReturnPreferedFAQById() {
-        //arrange
-        Integer faqId = 1;
-        //act
         webTestClient.get()
-                .uri(BASE_URI_FAQS + "/" + faqId)
+                .uri(BASE_URI_FAQS)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$.faqId").isEqualTo(faqId);
+                .expectBody().jsonPath("$.length()").isEqualTo(5);
+        }
+
+
+
+    @Test
+    void getPreferedFAQsById_ThenReturnPreferedFAQById() {
+        //arrange
+        Integer expectedNumberOFFaqs = 3;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_FAQS + "/preferred")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumberOFFaqs);
     }
 }

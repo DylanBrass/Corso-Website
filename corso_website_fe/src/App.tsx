@@ -5,8 +5,8 @@ import LogoutRedirect from "./security/logoutRedirect";
 import VerifyRedirect from "./security/verifyRedirect";
 import {AuthProvider} from "./security/Components/AuthProvider";
 import ExternalHandling from "./security/externalProvidersHandling/externalHandling";
-import Dashboard from "./Pages/Dashboard";
-import CreateAdminPage from "./Pages/CreateAdminPage";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import CreateAdminPage from "./Pages/CreateAdmin/CreateAdminPage";
 import CurrentOrdersPage from "./Pages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import ViewAllFaq from "./Pages/AllFAQs/ViewAllFaq";
@@ -16,7 +16,7 @@ import ServiceDetailsPage from "./Pages/ServiceDetailsPage";
 import PendingOrdersPage from "./PendingOrdersPage";
 
 
-function App() {
+function yApp() {
 
   return (
     <>
@@ -31,6 +31,8 @@ function App() {
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path={"/profile"} element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
+                    <Route path={"/profile"} element={<ProfilePage/>} />
+                    <Route path="/create/admin" element={<CreateAdminPage/>} />
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
                     <Route path="/external" element={<ExternalHandling />} />
@@ -42,4 +44,4 @@ function App() {
   );
 }
 
-export default App;
+export default yApp;

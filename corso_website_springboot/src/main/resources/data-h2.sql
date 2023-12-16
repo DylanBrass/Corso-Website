@@ -29,7 +29,7 @@ VALUES
     ('0a44b38b-08af-4321-8117-9a5c32ff3a29', '1E92BF', '953a8b11-3c0a-4a9b-900d-2ab3395d5d81', 'auth0|65702e81e9661e14ab3aac89', '2023-05-01', '2023-06-01', 'COMPLETED', 'SEO optimization for website', 'David Brown', 'david@example.com', '9876123450', '202 Maple St');
 
 -- Insert dummy data into `FAQs` table
-INSERT INTO `FAQs` (faq_id, question, answer, preference)
+INSERT INTO `faqs` (faq_id, question, answer, preference)
 VALUES
     ('87e59aeb-3aa3-4c22-be1d-a35acde209b9', 'What services do you offer?', 'We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.', true),
     ('368918a2-dbfe-4b50-bc6b-9ee3a7c5a0eb', 'How can I place an order?', 'You can place an order by visiting our website and selecting the desired service. Follow the instructions to complete the order process.', false),

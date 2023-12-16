@@ -24,9 +24,4 @@ public class FAQ{
 
     public boolean preference;
 
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
 }
