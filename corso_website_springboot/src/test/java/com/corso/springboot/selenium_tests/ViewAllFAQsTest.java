@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -57,7 +58,7 @@ public class ViewAllFAQsTest {
         sleep(2000);
 
         // Make sure it hid the answer
-        assertTrue(!$("div.tile-box:nth-of-type(1) .answer-box").isDisplayed());
+        assertFalse($("div.tile-box:nth-of-type(1) .answer-box").isDisplayed());
         sleep(2000);
 
 

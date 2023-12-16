@@ -28,6 +28,7 @@ function ViewAllFaq() {
     useEffect(() => {
         getFaqs()
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
