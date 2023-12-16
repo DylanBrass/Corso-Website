@@ -16,24 +16,24 @@ function MainPage() {
         <div>
             <NavigationBar/>
             <div id={"banner"}>
-            {
-                // @ts-ignore
-                auth.isAuthenticated ?
-                    <BannerMainPage
-                        image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702345020/banner-img-2_bgodwz.png"}
-                    />
-                    :
-                    <BannerMainPageAnonymous
-                        image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702332049/banner_cqmadc.png"}/>
-            }
+                {
+                    // @ts-ignore
+                    auth.isAuthenticated ?
+                        <BannerMainPage
+                            image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702345020/banner-img-2_bgodwz.png"}
+                        />
+                        :
+                        <BannerMainPageAnonymous
+                            image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702332049/banner_cqmadc.png"}/>
+                }
                 <div id={"carousel"}>
                     <OurPreviousProjects/>
                 </div>
+                <AllServices/>
                 <div id={"faq"}>
                     <FaqPinnedMainPage/>
                 </div>
-                <AllServices />
-            <Footer />
+                <Footer/>
             </div>
 
         </div>
