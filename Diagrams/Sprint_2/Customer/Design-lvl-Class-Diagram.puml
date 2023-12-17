@@ -1,0 +1,112 @@
+@startuml
+class "<<controller>>\nCustomerController" as customerController {
+    - customerService : CustomerService
+    ---
+    + getCustomerByUserId(principal: OidcUser, requestParams: Map<String, String>) : ResponseEntity<CustomerResponse>
+    + createCustomer(principal: OidcUser, customerRequest : CustomerRequest) : ResponseEntity<CustomerResponse>
+    + updateCustomer(principal: OidcUser, customerRequest : "CustomerRequest) : ResponseEntity<CustomerResponse>
+    + deleteCustomer(principal: OidcUser) : ResponseEntity<Void>
+}
+
+interface "CustomerService" as customerService{
+    ---
+    + getCustomerByUserId(userId: String) : CustomerResponse
+    + createCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + updateCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + deleteCustomer(userId: String) : void
+    + checkIfCustomerExists(userId: String) : boolean
+}
+
+class "<<service>>\nCustomerServiceImpl" as customerServiceImpl{
+    - customerRepository : CustomerRepository
+    - customerRequestMapper : CustomerRequestMapper
+    - customerResponseMapper : CustomerResponseMapper
+    ---
+    + getCustomerByUserId(userId: String) : CustomerResponse
+    + createCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + updateCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + deleteCustomer(userId: String) : void
+    + checkIfCustomerExists(userId: String) : boolean
+}
+
+class customerServiceImpl extends customerService
+
+interface "<<repository>>\nCustomerRepository" as customerRepository{
+    ---
+    + getCustomerByUserId(userId: String) : Customer
+    + deleteCustomerByUserId(userId: String) : void
+    + existsByUserId(userId: String) : boolean
+}
+
+class "Customer" as customer{
+    - id : int
+    - userId : String
+    - name : String
+    - email : String
+    - phone : String
+    - address : String
+    - postalCode : String
+    - city : String
+    - apartmentNumber : String
+    ---
+
+}
+
+customerServiceImpl --> customer
+
+class "CustomerResponse" as customerResponse{
+    - email : String
+    - name : String
+    - phone : String
+    - address : String
+    - postalCode : String
+    - city : String
+    - apartmentNumber : String
+    ---
+
+}
+
+class "CustomerRequest" as customerRequest{
+    - email : String
+    - name : String
+    - phone : String
+    - address : String
+    - postalCode : String
+    - city : String
+    - apartmentNumber : String
+    ---
+
+}
+
+customerRequestMapper --> customerRequest
+
+customerResponseMapper --> customerResponse
+
+customerRepository --> customer
+
+customerServiceImpl --> customerResponseMapper
+customerServiceImpl --> customerRequestMapper
+
+
+interface "<<Mapper>>\nCustomerRequestMapper" as customerRequestMapper{
+    ---
+    + toCustomer(customerRequest : CustomerRequest) : Customer
+}
+
+interface "<<Mapper>>\nCustomerResponseMapper" as customerResponseMapper{
+    ---
+    + toCustomerResponse(customer : Customer) : CustomerResponse
+}
+
+
+customerController --> customerResponse
+customerController --> customerRequest
+
+
+interface customerRepository extends JpaRepository
+
+customerController --> customerServiceImpl
+
+customerServiceImpl --> customerRepository
+
+@endpuml

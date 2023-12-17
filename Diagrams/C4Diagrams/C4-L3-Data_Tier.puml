@@ -53,6 +53,8 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
                         ---
                           $column("order_id"): VARCHAR(36) NOT NULL
 
+                          $column("order_tracking_number"): VARCHAR(36) NOT NULL
+
                           $column("user_id"): VARCHAR(60) NOT NULL
 
                           $column("order_date"): DATE NOT NULL
