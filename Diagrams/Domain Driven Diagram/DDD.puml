@@ -77,16 +77,27 @@ rectangle "Bounded Context" as BoundedContextCorso #line.dashed {
     rectangle "Order Subdomain" #LightBlue {
         ENTITY(Order) {
           -orderDate: Date
+          -orderDueDate: Date
           -orderStatus: Enum<Status>
+          -orderDescription: String
+          -customerFullName: String
+          -customerEmail: String
+          -customerPhone: String
+          -customerAddress: String
         }
 
         VALUE_OBJECT(OrderIdentifier) {
             -orderId: UUID
         }
 
+        VALUE_OBJECT(OrderTrackingNumber) {
+            -ordertrackingNumber: String
+        }
+
         Order  -down->  CustomerIdentifier #Blue
         Order  -down->  ServiceIdentifier #Red
         OrderIdentifier <--  Order
+        OrderTrackingNumber <-- Order
         AGGREGATE_ROOT(Order)
 
         note "Invariant: [Order must be related to a existing customer]" as orderInvariant1
@@ -95,9 +106,11 @@ rectangle "Bounded Context" as BoundedContextCorso #line.dashed {
     }
     rectangle "Review Subdomain" #LightBlue {
         AGGREGATE_ROOT(Review) {
+         -customer_full_name: String
          -reviewDate: Date
-         -grade: int
          -message: String
+         -review_rating: int
+         -pinned: boolean
         }
         note "Invariant: [Customer must have an order]" as reviewInvariant1
 
