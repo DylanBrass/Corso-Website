@@ -1,4 +1,4 @@
-import NavigationBar from "../../Components/NavigationBar";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {FAQ, FaqTileFaqPage} from "./FaqTileFaqPage";

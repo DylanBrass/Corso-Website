@@ -1,5 +1,7 @@
 package com.corso.springboot.configuration.security.service;
 
+import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
+import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
 import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.configuration.security.exceptions.Auth0Error;
 import com.corso.springboot.configuration.security.models.Auth0GetUsersResponse;
@@ -10,6 +12,7 @@ import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Generated;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -25,10 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @Generated
 public class Auth0ManagementService {
 
@@ -41,6 +44,7 @@ public class Auth0ManagementService {
     @Value("${okta.oauth2.client-secret}")
     private String clientSecret;
 
+    private final CustomerService customerService;
 
     public ResponseEntity<UserResponse> addAdmin(UserRequest userRequest) throws IOException, InterruptedException {
 
@@ -229,7 +233,7 @@ public class Auth0ManagementService {
 
     public ResponseEntity<Integer> getTotalOfRole(String role_id) throws IOException, InterruptedException {
         log.info("Getting total admins");
-        String accessToken = null;
+        String accessToken;
         try {
             accessToken = getAccessToken();
         } catch (Exception e) {
@@ -275,9 +279,28 @@ public class Auth0ManagementService {
 
     public ResponseEntity<List<Auth0GetUsersResponse>> getMatchingUsers(Map<String, String> requestParams) {
 
+        List<Auth0GetUsersResponse> users = new ArrayList<>();
+
+
+        customerService.getCustomerByQueryParams(requestParams).forEach(customer -> {
+            users.add(Auth0GetUsersResponse.builder()
+                    .user_id(customer.getUserId())
+                    .name(customer.getName())
+                    .email(customer.getEmail())
+                    .username(customer.getName())
+                    .address(customer.getAddress())
+                    .apartmentNumber(customer.getApartmentNumber())
+                    .city(customer.getCity())
+                    .postalCode(customer.getPostalCode())
+                    .phone(customer.getPhone())
+                    .build());
+        });
+
         try {
             String accessToken = getAccessToken();
+
             String url = issuer + "api/v2/users?q=";
+
 
             if (requestParams.containsKey("username")) {
                 url += "username%3A" + requestParams.get("username") + "*";
@@ -305,12 +328,9 @@ public class Auth0ManagementService {
                 throw new Auth0Error("Error getting users", HttpStatus.valueOf(response.statusCode()));
             }
 
-            List<Auth0GetUsersResponse> users = new ArrayList<>();
 
 
-            JsonNode jsonNode = new ObjectMapper().readTree(response.body());
-
-            jsonNode.forEach(node -> {
+            new ObjectMapper().readTree(response.body()).forEach(node -> {
                 log.info("Node: " + node.toString());
                 users.add(Auth0GetUsersResponse.builder()
                         .user_id(node.path("user_id").asText())
@@ -320,8 +340,17 @@ public class Auth0ManagementService {
                         .build());
             });
 
+            log.info("Users: " + users);
 
-            return ResponseEntity.ok().body(users);
+            HashMap<String, Auth0GetUsersResponse> map = new HashMap<>();
+
+            users.forEach(user -> {
+                if (!map.containsKey(user.getUser_id())) {
+                    map.put(user.getUser_id(), user);
+                }
+            });
+
+            return ResponseEntity.ok().body(map.values().stream().toList());
 
 
         } catch (Exception e) {

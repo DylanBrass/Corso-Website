@@ -1,4 +1,3 @@
-
 CNavbar {
     background-color: #24252A;
 }
@@ -9,7 +8,11 @@ CNavbar {
 }
 
 .navbar-custom img {
-    max-height: 150px;
+    max-height: 125px;
+}
+
+.navbar-custom{
+    max-height: 125px;
 }
 
 .navbar-custom .navbar-nav .nav-link {

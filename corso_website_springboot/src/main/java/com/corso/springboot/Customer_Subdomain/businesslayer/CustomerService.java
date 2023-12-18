@@ -4,6 +4,9 @@ import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerRequest
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
 import org.reactivestreams.Publisher;
 
+import java.util.List;
+import java.util.Map;
+
 public interface CustomerService {
     CustomerResponse getCustomerByUserId(String userId);
 
@@ -15,4 +18,5 @@ public interface CustomerService {
 
     boolean checkIfCustomerExists(String userId);
 
+    List<CustomerResponse> getCustomerByQueryParams(Map<String, String> requestParams);
 }

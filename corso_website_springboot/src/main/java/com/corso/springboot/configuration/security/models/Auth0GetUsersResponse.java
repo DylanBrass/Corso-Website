@@ -18,4 +18,13 @@ public class Auth0GetUsersResponse {
 
     String username;
 
+    String phone;
+
+    String address;
+
+    String postalCode;
+
+    String city;
+
+    String apartmentNumber;
 }

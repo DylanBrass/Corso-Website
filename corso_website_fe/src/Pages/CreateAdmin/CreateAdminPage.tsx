@@ -1,4 +1,4 @@
-import NavigationBar from "../../Components/NavigationBar";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 import {useAuth} from "../../security/Components/AuthProvider";
 import axios from "axios";
 import {useEffect} from "react";

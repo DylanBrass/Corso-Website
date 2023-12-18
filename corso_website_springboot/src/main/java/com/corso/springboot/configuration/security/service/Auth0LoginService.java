@@ -99,12 +99,11 @@ public class Auth0LoginService {
                 .sameSite("None")
                 .build();
 
-
-        log.info("Subject: " + principal.getSubject());
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, accessPermissionCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, pictureCookie.toString());
+
         if (principal.getClaim("https://corso-dev.com/roles").toString().contains("Admin")) {
             return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
                     .location(URI.create("http://localhost:3000/dashboard")).build();

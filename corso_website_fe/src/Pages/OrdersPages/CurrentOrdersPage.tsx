@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import OrderTile from "../Components/OrderTile";
-import CustomPagination from "../Components/Pagination";
-import { Order } from "../Components/OrderTile";
-import NavigationBar from "../Components/NavigationBar";
+import OrderTile from "../../Components/OrderTile/OrderTile";
+import CustomPagination from "../../Components/Pagination";
+import { Order } from "../../Components/OrderTile/OrderTile";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 
-function CompletedOrdersPage() {
+function CurrentOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
     const [pageSize, ] = useState(1);
@@ -13,12 +13,12 @@ function CompletedOrdersPage() {
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
-            const responseTotalOrders = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=completed&pageSize=0&offset=0`);
+            const responseTotalOrders = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=0&offset=0`);
             const nbOrdersTotal = responseTotalOrders.data.length;
 
             const newTotalPages = Math.ceil(nbOrdersTotal / size);
 
-            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=completed&pageSize=${size}&offset=${(pageNumber - 1) * size}`);
+            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=${size}&offset=${(pageNumber - 1) * size}`);
             console.log(response.data)
             const responseData = response.data;
 
@@ -56,7 +56,7 @@ function CompletedOrdersPage() {
         <>
             <NavigationBar/>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <h1>COMPLETED ORDERS</h1>
+                <h1>CURRENT ORDERS</h1>
                 {orders.map(order => (
                     <OrderTile
                         key={order.orderTrackingNumber}
@@ -75,4 +75,4 @@ function CompletedOrdersPage() {
     );
 }
 
-export default CompletedOrdersPage;
+export default CurrentOrdersPage;

@@ -45,7 +45,7 @@ public class Auth0Controller {
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/get-stats-last-30-days")
-    public ResponseEntity<Integer> getStatsLast30Days() throws IOException, InterruptedException {
+    public ResponseEntity<Integer> getStatsLast30Days() {
         return auth0ManagementService.getStatsLast30Days();
     }
 }

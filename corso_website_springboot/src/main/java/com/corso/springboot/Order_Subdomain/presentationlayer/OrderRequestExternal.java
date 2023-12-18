@@ -1,6 +1,9 @@
 package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 
+import com.corso.springboot.utils.annotations.ValidCanadianPostalCode;
+import com.corso.springboot.utils.annotations.ValidPhoneNumber;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class OrderRequestExternal {
 
-    @NotBlank
+    @NotBlank(message = "Service Id is required.")
     public String serviceId;
 
     public String userId;
@@ -20,14 +23,31 @@ public class OrderRequestExternal {
 
     private String orderDescription;
 
-    @NotBlank
+    @NotBlank(message = "Full Name is required.")
     private String customerFullName;
 
-    @NotBlank
+    @NotBlank(message = "Email is required.")
+    @Email
     private String customerEmail;
 
+    @ValidPhoneNumber
     private String customerPhone;
 
-    @NotBlank
+    @NotBlank(message = "Address is required.")
     private String customerAddress;
+
+    @NotBlank(message = "City is required.")
+    private String customerCity;
+
+    @NotBlank(message = "Postal Code is required.")
+    @ValidCanadianPostalCode
+    String customerPostalCode;
+
+    String customerApartmentNumber;
+
+    int estimatedDuration;
+
+    int daysLeft;
+
+
 }

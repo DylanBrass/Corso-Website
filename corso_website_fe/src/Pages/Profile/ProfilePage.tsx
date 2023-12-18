@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useAuth} from "../../security/Components/AuthProvider";
 import Cookies from "js-cookie";
-import NavigationBar from "../../Components/NavigationBar";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 import "./ModifyProfile.css";
 import React, {useEffect, useState} from "react";
 import swal from "sweetalert"; // Import the styles from ModifyProfile.css
@@ -31,7 +31,6 @@ function ProfilePage() {
         await axios.get("http://localhost:8080/api/v1/corso/customers?simpleCheck=true", {
             headers: {
                 // @ts-ignore
-
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
             }
         }).then(r => {
@@ -130,7 +129,17 @@ function ProfilePage() {
                 }
             })
                 .catch(e => {
-                    swal("Error!", e.response.data.message, "error").then(r => {
+                    let errors = "";
+
+                    if (e.response.data.errors !== undefined) {
+                        // @ts-ignore
+                        e.response.data.errors.forEach((error: any) => {
+                            errors += error.defaultMessage + "\n";
+                        })
+                    }
+
+
+                    swal("Error!", "A or multiple errors present !\n" + errors, "error").then(r => {
                         // @ts-ignore
                         auth.authError(e.response.status)
                     })
@@ -152,7 +161,18 @@ function ProfilePage() {
                         setHasProfile(true);
                     }
                 }).catch(e => {
-                swal("Error!", e.response.data.message, "error").then(r => {
+
+                    let errors = "";
+
+                if (e.response.data.errors !== undefined) {
+                    // @ts-ignore
+                    e.response.data.errors.forEach((error: any) => {
+                        errors += error.defaultMessage + "\n";
+                    })
+                }
+
+
+                swal("Error!", "A or multiple errors present !\n" + errors, "error").then(r => {
                     // @ts-ignore
                     auth.authError(e.response.status)
                 })

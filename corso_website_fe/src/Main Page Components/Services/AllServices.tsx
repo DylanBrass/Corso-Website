@@ -15,7 +15,7 @@ function AllServices() {
     useEffect(() => {
         const fetchServices = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/corso/services/allServices');
+                const response = await axios.get('http://localhost:8080/api/v1/corso/services');
                 setServices(response.data);
             } catch (error) {
                 console.error('Error fetching services:', error);

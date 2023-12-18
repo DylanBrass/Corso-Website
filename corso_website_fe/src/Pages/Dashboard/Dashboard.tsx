@@ -1,6 +1,6 @@
-import NavigationBar from "../../Components/NavigationBar";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 import {useAuth} from "../../security/Components/AuthProvider";
-import AdminDashboardTile from "../../Components/AdminDashboardTile";
+import AdminDashboardTile from "../../Components/Dashboard/AdminDashboardTile";
 import "./Dashboard.css"
 import Cookies from "js-cookie";
 import {useEffect, useState} from "react";
@@ -214,7 +214,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={"10"}
                             title2={""}
-                            text1={"Service Offered"}
+                            text1={"Services Offered"}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon11_pprfnf.png"}
                             action={() => {

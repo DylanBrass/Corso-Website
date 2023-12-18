@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -73,8 +76,6 @@ public class CustomerServiceImpl implements CustomerService{
         customer.setCity(customerRequest.getCity() != null ? customerRequest.getCity() : customer.getCity());
         customer.setApartmentNumber(customerRequest.getApartmentNumber() != null ? customerRequest.getApartmentNumber() : customer.getApartmentNumber());
 
-
-
         customerRepository.save(customer);
 
         return customerResponseMapper.toCustomerResponse(customer);
@@ -98,4 +99,33 @@ public class CustomerServiceImpl implements CustomerService{
     public boolean checkIfCustomerExists(String userId) {
         return customerRepository.existsByUserId(userId);
     }
+
+    @Override
+    public List<CustomerResponse> getCustomerByQueryParams(Map<String, String> requestParams) {
+
+        log.info("Request params {}", requestParams);
+
+
+        String name = requestParams.get("name");
+
+        if (name == null)
+            name = requestParams.get("username");
+
+
+        String email = requestParams.get("email");
+
+        
+        if (name != null) {
+            return customerResponseMapper.toCustomersResponse(customerRepository.findAllByNameStartingWith(name));
+        }
+
+        if (email != null) {
+            return customerResponseMapper.toCustomersResponse(customerRepository.findAllByEmailStartingWith(email));
+        }
+
+        return customerResponseMapper.toCustomersResponse(customerRepository.findAll());
+
+    }
+
+
 }
