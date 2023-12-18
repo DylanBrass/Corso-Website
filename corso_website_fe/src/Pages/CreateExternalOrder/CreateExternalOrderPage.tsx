@@ -217,7 +217,7 @@ function CreateExternalOrderPage() {
                                                 setSelectedRowIndex(index);
                                             }
                                             }
-                                            className={selectedRowIndex === index ? "selected-row" : "" + " user-row"}
+                                            className={"user-row " && selectedRowIndex === index ? "selected-row" : "" }
                                         >
                                             <td>{user.name || "Not Applicable"}</td>
                                             <td>{user.email || "Not Applicable"}</td>

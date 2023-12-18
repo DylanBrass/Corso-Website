@@ -28,7 +28,7 @@ const Dropdown = ({ label, options, onSelect }) => {
             options.map((option, index) => (
             <li
               key={index}
-              className={"dropdown-option {option === selectedOption ? 'selected' : ''}" + ' border-0'}
+              className={"dropdown-option border-0 " + option === selectedOption ? 'selected' : ''}
               onClick={() => handleOptionClick(option)}
             >
               {option}
