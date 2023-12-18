@@ -7,13 +7,14 @@ import {AuthProvider} from "./security/Components/AuthProvider";
 import ExternalHandling from "./security/externalProvidersHandling/externalHandling";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import CreateAdminPage from "./Pages/CreateAdmin/CreateAdminPage";
-import CurrentOrdersPage from "./Pages/CurrentOrdersPage";
+import CurrentOrdersPage from "./Pages/OrdersPages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import ViewAllFaq from "./Pages/AllFAQs/ViewAllFaq";
 
-import CompletedOrdersPage from "./Pages/CompleteOrdersPage";
-import ServiceDetailsPage from "./Pages/ServiceDetailsPage";
-import PendingOrdersPage from "./PendingOrdersPage";
+import CompletedOrdersPage from "./Pages/OrdersPages/CompleteOrdersPage";
+import ServiceDetailsPage from "./Pages/ViewServices/ServiceDetailsPage";
+import PendingOrdersPage from "./Pages/OrdersPages/PendingOrdersPage";
+import CreateExternalOrderPage from "./Pages/CreateExternalOrder/CreateExternalOrderPage";
 
 
 function App() {
@@ -26,13 +27,12 @@ function App() {
                     <Route path="/" element={<MainPage />} />
                     <Route path="/faq" element={<ViewAllFaq/>} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/create/orders/external" element={<CreateExternalOrderPage/>} />
                     <Route path="/orders/current" element={<CurrentOrdersPage/>} />
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
-                    <Route path={"/profile"} element={<ProfilePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
-                    <Route path={"/profile"} element={<ProfilePage/>} />
-                    <Route path="/create/admin" element={<CreateAdminPage/>} />
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
                     <Route path="/external" element={<ExternalHandling />} />
@@ -41,7 +41,7 @@ function App() {
             </BrowserRouter>
         </AuthProvider>
     </>
-  );
+  )
 }
 
 export default App;

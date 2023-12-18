@@ -11,6 +11,10 @@ public class ServiceIdentifier {
         this.serviceId = java.util.UUID.randomUUID().toString();
     }
 
+    public ServiceIdentifier(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
     public String getServiceId() {
         return serviceId;
     }

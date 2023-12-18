@@ -1,7 +1,9 @@
 package com.corso.springboot.Order_Subdomain.datalayer;
 
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
+import com.corso.springboot.utils.annotations.ValidCanadianPostalCode;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 
@@ -44,6 +46,16 @@ public class Order {
     private String customerPhone;
 
     private String customerAddress;
+
+    private String customerCity;
+
+    String customerPostalCode;
+
+    String customerApartmentNumber;
+
+    int estimatedDuration;
+
+    int daysLeft;
 
     public Order(String userId, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress) {
         this.orderId = new OrderIdentifier();

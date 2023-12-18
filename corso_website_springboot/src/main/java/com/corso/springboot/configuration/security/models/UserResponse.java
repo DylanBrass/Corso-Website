@@ -1,9 +1,6 @@
 package com.corso.springboot.configuration.security.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Generated
+@Builder
 public class UserResponse {
     private String username;
     private String email;

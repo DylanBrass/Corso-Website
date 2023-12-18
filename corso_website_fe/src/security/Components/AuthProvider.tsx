@@ -19,7 +19,6 @@ const AuthProvider = ({children}) => {
     })
 
     useEffect(() => {
-        console.log("XSRF-TOKEN: " + Cookies.get("XSRF-TOKEN"))
         setCsrfToken(document.cookie.replace(/(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$|^.*$/, '$1'))
     }, [csrfToken]);
 
@@ -28,14 +27,11 @@ const AuthProvider = ({children}) => {
     }, [isAuthenticated])
 
     useEffect(() => {
-        console.log("isAuthenticated: " + Cookies.get("isAuthenticated"))
         if (Cookies.get("isAuthenticated") === undefined) {
             setIsAuthenticated(false)
         } else {
-            console.log("isAuthenticated: " + Boolean(Cookies.get("isAuthenticated")))
             setIsAuthenticated(Boolean(Cookies.get("isAuthenticated")))
         }
-        console.log("isAuthenticated: " + isAuthenticated)
     }, [isAuthenticated])
 
     const login = () => {
@@ -52,9 +48,7 @@ const AuthProvider = ({children}) => {
                 }
             })
                 .then(r => {
-                    console.log(r)
                     if (r.status === 200) {
-                        console.log(r.data)
                         Cookies.set("username", r.data.name)
                         Cookies.set("email", r.data.email)
                     }else{
@@ -62,7 +56,6 @@ const AuthProvider = ({children}) => {
                     }
                 })
                 .catch(e => {
-                    console.log(e)
                     getInfo()
                 })
 
@@ -77,20 +70,21 @@ const AuthProvider = ({children}) => {
             })
                 .then(r => {
                     if (r.status === 200) {
-                        console.log(r.data)
                         Cookies.set("username", r.data.username)
                         Cookies.set("email", r.data.email)
 
                     }
                 })
                 .catch(e => {
+
+
                 })
         }
     }
 
     useEffect(() => {
         if (isAuthenticated) {
-            getUserInfo().then(r => console.log(r))
+            getUserInfo()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated]);
@@ -104,8 +98,6 @@ const AuthProvider = ({children}) => {
             window.location.href = "http://localhost:8080/oauth2/authorization/okta"
         } else if (status === 403) {
             window.location.href = "/403"
-        } else {
-            console.log("Error: " + status)
         }
     }
 

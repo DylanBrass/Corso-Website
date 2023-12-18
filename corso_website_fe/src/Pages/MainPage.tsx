@@ -1,10 +1,10 @@
 import OurPreviousProjects from "../Main Page Components/Gallery/OurPreviousProjects";
-import NavigationBar from "../Components/NavigationBar";
+import NavigationBar from "../Components/NavBar/NavigationBar";
 import BannerMainPage from "../Main Page Components/Banner/BannerMainPage";
 import {useAuth} from "../security/Components/AuthProvider";
-import AllServices from "../Main Page Components/AllServices";
 import BannerMainPageAnonymous from "../Main Page Components/Banner/BannerMainPageAnonymous";
-import Footer from "../Components/Footer";
+import AllServices from "../Main Page Components/Services/AllServices";
+import Footer from "../Components/Footer/Footer";
 import FaqPinnedMainPage from "../Main Page Components/FAQ/FaqPinnedMainPage";
 
 

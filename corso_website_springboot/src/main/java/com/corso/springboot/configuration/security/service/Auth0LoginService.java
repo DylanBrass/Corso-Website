@@ -48,7 +48,6 @@ public class Auth0LoginService {
     }
 
 
-
     public ResponseEntity<Void> handleExternalLogin(OidcUser principal) {
         log.info("Handling Apple Login");
 
@@ -69,7 +68,7 @@ public class Auth0LoginService {
     public ResponseEntity<Void> getVoidResponseEntity(@AuthenticationPrincipal OidcUser principal) {
         HttpHeaders headers = new HttpHeaders();
 
-        ResponseCookie cookie = ResponseCookie.from("id_token",principal.getIdToken().getTokenValue())
+        ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
@@ -84,7 +83,7 @@ public class Auth0LoginService {
                 .build();
 
         ResponseCookie accessPermissionCookie = ResponseCookie.from("accessPermission", principal.getAuthorities().toString()
-                        .replace(",","-").replace(" ",""))
+                        .replace(",", "-").replace(" ", ""))
                 .httpOnly(false)
                 .secure(true)
                 .path("/")
@@ -100,15 +99,18 @@ public class Auth0LoginService {
                 .sameSite("None")
                 .build();
 
-
-        log.info("Subject: " + principal.getSubject());
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, accessPermissionCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, pictureCookie.toString());
 
-        return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
-                .location(URI.create("http://localhost:3000")).build();
+        if (principal.getClaim("https://corso-dev.com/roles").toString().contains("Admin")) {
+            return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
+                    .location(URI.create("http://localhost:3000/dashboard")).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
+                    .location(URI.create("http://localhost:3000")).build();
+        }
     }
 
 }

@@ -14,9 +14,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -59,9 +62,9 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
-        Mockito.when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomer);
+        when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomer);
 
-        Mockito.when(customerResponseMapper.toCustomerResponse(mockCustomer)).thenReturn(mockCustomerResponse);
+        when(customerResponseMapper.toCustomerResponse(mockCustomer)).thenReturn(mockCustomerResponse);
 
         CustomerResponse result = customerService.getCustomerByUserId(userId);
 
@@ -119,13 +122,13 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
-        Mockito.when(customerRepository.existsByUserId(userId)).thenReturn(false);
+        when(customerRepository.existsByUserId(userId)).thenReturn(false);
 
-        Mockito.when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomer);
+        when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomer);
 
-        Mockito.when(customerRepository.save(mockCustomer)).thenReturn(mockCustomer);
+        when(customerRepository.save(mockCustomer)).thenReturn(mockCustomer);
 
-        Mockito.when(customerResponseMapper.toCustomerResponse(mockCustomer)).thenReturn(mockCustomerResponse);
+        when(customerResponseMapper.toCustomerResponse(mockCustomer)).thenReturn(mockCustomerResponse);
 
         CustomerResponse result = customerService.createCustomer(mockCustomerRequest, userId);
 
@@ -184,13 +187,13 @@ class CustomerServiceUnitTest {
 
 
 
-        Mockito.when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomerExisting);
+        when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomerExisting);
 
-        Mockito.when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomerExisting);
+        when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomerExisting);
 
-        Mockito.when(customerRepository.save(mockCustomerExisting)).thenReturn(mockCustomerExisting);
+        when(customerRepository.save(mockCustomerExisting)).thenReturn(mockCustomerExisting);
 
-        Mockito.when(customerResponseMapper.toCustomerResponse(mockCustomerExisting)).thenReturn(mockCustomerResponse);
+        when(customerResponseMapper.toCustomerResponse(mockCustomerExisting)).thenReturn(mockCustomerResponse);
 
         CustomerResponse result = customerService.updateCustomer(mockCustomerRequest, userId);
 
@@ -251,13 +254,13 @@ class CustomerServiceUnitTest {
                 .city("new city")
                 .build();
 
-        Mockito.when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomerExisting);
+        when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomerExisting);
 
-        Mockito.when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomerExisting);
+        when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomerExisting);
 
-        Mockito.when(customerRepository.save(mockCustomerExisting)).thenReturn(mockCustomerExisting);
+        when(customerRepository.save(mockCustomerExisting)).thenReturn(mockCustomerExisting);
 
-        Mockito.when(customerResponseMapper.toCustomerResponse(mockCustomerExisting)).thenReturn(mockCustomerResponse);
+        when(customerResponseMapper.toCustomerResponse(mockCustomerExisting)).thenReturn(mockCustomerResponse);
 
         CustomerResponse result = customerService.updateCustomer(mockCustomerRequest, userId);
 
@@ -282,7 +285,7 @@ class CustomerServiceUnitTest {
         // Given
         String userId = "google|123456789";
 
-        Mockito.when(customerRepository.existsByUserId(userId)).thenReturn(true, false);
+        when(customerRepository.existsByUserId(userId)).thenReturn(true, false);
 
         // When
         customerService.deleteCustomer(userId);
@@ -299,7 +302,7 @@ class CustomerServiceUnitTest {
 
         String userId = "google|123456789";
 
-        Mockito.when(customerRepository.existsByUserId(userId)).thenReturn(true);
+        when(customerRepository.existsByUserId(userId)).thenReturn(true);
 
         assertThrows(InvalidRequestException.class, () -> customerService.deleteCustomer(userId));
 
@@ -309,10 +312,85 @@ class CustomerServiceUnitTest {
 
         String userId = "google|123456789";
 
-        Mockito.when(customerRepository.existsByUserId(userId)).thenReturn(true);
+        when(customerRepository.existsByUserId(userId)).thenReturn(true);
 
         boolean result = customerService.checkIfCustomerExists(userId);
 
         assertTrue(result);
+    }
+
+
+    @Test
+    void getCustomerByName(){
+        Map<String, String> requestParams = Map.of("name", "Alice");
+
+        Customer mockCustomer = Customer.builder()
+                .name("Alice Doe")
+                .email("test@email.com")
+                .phone("+1234567890")
+                .postalCode("A1B 2C3")
+                .address("123 Main St")
+                .apartmentNumber("Apt 5")
+                .city("Cityville")
+                .build();
+
+        when(customerRepository.findAllByNameStartingWith("Alice")).thenReturn(List.of(mockCustomer));
+
+        CustomerResponse mockCustomerResponse = CustomerResponse.builder()
+                .name("Alice Doe")
+                .email(mockCustomer.getEmail())
+                .phone(mockCustomer.getPhone())
+                .postalCode(mockCustomer.getPostalCode())
+                .address(mockCustomer.getAddress())
+                .apartmentNumber(mockCustomer.getApartmentNumber())
+                .city(mockCustomer.getCity())
+                .build();
+
+        when(customerResponseMapper.toCustomersResponse(List.of(mockCustomer))).thenReturn(List.of(mockCustomerResponse));
+
+
+        List<CustomerResponse> result = customerService.getCustomerByQueryParams(requestParams);
+
+        assertEquals(mockCustomerResponse.getName(), result.get(0).getName());
+
+        assertEquals(mockCustomerResponse.getEmail(), result.get(0).getEmail());
+
+        assertEquals(mockCustomerResponse.getPhone(), result.get(0).getPhone());
+    }
+
+
+    @Test
+    void getCustomerByEmail() {
+        Map<String, String> requestParams = Map.of("email", "test@email.com");
+
+        Customer mockCustomer = Customer.builder()
+                .name("Alice Doe")
+                .email(requestParams.get("email"))
+                .phone("+1234567890")
+                .postalCode("A1B 2C3")
+                .address("123 Main St")
+                .apartmentNumber("Apt 5")
+                .city("Cityville")
+                .build();
+
+        when(customerRepository.findAllByEmailStartingWith(requestParams.get("email"))).thenReturn(List.of(mockCustomer));
+
+        CustomerResponse mockCustomerResponse = CustomerResponse.builder()
+                .name(mockCustomer.getName())
+                .email(mockCustomer.getEmail())
+                .phone(mockCustomer.getPhone())
+                .postalCode(mockCustomer.getPostalCode())
+                .address(mockCustomer.getAddress())
+                .apartmentNumber(mockCustomer.getApartmentNumber())
+                .city(mockCustomer.getCity())
+                .build();
+
+        when(customerResponseMapper.toCustomersResponse(List.of(mockCustomer))).thenReturn(List.of(mockCustomerResponse));
+
+        List<CustomerResponse> result = customerService.getCustomerByQueryParams(requestParams);
+
+        assertEquals(mockCustomerResponse.getName(), result.get(0).getName());
+
+        assertEquals(mockCustomerResponse.getEmail(), result.get(0).getEmail());
     }
 }

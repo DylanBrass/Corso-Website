@@ -52,7 +52,7 @@ function ViewServiceDetails() {
                         <p className="lead">{serviceDetails.serviceDescription}</p>
                     </div>
                 <div className="row custom-row">
-                    <a href="/" className="home-hyperlink">
+                    <a href="/public" className="home-hyperlink">
                         Back to Main Page
                     </a>
                 </div>

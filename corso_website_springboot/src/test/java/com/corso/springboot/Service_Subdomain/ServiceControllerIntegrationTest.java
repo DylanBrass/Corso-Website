@@ -55,7 +55,7 @@ public class ServiceControllerIntegrationTest {
         Integer expectedNumServices = 1;
         //act
         webTestClient.get()
-                .uri(BASE_URI_SERVICES + "/allServices")
+                .uri(BASE_URI_SERVICES)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)

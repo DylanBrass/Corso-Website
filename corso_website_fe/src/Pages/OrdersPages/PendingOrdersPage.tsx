@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import OrderTile, {Order} from "./Components/OrderTile";
-import NavigationBar from "./Components/NavigationBar";
-import CustomPagination from "./Components/Pagination";
+import OrderTile, {Order} from "../../Components/OrderTile/OrderTile";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
+import CustomPagination from "../../Components/Pagination";
 
 
 function PendingOrdersPage() {

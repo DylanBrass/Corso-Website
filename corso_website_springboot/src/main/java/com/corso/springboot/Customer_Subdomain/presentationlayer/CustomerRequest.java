@@ -15,7 +15,7 @@ import lombok.Value;
 public class CustomerRequest {
 
     @Email
-    @NotBlank
+    @NotBlank(message = "Email is required.")
     String email;
 
     String name;
@@ -23,14 +23,14 @@ public class CustomerRequest {
     @ValidPhoneNumber
     String phone;
 
-    @NotBlank
+    @NotBlank(message = "Address is required.")
     String address;
 
     @NotBlank
     @ValidCanadianPostalCode
     String postalCode;
 
-    @NotBlank
+    @NotBlank(message = "City is required.")
     String city;
 
     String apartmentNumber;

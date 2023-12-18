@@ -11,6 +11,8 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomerResponse {
 
+    String userId;
+
     String email;
 
     String name;

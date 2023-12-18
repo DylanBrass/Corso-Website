@@ -1,11 +1,14 @@
 package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +29,13 @@ public class OrderController {
             @RequestParam Map<String, String> queryParams,
             @RequestParam(name = "pageSize") int pageSize,
             @RequestParam(name = "offset") int offset) {
-
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOrdersByStatus(queryParams, pageSize, offset));
     }
 
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PostMapping("/external")
+    public ResponseEntity<OrderResponse> createOrderExternal(@Valid @RequestBody OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrderExternal(orderRequestExternal));
+    }
 }

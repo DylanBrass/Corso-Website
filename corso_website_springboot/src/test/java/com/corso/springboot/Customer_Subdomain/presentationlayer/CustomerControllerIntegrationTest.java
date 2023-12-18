@@ -1,17 +1,13 @@
 package com.corso.springboot.Customer_Subdomain.presentationlayer;
 
-import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
-import com.corso.springboot.Customer_Subdomain.datalayer.CustomerRepository;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -196,5 +192,7 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.apartmentNumber").value("Apt 5"))
                 .andExpect(jsonPath("$.name").value("Alice Doe"));
     }
+
+
 
 }

@@ -24,7 +24,7 @@ public class ServiceController {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getServiceByServiceId(serviceId));
     }
 
-    @GetMapping("/allServices")
+    @GetMapping("")
     public ResponseEntity<List<ServiceResponse>> getAllServices(){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getAllServices());
     }

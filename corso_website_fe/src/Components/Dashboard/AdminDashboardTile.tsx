@@ -25,7 +25,7 @@ function AdminDashboardTile(body: Body) {
     return (
         <div className={"h-100 full-tile"} onClick={body.action}>
             <div className={"admin-dashboard-tile d-flex container h-100"}>
-                <div className={"row h-100"} style={{
+                <div className={"row h-100 text-center"} style={{
                 }}>
                     <div className={"col-12 col-lg-7 box-body"}>
                         {body.title1 !== ""  &&

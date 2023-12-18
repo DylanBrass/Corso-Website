@@ -1,6 +1,7 @@
 package com.corso.springboot.Order_Subdomain.datalayer;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -8,6 +9,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+@Getter
 @Embeddable
 public class OrderTrackingNumber {
 
@@ -17,11 +19,7 @@ public class OrderTrackingNumber {
         this.orderTrackingNumber = generateRandomString(6);
     }
 
-    public String getOrderTrackingNumber() {
-        return orderTrackingNumber;
-    }
-
-    private String generateRandomString(int length) {
+    public static String generateRandomString(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         SecureRandom random = new SecureRandom();
 

@@ -1,4 +1,4 @@
-import NavigationBar from "../Components/NavigationBar";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 import ViewServiceDetails from "./ViewServiceDetails";
 
 function ServiceDetailsPage() {

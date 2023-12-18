@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidPostalCodeRegex.class)
 public @interface ValidCanadianPostalCode {
-    String message() default "Invalid Phone Number Format.";
+    String message() default "Invalid Postal Code Format.";
 
     Class<?>[] groups() default {};
 

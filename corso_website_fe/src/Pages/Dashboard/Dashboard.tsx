@@ -1,6 +1,6 @@
-import NavigationBar from "../../Components/NavigationBar";
+import NavigationBar from "../../Components/NavBar/NavigationBar";
 import {useAuth} from "../../security/Components/AuthProvider";
-import AdminDashboardTile from "../../Components/AdminDashboardTile";
+import AdminDashboardTile from "../../Components/Dashboard/AdminDashboardTile";
 import "./Dashboard.css"
 import Cookies from "js-cookie";
 import {useEffect, useState} from "react";
@@ -9,6 +9,8 @@ import axios from "axios";
 function Dashboard() {
 
     const [totalAdmins, setTotalAdmins] = useState(0)
+
+    const [visitors, setVisitors] = useState(0)
 
     const getTotalAdmins = async () => {
         axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-total-admins", {
@@ -30,6 +32,26 @@ function Dashboard() {
     }
 
 
+    const getVisitors = async () => {
+        axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-stats-last-30-days", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => {
+                if (r.status === 200) {
+                    console.log(r.data)
+                    setVisitors(r.data)
+                }
+            })
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status)
+            })
+    }
+
+
 
     const auth = useAuth()
 
@@ -40,6 +62,10 @@ function Dashboard() {
         }
 
         getTotalAdmins().then(r => {
+            console.log(r)
+        })
+
+        getVisitors().then(r => {
             console.log(r)
         })
 
@@ -126,9 +152,9 @@ function Dashboard() {
 
                         <AdminDashboardTile
                             title1={""}
-                            title2={"67"}
+                            title2={visitors.toString()}
                             text1={"View Main Page"}
-                            text2={"Total Visitors this Month"}
+                            text2={"Unique Visitors in the last 30 days"}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon9_ehmde3.png"}
                             action={() => {
                                 window.location.href = "/"
@@ -179,7 +205,7 @@ function Dashboard() {
                             text2={"for External Orders"}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon10_c7xbqz.png"}
                             action={() => {
-                                console.log("test")
+                                window.location.href = "/create/orders/external"
                             }}
                         />
                     </div>
@@ -188,7 +214,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={"10"}
                             title2={""}
-                            text1={"Service Offered"}
+                            text1={"Services Offered"}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon11_pprfnf.png"}
                             action={() => {
