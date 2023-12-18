@@ -1,0 +1,99 @@
+@startuml
+
+title Create an account use case DLSD
+
+actor User
+
+participant HomePage as "<<view>>\nHomePage"
+
+participant RegisterPage as "<<view>>\nRegisterNowPage"
+
+participant CustomerRequest as "customerRequest: CustomerRequest"
+
+participant CustomerController as "<<Controller>>\nCustomerController"
+
+participant CustomerService as "<<Service>>\nCustomerService"
+
+participant Response as "response: CustomerResponse"
+
+participant CustomerRepository as "<<Repository>>\nCustomerRepository"
+
+participant Customer as "customer: Customer"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant CustomerResponseMapper as "<<Mapper>>\nCustomerResponseMapper"
+
+participant CustomerRequestMapper as "<<Mapper>>\nCustomerRequestMapper"
+
+User -> HomePage : CreateCustomerAccount()
+activate HomePage
+HomePage -> RegisterPage : render()
+activate RegisterPage
+User -> RegisterPage : SubmitCreateAccountForm()
+
+RegisterPage -> CustomerRequest : POST /api/v1/corso/customers
+
+activate CustomerRequest
+
+CustomerRequest -> CustomerController : customerRequest: CustomerRequest
+
+activate CustomerController
+
+
+CustomerController -> CustomerService : createCustomerAccount(customerRequest)
+
+activate CustomerService
+
+CustomerService -> CustomerRequestMapper : toEntity(customerRequest)
+
+activate CustomerRequestMapper
+
+
+CustomerRequestMapper -> Customer : customer: Customer
+activate Customer
+
+Customer --> CustomerService : customer: Customer
+destroy CustomerRequest
+destroy CustomerRequestMapper
+
+CustomerService -> CustomerRepository : save(customer)
+activate CustomerRepository
+
+CustomerRepository -> Database : INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+destroy Customer
+activate Database
+
+Database --> CustomerRepository : Customer
+
+deactivate Database
+
+CustomerRepository --> Customer : Customer
+destroy CustomerRepository
+activate Customer
+
+Customer --> CustomerService : customer: Customer
+
+CustomerService -> CustomerResponseMapper : toResponse(customer)
+destroy Customer
+activate CustomerResponseMapper
+
+CustomerResponseMapper -> Response : CustomerResponse
+destroy CustomerResponseMapper
+
+activate Response
+Response --> CustomerService : response: CustomerResponse
+
+CustomerService --> CustomerController : response: CustomerResponse
+
+destroy CustomerService
+
+
+CustomerController --> HomePage : response: CustomerResponse
+
+destroy Response
+destroy CustomerController
+
+User -> HomePage : BackToHomePage()
+
+@endpuml

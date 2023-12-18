@@ -1,0 +1,223 @@
+@startuml
+class "<<controller>>\nReviewController" as reviewController {
+    - reviewService : ReviewService
+    ---
+    + getAllReviews() : ResponseEntity<List<ReviewResponse>>
+    + getReviewByReviewId(reviewId: String) : ResponseEntity<ReviewResponse>
+    + postReview() : ResponseEntity<ReviewResponse>
+    + updateReview(reviewId: String, reviewRequest : "ReviewRequest) : ResponseEntity<ReviewResponse>
+    + deleteCustomer(reviewId: String) : ResponseEntity<Void>
+}
+
+interface "ReviewService" as reviewService{
+    ---
+    + getAllReviews() : ResponseEntity<List<ReviewResponse>>
+    + getReviewByReviewId(reviewId: String) : ResponseEntity<ReviewResponse>
+    + postReview() : ResponseEntity<ReviewResponse>
+    + updateReview(reviewId: String, reviewRequest : "ReviewRequest) : ResponseEntity<ReviewResponse>
+    + deleteCustomer(reviewId: String) : ResponseEntity<Void>
+}
+
+class "<<service>>\nReviewServiceImpl" as reviewServiceImpl{
+    - reviewRepository : ReviewRepository
+    - reviewRequestMapper : ReviewRequestMapper
+    - reviewResponseMapper : reviewResponseMapper
+    ---
+    + getAllReviews() : ResponseEntity<List<ReviewResponse>>
+    + getReviewByReviewId(reviewId: String) : ResponseEntity<ReviewResponse>
+    + postReview() : ResponseEntity<ReviewResponse>
+    + updateReview(reviewId: String, reviewRequest : "ReviewRequest) : ResponseEntity<ReviewResponse>
+    + deleteCustomer(reviewId: String) : ResponseEntity<Void>
+}
+
+class reviewServiceImpl extends reviewService
+
+interface "<<repository>>\nReviewRepository" as reviewRepository{
+    ---
+    + getReviewByReviewId(reviewId: String) : Review
+    + deleteReviewByReviewId(reviewId: String) : void
+    + existsByReviewId(reviewId: String) : boolean
+}
+
+class "Review" as review{
+    - id : int
+    - reviewId : String
+    - userId : String
+    - customer_full_name : String
+    - review_date : Date
+    - message : String
+    - review_rating : int
+    - pinned : boolean
+    ---
+
+}
+
+reviewServiceImpl --> review
+
+class "ReviewResponse" as reviewResponse{
+    - reviewId : String
+    - userId : String
+    - customer_full_name : String
+    - review_date : Date
+    - message : String
+    - review_rating : int
+    - pinned : boolean
+    ---
+
+}
+
+class "ReviewRequest" as reviewRequest{
+    - userId : String
+    - customer_full_name : String
+    - review_date : Date
+    - message : String
+    - review_rating : int
+    - pinned : boolean
+    ---
+
+}
+
+reviewRequestMapper --> reviewRequest
+
+reviewResponseMapper --> reviewResponse
+
+reviewRepository --> review
+
+reviewServiceImpl --> reviewResponseMapper
+reviewServiceImpl --> reviewRequestMapper
+
+
+interface "<<Mapper>>\nReviewRequestMapper" as reviewRequestMapper{
+    ---
+    + toReview(reviewRequest : ReviewRequest) : Review
+}
+
+interface "<<Mapper>>\nReviewResponseMapper" as reviewResponseMapper{
+    ---
+    + toReviewResponse(review : Review) : ReviewResponse
+}
+
+
+reviewController --> reviewResponse
+reviewController --> reviewRequest
+
+
+interface reviewRepository extends JpaRepository
+
+reviewController --> reviewServiceImpl
+
+reviewServiceImpl --> reviewRepository
+
+class "<<controller>>\nCustomerController" as customerController {
+    - customerService : CustomerService
+    ---
+    + getCustomerByUserId(principal: OidcUser, requestParams: Map<String, String>) : ResponseEntity<CustomerResponse>
+    + createCustomer(principal: OidcUser, customerRequest : CustomerRequest) : ResponseEntity<CustomerResponse>
+    + updateCustomer(principal: OidcUser, customerRequest : "CustomerRequest) : ResponseEntity<CustomerResponse>
+    + deleteCustomer(principal: OidcUser) : ResponseEntity<Void>
+}
+
+interface "CustomerService" as customerService{
+    ---
+    + getCustomerByUserId(userId: String) : CustomerResponse
+    + createCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + updateCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + deleteCustomer(userId: String) : void
+    + checkIfCustomerExists(userId: String) : boolean
+}
+
+class "<<service>>\nCustomerServiceImpl" as customerServiceImpl{
+    - customerRepository : CustomerRepository
+    - customerRequestMapper : CustomerRequestMapper
+    - customerResponseMapper : CustomerResponseMapper
+    ---
+    + getCustomerByUserId(userId: String) : CustomerResponse
+    + createCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + updateCustomer(customerRequest : CustomerRequest, userId: String) : CustomerResponse
+    + deleteCustomer(userId: String) : void
+    + checkIfCustomerExists(userId: String) : boolean
+}
+
+class customerServiceImpl extends customerService
+
+interface "<<repository>>\nCustomerRepository" as customerRepository{
+    ---
+    + getCustomerByUserId(userId: String) : Customer
+    + deleteCustomerByUserId(userId: String) : void
+    + existsByUserId(userId: String) : boolean
+}
+
+class "Customer" as customer{
+    - id : int
+    - userId : String
+    - name : String
+    - email : String
+    - phone : String
+    - address : String
+    - postalCode : String
+    - city : String
+    - apartmentNumber : String
+    ---
+
+}
+
+customerServiceImpl --> customer
+
+class "CustomerResponse" as customerResponse{
+    - email : String
+    - name : String
+    - phone : String
+    - address : String
+    - postalCode : String
+    - city : String
+    - apartmentNumber : String
+    ---
+
+}
+
+class "CustomerRequest" as customerRequest{
+    - email : String
+    - name : String
+    - phone : String
+    - address : String
+    - postalCode : String
+    - city : String
+    - apartmentNumber : String
+    ---
+
+}
+
+customerRequestMapper --> customerRequest
+
+customerResponseMapper --> customerResponse
+
+customerRepository --> customer
+
+customerServiceImpl --> customerResponseMapper
+customerServiceImpl --> customerRequestMapper
+
+
+interface "<<Mapper>>\nCustomerRequestMapper" as customerRequestMapper{
+    ---
+    + toCustomer(customerRequest : CustomerRequest) : Customer
+}
+
+interface "<<Mapper>>\nCustomerResponseMapper" as customerResponseMapper{
+    ---
+    + toCustomerResponse(customer : Customer) : CustomerResponse
+}
+
+
+customerController --> customerResponse
+customerController --> customerRequest
+
+
+interface customerRepository extends JpaRepository
+
+customerController --> customerServiceImpl
+
+customerServiceImpl --> customerRepository
+
+customer --> review
+
+@endpuml
