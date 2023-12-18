@@ -15,20 +15,20 @@ const Dropdown = ({ label, options, onSelect }) => {
   };
 
   return (
-    <div className="dropdown-container">
-      <div className="dropdown-header" onClick={toggleDropdown}>
+    <div className="dropdown-container border-0">
+      <div className="dropdown-header border-0" onClick={toggleDropdown}>
         {label}
-        <span className="dropdown-symbol">{isOpen ? '▲' : '▼'}</span>
+        <span className="dropdown-symbol border-0">{isOpen ? '▲' : '▼'}</span>
       </div>
       {isOpen && (
-        <ul className="dropdown-list">
+        <ul className="dropdown-list border-0">
 
           {
             // @ts-ignore
             options.map((option, index) => (
             <li
               key={index}
-              className={`dropdown-option ${option === selectedOption ? 'selected' : ''}`}
+              className={"dropdown-option {option === selectedOption ? 'selected' : ''}" + ' border-0'}
               onClick={() => handleOptionClick(option)}
             >
               {option}

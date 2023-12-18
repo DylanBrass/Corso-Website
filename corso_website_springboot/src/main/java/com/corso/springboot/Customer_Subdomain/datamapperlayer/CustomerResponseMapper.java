@@ -11,6 +11,5 @@ public interface CustomerResponseMapper {
 
 
     CustomerResponse toCustomerResponse(Customer customer);
-
     List<CustomerResponse> toCustomersResponse(List<Customer> allByNameAndEmail);
 }

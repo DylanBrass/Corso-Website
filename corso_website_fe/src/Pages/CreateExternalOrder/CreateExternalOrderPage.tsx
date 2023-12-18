@@ -6,6 +6,7 @@ import "./CreateExternalOrder.css"
 import Dropdown from "../../Components/Dropdown/droptown";
 import swal from "sweetalert";
 import searchIcon from "../../images/Search_light.svg"
+import {usePlacesWidget} from "react-google-autocomplete";
 
 function CreateExternalOrderPage() {
 
@@ -21,6 +22,25 @@ function CreateExternalOrderPage() {
     const [selectedSearchField, setSelectedSearchField] = React.useState("name")
 
     const auth = useAuth()
+
+
+    const { ref } = usePlacesWidget({
+        apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
+        onPlaceSelected: (place) => {
+            try {
+                document.getElementById("customerAddress")!.setAttribute("value", place.formatted_address)
+                document.getElementById("customerCity")!.setAttribute("value", place.address_components[2].long_name)
+                document.getElementById("customerPostalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
+                console.log(place)
+            }catch (e) {
+                console.log(e)
+            }
+        },
+        options: {
+            types: ["address"],
+            componentRestrictions: { country: "ca" },
+        }
+    })
 
     const getUsers = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -132,13 +152,13 @@ function CreateExternalOrderPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    // @ts-ignore
     return (
         <div className={"text-center"}>
             <NavigationBar/>
-            <h1>Create External Order Page</h1>
-            <div className={"search-banner w-100"}>
+            <div className={"search-banner w-100 mt-3"}>
                 <h2 className={"text-white"}>Search for user</h2>
-                <div className={"search-bar w-50 m-auto"}>
+                <div className={"search-bar m-auto"}>
 
                     <form onSubmit={getUsers}>
                         <Dropdown
@@ -157,24 +177,8 @@ function CreateExternalOrderPage() {
                     </form>
                 </div>
 
-                <button onClick={
-                    () => {
-                        setUsers([])
-                        setSelectedUser("")
-                        setSelectedRowIndex(-1)
-                        document.getElementById("customerFullName")!.setAttribute("value", "");
-                        document.getElementById("customerEmail")!.setAttribute("value", "");
-                        document.getElementById("customerPhone")!.setAttribute("value", "");
-                        document.getElementById("customerAddress")!.setAttribute("value", "");
-                        document.getElementById("customerPostalCode")!.setAttribute("value", "");
-                        document.getElementById("customerCity")!.setAttribute("value", "");
-                        document.getElementById("customerApartment")!.setAttribute("value", "");
-                    }
-                }>
-                    Clear User Selection
-                </button>
             </div>
-            <div className={"container w-100 text-center mb-3"}>
+            <div className={"container w-100 text-center mb-3 mt-5"}>
 
 
                 <div className={"user-picker w-100 text-center m-auto"}>
@@ -200,6 +204,7 @@ function CreateExternalOrderPage() {
                                         <tr
                                             key={user.user_id}
                                             onClick={() => {
+                                                document.getElementById("customerAddress")!.innerText = user.address || "";
                                                 setSelectedUser(user.user_id);
                                                 document.getElementById("customerFullName")!.setAttribute("value", user.name || "");
                                                 document.getElementById("customerEmail")!.setAttribute("value", user.email || "");
@@ -227,11 +232,28 @@ function CreateExternalOrderPage() {
 
                 </div>
             </div>
+            <button onClick={
+                () => {
+
+                    setUsers([])
+                    setSelectedUser("")
+                    setSelectedRowIndex(-1)
+                    document.getElementById("customerFullName")!.setAttribute("value", "");
+                    document.getElementById("customerEmail")!.setAttribute("value", "");
+                    document.getElementById("customerPhone")!.setAttribute("value", "");
+                    document.getElementById("customerAddress")!.setAttribute("value", "");
+                    document.getElementById("customerPostalCode")!.setAttribute("value", "");
+                    document.getElementById("customerCity")!.setAttribute("value", "");
+                    document.getElementById("customerApartment")!.setAttribute("value", "");
+                }
+            }
+                    className={"mt-1 mb-5 btn-style"}
+            >
+                Clear User Selection
+            </button>
             <div className={"container w-100 text-center"}>
-                <div className="order-creation-form w-75 text-end m-auto">
+                <div className="order-creation-form w-75 text-start text-md-end m-auto">
                     <form onSubmit={createOrder}>
-
-
                         <div className="row mb-3">
                             <label htmlFor="serviceId" className="col-sm-3 col-form-label">
                                 Service
@@ -256,7 +278,6 @@ function CreateExternalOrderPage() {
 
                             </div>
                         </div>
-
                         <div className="row mb-3">
                             <label htmlFor={"dueDate"} className="col-sm-3 col-form-label">
                                 Due Date
@@ -340,6 +361,8 @@ function CreateExternalOrderPage() {
                             </label>
                             <div className="col-sm-9">
                                 <input
+                                    // @ts-ignore
+                                    ref={ref}
                                     required
                                     name={"customerAddress"}
                                     id={"customerAddress"}
@@ -436,7 +459,7 @@ function CreateExternalOrderPage() {
 
                         <div className="row mb-3">
                             <div className="col-sm-9 offset-sm-3">
-                                <button type={"submit"} className="submit-order">
+                                <button type={"submit"} className="btn-style">
                                     Create Order
                                 </button>
                             </div>
@@ -444,7 +467,6 @@ function CreateExternalOrderPage() {
                     </form>
                 </div>
             </div>
-
         </div>
     );
 }

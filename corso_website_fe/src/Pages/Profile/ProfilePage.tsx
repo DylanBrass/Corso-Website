@@ -4,12 +4,34 @@ import Cookies from "js-cookie";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import "./ModifyProfile.css";
 import React, {useEffect, useState} from "react";
-import swal from "sweetalert"; // Import the styles from ModifyProfile.css
+import swal from "sweetalert";
+import {usePlacesWidget} from "react-google-autocomplete"; // Import the styles from ModifyProfile.css
+
+
 
 function ProfilePage() {
     const auth = useAuth();
 
     const [hasProfile, setHasProfile] = useState(false);
+
+
+    const { ref } = usePlacesWidget({
+        apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
+        onPlaceSelected: (place) => {
+            try {
+            document.getElementById("city")!.setAttribute("value", place.address_components[2].long_name)
+            document.getElementById("postalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
+            console.log(place)
+            }catch (e) {
+                console.log(e)
+            }
+        },
+        options: {
+            types: ["address"],
+            componentRestrictions: { country: "ca" },
+        }
+    })
+
 
     useEffect(() => {
         // @ts-ignore
@@ -262,14 +284,14 @@ function ProfilePage() {
                         <div className="row w-75 m-auto">
                             <label>
                                 Name:
-                                <input type="text" name="username" className="form-control mb-2" placeholder="Name"
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="username" className="form-control mb-2" placeholder="Name"
                                        id={"name"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
                                 Email:
-                                <input type="text" name="email" className="form-control mb-2" placeholder="Email"
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="email" className="form-control mb-2" placeholder="Email"
                                        id={"email"}
                                        required={true}/>
                             </label>
@@ -277,7 +299,8 @@ function ProfilePage() {
                         <div className="row w-75 m-auto">
                             <label>
                                 Address:
-                                <input type="text" name="address" className="form-control mb-2" placeholder="Address"
+                                {/*// @ts-ignore*/}
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} ref={ref} type="text" name="address" className="form-control mb-2" placeholder="Address"
                                        id={"address"}
                                        required={true}/>
                             </label>
@@ -285,7 +308,7 @@ function ProfilePage() {
                         <div className="row w-75 m-auto">
                             <label>
                                 Postal Code:
-                                <input type="text" name="postalCode" className="form-control mb-2"
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="postalCode" className="form-control mb-2"
                                        placeholder="Postal Code" required={true}
                                        id={"postalCode"}/>
                             </label>
@@ -293,21 +316,21 @@ function ProfilePage() {
                         <div className="row w-75 m-auto">
                             <label>
                                 City:
-                                <input type="text" name="city" className="form-control mb-2" placeholder="City"
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="city" className="form-control mb-2" placeholder="City"
                                        required={true} id={"city"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
                                 Apartment Number:
-                                <input type="text" name="apartmentNumber" className="form-control mb-2"
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="apartmentNumber" className="form-control mb-2"
                                        placeholder="Apartment Number" id={"apartmentNumber"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
                                 Phone:
-                                <input type="text" name="phone" className="form-control mb-2" placeholder="Phone"
+                                <input    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }} type="text" name="phone" className="form-control mb-2" placeholder="Phone"
                                        id={"phone"}/>
                             </label>
                         </div>

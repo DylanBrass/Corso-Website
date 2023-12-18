@@ -26,28 +26,26 @@ CREATE TABLE IF NOT EXISTS `services`
     service_image       VARCHAR(255) NOT NULL
 );
 
-Create table orders
+CREATE TABLE IF NOT EXISTS `orders`
 (
-    id                         int auto_increment
-        primary key,
-    order_id                   varchar(36)  not null,
-    service_id                 varchar(36)  not null,
-    user_id                    varchar(36)  not null,
-    order_tracking_number      varchar(36)  not null,
-    order_date                 date         not null,
-    due_date                   date         null,
-    order_status               varchar(50)  not null,
-    order_description          text         null,
-    customer_full_name         varchar(255) not null,
-    customer_email             varchar(255) not null,
-    customer_phone             varchar(255) null,
-    customer_address           text         not null,
-    customer_postal_code       varchar(10)  not null,
-    customer_city              varchar(100) not null,
-    customer_apartment_number varchar(25)  null,
-    days_left                  int          null,
-    estimated_duration         int          null,
-
+    id                        INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id                  varchar(36)  not null,
+    service_id                varchar(36)  not null,
+    user_id                   varchar(36)  not null,
+    order_tracking_number     varchar(36)  not null,
+    order_date                date         not null,
+    due_date                  date,
+    order_status              varchar(50)  not null,
+    order_description         text         null,
+    customer_full_name        varchar(255) not null,
+    customer_email            varchar(255) not null,
+    customer_phone            varchar(255),
+    customer_address          text         not null,
+    customer_postal_code      varchar(10)  not null,
+    customer_city             varchar(100) not null,
+    customer_apartment_number varchar(25),
+    days_left                 int,
+    estimated_duration        int
 );
 
 CREATE TABLE IF NOT EXISTS `faqs`

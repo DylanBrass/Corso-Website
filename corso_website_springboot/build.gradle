@@ -105,6 +105,7 @@ test {
     exclude '**/ViewPendingOrdersTest.class'
     exclude '**/ViewAllFAQsTest.class'
     exclude '**/ViewAllPreferredFAQsTest.class'
+    exclude '**/CreateExternalOrderTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

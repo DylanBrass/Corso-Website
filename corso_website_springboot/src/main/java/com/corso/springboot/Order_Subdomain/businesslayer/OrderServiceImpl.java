@@ -71,7 +71,9 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRequestMapper.requestModelToOrder(orderRequestExternal);
 
-        if (!orderRequestExternal.getUserId().isEmpty()) {
+        if (orderRequestExternal.getUserId() == null || orderRequestExternal.getUserId().isEmpty())
+            order.setUserId("external_client");
+        else {
             UserInfoResponse user = null;
             try {
                 user = auth0ManagementService.getUserInfo(orderRequestExternal.getUserId());
@@ -83,18 +85,14 @@ public class OrderServiceImpl implements OrderService {
                 order.setUserId("external_client");
             }
             order.setUserId(orderRequestExternal.getUserId());
-        } else {
-            order.setUserId("external_client");
         }
 
         order.setOrderId(new OrderIdentifier());
 
         order.setOrderTrackingNumber(new OrderTrackingNumber());
 
-        if (orderRequestExternal.getDaysLeft() == 0)
-            order.setDaysLeft(orderRequestExternal.getEstimatedDuration());
-        else
-            order.setDaysLeft(orderRequestExternal.getDaysLeft());
+        if (orderRequestExternal.getDaysLeft() == 0) order.setDaysLeft(orderRequestExternal.getEstimatedDuration());
+        else order.setDaysLeft(orderRequestExternal.getDaysLeft());
 
         order.setOrderStatus(Status.IN_PROGRESS);
 
@@ -102,14 +100,13 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderDate(String.valueOf(LocalDate.now()));
 
-        if(orderRequestExternal.getDueDate().isEmpty())
+        if (orderRequestExternal.getDueDate() == null || orderRequestExternal.getDueDate().isEmpty())
             order.setDueDate(null);
-        else
-            order.setDueDate(orderRequestExternal.getDueDate());
+        else order.setDueDate(orderRequestExternal.getDueDate());
 
-        try{
-        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
-        }catch (Exception e){
+        try {
+            return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+        } catch (Exception e) {
             throw new InvalidRequestException("Invalid request");
         }
     }

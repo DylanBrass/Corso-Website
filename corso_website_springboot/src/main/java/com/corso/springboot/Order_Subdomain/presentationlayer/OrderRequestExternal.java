@@ -6,12 +6,14 @@ import com.corso.springboot.utils.annotations.ValidPhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper=false)
 @Data
 @AllArgsConstructor
+@Builder
 public class OrderRequestExternal {
 
     @NotBlank(message = "Service Id is required.")
