@@ -13,30 +13,10 @@ function MainPage() {
 
     const auth = useAuth();
 
-    const testEmailPost = () => {
-        axios.post("http://localhost:8080/api/v1/corso/email", {
-            recipient: "denisanhategan@gmail.com",
-            message: "Testing",
-            subject: "Testing"
-        },
-            {
-                headers: {
-                    // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken()
-                }
-            }).then(res => {
-            console.log(res);
-        }).catch(err => {
-                console.log(err);
-            }
-        )
-
-    }
 
 
     return (
         <div>
-            <button onClick={testEmailPost}>Test Email</button>
             <NavigationBar/>
             <div id={"banner"}>
                 {
