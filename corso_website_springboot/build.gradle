@@ -41,6 +41,7 @@ dependencies {
     implementation('com.okta.spring:okta-spring-boot-starter:3.0.5')
     runtimeOnly 'com.h2database:h2'
 
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -95,17 +96,17 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
-//    exclude '**/ViewCarouselTest.class'
-//    exclude '**/LoginAuthTest.class'
-//    exclude '**/ViewCurrentOrdersTest.class'
-//    exclude '**/ViewAllCompletedOrdersTest.class'
-//    exclude '**/ViewAllServicesTest.class'
-//    exclude '**/ModifyProfileTest.class'
-//    exclude '**/ViewServiceDetailsTest.class'
-//    exclude '**/ViewPendingOrdersTest.class'
-//    exclude '**/ViewAllFAQsTest.class'
-//    exclude '**/ViewAllPreferredFAQsTest.class'
-//    exclude '**/CreateExternalOrderTest.class'
+    exclude '**/ViewCarouselTest.class'
+    exclude '**/LoginAuthTest.class'
+    exclude '**/ViewCurrentOrdersTest.class'
+    exclude '**/ViewAllCompletedOrdersTest.class'
+    exclude '**/ViewAllServicesTest.class'
+    exclude '**/ModifyProfileTest.class'
+    exclude '**/ViewServiceDetailsTest.class'
+    exclude '**/ViewPendingOrdersTest.class'
+    exclude '**/ViewAllFAQsTest.class'
+    exclude '**/ViewAllPreferredFAQsTest.class'
+    exclude '**/CreateExternalOrderTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

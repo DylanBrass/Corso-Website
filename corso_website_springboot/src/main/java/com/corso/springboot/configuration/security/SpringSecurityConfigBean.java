@@ -50,6 +50,7 @@ public class SpringSecurityConfigBean {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/auth0/manage/**")).hasAuthority("Admin")
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/email/**")).permitAll()//.hasAuthority("Admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/galleries/carousel")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/services")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/services/{serviceId}")).permitAll()
@@ -71,7 +72,7 @@ public class SpringSecurityConfigBean {
 
                                 Arrays.stream(request.getCookies()).toList().forEach(cookie -> {
                                     if (!cookie.getName().equals("JSESSIONID")) {
-                                       Cookie newCookie = new Cookie(cookie.getName(), "");
+                                        Cookie newCookie = new Cookie(cookie.getName(), "");
                                         newCookie.setMaxAge(0);
                                         newCookie.setPath("/");
                                         response.addCookie(newCookie);
@@ -90,14 +91,14 @@ public class SpringSecurityConfigBean {
                         )
                 )
                 .cors(httpSecurityCorsConfigurer -> {
-                        final var cors = new CorsConfiguration();
-                        cors.setAllowedOrigins(List.of(frontendDomain));
-                        cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-                        cors.setAllowedHeaders(Arrays.asList("authorization", "content-type", "xsrf-token"));
-                        cors.setExposedHeaders(List.of("xsrf-token"));
-                        cors.setAllowCredentials(true);
-                        cors.setMaxAge(3600L);
-                    })
+                    final var cors = new CorsConfiguration();
+                    cors.setAllowedOrigins(List.of(frontendDomain));
+                    cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                    cors.setAllowedHeaders(Arrays.asList("authorization", "content-type", "xsrf-token"));
+                    cors.setExposedHeaders(List.of("xsrf-token"));
+                    cors.setAllowCredentials(true);
+                    cors.setMaxAge(3600L);
+                })
                 .addFilterAfter(new CsrfCustomFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
@@ -120,17 +121,16 @@ public class SpringSecurityConfigBean {
     }
 
 
-
     private LogoutHandler logoutHandler() {
         return (request, response, authentication) -> {
 
             List<Cookie> cookies = List.of(request.getCookies());
 
             cookies.forEach(cookie -> {
-                    Cookie newCookie = new Cookie(cookie.getName(), "");
-                    newCookie.setMaxAge(0);
-                    newCookie.setPath("/");
-                    response.addCookie(newCookie);
+                Cookie newCookie = new Cookie(cookie.getName(), "");
+                newCookie.setMaxAge(0);
+                newCookie.setPath("/");
+                response.addCookie(newCookie);
             });
 
             boolean isSignup = Boolean.parseBoolean(request.getParameter("isLogoutSignUp"));

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.mail.MessagingException;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
@@ -22,6 +24,12 @@ public class GlobalControllerHandler {
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(InvalidRequestException.class)
     public HttpErrorInfo handleErrorWhileCreatingAdmin(InvalidRequestException ex) {
+        return createHttpErrorInfo(UNPROCESSABLE_ENTITY, ex);
+    }
+
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(MessagingException.class)
+    public HttpErrorInfo handleErrorWhileCreatingAdmin(MessagingException ex) {
         return createHttpErrorInfo(UNPROCESSABLE_ENTITY, ex);
     }
 

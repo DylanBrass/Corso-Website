@@ -6,14 +6,37 @@ import BannerMainPageAnonymous from "../Main Page Components/Banner/BannerMainPa
 import AllServices from "../Main Page Components/Services/AllServices";
 import Footer from "../Components/Footer/Footer";
 import FaqPinnedMainPage from "../Main Page Components/FAQ/FaqPinnedMainPage";
+import axios from "axios";
 
 
 function MainPage() {
 
     const auth = useAuth();
 
+    const testEmailPost = () => {
+        axios.post("http://localhost:8080/api/v1/corso/email", {
+            recipient: "denisanhategan@gmail.com",
+            message: "Testing",
+            subject: "Testing"
+        },
+            {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                }
+            }).then(res => {
+            console.log(res);
+        }).catch(err => {
+                console.log(err);
+            }
+        )
+
+    }
+
+
     return (
         <div>
+            <button onClick={testEmailPost}>Test Email</button>
             <NavigationBar/>
             <div id={"banner"}>
                 {

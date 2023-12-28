@@ -145,6 +145,26 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
                               $column("prefered"): BOOL NOT NULL
                     }
 
+                    $table("Customers", "customer_tb") {
+                              $pk("id"): NUMBER NOT NULL AUTO_INCREMENT
+                                ---
+                              $column("user_id"): VARCHAR(36) NOT NULL
+
+                              $column("name"): VARCHAR(255) NOT NULL
+
+                              $column("email"): VARCHAR(255) NOT NULL
+
+                              $column("phone"): VARCHAR(255) NOT NULL
+
+                              $column("address"): VARCHAR(255) NOT NULL
+
+                              $column("city"): VARCHAR(255) NOT NULL
+
+                              $column("postal_code"): VARCHAR(255) NOT NULL
+
+                              $column("apartment_number"): VARCHAR(255) NOT NULL
+                    }
+
                  "service_tb" |o--o{ "order_tb"
 }
  AddElementTag("service", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="API \neight sided")
