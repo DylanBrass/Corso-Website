@@ -1,12 +1,12 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper=false)
-@Data
+//@Data
 @AllArgsConstructor
+@Builder
+@Value
 public class ServiceResponse {
     private String serviceId;
     private String serviceName;

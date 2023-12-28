@@ -17,6 +17,7 @@ function AllServices() {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/corso/services');
                 setServices(response.data);
+                console.log(response.data)
             } catch (error) {
                 console.error('Error fetching services:', error);
                 // @ts-ignore

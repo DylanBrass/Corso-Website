@@ -219,11 +219,11 @@ function Dashboard() {
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon11_pprfnf.png"}
                             action={() => {
                                 console.log("test")
+                                window.location.href="/services"
                             }}
                         />
                     </div>
                     <div className={"col-4"}>
-
                         <AdminDashboardTile
                             title1={totalAdmins.toString()}
                             title2={""}
