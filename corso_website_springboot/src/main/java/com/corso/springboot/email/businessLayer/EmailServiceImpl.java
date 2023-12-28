@@ -1,5 +1,6 @@
 package com.corso.springboot.email.businessLayer;
 
+import lombok.Generated;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Properties;
 
 
 @Service
+@Generated
 public class EmailServiceImpl implements EmailService {
 
     private final String username;

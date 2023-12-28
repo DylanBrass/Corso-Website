@@ -1,6 +1,7 @@
 package com.corso.springboot.email.presentationLayer;
 
 import com.corso.springboot.email.businessLayer.EmailService;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import javax.mail.MessagingException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/corso/email")
+@Generated
 public class EmailController {
 
 
