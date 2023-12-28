@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.codeborne.selenide.Selenide.sleep;
+
 @SpringBootTest
 public class LoginAuthTest {
     JavascriptExecutor js;
@@ -41,7 +43,11 @@ public class LoginAuthTest {
 
         driver.findElement(By.id("logout-btn")).click();
 
+        sleep(2000);
+
         assert driver.findElement(By.className("banner-box")).isDisplayed();
+
+        driver.quit();
     }
 
 

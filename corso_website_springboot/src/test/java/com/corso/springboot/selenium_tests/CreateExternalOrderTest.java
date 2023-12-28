@@ -35,7 +35,7 @@ public class CreateExternalOrderTest {
     @Test
     public void createExternalOrderTest() {
         driver.get("http://localhost:3000/");
-        driver.manage().window().setSize(new org.openqa.selenium.Dimension(1740, 1091));
+        driver.manage().window().maximize();
         driver.findElement(org.openqa.selenium.By.linkText("LOGIN")).click();
         driver.findElement(org.openqa.selenium.By.id("username")).sendKeys("Admin");
         driver.findElement(org.openqa.selenium.By.name("action")).click();
@@ -48,16 +48,16 @@ public class CreateExternalOrderTest {
         driver.findElement(By.cssSelector("button > img")).click();
         sleep(3000);
 
-        driver.findElement(By.ByXPath.xpath("//*[@id='root']/div/div[2]/div/div/table/tbody/tr[3]")).
+        driver.findElement(By.ByXPath.xpath("//*[@id='root']/div/div[2]/div/div/table/tbody/tr[4]")).
                 click();
+        ((JavascriptExecutor) driver)
+                .executeScript("window.scrollTo(0, document.body.scrollHeight)");
+
         sleep(1000);
         logger.info("City : " + driver.findElement(By.id("customerCity")).getAttribute("value"));
-        assert Objects.equals(driver.findElement(By.id("customerCity")).getAttribute("value"), "3333");
+        assert Objects.equals(driver.findElement(By.id("customerCity")).getAttribute("value"), "La Prairie");
 
-        driver.findElement(By.id("dueDate")).click();
-        //delete the current date
-        driver.findElement(By.id("dueDate")).clear();
-        driver.findElement(By.id("dueDate")).sendKeys("2222222" + org.openqa.selenium.Keys.ENTER);
+        driver.findElement(By.id("submit-order")).click();
 
         sleep(2000);
         driver.findElement(By.cssSelector(".swal-button")).click();

@@ -361,6 +361,7 @@ function ProfilePage() {
                             <button
                                 type="submit"
                                 className="btn btn-primary cancel-btn"
+                                id={"delete-btn"}
                             >
                                 Delete Information
                             </button>

@@ -234,7 +234,6 @@ function CreateExternalOrderPage() {
             </div>
             <button onClick={
                 () => {
-
                     setUsers([])
                     setSelectedUser("")
                     setSelectedRowIndex(-1)
@@ -245,6 +244,7 @@ function CreateExternalOrderPage() {
                     document.getElementById("customerPostalCode")!.setAttribute("value", "");
                     document.getElementById("customerCity")!.setAttribute("value", "");
                     document.getElementById("customerApartment")!.setAttribute("value", "");
+                    console.log(ref)
                 }
             }
                     className={"mt-1 mb-5 btn-style"}
@@ -369,7 +369,9 @@ function CreateExternalOrderPage() {
                                     type="text"
                                     className="form-control"
                                     placeholder="Customer Address"
-                                />
+                                >
+
+                                </input>
                             </div>
                         </div>
 
@@ -459,7 +461,7 @@ function CreateExternalOrderPage() {
 
                         <div className="row mb-3">
                             <div className="col-sm-9 offset-sm-3">
-                                <button type={"submit"} className="btn-style">
+                                <button id={"submit-order"} type={"submit"} className="btn-style">
                                     Create Order
                                 </button>
                             </div>
