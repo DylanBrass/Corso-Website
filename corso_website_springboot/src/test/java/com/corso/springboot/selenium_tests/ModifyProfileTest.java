@@ -32,13 +32,13 @@ public class ModifyProfileTest {
     public void ModifyProfileSelenideTest() {
 
         driver.get("http://localhost:3000/");
-        driver.manage().window().setSize(new Dimension(1062, 1083));
+        driver.manage().window().maximize();
         driver.findElement(By.linkText("LOGIN")).click();
         driver.findElement(By.id("username")).sendKeys("dylan.brassard@outlook.com");
         driver.findElement(By.name("action")).click();
         driver.findElement(By.id("password")).sendKeys("Password!!");
         driver.findElement(By.id("password")).click();
-        driver.findElement(By.cssSelector(".cc78b8bf3")).click();
+        driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
         sleep(3000);
         logger.info(driver.findElement(By.id("greeting")).getText());
         assert(driver.findElement(By.id("greeting")).getText().contains("DYLAN"));
@@ -58,7 +58,7 @@ public class ModifyProfileTest {
         assert(driver.findElement(By.id("greeting")).getText().contains("TEST"));
         sleep(2000);
         driver.findElement(By.id("to-profile")).click();
-        driver.findElement(By.className("cancel-btn")).click();
+        driver.findElement(By.id("delete-btn")).click();
         sleep(2000);
         driver.findElement(By.cssSelector(".swal-button")).click();
         sleep(2000);

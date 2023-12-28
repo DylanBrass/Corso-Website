@@ -95,17 +95,17 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
-    exclude '**/ViewCarouselTest.class'
-    exclude '**/LoginAuthTest.class'
-    exclude '**/ViewCurrentOrdersTest.class'
-    exclude '**/ViewAllCompletedOrdersTest.class'
-    exclude '**/ViewAllServicesTest.class'
-    exclude '**/ModifyProfileTest.class'
-    exclude '**/ViewServiceDetailsTest.class'
-    exclude '**/ViewPendingOrdersTest.class'
-    exclude '**/ViewAllFAQsTest.class'
-    exclude '**/ViewAllPreferredFAQsTest.class'
-    exclude '**/CreateExternalOrderTest.class'
+//    exclude '**/ViewCarouselTest.class'
+//    exclude '**/LoginAuthTest.class'
+//    exclude '**/ViewCurrentOrdersTest.class'
+//    exclude '**/ViewAllCompletedOrdersTest.class'
+//    exclude '**/ViewAllServicesTest.class'
+//    exclude '**/ModifyProfileTest.class'
+//    exclude '**/ViewServiceDetailsTest.class'
+//    exclude '**/ViewPendingOrdersTest.class'
+//    exclude '**/ViewAllFAQsTest.class'
+//    exclude '**/ViewAllPreferredFAQsTest.class'
+//    exclude '**/CreateExternalOrderTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
