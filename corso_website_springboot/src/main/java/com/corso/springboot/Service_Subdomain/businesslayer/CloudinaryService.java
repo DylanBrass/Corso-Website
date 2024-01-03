@@ -1,0 +1,52 @@
+package com.corso.springboot.Service_Subdomain.businesslayer;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import lombok.*;
+import org.springframework.stereotype.Service;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Map;
+
+@Service
+@RequiredArgsConstructor
+public class CloudinaryService {
+
+    private final Cloudinary cloudinary;
+
+    public CloudinaryService() {
+        cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dszhbawv7",
+                "api_key", "533582356614965",
+                "api_secret", "katPxshTkWq5wdvRa24ukrjqrLI",
+                "secure", true));
+    }
+
+    public String uploadBase64Image(String base64Image) throws IOException {
+        if (base64Image == null || base64Image.isEmpty()) {
+            throw new IllegalArgumentException("Cannot upload because the base64Image is null or empty.");
+        }
+
+        try {
+            // Remove the Base64 prefix if present
+            String base64ImageNoPrefix = base64Image.split(",")[1];
+
+            // Decode the base64 string
+            byte[] decodedBytes = Base64.getDecoder().decode(base64ImageNoPrefix);
+
+            // Upload the decoded bytes and retrieve the URL
+            @SuppressWarnings("unchecked")
+            Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.emptyMap());
+            String url = (String) uploadResult.get("url");
+
+            if (url == null || url.isEmpty()) {
+                throw new IllegalStateException("Failed to upload the image; no URL was returned from Cloudinary.");
+            }
+
+            return url;
+        } catch (IOException e) {
+            throw new IOException("Error while uploading the image to Cloudinary.", e);
+        }
+    }
+}
+

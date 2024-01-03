@@ -1,0 +1,244 @@
+.add-service-container {
+    background: #F5F5F5;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    padding-top: 20px;
+    width: 60%;
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .grid-item.input-container {
+        width: 100%;
+    }
+
+    & input,
+    & textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        resize: none;
+    }
+
+    & input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    .image-preview-container {
+        width: 350px;
+        height: 250px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-left: 30px;
+        margin-bottom: 10px;
+
+        & .service-image {
+            width: 80%;
+            height: 70%;
+            object-fit: contain;
+        }
+
+        & .service-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+    }
+
+    & .placeholder-rectangle {
+        width: 300px;
+        height: 200px;
+        background-color: #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    & .placeholder-circle {
+        width: 100px;
+        height: 100px;
+        background-color: #ccc;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        margin: 0;
+    }
+
+    & .grid-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto auto; /* Added rows definition */
+        gap: 10px; /* Added gap between rows and columns */
+        padding: 10px;
+
+        & .grid-item {
+            text-align: center;
+        }
+
+        & .grid-item-full {
+            grid-column: span 2; /* Span two columns */
+        }
+    }
+
+    @media (max-width: 1500px) {
+        & input,
+        & textarea {
+            width: 80%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            resize: none;
+        }
+    }
+
+    @media (max-width: 1260px) {
+        & input,
+        & textarea {
+            width: 70%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            resize: none;
+        }
+
+        & .pen-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        & .grid-container {
+            grid-template-columns: 1fr; /* Set to a single column */
+            grid-template-rows: auto auto auto; /* Added an additional row for the circle */
+        }
+
+        & .grid-item-bottom {
+            grid-column: span 1; /* Span the single column */
+            grid-row: span 1; /* Span a single row */
+        }
+
+        & .grid-item-full {
+            width: 100%;
+        }
+
+        & .image-preview-container {
+            margin-left: 0; /* Remove the left margin to center the container */
+        }
+
+        & .service-icon {
+            width: 80%;
+            height: 80%;
+        }
+    }
+
+    @media (max-width: 960px) {
+        .grid-container {
+            display: block; /* Change to block layout for smaller screens */
+        }
+
+        & .image-preview-container {
+            margin-left: 0;
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        & .placeholder-rectangle {
+            width: 80%;
+            height: 70%;
+        }
+    }
+
+    @media (max-width: 530px) {
+
+        & .placeholder-rectangle {
+            width: 80%;
+            height: 80%;
+        }
+
+        .image-preview-container {
+            width: 150px;
+            height: 50px;
+
+            & .service-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            & .placeholder-circle {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    }
+
+    @media (max-width: 430px) {
+
+        .image-preview-container {
+            width: 100px;
+            height: 50px;
+            margin-top: 10px;
+
+            & .service-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            & .placeholder-circle {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+
+        & .pen-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        & input {
+            font-size: 13px;
+        }
+
+        & textarea {
+            font-size: 15px;
+        }
+    }
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    color: white;
+    border: none;
+    padding: 10px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50px;
+    background: #064BEC;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+@media (max-width: 430px) {
+    .submit-button {
+        padding: 10px 30px;
+        font-size: 13px;
+    }
+}

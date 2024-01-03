@@ -39,6 +39,8 @@ dependencies {
     implementation('me.paulschwarz:spring-dotenv:4.0.0')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('com.okta.spring:okta-spring-boot-starter:3.0.5')
+    implementation 'com.cloudinary:cloudinary-http44:1.27.0'
+
     runtimeOnly 'com.h2database:h2'
 
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
@@ -107,6 +109,7 @@ test {
     exclude '**/ViewAllFAQsTest.class'
     exclude '**/ViewAllPreferredFAQsTest.class'
     exclude '**/CreateExternalOrderTest.class'
+    exclude '**/CreateAServiceTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

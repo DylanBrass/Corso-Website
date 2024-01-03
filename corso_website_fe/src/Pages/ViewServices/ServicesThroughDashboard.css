@@ -1,0 +1,26 @@
+.service-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    & .service-tiles-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    & .add-service-icon {
+        margin-left: 50%;
+    }
+
+    & .add-service-icon:hover {
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        & .add-service-icon {
+            margin: 20px 0 0 20px;
+        }
+    }
+}

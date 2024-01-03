@@ -15,6 +15,8 @@ import CompletedOrdersPage from "./Pages/OrdersPages/CompleteOrdersPage";
 import ServiceDetailsPage from "./Pages/ViewServices/ServiceDetailsPage";
 import PendingOrdersPage from "./Pages/OrdersPages/PendingOrdersPage";
 import CreateExternalOrderPage from "./Pages/CreateExternalOrder/CreateExternalOrderPage";
+import ServicesThroughDashboard from "./Pages/ViewServices/ServicesThroughDashboard";
+import AddServicePage from "./Pages/AddService/AddServicePage";
 
 
 function App() {
@@ -36,6 +38,8 @@ function App() {
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
                     <Route path="/external" element={<ExternalHandling />} />
+                    <Route path={"/services"} element={<ServicesThroughDashboard/>}/>
+                    <Route path={"/add-service"} element={<AddServicePage/>}/>
                     <Route path="/viewServiceDetails/:serviceId" element={<ServiceDetailsPage />} />
                 </Routes>
             </BrowserRouter>
