@@ -13,9 +13,7 @@ import java.util.List;
 public interface ReviewResponseMapper {
 
     @Mapping(expression="java(review.getReviewId().getReviewId())", target = "reviewId")
-    //@Mapping(expression="java(review.getUserId().getUserId())", target = "userId")
-    //@Mapping(expression="java(review.getCustomerFullName().getCustomerFullName())", target = "customerFullName")
-    //@Mapping(expression="java(review.getReviewDate().getReviewDate())", target = "reviewDate")
+
 
     //get 1 review
     ReviewResponse toReviewResponse(Review review);
