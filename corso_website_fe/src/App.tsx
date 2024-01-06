@@ -17,6 +17,7 @@ import PendingOrdersPage from "./Pages/OrdersPages/PendingOrdersPage";
 import CreateExternalOrderPage from "./Pages/CreateExternalOrder/CreateExternalOrderPage";
 import ServicesThroughDashboard from "./Pages/ViewServices/ServicesThroughDashboard";
 import AddServicePage from "./Pages/AddService/AddServicePage";
+import ViewSpecificOrderAdmin from "./Pages/OrdersDetailsPages/ViewSpecificOrderAdmin";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
+                    <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin />} />
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
                     <Route path="/external" element={<ExternalHandling />} />

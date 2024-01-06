@@ -1,6 +1,7 @@
 package com.corso.springboot.email.businessLayer;
 
 import lombok.Generated;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Properties;
 
 
 @Service
+@Slf4j
 @Generated
 public class EmailServiceImpl implements EmailService {
 
@@ -45,21 +47,30 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public int sendEmail(String recipient, String subject, String text) throws MessagingException {
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(username));
-        message.setRecipients(
-                Message.RecipientType.TO,
-                InternetAddress.parse(recipient)
-        );
-        message.setSubject(subject);
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(recipient)
+            );
+            message.setSubject(subject);
 
-        message.setText(text);
+            message.setText(text);
 
-        //error is handled by the global controller handler
-        Transport.send(message);
+            //error is handled by the global controller handler
+            Transport.send(message);
 
-        //if no error is thrown, return 200
-        return HttpStatus.SC_OK;
-
+            //if no error is thrown, return 200
+            return HttpStatus.SC_OK;
+        } catch (MessagingException e) {
+            //if an error is thrown, return 500
+            throw new MessagingException();
+        } catch (Exception e) {
+            //if an error is thrown, return 500
+            log.error(e.getMessage());
+            return HttpStatus.SC_UNPROCESSABLE_ENTITY;
+        }
     }
 }
+

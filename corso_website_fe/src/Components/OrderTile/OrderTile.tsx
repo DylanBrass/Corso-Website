@@ -6,19 +6,16 @@ export {};
 
 export class Order {
     orderTrackingNumber: string;
+    orderId: string;
     serviceName: string;
     customerFullName: string;
     orderStatus: string;
     action: () => void;
 
-    constructor(
-        orderTrackingNumber: string,
-        serviceName: string,
-        customerFullName: string,
-        orderStatus: string,
-        action: () => void
-    ) {
+
+    constructor(orderTrackingNumber: string, orderId: string, serviceName: string, customerFullName: string, orderStatus: string, action: () => void) {
         this.orderTrackingNumber = orderTrackingNumber;
+        this.orderId = orderId;
         this.serviceName = serviceName;
         this.customerFullName = customerFullName;
         this.orderStatus = orderStatus;

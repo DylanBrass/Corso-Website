@@ -13,6 +13,7 @@ public interface OrderResponseMapper {
     @Mapping(expression="java(order.getOrderId().getOrderId())", target = "orderId")
     @Mapping(expression="java(order.getServiceId().getServiceId())", target = "serviceId")
     @Mapping(expression="java(order.getOrderTrackingNumber().getOrderTrackingNumber())", target = "orderTrackingNumber")
+    @Mapping(ignore = true, target = "service")
     OrderResponse toOrderResponse(Order order);
     List<OrderResponse> toOrdersResponse(List<Order> orders);
 

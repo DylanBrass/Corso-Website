@@ -1,0 +1,126 @@
+.specific-order-admim {
+    background: #F7F7F7;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin-top: 5vh;
+
+    button {
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        color: #000;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+        width: 35%;
+    }
+
+    .email-button {
+        border-radius: 30px;
+        background: #B5BEDC;
+        margin: 4vh auto;
+        padding: 20px 20px 20px 20px;
+    }
+
+    .accept-button {
+        border-radius: 30px;
+        background-color: #C1EBB7;
+        margin: 4vh auto auto;
+        padding: 20px 20px 20px 20px;
+
+    }
+
+    .decline-button {
+        border-radius: 30px;
+        background: #E1ADAD;
+        margin: 4vh auto auto;
+        padding: 20px 20px 20px 20px;
+
+    }
+
+    .request-info-box {
+
+        padding-left: 8em;
+
+        p {
+            color: rgba(0, 0, 0, 0.50);
+            font-family: Nunito;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+
+            margin-left: 3em;
+
+            @media (max-width: 768px) {
+                margin-left: 0;
+            }
+
+        }
+
+        h1 {
+            text-align: left;
+
+
+        }
+    }
+}
+
+.popup-box {
+    background-color: #F7F7F7;
+    border: #24252A 1px solid;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+
+    position: relative;
+
+    width: 50vw;
+    border-radius: 20px;
+
+    label {
+        margin-top: 1em;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-align: center;
+        color: #000000;
+    }
+
+    @media (max-width: 768px) {
+        width: 90vw;
+    }
+
+    .send-email-btn{
+        margin: auto;
+    }
+}
+
+
+.hidden{
+    visibility: hidden;
+}
+
+.spinner-box{
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+
+    h3{
+        background: none;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-align: center;
+        color: #000000;
+    }
+}

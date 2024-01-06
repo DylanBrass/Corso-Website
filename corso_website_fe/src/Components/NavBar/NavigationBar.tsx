@@ -11,7 +11,7 @@ function NavigationBar() {
     return (
         <Navbar expand="lg" className="navbar-custom">
             <Container fluid>
-                <Navbar.Brand href="#">
+                <Navbar.Brand href="/">
                     <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1701844105/customcolor_logo_transparent_background_x5ensc.png" alt="Logo"/>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarNav" />
