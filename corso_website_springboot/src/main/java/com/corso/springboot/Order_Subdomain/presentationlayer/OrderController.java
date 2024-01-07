@@ -24,6 +24,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("")
     public ResponseEntity<List<OrderResponse>> GetAllOrdersByStatus(
             @RequestParam Map<String, String> queryParams,
@@ -32,6 +33,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOrdersByStatus(queryParams, pageSize, offset));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/overdue")
+    public ResponseEntity<List<OrderResponse>> GetAllOverdueOrders( @RequestParam(name = "pageSize") int pageSize,
+                                                                    @RequestParam(name = "offset") int offset) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOverdueOrders(pageSize, offset));
+    }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/external")

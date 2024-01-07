@@ -102,6 +102,7 @@ test {
     exclude '**/LoginAuthTest.class'
     exclude '**/ViewCurrentOrdersTest.class'
     exclude '**/ViewAllCompletedOrdersTest.class'
+    exclude '**/ViewAllOverdueOrdersTest.class'
     exclude '**/ViewAllServicesTest.class'
     exclude '**/ModifyProfileTest.class'
     exclude '**/ViewServiceDetailsTest.class'

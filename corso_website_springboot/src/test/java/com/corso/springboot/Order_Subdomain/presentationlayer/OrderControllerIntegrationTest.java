@@ -3,23 +3,26 @@ package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.Order_Subdomain.datalayer.OrderRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -36,13 +39,12 @@ public class OrderControllerIntegrationTest {
     @Autowired
     OrderRepository orderRepository;
 
-    @Autowired
-    private MockMvc mockMvc;
-
     @Test
-    public void whenCompletedOrdersWithOneITemPerPageExist_thenReturnAllCompletedOrders() {
+    @WithMockUser(authorities = "Admin")
+    public void whenCompletedOrdersWithOneITemPerPageExist_thenReturnAllCompletedOrders() throws Exception {
         //arrange
         Integer expectedNumOrders = 1;
+
         //act
         webTestClient.get()
                 .uri(BASE_URI_ORDERS + "?status=completed&pageSize=1&offset=0")
@@ -50,9 +52,11 @@ public class OrderControllerIntegrationTest {
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     public void whenCompleteOrdersWithoutPaginationExist_thenReturnAllCompletedOrders() {
         //arrange
         Integer expectedNumOrders = 2;
@@ -66,6 +70,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     public void whenOrdersInProgressExist_thenReturnAllOrdersInProgress() {
         //arrange
         Integer expectedNumOrders = 1;
@@ -79,6 +84,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     public void whenOrdersWithoutStatusFilterExist_thenReturnAllOrders() {
         //arrange
         Integer expectedNumOrders = 5;
@@ -92,6 +98,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     public void whenOrderWithoutStatusFilterNorPaginationExist_thenReturnAllOrders() {
         //arrange
         Integer expectedNumOrders = 5;
@@ -105,6 +112,35 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenOverdueOrdersExist_thenReturnOverdueOrders() {
+        //arrange
+        Integer expectedNumOrders = 1;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/overdue?pageSize=50&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenOverdueOrdersWithoutPaginationExist_thenReturnAllOverdueOrders() {
+        //arrange
+        Integer expectedNumOrders = 1;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/overdue?pageSize=0&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
     public void whenOrderWithStatusFilterAndPaginationExist_thenReturnAllOrders() {
         //arrange
         Integer expectedNumOrders = 1;

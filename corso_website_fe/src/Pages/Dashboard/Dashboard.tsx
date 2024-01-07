@@ -144,6 +144,7 @@ function Dashboard() {
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon5_tgqojw.png"}
                             action={() => {
                                 console.log("test")
+                                window.location.href = "/orders/overdue"
                             }}
                         />
                     </div>

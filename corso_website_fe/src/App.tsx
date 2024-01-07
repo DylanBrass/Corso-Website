@@ -18,6 +18,8 @@ import CreateExternalOrderPage from "./Pages/CreateExternalOrder/CreateExternalO
 import ServicesThroughDashboard from "./Pages/ViewServices/ServicesThroughDashboard";
 import AddServicePage from "./Pages/AddService/AddServicePage";
 import ViewSpecificOrderAdmin from "./Pages/OrdersDetailsPages/ViewSpecificOrderAdmin";
+import OverdueOrdersPage from "./Pages/OrdersPages/OverdueOrdersPage";
+
 
 
 function App() {
@@ -34,6 +36,7 @@ function App() {
                     <Route path="/orders/current" element={<CurrentOrdersPage/>} />
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
+                    <Route path="/orders/overdue" element={<OverdueOrdersPage/>} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
                     <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin />} />
