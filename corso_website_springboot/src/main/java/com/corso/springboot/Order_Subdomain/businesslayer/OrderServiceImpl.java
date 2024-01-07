@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (queryParams.get("status") == null) {
-            return orderResponseMapper.toOrdersResponse(orderRepository.findAllServices(pageSize, offset));
+            return orderResponseMapper.toOrdersResponse(orderRepository.findAllOrders(pageSize, offset));
         }
 
         if (pageSize == 0 && offset == 0) {
@@ -61,6 +61,16 @@ public class OrderServiceImpl implements OrderService {
         Status statusEnum = Status.valueOf(queryParams.get("status").toUpperCase());
         return orderResponseMapper.toOrdersResponse(orderRepository.findAllByOrderStatusWithPagination(String.valueOf(statusEnum), pageSize, offset));
     }
+
+    @Override
+    public List<OrderResponse> getAllOverdueOrders(int pageSize, int offset) {
+        if (pageSize == 0 && offset == 0) {
+            return orderResponseMapper.toOrdersResponse(orderRepository.findAllOverdueOrders());
+        }
+
+        return orderResponseMapper.toOrdersResponse(orderRepository.findAllOverdueOrdersWithPagination(pageSize, offset));
+    }
+
 
     @Override
     public OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException {

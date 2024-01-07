@@ -24,7 +24,7 @@ public class CloudinaryService {
 
     public String uploadBase64Image(String base64Image) throws IOException {
         if (base64Image == null || base64Image.isEmpty()) {
-            throw new IllegalArgumentException("Cannot upload because the base64Image is null or empty.");
+            throw new IllegalArgumentException("Unable to upload the image – it appears that the image is missing. Please ensure you include a valid image (.jpg, .jpeg, .png) before uploading.");
         }
 
         try {
@@ -40,7 +40,7 @@ public class CloudinaryService {
             String url = (String) uploadResult.get("url");
 
             if (url == null || url.isEmpty()) {
-                throw new IllegalStateException("Failed to upload the image; no URL was returned from Cloudinary.");
+                throw new IllegalStateException("Something went wrong while trying to upload the picture on the internet. The system expected to get a special web link for the picture, but it didn't get one. The upload cannot be completed.");
             }
 
             return url;
