@@ -20,7 +20,7 @@ public class ViewPendingOrdersTest {
     }
 
     @Test
-    public void viewCurrentOrdersTest() {
+    public void viewPendingOrdersTest() {
         $(By.linkText("LOGIN")).click();
         $("#username").setValue("Admin");
         $("[name='action']").click();

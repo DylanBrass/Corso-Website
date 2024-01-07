@@ -10,17 +10,17 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     List<Order> findAllByOrderStatusEquals(Status status);
 
-    @Query(value = "SELECT * FROM orders WHERE order_status = :status ORDER BY order_id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM orders WHERE order_status = :status ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Order> findAllByOrderStatusWithPagination(@Param("status") String status, @Param("pageSize") int pageSize, @Param("offset") int offset);
 
-    @Query(value = "SELECT * FROM orders ORDER BY order_id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM orders ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Order> findAllOrders(int pageSize, int offset);
 
     Order findByOrderId_OrderId(String orderId);
 
-    @Query(value = "SELECT * FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS') ORDER BY order_id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS') ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Order> findAllOverdueOrdersWithPagination(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
-    @Query(value = "SELECT * FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS')", nativeQuery = true)
+    @Query(value = "SELECT * FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS') ORDER BY id", nativeQuery = true)
     List<Order> findAllOverdueOrders();
 }

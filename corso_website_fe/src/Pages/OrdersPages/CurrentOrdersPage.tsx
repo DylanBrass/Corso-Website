@@ -8,31 +8,41 @@ import NavigationBar from "../../Components/NavBar/NavigationBar";
 function CurrentOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
-    const [pageSize, ] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
             const responseTotalOrders = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=0&offset=0`);
             const nbOrdersTotal = responseTotalOrders.data.length;
-
             const newTotalPages = Math.ceil(nbOrdersTotal / size);
 
-            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=${size}&offset=${(pageNumber - 1) * size}`);
-            console.log(response.data)
+            const offset = (pageNumber - 1) * size;
+            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=${size}&offset=${offset}`);
             const responseData = response.data;
 
             const newOrders = await Promise.all(responseData.map(async (order: any) => {
-                const serviceResponse = await axios.get("http://localhost:8080/api/v1/corso/services/" + order.serviceId);
-                console.log("SERVICES " + serviceResponse.data);
-                const serviceName = serviceResponse.data.serviceName;
+                try {
+                    const serviceResponse = await axios.get(`http://localhost:8080/api/v1/corso/services/${order.serviceId}`);
+                    const serviceName = serviceResponse.data.serviceName;
 
-                return new Order(order.orderTrackingNumber, order.orderId, serviceName, order.customerFullName.toUpperCase(), order.orderStatus.toLowerCase(), () => {
-                    console.log("Order clicked");
-                });
+                    return new Order(
+                        order.orderTrackingNumber,
+                        order.orderId,
+                        serviceName,
+                        order.customerFullName.toUpperCase(),
+                        order.orderStatus.toLowerCase(),
+                        () => {
+                            console.log("Order clicked");
+                        }
+                    );
+                } catch (serviceError) {
+                    console.error('Error fetching service data:', serviceError);
+                    return null;
+                }
             }));
 
-            setOrders(newOrders);
+            setOrders(newOrders.filter(order => order !== null));
             setTotalPages(newTotalPages);
 
             if (pageNumber > newTotalPages) {
@@ -44,17 +54,18 @@ function CurrentOrdersPage() {
     };
 
     const handlePageChange = (pageNumber: number, size: number) => {
-        setPage(pageNumber);
-        fetchOrders(pageNumber, size);
+        setPage(prevPage => pageNumber);
+        setPageSize(size);
     };
 
     useEffect(() => {
         fetchOrders(page, pageSize);
+        console.log("Page: " + page + " PageSize: " + pageSize);
     }, [page, pageSize]);
 
     return (
         <>
-            <NavigationBar/>
+            <NavigationBar />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <h1>CURRENT ORDERS</h1>
                 {orders.map(order => (
