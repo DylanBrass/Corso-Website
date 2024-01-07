@@ -1,6 +1,8 @@
 package com.corso.springboot.Customer_Subdomain.presentationlayer;
 
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
+import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
@@ -22,6 +25,8 @@ import java.util.Map;
 public class CustomerController {
 
     private final CustomerService customerService;
+
+    private final OrderService orderService;
 
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('Customer')")
@@ -79,5 +84,15 @@ public class CustomerController {
 
         return ResponseEntity.ok(customerResponse);
 
+    }
+
+    @GetMapping("/orders")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<List<OrderResponse>> getCustomerWithOrders(@AuthenticationPrincipal OidcUser principal, @RequestParam(name = "pageSize") int pageSize,
+                                                                     @RequestParam(name = "offset") int offset) {
+        String userId = principal.getSubject();
+        log.info("Get customer orders with userId: {}", userId);
+
+        return ResponseEntity.ok(orderService.getCustomerOrders(userId, pageSize, offset));
     }
 }

@@ -13,41 +13,19 @@ function CurrentOrdersPage() {
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
-            const responseTotalOrders = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=0&offset=0`);
-            const nbOrdersTotal = responseTotalOrders.data.length;
-            const newTotalPages = Math.ceil(nbOrdersTotal / size);
 
-            const offset = (pageNumber - 1) * size;
-            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=${size}&offset=${offset}`);
-            const responseData = response.data;
+            await axios.get(`http://localhost:8080/api/v1/corso/orders?status=in_progress&pageSize=${size}&offset=${(pageNumber - 1) * size}`)
+                .then(res => {
+                    const orders = res.data;
+                    setOrders(orders);
 
-            const newOrders = await Promise.all(responseData.map(async (order: any) => {
-                try {
-                    const serviceResponse = await axios.get(`http://localhost:8080/api/v1/corso/services/${order.serviceId}`);
-                    const serviceName = serviceResponse.data.serviceName;
+                    const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
+                    setTotalPages(newTotalPages);
+                    if (pageNumber > newTotalPages) {
+                        setPage(newTotalPages);
+                    }
+                })
 
-                    return new Order(
-                        order.orderTrackingNumber,
-                        order.orderId,
-                        serviceName,
-                        order.customerFullName.toUpperCase(),
-                        order.orderStatus.toLowerCase(),
-                        () => {
-                            console.log("Order clicked");
-                        }
-                    );
-                } catch (serviceError) {
-                    console.error('Error fetching service data:', serviceError);
-                    return null;
-                }
-            }));
-
-            setOrders(newOrders.filter(order => order !== null));
-            setTotalPages(newTotalPages);
-
-            if (pageNumber > newTotalPages) {
-                setPage(newTotalPages);
-            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -74,7 +52,7 @@ function CurrentOrdersPage() {
                         order={{
                             orderTrackingNumber: order.orderTrackingNumber,
                             orderId: order.orderId,
-                            serviceName: order.serviceName,
+                            service: order.service,
                             customerFullName: order.customerFullName,
                             orderStatus: order.orderStatus,
                             action: order.action

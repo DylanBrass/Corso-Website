@@ -17,11 +17,11 @@ public class EmailRequest {
     String recipient;
 
     @NotBlank(message = "Subject is required.")
-    @NotNull(message = "Recipient is required.")
+    @NotNull(message = "Subject is required.")
     String subject;
 
     @NotBlank(message = "Message is required.")
-    @NotNull(message = "Recipient is required.")
+    @NotNull(message = "Message is required.")
     String message;
 
 }

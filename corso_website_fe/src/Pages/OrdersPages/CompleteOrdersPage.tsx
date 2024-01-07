@@ -13,31 +13,21 @@ function CompletedOrdersPage() {
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
-            const responseTotalOrders = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=completed&pageSize=0&offset=0`);
-            const nbOrdersTotal = responseTotalOrders.data.length;
+            ;
 
-            const newTotalPages = Math.ceil(nbOrdersTotal / size);
+            await axios.get(`http://localhost:8080/api/v1/corso/orders?status=completed&pageSize=${size}&offset=${(pageNumber - 1) * size}`)
+                .then(res => {
+                const orders = res.data;
+                setOrders(orders);
 
-            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=completed&pageSize=${size}&offset=${(pageNumber - 1) * size}`);
-            console.log(response.data)
-            const responseData = response.data;
+                const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
+                setTotalPages(newTotalPages);
+                if (pageNumber > newTotalPages) {
+                    setPage(newTotalPages);
+                }
+            })
 
-            const newOrders = await Promise.all(responseData.map(async (order: any) => {
-                const serviceResponse = await axios.get("http://localhost:8080/api/v1/corso/services/" + order.serviceId);
-                console.log("SERVICES " + serviceResponse.data);
-                const serviceName = serviceResponse.data.serviceName;
 
-                return new Order(order.orderTrackingNumber, order.orderId, serviceName, order.customerFullName.toUpperCase(), order.orderStatus.toLowerCase(), () => {
-                    console.log("Order clicked");
-                });
-            }));
-
-            setOrders(newOrders);
-            setTotalPages(newTotalPages);
-
-            if (pageNumber > newTotalPages) {
-                setPage(newTotalPages);
-            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -63,7 +53,7 @@ function CompletedOrdersPage() {
                         order={{
                             orderTrackingNumber: order.orderTrackingNumber,
                             orderId: order.orderId,
-                            serviceName: order.serviceName,
+                            service: order.service,
                             customerFullName: order.customerFullName,
                             orderStatus: order.orderStatus,
                             action: order.action

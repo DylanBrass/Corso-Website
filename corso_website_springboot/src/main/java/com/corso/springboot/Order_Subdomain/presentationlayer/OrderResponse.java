@@ -41,4 +41,6 @@ public class OrderResponse {
     private String customerPostalCode;
 
     private String customerApartmentNumber;
+
+    private int totalOrdersMatchingRequest;
 }
