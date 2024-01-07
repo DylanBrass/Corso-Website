@@ -16,5 +16,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     @Query(value = "SELECT * FROM orders ORDER BY order_id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Order> findAllServices(int pageSize, int offset);
 
+    Order findByOrderId_OrderId(String orderId);
 
 }

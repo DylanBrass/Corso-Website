@@ -1,14 +1,21 @@
 package com.corso.springboot.Order_Subdomain.datalayer;
 
+import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class OrderRepositoryPersistenceTest {
+
+
+    Logger logger = Logger.getLogger(OrderRepositoryPersistenceTest.class.getName());
 
     @Autowired
     OrderRepository orderRepository;
@@ -19,21 +26,25 @@ public class OrderRepositoryPersistenceTest {
     public void setup(){
         orderRepository.deleteAll();
         preSavedOrder = orderRepository.save(
-                new Order("982577e6-1909-46b8-8583-e08c9daa4e9b", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St")
+                new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "",5,1)
         );
+
+        logger.info("preSavedOrder: " + preSavedOrder.getOrderId().getOrderId());
+
     }
 
 
+    @Test
+    public void getOrderById_ShouldSucceed() {
+        // Arrange
+        String orderId = String.valueOf(preSavedOrder.getOrderId().getOrderId());
 
-//    @Test
-//    public void whenFindAllByOrderStatusWithPagination_thenReturnAllOrdersWithStatus() {
-//        //arrange
-//        Integer expectedNumOrders = 1;
-//
-//        //act
-//        List<Order> orders = orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0);
-//
-//        //assert
-//        assert orders.size() == expectedNumOrders;
-//    }
+        logger.info("orderId: " + orderId);
+        // Act
+        Order result = orderRepository.findByOrderId_OrderId(orderId);
+
+        // Assert
+        assert result.getOrderId().getOrderId().equals(orderId);
+    }
+
 }

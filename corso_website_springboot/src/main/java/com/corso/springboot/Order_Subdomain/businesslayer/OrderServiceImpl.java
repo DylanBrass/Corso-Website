@@ -13,6 +13,7 @@ import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.models.UserResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
+import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
 import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,5 +110,21 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             throw new InvalidRequestException("Invalid request");
         }
+    }
+
+    @Override
+    public OrderResponse getOrderByOrderId(String orderId) {
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        serviceService.getServiceByServiceId(order.getServiceId().getServiceId());
+
+        OrderResponse orderResponse = orderResponseMapper.toOrderResponse(order);
+
+        orderResponse.setService(serviceService.getServiceByServiceId(order.getServiceId().getServiceId()));
+
+        return orderResponse;
     }
 }

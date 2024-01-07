@@ -27,8 +27,9 @@ function PendingOrdersPage() {
                 console.log("SERVICES " + serviceResponse.data);
                 const serviceName = serviceResponse.data.serviceName;
 
-                return new Order(order.orderTrackingNumber, serviceName, order.customerFullName.toUpperCase(), order.orderStatus.toLowerCase(), () => {
+                return new Order(order.orderTrackingNumber, order.orderId, serviceName, order.customerFullName.toUpperCase(), order.orderStatus.toLowerCase(), () => {
                     console.log("Order clicked");
+                    window.location.href = `/manage/orders/${order.orderId}`;
                 });
             }));
 
@@ -62,6 +63,7 @@ function PendingOrdersPage() {
                         key={order.orderTrackingNumber}
                         order={{
                             orderTrackingNumber: order.orderTrackingNumber,
+                            orderId: order.orderId,
                             serviceName: order.serviceName,
                             customerFullName: order.customerFullName,
                             orderStatus: order.orderStatus,

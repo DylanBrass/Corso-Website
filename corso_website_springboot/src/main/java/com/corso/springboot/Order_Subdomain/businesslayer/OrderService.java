@@ -11,4 +11,6 @@ public interface OrderService {
     List<OrderResponse> getAllOrdersByStatus(Map<String, String> queryParams, int pageSize, int offset);
 
     OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException;
+
+    OrderResponse getOrderByOrderId(String orderId);
 }

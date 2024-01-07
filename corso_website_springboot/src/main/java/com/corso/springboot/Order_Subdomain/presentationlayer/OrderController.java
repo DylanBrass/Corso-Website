@@ -38,4 +38,11 @@ public class OrderController {
     public ResponseEntity<OrderResponse> createOrderExternal(@Valid @RequestBody OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrderExternal(orderRequestExternal));
     }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/manage/{orderId}")
+    public ResponseEntity<OrderResponse> GetOrderByOrderId(@PathVariable String orderId){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderByOrderId(orderId));
+    }
+
 }
