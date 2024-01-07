@@ -28,22 +28,26 @@ export class OverdueOrder extends Order {
 
     constructor(
         orderTrackingNumber: string,
+        orderId: string,
         serviceName: string,
         customerFullName: string,
         orderStatus: string,
         action: () => void,
         overdueDays: number
     ) {
-        super(orderTrackingNumber, serviceName, customerFullName, orderStatus, action);
+        super(orderTrackingNumber, orderId, serviceName, customerFullName, orderStatus, action);
         this.overdueDays = overdueDays;
     }
 }
 
 
 function OrderTile({ order }: { order: Order }) {
-    // Get the first 4 characters of orderId
     if(order.orderStatus === "in_progress") {
         order.orderStatus = "in progress";
+    }
+
+    if(order instanceof OverdueOrder) {
+        order.orderStatus = "overdue";
     }
 
     return (
@@ -55,9 +59,9 @@ function OrderTile({ order }: { order: Order }) {
                 </div>
                 <div className={"order-data-separation"}>
                     <p className="order-service"><b>Service</b>: {order.serviceName}</p>
+                    <p className="order-status"><b>Order Status</b>: {order.orderStatus}</p>
                     {order instanceof OverdueOrder && (
                         <>
-                            <p className="order-status"><b>Order Status</b>: overdue</p>
                             <p className="order-days"><b>Overdue by</b>: {order.overdueDays} days</p>
                         </>
                     )}

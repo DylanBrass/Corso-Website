@@ -21,12 +21,10 @@ function OverdueOrdersPage() {
             const newTotalPages = Math.ceil(nbOrdersTotal / size);
 
             const response = await axios.get(`http://localhost:8080/api/v1/corso/orders/overdue?pageSize=${size}&offset=${(pageNumber - 1) * size}`);
-            console.log(response.data)
             const responseData = response.data;
 
             const newOrders = await Promise.all(responseData.map(async (order: any) => {
                 const serviceResponse = await axios.get("http://localhost:8080/api/v1/corso/services/" + order.serviceId);
-                console.log("SERVICES " + serviceResponse.data);
                 const serviceName = serviceResponse.data.serviceName;
 
                 const dueDate = parseISO(order.dueDate);
@@ -38,12 +36,9 @@ function OverdueOrdersPage() {
 
                 const overdueDays = Math.floor((new Date(currentDateUTC).getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
 
-                console.log("current date " + currentDate);
-                console.log("due date " + dueDate);
-                console.log("overdue days " + overdueDays);
-
                 return new OverdueOrder(
                     order.orderTrackingNumber,
+                    order.orderId,
                     serviceName,
                     order.customerFullName.toUpperCase(),
                     order.orderStatus.toLowerCase(),
