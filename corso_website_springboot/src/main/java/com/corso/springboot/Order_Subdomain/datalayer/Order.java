@@ -57,10 +57,10 @@ public class Order {
 
     int daysLeft;
 
-    public Order(String userId, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress) {
+    public Order(ServiceIdentifier serviceId, String userId, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerPostalCode, String customerApartmentNumber, int estimatedDuration, int daysLeft) {
         this.orderId = new OrderIdentifier();
         this.orderTrackingNumber = new OrderTrackingNumber();
-        this.serviceId = new ServiceIdentifier();
+        this.serviceId = serviceId;
         this.userId = userId;
         this.orderDate = orderDate;
         this.dueDate = dueDate;
@@ -70,5 +70,10 @@ public class Order {
         this.customerEmail = customerEmail;
         this.customerPhone = customerPhone;
         this.customerAddress = customerAddress;
+        this.customerCity = customerCity;
+        this.customerPostalCode = customerPostalCode;
+        this.customerApartmentNumber = customerApartmentNumber;
+        this.estimatedDuration = estimatedDuration;
+        this.daysLeft = daysLeft;
     }
 }

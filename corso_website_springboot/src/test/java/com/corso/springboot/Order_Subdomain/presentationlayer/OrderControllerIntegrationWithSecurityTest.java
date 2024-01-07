@@ -1,11 +1,9 @@
 package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
-import com.corso.springboot.configuration.security.models.UserResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,13 +18,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("test")
-@AutoConfigureMockMvc//(addFilters = false)
+@AutoConfigureMockMvc
 public class OrderControllerIntegrationWithSecurityTest {
 
     private final String BASE_URI_ORDERS = "/api/v1/corso/orders";
@@ -76,7 +75,6 @@ public class OrderControllerIntegrationWithSecurityTest {
     }
 
 
-
     @Test
     public void whenCreatingOrderWithValidValuesAndUser_thenReturnCreatedOrder() throws Exception {
 
@@ -104,6 +102,37 @@ public class OrderControllerIntegrationWithSecurityTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.orderDescription").value("Test order"))
                 .andExpect(jsonPath("$.userId").value("google|123456789"));
+    }
+
+
+    @Test
+    public void getOrderById_thenReturnOrder() throws Exception {
+        //arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+        //act
+
+        mockMvc.perform(get(BASE_URI_ORDERS + "/manage/" + orderId)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Admin")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value(orderId));
+
 
     }
+
+
+    @Test
+    public void getOrderByInvalidId_thenReturnNotFound() throws Exception {
+        //arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f412";
+        //act
+
+        mockMvc.perform(get(BASE_URI_ORDERS + "/manage/" + orderId)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Admin")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
 }
