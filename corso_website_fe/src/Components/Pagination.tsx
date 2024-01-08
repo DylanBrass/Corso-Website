@@ -1,17 +1,21 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Pagination from '@mui/material/Pagination';
-
-export {};
 
 interface CustomPaginationProps {
     onPageChange: (pageNumber: number, pageSize: number) => void;
     pageSize: number;
     totalPages: number;
+    resetKey?: string | null;
 }
 
-function CustomPagination({ onPageChange, pageSize, totalPages }: CustomPaginationProps) {
-    const [page, setPage] = React.useState(1);
-    const [localPageSize, setLocalPageSize] = React.useState(pageSize);
+const CustomPagination: React.FC<CustomPaginationProps> = ({
+                                                               onPageChange,
+                                                               pageSize,
+                                                               totalPages,
+                                                               resetKey,
+                                                           }) => {
+    const [page, setPage] = useState(1);
+    const [localPageSize, setLocalPageSize] = useState(pageSize);
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
@@ -25,10 +29,17 @@ function CustomPagination({ onPageChange, pageSize, totalPages }: CustomPaginati
         onPageChange(1, newSize);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         // Update localPageSize when the pageSize prop changes
         setLocalPageSize(pageSize);
+        setPage(1); // Reset page to 1 when pageSize changes
     }, [pageSize]);
+
+    useEffect(() => {
+        // Reset local state when the resetKey (status) changes
+        setPage(1);
+        setLocalPageSize(1);
+    }, [resetKey]);
 
     return (
         <div>
@@ -36,7 +47,9 @@ function CustomPagination({ onPageChange, pageSize, totalPages }: CustomPaginati
                 <p style={{ fontWeight: 'bold' }}>Page: {page}</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="pageSize" style={{ marginRight: '10px' }}>Items per page: </label>
+                <label htmlFor="pageSize" style={{ marginRight: '10px' }}>
+                    Items per page:{' '}
+                </label>
                 <select id="pageSize" value={localPageSize} onChange={handlePageSizeChange}>
                     <option value={1}>1</option>
                     <option value={5}>5</option>
@@ -45,9 +58,7 @@ function CustomPagination({ onPageChange, pageSize, totalPages }: CustomPaginati
                 <Pagination count={totalPages} page={page} onChange={handleChange} style={{ marginLeft: '10px' }} />
             </div>
         </div>
-
     );
-}
+};
 
 export default CustomPagination;
-

@@ -41,6 +41,54 @@ public class OrderControllerIntegrationTest {
 
     @Test
     @WithMockUser(authorities = "Admin")
+    public void whenAllOrdersExist_thenReturnAllOrdersWithoutPagination() throws Exception {
+        //arrange
+        Integer expectedNumOrders = 5;
+
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/filter?pageSize=0&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenAllOrdersExist_thenReturnAllOrdersWithPagination() throws Exception {
+        //arrange
+        Integer expectedNumOrders = 1;
+
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/filter?pageSize=1&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+
+    }
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenAllOrdersExist_thenReturnAllOrdersWithPaginationAndStatusFilter() throws Exception {
+        //arrange
+        Integer expectedNumOrders = 1;
+
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/filter?status=completed&pageSize=1&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "Admin")
     public void whenCompletedOrdersWithOneITemPerPageExist_thenReturnAllCompletedOrders() throws Exception {
         //arrange
         Integer expectedNumOrders = 1;

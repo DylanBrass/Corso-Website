@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
+    List<OrderResponse> getAllOrders(Map<String, String> queryParams, int pageSize, int offset);
     List<OrderResponse> getAllOrdersByStatus(Map<String, String> queryParams, int pageSize, int offset);
 
     List<OrderResponse> getAllOverdueOrders(int pageSize, int offset);

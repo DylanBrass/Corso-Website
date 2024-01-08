@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +39,55 @@ public class OrderServiceImplUnitTest {
     ServiceService serviceService;
 
     @Test
+    void getAllOrders_ShouldSucceed() {
+        // Arrange
+        Map<String, String> queryParams = Map.of();
+
+        List<OrderResponse> mockOrderResponses = new ArrayList<>();
+        mockOrderResponses.add(new OrderResponse("orderId1", "trackingNumber1", "serviceId1", null, "userId1", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Description1", "Customer1", "customer1@example.com", "1234567890", "123 Main St", "City1", "PostalCode1", "ApartmentNumber1", 2));
+        mockOrderResponses.add(new OrderResponse("orderId2", "trackingNumber2", "serviceId2", null, "userId2", "2023-01-02", "2023-02-02", Status.COMPLETED, "Description2", "Customer2", "customer2@example.com", "1234567890", "456 Main St", "City2", "PostalCode2", "ApartmentNumber2", 3));
+
+        Mockito.when(orderRepository.count()).thenReturn(2L);
+        Mockito.when(orderRepository.findAll()).thenReturn(new ArrayList<>());
+        Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
+
+        // Act
+        List<OrderResponse> result = orderService.getAllOrders(queryParams, 0, 0);
+
+        // Assert
+        assertEquals(mockOrderResponses, result);
+        assertEquals(2, result.size());
+        assertEquals(Status.IN_PROGRESS, result.get(0).getOrderStatus());
+        assertEquals(Status.COMPLETED, result.get(1).getOrderStatus());
+    }
+
+    @Test
+    void getAllOrdersByStatus_ShouldSucceed() {
+        // Arrange
+        Map<String, String> queryParams = Map.of("status", "in_progress");
+
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2),
+                new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
+
+        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
+
+        Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
+
+        // Act
+        List<OrderResponse> result = orderService.getAllOrdersByStatus(queryParams, 50, 0);
+
+        // Assert
+        assertEquals(mockOrderResponses, result);
+        assertEquals(Status.IN_PROGRESS, result.get(0).getOrderStatus());
+        assertEquals(Status.IN_PROGRESS, result.get(1).getOrderStatus());
+    }
+        @Test
     void getAllInProgressOrders_ShouldSucceed() {
         // Arrange
         Map<String, String> queryParams = Map.of("status", "in_progress");
 
-        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2), new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2),
+                new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
 
         Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
 

@@ -42,10 +42,45 @@ public class OrderServiceImpl implements OrderService {
 
     private final Auth0ManagementService auth0ManagementService;
 
+
+    @Override
+    public List<OrderResponse> getAllOrders(Map<String, String> queryParams, int pageSize, int offset) {
+        if (queryParams.get("status") == null && pageSize == 0 && offset == 0) {
+            return getAllOrdersWithDefaultSettings();
+        }
+
+        if (queryParams.get("status") == null) {
+            return getAllOrdersWithPagination(pageSize, offset);
+        }
+
+        return getAllOrdersByStatus(queryParams, pageSize, offset);
+    }
+
+    private List<OrderResponse> getAllOrdersWithDefaultSettings() {
+        int totalOrders = (int) orderRepository.count();
+        List<OrderResponse> orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAll());
+
+        orderResponses.forEach(orderResponse -> setOrderResponseDetails(orderResponse, totalOrders));
+
+        return orderResponses;
+    }
+
+    private List<OrderResponse> getAllOrdersWithPagination(int pageSize, int offset) {
+        int totalOrders = (int) orderRepository.count();
+        List<OrderResponse> orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllOrders(pageSize, offset));
+
+        orderResponses.forEach(orderResponse -> setOrderResponseDetails(orderResponse, totalOrders));
+
+        return orderResponses;
+    }
+
+    private void setOrderResponseDetails(OrderResponse orderResponse, int totalOrders) {
+        orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+        orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+    }
+
     @Override
     public List<OrderResponse> getAllOrdersByStatus(Map<String, String> queryParams, int pageSize, int offset) {
-
-
 
         if (queryParams.get("status") == null && pageSize == 0 && offset == 0) {
             return orderResponseMapper.toOrdersResponse(orderRepository.findAll());

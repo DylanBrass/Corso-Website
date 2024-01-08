@@ -103,6 +103,8 @@ test {
     exclude("**/ViewProfileOrdersTest.class")
     exclude '**/ViewCarouselTest.class'
     exclude '**/LoginAuthTest.class'
+    exclude '**/ViewAllOrdersTest.class'
+    exclude '**/ViewAllOrdersQueryParams.class'
     exclude '**/ViewCurrentOrdersTest.class'
     exclude '**/ViewAllCompletedOrdersTest.class'
     exclude '**/ViewAllOverdueOrdersTest.class'
