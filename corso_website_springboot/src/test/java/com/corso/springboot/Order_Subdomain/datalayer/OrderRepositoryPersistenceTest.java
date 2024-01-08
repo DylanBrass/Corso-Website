@@ -47,4 +47,16 @@ public class OrderRepositoryPersistenceTest {
         assert result.getOrderId().getOrderId().equals(orderId);
     }
 
+    @Test
+    public void getAllUsersOrders_ShouldSucceed() {
+        // Arrange
+        String userId = preSavedOrder.getUserId();
+
+        // Act
+        List<Order> result = orderRepository.findAllByUserIdWithPagination(userId, 10,0);
+
+        // Assert
+        assert result.size() == 1;
+    }
+
 }

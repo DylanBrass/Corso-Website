@@ -1,5 +1,5 @@
 .orders-tile {
-    width: 60%;
+    width: 50%;
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     cursor: pointer;
@@ -64,14 +64,12 @@
 
     & .order-service {
         grid-area: 1 / 2 / 2 / 3; /* Place order-service in the top-right grid cell */
-        margin-left: 90px; /* Add margin-left to the second box */
         font-size: 20px;
         color: black;
     }
 
     & .order-status, .order-days {
         grid-area: 2 / 2 / 3 / 3; /* Place order-status in the bottom-right grid cell */
-        margin-left: 100px;
         font-size: 19px;
         padding-top: 30px;
         color: black;

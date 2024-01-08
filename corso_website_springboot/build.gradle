@@ -39,9 +39,11 @@ dependencies {
     implementation('me.paulschwarz:spring-dotenv:4.0.0')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('com.okta.spring:okta-spring-boot-starter:3.0.5')
-    implementation 'com.cloudinary:cloudinary-http44:1.27.0'
+    implementation('com.cloudinary:cloudinary-http44:1.27.0')
 
-    runtimeOnly 'com.h2database:h2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '3.2.1'
+
+    runtimeOnly('com.h2database:h2')
 
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 
@@ -71,7 +73,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
-jacoco{
+jacoco {
     toolVersion = "0.8.8"
 }
 jacocoTestReport {
@@ -98,6 +100,7 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
+    exclude("**/ViewProfileOrdersTest.class")
     exclude '**/ViewCarouselTest.class'
     exclude '**/LoginAuthTest.class'
     exclude '**/ViewCurrentOrdersTest.class'

@@ -15,4 +15,6 @@ public interface OrderService {
     OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException;
 
     OrderResponse getOrderByOrderId(String orderId);
+
+    List<OrderResponse> getCustomerOrders(String userId, int pageSize, int offset);
 }

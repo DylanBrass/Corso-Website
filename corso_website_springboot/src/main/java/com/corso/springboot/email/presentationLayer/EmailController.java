@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @Slf4j
@@ -24,6 +26,24 @@ public class EmailController {
     public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest emailRequest) throws MessagingException {
 
         int status = emailService.sendEmail(emailRequest.getRecipient(), emailRequest.getSubject(), emailRequest.getMessage());
+
+        if (status == 200)
+            return ResponseEntity.ok().build();
+        else
+            return ResponseEntity.status(status).build();
+    }
+
+
+    @PostMapping("/template")
+    public ResponseEntity<Void> sendEmailWithTemplate() throws MessagingException {
+
+        Map<String, String> parameters = new HashMap<>();
+
+        parameters.put("message", "testing pls work");
+
+        parameters.put("cool", "Dylan");
+
+        int status = emailService.sendEmail("dylan.brassard@outlook.com", "emailRequest.getSubject()", "test", parameters);
 
         if (status == 200)
             return ResponseEntity.ok().build();

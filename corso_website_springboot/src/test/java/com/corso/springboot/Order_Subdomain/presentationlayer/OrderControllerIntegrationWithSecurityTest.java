@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerIntegrationWithSecurityTest {
 
     private final String BASE_URI_ORDERS = "/api/v1/corso/orders";
+    private final String BASE_URI_CUSTOMERS = "/api/v1/corso/customers";
 
     @Autowired
     private MockMvc mockMvc;
@@ -106,6 +107,44 @@ public class OrderControllerIntegrationWithSecurityTest {
 
 
     @Test
+    public void whenCustomerGetsAllOrders_thenReturnAllOrders() throws Exception {
+        //arrange
+        Integer expectedNumOrders = 5;
+
+        //act
+        mockMvc.perform(get(BASE_URI_CUSTOMERS + "/orders?pageSize=50&offset=0")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(expectedNumOrders));
+    }
+
+    @Test
+    public void whenCustomerGetsAllOrdersWithNoOrders_thenReturnNotFound() throws Exception {
+        //act
+        mockMvc.perform(get(BASE_URI_CUSTOMERS + "/orders?pageSize=50&offset=0")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac88")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void whenCustomerGetsAllOrdersWithPageSize0AndOffset0_thenReturnNotFound() throws Exception {
+        Integer expectedNumOrders = 5;
+
+        //act
+        mockMvc.perform(get(BASE_URI_CUSTOMERS + "/orders?pageSize=0&offset=0")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(expectedNumOrders));
+    }
+
+    @Test
     public void getOrderById_thenReturnOrder() throws Exception {
         //arrange
         String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
@@ -122,6 +161,10 @@ public class OrderControllerIntegrationWithSecurityTest {
     }
 
 
+
+
+
+
     @Test
     public void getOrderByInvalidId_thenReturnNotFound() throws Exception {
         //arrange
@@ -134,5 +177,7 @@ public class OrderControllerIntegrationWithSecurityTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+
 
 }

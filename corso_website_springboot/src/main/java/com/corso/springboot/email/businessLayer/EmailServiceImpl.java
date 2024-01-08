@@ -12,8 +12,11 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Map;
 import java.util.Properties;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
 @Slf4j
@@ -21,15 +24,16 @@ import java.util.Properties;
 public class EmailServiceImpl implements EmailService {
 
     private final String username;
-
+    private final TemplateEngine templateEngine;
 
     Session session;
 
     public EmailServiceImpl(@Value("${spring.mail.username}") String username,
-                            @Value("${spring.mail.password}") String password) {
+                            @Value("${spring.mail.password}") String password, TemplateEngine templateEngine) {
 
 
         this.username = username;
+        this.templateEngine = templateEngine;
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -59,6 +63,46 @@ public class EmailServiceImpl implements EmailService {
             message.setText(text);
 
             //error is handled by the global controller handler
+            Transport.send(message);
+
+            //if no error is thrown, return 200
+            return HttpStatus.SC_OK;
+        } catch (MessagingException e) {
+            //if an error is thrown, return 500
+            throw new MessagingException();
+        } catch (Exception e) {
+            //if an error is thrown, return 500
+            log.error(e.getMessage());
+            return HttpStatus.SC_UNPROCESSABLE_ENTITY;
+        }
+    }
+
+    @Override
+    public int sendEmail(String recipient, String subject, String template, Map<String, String> parameters) throws MessagingException {
+        try {
+            Message message = new MimeMessage(session);
+
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(recipient)
+            );
+            message.setSubject(subject);
+
+            Context context = new Context();
+            //loop for all parameters and add them to the context
+
+            for (Map.Entry<String, String> entry : parameters.entrySet()) {
+                context.setVariable(entry.getKey(), entry.getValue());
+            }
+
+            String processedString = templateEngine.process(template, context);
+
+            //error is handled by the global controller handler
+
+            message.setContent(processedString, "text/html; charset=utf-8");
+
+
             Transport.send(message);
 
             //if no error is thrown, return 200

@@ -16,11 +16,24 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     @Query(value = "SELECT * FROM orders ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Order> findAllOrders(int pageSize, int offset);
 
-    Order findByOrderId_OrderId(String orderId);
 
     @Query(value = "SELECT * FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS') ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Order> findAllOverdueOrdersWithPagination(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
     @Query(value = "SELECT * FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS') ORDER BY id", nativeQuery = true)
     List<Order> findAllOverdueOrders();
+
+    Order findByOrderId_OrderId(String orderId);
+
+    @Query(value = "SELECT * FROM orders WHERE user_id = :userId ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    List<Order> findAllByUserIdWithPagination(@Param("userId") String userId, @Param("pageSize") int pageSize, @Param("offset") int offset);
+
+    int countByUserId(String userId);
+
+    @Query(value = "SELECT COUNT(*) FROM orders WHERE order_status = :status", nativeQuery = true)
+    int countByOrderStatus(@Param("status") String status);
+
+
+    @Query(value = "SELECT COUNT(*) FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS')", nativeQuery = true)
+    int countOverdueOrders();
 }

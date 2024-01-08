@@ -13,32 +13,22 @@ function PendingOrdersPage() {
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
-            const responseTotalOrders = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=pending&pageSize=0&offset=0`);
-            const nbOrdersTotal = responseTotalOrders.data.length;
 
-            const newTotalPages = Math.ceil(nbOrdersTotal / size);
 
-            const response = await axios.get(`http://localhost:8080/api/v1/corso/orders?status=pending&pageSize=${size}&offset=${(pageNumber - 1) * size}`);
-            console.log(response.data)
-            const responseData = response.data;
+            axios.get(`http://localhost:8080/api/v1/corso/orders?status=pending&pageSize=${size}&offset=${(pageNumber - 1) * size}`)
+                .then(res => {
+                    const orders = res.data;
+                    setOrders(orders);
 
-            const newOrders = await Promise.all(responseData.map(async (order: any) => {
-                const serviceResponse = await axios.get("http://localhost:8080/api/v1/corso/services/" + order.serviceId);
-                console.log("SERVICES " + serviceResponse.data);
-                const serviceName = serviceResponse.data.serviceName;
+                    const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
+                    setTotalPages(newTotalPages);
+                    if (pageNumber > newTotalPages) {
+                        setPage(newTotalPages);
+                    }
+                })
 
-                return new Order(order.orderTrackingNumber, order.orderId, serviceName, order.customerFullName.toUpperCase(), order.orderStatus.toLowerCase(), () => {
-                    console.log("Order clicked");
-                    window.location.href = `/manage/orders/${order.orderId}`;
-                });
-            }));
 
-            setOrders(newOrders);
-            setTotalPages(newTotalPages);
 
-            if (pageNumber > newTotalPages) {
-                setPage(newTotalPages);
-            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -56,22 +46,15 @@ function PendingOrdersPage() {
     return (
         <>
             <NavigationBar/>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} className={"mb-5"}>
                 <h1>CLIENT REQUESTS</h1>
-                {orders.map(order => (
-                    <OrderTile
-                        key={order.orderTrackingNumber}
-                        order={{
-                            orderTrackingNumber: order.orderTrackingNumber,
-                            orderId: order.orderId,
-                            serviceName: order.serviceName,
-                            customerFullName: order.customerFullName,
-                            orderStatus: order.orderStatus,
-                            action: order.action
-                        }}
-                    />
-                ))}
+                {
+                    orders.map((order: Order) => (
+                        <OrderTile order={order} key={order.orderId}/>
+                    ))
+                }
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages} />
+
             </div>
         </>
     );

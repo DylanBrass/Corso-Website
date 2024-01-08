@@ -45,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getAllOrdersByStatus(Map<String, String> queryParams, int pageSize, int offset) {
 
+
+
         if (queryParams.get("status") == null && pageSize == 0 && offset == 0) {
             return orderResponseMapper.toOrdersResponse(orderRepository.findAll());
         }
@@ -53,27 +55,62 @@ public class OrderServiceImpl implements OrderService {
             return orderResponseMapper.toOrdersResponse(orderRepository.findAllOrders(pageSize, offset));
         }
 
+        int totalOrders = orderRepository.countByOrderStatus(queryParams.get("status").toUpperCase());
+        Status statusEnum = Status.valueOf(queryParams.get("status").toUpperCase());
+
+        List<OrderResponse> orderResponses;
         if (pageSize == 0 && offset == 0) {
-            Status statusEnum = Status.valueOf(queryParams.get("status").toUpperCase());
-            return orderResponseMapper.toOrdersResponse(orderRepository.findAllByOrderStatusEquals(statusEnum));
+            orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByOrderStatusEquals(statusEnum));
+
+            for (OrderResponse orderResponse : orderResponses) {
+                orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+                orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+            }
+
+            return orderResponses;
         }
 
-        Status statusEnum = Status.valueOf(queryParams.get("status").toUpperCase());
-        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByOrderStatusWithPagination(String.valueOf(statusEnum), pageSize, offset));
+        orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByOrderStatusWithPagination(String.valueOf(statusEnum), pageSize, offset));
+
+        for (OrderResponse orderResponse : orderResponses) {
+            orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+            orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+        }
+
+        return orderResponses;
     }
 
     @Override
     public List<OrderResponse> getAllOverdueOrders(int pageSize, int offset) {
+
+        int totalOrders = orderRepository.countOverdueOrders();
+
+        List<OrderResponse> orderResponses;
+
         if (pageSize == 0 && offset == 0) {
-            return orderResponseMapper.toOrdersResponse(orderRepository.findAllOverdueOrders());
+            orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllOverdueOrders());
+
+            for (OrderResponse orderResponse : orderResponses) {
+                orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+                orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+            }
+
+            return orderResponses;
         }
 
-        return orderResponseMapper.toOrdersResponse(orderRepository.findAllOverdueOrdersWithPagination(pageSize, offset));
+        orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllOverdueOrdersWithPagination(pageSize, offset));
+
+        for (OrderResponse orderResponse : orderResponses) {
+            orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+            orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+        }
+
+        return orderResponses;
     }
 
 
     @Override
-    public OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException {
+    public OrderResponse createOrderExternal(OrderRequestExternal orderRequestExternal) throws IOException {
 
         if (serviceService.getServiceByServiceId(orderRequestExternal.getServiceId()) == null) {
             throw new ServiceNotFoundException("Service not found");
@@ -136,5 +173,35 @@ public class OrderServiceImpl implements OrderService {
         orderResponse.setService(serviceService.getServiceByServiceId(order.getServiceId().getServiceId()));
 
         return orderResponse;
+    }
+
+    @Override
+    public List<OrderResponse> getCustomerOrders(String userId, int pageSize, int offset) {
+        List<OrderResponse> orderResponses;
+
+        int totalOrders = orderRepository.countByUserId(userId);
+
+        if(totalOrders == 0){
+           throw new OrderNotFoundException("No orders found for user: " + userId);
+        }
+
+        if (pageSize == 0 && offset == 0) {
+             orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, 10, 0));
+                for (OrderResponse orderResponse : orderResponses) {
+                    orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+                    orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+                }
+
+                return orderResponses;
+        }
+
+        orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, pageSize, offset));
+
+        for (OrderResponse orderResponse : orderResponses) {
+            orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+            orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+        }
+
+        return orderResponses;
     }
 }
