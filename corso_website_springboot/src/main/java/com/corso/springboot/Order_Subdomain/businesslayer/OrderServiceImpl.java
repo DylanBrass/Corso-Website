@@ -186,7 +186,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (pageSize == 0 && offset == 0) {
-             orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, 10, 1));
+             orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, 10, 0));
                 for (OrderResponse orderResponse : orderResponses) {
                     orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
                     orderResponse.setTotalOrdersMatchingRequest(totalOrders);
