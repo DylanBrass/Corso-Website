@@ -13,7 +13,7 @@ function CompletedOrdersPage() {
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
-            ;
+
 
             await axios.get(`http://localhost:8080/api/v1/corso/orders?status=completed&pageSize=${size}&offset=${(pageNumber - 1) * size}`)
                 .then(res => {

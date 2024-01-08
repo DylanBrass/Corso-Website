@@ -3,7 +3,6 @@ import axios from 'axios';
 import OrderTile, {Order} from "../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import CustomPagination from "../../Components/Pagination";
-import Footer from "../../Components/Footer/Footer";
 
 
 function PendingOrdersPage() {

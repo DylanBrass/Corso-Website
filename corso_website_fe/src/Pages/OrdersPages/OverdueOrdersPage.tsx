@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import OrderTile, {OverdueOrder} from "../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../Components/Pagination";
-import {Order} from "../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import {format, parseISO} from 'date-fns';
 

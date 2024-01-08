@@ -9,7 +9,6 @@ import React from "react";
 
 
 function ProfilePage() {
-    const auth = useAuth();
 
 
     return (

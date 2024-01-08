@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {useAuth} from "../../../security/Components/AuthProvider";
 import OrderTile from "../../../Components/OrderTile/OrderTile";
 import {Order} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
