@@ -1,4 +1,3 @@
-import {useAuth} from "../../security/Components/AuthProvider";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import AddCustomerInformation from "./Components/AddCustomerInformation";
 import AllCustomerOrders from "./Components/AllCustomerOrders";
