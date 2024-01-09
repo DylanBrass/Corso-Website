@@ -200,5 +200,16 @@ public class OrderControllerIntegrationTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
     }
-
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenCountByOrderStatus_thenReturnCount() {
+        //arrange
+        Integer expectedNumOrders = 1;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/manage/count?status=PENDING")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody(Integer.class).isEqualTo(expectedNumOrders);
+    }
 }

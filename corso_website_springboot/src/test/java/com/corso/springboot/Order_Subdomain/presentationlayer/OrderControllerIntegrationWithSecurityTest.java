@@ -18,6 +18,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -188,6 +189,30 @@ public class OrderControllerIntegrationWithSecurityTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
 
+    }
+    @Test
+    public void whenOrderWithStatusPendingAndAcceptedWithValidOrderId_thenReturnSuccessful() throws Exception {
+        //arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+
+        //act
+        mockMvc.perform(put(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
+                                .authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void whenOrderWithStatusPendingAndAcceptedWithInvalidOrderId_thenReturnNotFound() throws Exception {
+        //arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f412";
+
+        //act
+        mockMvc.perform(put(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
+                                .authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isNotFound());
     }
 
 }

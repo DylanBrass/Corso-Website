@@ -252,4 +252,24 @@ public class OrderServiceImpl implements OrderService {
 
         return orderResponse;
     }
+
+    public OrderResponse updateOrderStatusToAccepted(String orderId) {
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        Status newStatus = Status.IN_PROGRESS;
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        order.setOrderStatus(Status.valueOf(newStatus.toString()));
+        order.setOrderDate(String.valueOf(LocalDate.now()));
+        order.setDueDate(String.valueOf(LocalDate.now().plusDays(order.getDaysLeft())));
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
+
+    @Override
+    public int countByOrderStatus(String status) {
+        return orderRepository.countByOrderStatus(status);
+    }
 }

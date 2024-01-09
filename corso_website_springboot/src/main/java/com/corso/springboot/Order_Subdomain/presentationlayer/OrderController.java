@@ -72,5 +72,15 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId));
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
+    @PutMapping("/manage/acceptOrder/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderStatusToAccepted(@PathVariable String orderId){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToAccepted(orderId));
+    }
 
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/manage/count")
+    public ResponseEntity<Integer> CountByOrderStatus(@RequestParam(name = "status") String status){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.countByOrderStatus(status));
+    }
 }

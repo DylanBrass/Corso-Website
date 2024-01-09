@@ -92,6 +92,47 @@ function ViewSpecificOrderAdmin() {
 
     }
 
+    const sendOrderAcceptedEmail = async () => {
+        try {
+            await axios.post(`http://localhost:8080/api/v1/corso/email/orderAccepted`, {
+                recipient: order.customerEmail,
+                subject: "Order Accepted"
+            }, {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                }
+            });
+            swal("Email Sent", "A confirmation email has been sent to the customer.", "success");
+        } catch (error) {
+            console.error("Error sending email: ", error);
+            swal("Failed!", "Failed to send the confirmation email.", "error");
+        }
+    }
+
+    const acceptStatus = async () => {
+        try {
+            const response = await axios.put(`http://localhost:8080/api/v1/corso/orders/manage/acceptOrder/${orderId}`, {}, {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                }
+            });
+            if (response.status === 200) {
+                swal("Accepted!", `The order with tracking number ${order.orderTrackingNumber} has been successfully accepted.`, "success")
+                    .then(() => {
+                        sendOrderAcceptedEmail();
+                        window.location.href = '/dashboard';
+                    });
+            } else {
+                swal("Oops!", "Something went wrong. Please try again.", "error");
+            }
+        } catch (error) {
+            console.error("Error updating order status: ", error);
+            swal("Failed!", `Failed to accept the order with tracking number ${order.orderTrackingNumber}.`, "error");
+        }
+    }
+
     useEffect(() => {
         getOrder().then(r => console.log("Order fetched"));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -133,7 +174,7 @@ function ViewSpecificOrderAdmin() {
                     </div>
                     <div className="col-lg-6 col-md-12">
                         <div className="row">
-                            <button className={"accept-button"}>Accept</button>
+                            <button className={"accept-button"} onClick={acceptStatus}>Accept</button>
                         </div>
                         <div className="row">
                             <button className={"decline-button"}>Decline</button>

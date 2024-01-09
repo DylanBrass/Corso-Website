@@ -22,4 +22,9 @@ public interface OrderService {
     OrderResponse getOrderByIdAndUserId(String orderId, String userId);
 
     List<OrderResponse> getCustomerCurrentOrders(String userId);
+
+    OrderResponse updateOrderStatusToAccepted(String orderId);
+
+    int countByOrderStatus(String status);
+
 }
