@@ -52,7 +52,20 @@ public class EmailController {
             return ResponseEntity.status(status).build();
     }
 
+    @PostMapping("/orderAccepted")
+    public ResponseEntity<Void> sendOrderAcceptedEmail(@RequestBody EmailRequest emailRequest) throws MessagingException {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("H1", "Thank you for choosing Corso.");
+        parameters.put("H2", "Your order has been accepted.");
+        parameters.put("H4", "For more information about your order, progress reports or to leave a review, " +
+                "please log in and navigate to the current orders page.");
+        parameters.put("H5", "We look forward to working with you.");
+        int status = emailService.sendEmail(emailRequest.getRecipient(), emailRequest.getSubject(), "ApproveOrder", parameters);
 
-
+        if (status == 200)
+            return ResponseEntity.ok().build();
+        else
+            return ResponseEntity.status(status).build();
+    }
 
 }

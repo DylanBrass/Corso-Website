@@ -12,6 +12,10 @@ function Dashboard() {
 
     const [visitors, setVisitors] = useState(0)
 
+    const [inProgressCount, setInProgressCount] = useState(0);
+    const [pendingCount, setPendingCount] = useState(0);
+    const [completedCount, setCompletedCount] = useState(0);
+
     const getTotalAdmins = async () => {
         axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-total-admins", {
             headers: {
@@ -51,6 +55,71 @@ function Dashboard() {
             })
     }
 
+    const getInProgressCount = async () => {
+        axios.get("http://localhost:8080/api/v1/corso/orders/manage/count", {
+            params: {
+                status: "IN_PROGRESS"
+            },
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setInProgressCount(response.data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching in progress count", error);
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    };
+
+    const getPendingCount = async () => {
+        axios.get("http://localhost:8080/api/v1/corso/orders/manage/count", {
+            params: {
+                status: "PENDING"
+            },
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setPendingCount(response.data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching pending count", error);
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    };
+    const getCompletedCount = async () => {
+        axios.get("http://localhost:8080/api/v1/corso/orders/manage/count", {
+            params: {
+                status: "COMPLETED"
+            },
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setCompletedCount(response.data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching completed count", error);
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    };
+
 
 
     const auth = useAuth()
@@ -68,9 +137,19 @@ function Dashboard() {
         getVisitors().then(r => {
             console.log(r)
         })
+        getInProgressCount().then(() => {
+            console.log("In-progress count fetched");
+        });
+        getPendingCount().then(() => {
+            console.log("Pending count fetched");
+        });
+        getCompletedCount().then(() => {
+            console.log("Pending count fetched");
+        });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
     return (
         <div style={{
         }}>
@@ -81,7 +160,7 @@ function Dashboard() {
                 <div className={"row d-flex align-items-stretch mt-4"}>
                     <div className={"col-4"}>
                         <AdminDashboardTile
-                            title1={"61"}
+                            title1={completedCount.toString()}
                             title2={""}
                             text1={"Completed Orders"}
                             text2={""}
@@ -95,7 +174,7 @@ function Dashboard() {
                     <div className={"col-4"}>
 
                         <AdminDashboardTile
-                            title1={"2"}
+                            title1={inProgressCount.toString()}
                             title2={""}
                             text1={"Current Orders"}
                             text2={""}
@@ -109,7 +188,7 @@ function Dashboard() {
                     <div className={"col-4"}>
 
                         <AdminDashboardTile
-                            title1={"1"}
+                            title1={pendingCount.toString()}
                             title2={""}
                             text1={"Client Requests"}
                             text2={""}

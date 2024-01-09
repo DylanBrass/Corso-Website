@@ -59,4 +59,14 @@ public class OrderRepositoryPersistenceTest {
         assert result.size() == 1;
     }
 
+    @Test
+    public void getCountByOrderStatus_ShouldSucceed() {
+        // Arrange
+        String status = "IN_PROGRESS";
+        // Act
+        int result = orderRepository.countByOrderStatus(status);
+
+        // Assert
+        assert result == 1;
+    }
 }
