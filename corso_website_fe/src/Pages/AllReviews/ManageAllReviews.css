@@ -1,0 +1,150 @@
+.reviews-container {
+    width: 80%;
+    text-align: center;
+    margin: 50px auto;
+    border-radius: 27px;
+    background: #E8E8E8;
+    box-shadow: 12px 12px 4px 0 rgba(0, 0, 0, 0.25);
+
+}
+
+.review-header {
+    width: auto;
+}
+
+.review-title {
+    color: #000;
+    text-align: center;
+    font-family: Nunito;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.error {
+    color: red;
+}
+
+.review-card {
+    position: relative;
+    border: 1px solid #ccc;
+    transition: box-shadow 0.3s ease-in-out;
+    overflow: clip;
+    margin-top: 50px;
+    border-radius: 27px;
+    box-shadow: 12px 12px 4px 0px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.72);
+
+    &:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+
+    .review-box-name {
+        background-color: #E8E8E8;
+    }
+
+}
+
+
+.review-icon-container {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+
+}
+
+.review-icon {
+    border-radius: 50%;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.review-name {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+.details-hyperlink {
+    color: #14ACED;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-transform: uppercase;
+}
+
+.review-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+    .review-content {
+        margin: 10px 0;
+    }
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+form input[type="text"] {
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 15px;
+    border: 1px solid #B7B6B6;
+    background: #FAFAFA;
+    width: 440px;
+    height: 57px;
+}
+
+form button {
+    border-radius: 15px;
+    background: #6488DC;
+    width: 68px;
+    height: 57px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-color: #FFFFFF;
+    outline: none;
+    margin-left: 10px;
+}
+
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+ .review-pinnedBtn {
+     background-color: #45a049;
+
+}
+
+ .btnPinnedClassName{
+     border: none;
+     background-color: #E8E8E8;
+
+ }
+
+ .btnNotPinnedClassName{
+    border:none;
+     background-color: #E8E8E8;
+ }
+
+

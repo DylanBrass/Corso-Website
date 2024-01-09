@@ -14,16 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 public class Review {
-/*
-id
-review_id
-user_id
-customer_full_name
-review_date
-message
-review_rating
-pinned
- */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;

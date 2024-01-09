@@ -20,7 +20,7 @@ import AddServicePage from "./Pages/AddService/AddServicePage";
 import ViewSpecificOrderAdmin from "./Pages/OrdersDetailsPages/ViewSpecificOrderAdmin";
 import OverdueOrdersPage from "./Pages/OrdersPages/OverdueOrdersPage";
 import AllOrdersPage from "./Pages/OrdersPages/AllOrdersPage";
-
+import ManageReviews from "./Pages/AllReviews/ManageReviews";
 
 
 function App() {
@@ -39,6 +39,7 @@ function App() {
                     <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path="/orders/overdue" element={<OverdueOrdersPage/>} />
+                    <Route path="/manage/testimonies" element={<ManageReviews/>} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/create/admin" element={<CreateAdminPage />} />
                     <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin />} />

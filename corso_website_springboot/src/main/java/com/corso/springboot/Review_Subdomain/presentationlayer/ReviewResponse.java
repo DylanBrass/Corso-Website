@@ -27,4 +27,6 @@ public class ReviewResponse {
     public int reviewRating;
 
     public boolean pinned;
+
+
 }
