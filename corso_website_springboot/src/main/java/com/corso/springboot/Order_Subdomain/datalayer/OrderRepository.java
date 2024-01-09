@@ -39,5 +39,13 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     Order findByOrderId_OrderIdAndUserId(String orderId, String userId);
 
+    @Query(value = "SELECT * FROM orders WHERE user_id = :userId AND order_status = :status ORDER BY id DESC LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    List<Order> findAllByUserIdAndOrderStatusWithPagination(@Param("userId") String userId, @Param("pageSize") int pageSize, @Param("offset") int offset,@Param("status") String status);
+
+    @Query(value = "SELECT COUNT(*) FROM orders WHERE user_id = :userId AND order_status = :status", nativeQuery = true)
+    int countByUserIdAndOrderStatus(String userId, String status);
+
     List<Order> findAllByUserIdAndOrderStatus(String userId, Status status);
+
+
 }

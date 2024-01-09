@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -45,15 +46,43 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> getAllOrders(Map<String, String> queryParams, int pageSize, int offset) {
-        if (queryParams.get("status") == null && pageSize == 0 && offset == 0) {
+        String status = queryParams.get("status");
+        String userId = queryParams.get("userId");
+
+        if (status != null) status = status.toUpperCase();
+
+        if (status == null && (userId == null || userId.isEmpty()) && pageSize == 0 && offset == 0) {
             return getAllOrdersWithDefaultSettings();
         }
 
-        if (queryParams.get("status") == null) {
+        if (status == null && (userId == null || userId.isEmpty())) {
             return getAllOrdersWithPagination(pageSize, offset);
         }
 
-        return getAllOrdersByStatus(queryParams, pageSize, offset);
+        if (status == null) {
+            return getCustomerOrders(userId, pageSize, offset);
+        }
+
+        if ((userId == null || userId.isEmpty())) {
+            return getAllOrdersByStatus(queryParams, pageSize, offset);
+        }
+
+        return getOrderByCustomerAndStatus(userId, status, pageSize, offset);
+    }
+
+
+
+
+    public List<OrderResponse> getOrderByCustomerAndStatus(String userId, String  status, int pageSize, int offset){
+        List<OrderResponse> responses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatusWithPagination(userId, pageSize, offset, status));
+
+        int totalOrders = orderRepository.countByUserIdAndOrderStatus(userId, status);
+        for(OrderResponse response : responses){
+            response.setTotalOrdersMatchingRequest(totalOrders);
+            response.setService(serviceService.getServiceByServiceId(response.getServiceId()));
+        }
+        return responses;
+
     }
 
     private List<OrderResponse> getAllOrdersWithDefaultSettings() {
@@ -237,9 +266,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getCustomerCurrentOrders(String userId) {
-        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId, Status.IN_PROGRESS));
+    public List<OrderResponse> getCustomerCurrentOrders(String userId,Status status) {
+        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId,status));
     }
+
+
 
     private OrderResponse getOrderResponse(String orderId, Order order) {
         if (order == null) {

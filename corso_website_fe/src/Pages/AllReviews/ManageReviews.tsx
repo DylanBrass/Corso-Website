@@ -124,7 +124,7 @@ function ManageReviews() {
 
     return (
 
-        <div>
+        <div className={"all-reviews"}>
             <NavigationBar/>
             <div className="container review-container">
                 <div className="row review-header">

@@ -1,7 +1,9 @@
 package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +19,11 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/corso/orders")
 public class OrderController {
 
     private final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/filter")
@@ -69,7 +68,7 @@ public class OrderController {
 
         String userId = principal.getSubject();
 
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId));
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId, Status.IN_PROGRESS));
     }
 
     @PreAuthorize("hasAuthority('Admin')")
@@ -83,4 +82,5 @@ public class OrderController {
     public ResponseEntity<Integer> CountByOrderStatus(@RequestParam(name = "status") String status){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.countByOrderStatus(status));
     }
+
 }

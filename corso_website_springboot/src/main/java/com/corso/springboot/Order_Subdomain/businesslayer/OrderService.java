@@ -1,5 +1,6 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
+import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 
@@ -21,10 +22,9 @@ public interface OrderService {
 
     OrderResponse getOrderByIdAndUserId(String orderId, String userId);
 
-    List<OrderResponse> getCustomerCurrentOrders(String userId);
-
     OrderResponse updateOrderStatusToAccepted(String orderId);
 
     int countByOrderStatus(String status);
 
+    List<OrderResponse> getCustomerCurrentOrders(String userId, Status status);
 }

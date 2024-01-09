@@ -52,6 +52,16 @@ function App() {
                 .then(() => {
                     window.location.href = "http://localhost:3000/"
                 })
+            if (err.response === undefined) {
+                // @ts-ignore
+               return;
+            }
+
+            if(err.response.status === 401){
+                // @ts-ignore
+                return
+            }
+
         })
 
     }
