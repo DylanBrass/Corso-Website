@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, String> {
 
-    @Query("SELECT r FROM Review r WHERE r.customerFullName LIKE ?1%")
+   @Query("SELECT r FROM Review r WHERE r.customerFullName LIKE ?1%")
     List<Review> findAllByCustomerFullNameStartingWith(String customerFullName);
 
 

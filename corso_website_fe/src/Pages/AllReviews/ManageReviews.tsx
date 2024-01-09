@@ -37,25 +37,25 @@ function ManageReviews() {
     const auth: {} = useAuth()
 
     const [reviews, setReviews] = useState<Reviews[]>([]);
-    const [error, ] = useState<string | null>(null);
+    const [error,] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
 
-/*
-    const toggleReviewPinned = (reviewId: string) => {
-        setReviews(prevReviews =>
-            prevReviews.map(review => {
-                if (review.id === reviewId) {
-                    return {
-                        ...review,
-                        pinned: !review.pinned
-                    };
-                }
-                return review;
-            })
-        );
-    };
- */
+    /*
+        const toggleReviewPinned = (reviewId: string) => {
+            setReviews(prevReviews =>
+                prevReviews.map(review => {
+                    if (review.id === reviewId) {
+                        return {
+                            ...review,
+                            pinned: !review.pinned
+                        };
+                    }
+                    return review;
+                })
+            );
+        };
+     */
 
 
     const getReviews = () => {
@@ -74,34 +74,32 @@ function ManageReviews() {
                 console.log(e)
             })
 
-        useEffect(() => {
-            getReviews();
-        }, []);
+
     }
 
 
-const getReviewsBySearch = () => {
-    axios.get("http://localhost:8080/api/v1/corso/reviews/search?customerFullName=" + searchTerm,
-        {
-            headers: {
-                // @ts-ignore
-                'X-XSRF-TOKEN': auth.getXsrfToken()
-            }
-        })
-        .then(r => {
-            const searchResults = r.data;
-            if (searchResults && searchResults.length > 0) {
-                const sortedReviews = searchResults.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-                setReviews(sortedReviews);
-            } else {
-                getReviews(); // Fetch all reviews if no search results found
-            }
-            setSearchTerm('');
-        })
-        .catch(e => {
-            console.log(e)
-        })
-}
+    const getReviewsBySearch = () => {
+        axios.get("http://localhost:8080/api/v1/corso/reviews/search?customerFullName=" + searchTerm,
+            {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                }
+            })
+            .then(r => {
+                const searchResults = r.data;
+                if (searchResults && searchResults.length > 0) {
+                    const sortedReviews = searchResults.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+                    setReviews(sortedReviews);
+                } else {
+                    getReviews(); // Fetch all reviews if no search results found
+                }
+                setSearchTerm('');
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -117,6 +115,10 @@ const getReviewsBySearch = () => {
     };
 
 
+    useEffect(() => {
+        getReviews();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
 
@@ -211,6 +213,7 @@ const getReviewsBySearch = () => {
             </div>
         </div>
     );
+
 }
 
 export default ManageReviews;
