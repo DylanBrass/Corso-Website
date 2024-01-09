@@ -20,11 +20,9 @@ import AddServicePage from "./Pages/AddService/AddServicePage";
 import ViewSpecificOrderAdmin from "./Pages/OrdersDetailsPages/ViewSpecificOrderAdmin";
 import OverdueOrdersPage from "./Pages/OrdersPages/OverdueOrdersPage";
 import AllOrdersPage from "./Pages/OrdersPages/AllOrdersPage";
-=======
 import ViewSpecificOrder from "./Pages/OrdersDetailsPages/Customer/ViewSpecificOrder";
 import AddCustomerInformation from "./Pages/Profile/ProfileLinkedPages/AddCustomerInformation";
 import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrders";
->>>>>>> Stashed changes
 
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
 

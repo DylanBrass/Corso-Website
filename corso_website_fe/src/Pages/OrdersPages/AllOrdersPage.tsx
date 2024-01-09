@@ -86,7 +86,9 @@ function AllOrdersPage() {
                             service: order.service,
                             customerFullName: order.customerFullName,
                             orderStatus: order.orderStatus,
-                            action: order.action
+                        }}
+                        action={() => {
+
                         }}
                     />
                 ))}

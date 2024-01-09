@@ -73,6 +73,7 @@
 
     h1 {
         text-align: left;
+        margin-top: 3vh;
 
         color: #000;
         font-family: Nunito;
@@ -177,4 +178,43 @@
     padding: 13px;
     align-items: flex-start;
     gap: 10px;
+}
+
+.notes-title{
+
+    margin-top: 2em;
+    color: #000;
+    font-family: Nunito;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.notes-box{
+    border: black 1px solid;
+    height: 20vh;
+}
+
+#title{
+    color: #000;
+    text-align: center;
+    font-family: Nunito;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.customer-interactions-btn{
+    border-radius: 50px;
+    background: #064BEC;
+    color: #FFF !important;
+    font-family: Nunito;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
 }

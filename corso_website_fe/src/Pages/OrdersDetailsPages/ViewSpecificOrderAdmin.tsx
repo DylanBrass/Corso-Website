@@ -96,7 +96,7 @@ function ViewSpecificOrderAdmin() {
         getOrder().then(r => console.log("Order fetched"));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [order, setOrder] = useState(new Order("","", "", new Service("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "",0,0));
+    const [order, setOrder] = useState(new Order("","", "", new Service("", "", ""), "","", "", "", "", "", "", "", "", "", "", "", "",0,0));
     return (
         <div>
             <NavigationBar/>

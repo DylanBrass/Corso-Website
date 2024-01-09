@@ -7,6 +7,7 @@ class Order {
     public serviceId: string;
     public service: Service;
     public userId: string;
+    public progressInformation: string;
     public orderDate: string;
     public dueDate: string;
     public orderStatus: string;
@@ -22,12 +23,13 @@ class Order {
     public daysLeft: number;
 
 
-    constructor(orderId: string, orderTrackingNumber: string, serviceId: string, service: Service, userId: string, orderDate: string, dueDate: string, orderStatus: string, orderDescription: string, customerFullName: string, customerEmail: string, customerPhone: string, customerAddress: string, customerCity: string, customerPostalCode: string, customerApartmentNumber: string, estimatedDuration: number, daysLeft: number) {
+    constructor(orderId: string, orderTrackingNumber: string, serviceId: string, service: Service, userId: string, progressInformation: string, orderDate: string, dueDate: string, orderStatus: string, orderDescription: string, customerFullName: string, customerEmail: string, customerPhone: string, customerAddress: string, customerCity: string, customerPostalCode: string, customerApartmentNumber: string, estimatedDuration: number, daysLeft: number) {
         this.orderId = orderId;
         this.orderTrackingNumber = orderTrackingNumber;
         this.serviceId = serviceId;
         this.service = service;
         this.userId = userId;
+        this.progressInformation = progressInformation;
         this.orderDate = orderDate;
         this.dueDate = dueDate;
         this.orderStatus = orderStatus;
