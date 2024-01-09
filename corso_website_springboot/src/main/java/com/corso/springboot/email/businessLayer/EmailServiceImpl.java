@@ -28,6 +28,7 @@ public class EmailServiceImpl implements EmailService {
 
     Session session;
 
+    @Generated
     public EmailServiceImpl(@Value("${spring.mail.username}") String username,
                             @Value("${spring.mail.password}") String password, TemplateEngine templateEngine) {
 

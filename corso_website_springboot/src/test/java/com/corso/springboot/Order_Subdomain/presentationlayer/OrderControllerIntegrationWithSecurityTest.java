@@ -178,6 +178,16 @@ public class OrderControllerIntegrationWithSecurityTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void getCustomerCurrentOrders() throws Exception {
 
+        mockMvc.perform(get(BASE_URI_ORDERS + "/current")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+
+    }
 
 }

@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `orders`
     order_id                  varchar(36)  not null,
     service_id                varchar(36)  not null,
     user_id                   varchar(36)  not null,
+    progress_information      text         null,
     order_tracking_number     varchar(36)  not null,
     order_date                date         not null,
     due_date                  date,

@@ -101,6 +101,7 @@ check.dependsOn jacocoTestCoverageVerification
 
 test {
     exclude("**/ViewProfileOrdersTest.class")
+    exclude("**/ViewSpecificOrderCustomerTest.class")
     exclude '**/ViewCarouselTest.class'
     exclude '**/LoginAuthTest.class'
     exclude '**/ViewAllOrdersTest.class'

@@ -23,12 +23,42 @@ import AllOrdersPage from "./Pages/OrdersPages/AllOrdersPage";
 import ViewSpecificOrder from "./Pages/OrdersDetailsPages/Customer/ViewSpecificOrder";
 import AddCustomerInformation from "./Pages/Profile/ProfileLinkedPages/AddCustomerInformation";
 import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrders";
+import {useEffect} from "react";
 
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
 
 
 function App() {
+    const checkServerConnection = () => {
+        fetch("http://localhost:8080/api/v1/corso/server/status",
+            {
+                method: 'HEAD'
+            }).then(
+            function (response) {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    // @ts-ignore
+                    swal("Error", "Server is down !", "error")
+                        .then(() => {
+                            window.location.href = "http://localhost:3000/"
+                        })
+                }
+            }
+        ).catch(function (err) {
+            console.log('Fetch Error :-S', err);
+            // @ts-ignore
+            swal("Error", "Server is down !", "error")
+                .then(() => {
+                    window.location.href = "http://localhost:3000/"
+                })
+        })
 
+    }
+
+    useEffect(() => {
+        checkServerConnection()
+    }, []);
   return (
     <>
         <AuthProvider>
@@ -44,26 +74,25 @@ function App() {
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path="/orders/overdue" element={<OverdueOrdersPage/>} />
                     <Route path="/manage/testimonies" element={<ManageReviews/>} />
+                        <Route path="/profile" element={<ProfilePage/>}/>
+                        <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
+                        <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
 
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/profile/edit" element={<AddCustomerInformation />} />
-                    <Route path="/profile/orders" element={<AllCustomerOrders />} />
 
-
-                    <Route path="/create/admin" element={<CreateAdminPage />} />
-                    <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin />} />
-                    <Route path="/orders/:orderId" element={<ViewSpecificOrder />} />
-                    <Route path="/logout" element={<LogoutRedirect />} />
-                    <Route path="/verify" element={<VerifyRedirect />} />
-                    <Route path="/external" element={<ExternalHandling />} />
-                    <Route path={"/services"} element={<ServicesThroughDashboard/>}/>
-                    <Route path={"/add-service"} element={<AddServicePage/>}/>
-                    <Route path="/viewServiceDetails/:serviceId" element={<ServiceDetailsPage />} />
-                </Routes>
-            </BrowserRouter>
-        </AuthProvider>
-    </>
-  )
+                        <Route path="/create/admin" element={<CreateAdminPage/>}/>
+                        <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
+                        <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>
+                        <Route path="/logout" element={<LogoutRedirect/>}/>
+                        <Route path="/verify" element={<VerifyRedirect/>}/>
+                        <Route path="/external" element={<ExternalHandling/>}/>
+                        <Route path={"/services"} element={<ServicesThroughDashboard/>}/>
+                        <Route path={"/add-service"} element={<AddServicePage/>}/>
+                        <Route path="/viewServiceDetails/:serviceId" element={<ServiceDetailsPage/>}/>
+                    </Routes>
+                </BrowserRouter>
+            </AuthProvider>
+        </>
+    )
 }
 
 export default App;
