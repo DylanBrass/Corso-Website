@@ -20,6 +20,12 @@ import AddServicePage from "./Pages/AddService/AddServicePage";
 import ViewSpecificOrderAdmin from "./Pages/OrdersDetailsPages/ViewSpecificOrderAdmin";
 import OverdueOrdersPage from "./Pages/OrdersPages/OverdueOrdersPage";
 import AllOrdersPage from "./Pages/OrdersPages/AllOrdersPage";
+=======
+import ViewSpecificOrder from "./Pages/OrdersDetailsPages/Customer/ViewSpecificOrder";
+import AddCustomerInformation from "./Pages/Profile/ProfileLinkedPages/AddCustomerInformation";
+import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrders";
+>>>>>>> Stashed changes
+
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
 
 
@@ -40,9 +46,15 @@ function App() {
                     <Route path="/orders/pending" element={<PendingOrdersPage/>} />
                     <Route path="/orders/overdue" element={<OverdueOrdersPage/>} />
                     <Route path="/manage/testimonies" element={<ManageReviews/>} />
+
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/profile/edit" element={<AddCustomerInformation />} />
+                    <Route path="/profile/orders" element={<AllCustomerOrders />} />
+
+
                     <Route path="/create/admin" element={<CreateAdminPage />} />
                     <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin />} />
+                    <Route path="/orders/:orderId" element={<ViewSpecificOrder />} />
                     <Route path="/logout" element={<LogoutRedirect />} />
                     <Route path="/verify" element={<VerifyRedirect />} />
                     <Route path="/external" element={<ExternalHandling />} />

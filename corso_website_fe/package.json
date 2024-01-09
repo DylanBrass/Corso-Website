@@ -31,6 +31,7 @@
     "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.8",
+    "react-step-progress-bar": "^1.0.3",
     "reactjs-popup": "^2.0.6",
     "svgify": "^0.0.0",
     "swal-forms": "^0.5.0",
@@ -67,6 +68,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@mui/types": "^7.2.10",
     "@types/js-cookie": "^3.0.6",
+    "@types/react-slick": "^0.23.13",
     "@types/selenium-webdriver": "^4.1.20"
   }
 }

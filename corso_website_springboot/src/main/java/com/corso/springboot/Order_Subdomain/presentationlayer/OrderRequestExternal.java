@@ -21,6 +21,8 @@ public class OrderRequestExternal {
 
     public String userId;
 
+    private String progressInformation;
+
     private String dueDate;
 
     private String orderDescription;

@@ -46,6 +46,10 @@
 
         padding-left: 8em;
 
+        .row {
+            width: 100%;
+        }
+
         p {
             color: rgba(0, 0, 0, 0.50);
             font-family: Nunito;
@@ -66,6 +70,10 @@
             text-align: left;
 
 
+        }
+
+        @media (max-width: 768px) {
+            padding-left: 0;
         }
     }
 }

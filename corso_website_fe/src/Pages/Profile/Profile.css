@@ -1,0 +1,167 @@
+.profile-page {
+    background: #F3F3F3;
+    height: 100vh;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+
+
+    .user-box {
+        background: #FFF;
+        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #profile-image-page {
+        border-radius: 50%;
+
+    }
+
+    #logout-profile {
+        background: none;
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
+        color: #14ACED;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-decoration-line: underline;
+    }
+
+    .option {
+        color: #000;
+        font-family: Nunito;
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        @media screen and (max-width: 768px) {
+            font-size: 20px;
+        }
+
+    }
+
+
+
+    .option-text{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+
+    }
+}
+
+.options-box{
+    background: #FFF;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+    padding: 0;
+    margin: 0;
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+        height: 100%;
+    }
+
+    .option-box{
+        margin: 0;
+        &:hover {
+            box-shadow:inset 0px 0px 0px 1px black;
+            color: #14ACED;
+            cursor: pointer;
+        }
+    }
+
+    h3{
+        background: none;
+    }
+}
+
+.request-order-box-profile{
+    p{
+        color: #000;
+        font-family: Nunito;
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+    }
+    button{
+        border-radius: 20px;
+        background: #4058A6;
+        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        color: #FFF;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 25px;
+        font-style: normal;
+        line-height: normal;
+        text-transform: uppercase;
+
+        &:hover{
+            background: #14ACED;
+            cursor: pointer;
+        }
+
+    }
+}
+
+.redirect-option{
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    text-align: start;
+    width: 100%;
+    text-transform: none;
+}
+
+.contact-box{
+    background: #FFF;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    width: 100%;
+
+    .contact-title{
+        color: #000;
+        font-family: Nunito;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-align: left;
+    }
+    p{
+        margin-left: 2em;
+
+        color: #000;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+    }
+}
+
+.current-orders-box{
+    margin-top: 1em;
+    background: #FFF;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+
+.box-row{
+    width: 75%;
+    @media screen and (max-width: 1440px) {
+        width: 100% !important;
+    }
+}

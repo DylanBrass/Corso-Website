@@ -49,6 +49,9 @@ function CompletedOrdersPage() {
                 <h1>COMPLETED ORDERS</h1>
                 {orders.map(order => (
                     <OrderTile
+                        action={() => {
+                        }
+                        }
                         key={order.orderTrackingNumber}
                         order={{
                             orderTrackingNumber: order.orderTrackingNumber,
@@ -56,7 +59,6 @@ function CompletedOrdersPage() {
                             service: order.service,
                             customerFullName: order.customerFullName,
                             orderStatus: order.orderStatus,
-                            action: order.action
                         }}
                     />
                 ))}

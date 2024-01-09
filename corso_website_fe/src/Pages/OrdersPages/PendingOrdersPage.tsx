@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import OrderTile, {Order} from "../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
@@ -9,7 +9,7 @@ import CustomPagination from "../../Components/Pagination";
 function PendingOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
-    const [pageSize, ] = useState(1);
+    const [pageSize,] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchOrders = async (pageNumber: number, size: number) => {
@@ -29,7 +29,6 @@ function PendingOrdersPage() {
                 })
 
 
-
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -47,14 +46,20 @@ function PendingOrdersPage() {
     return (
         <>
             <NavigationBar/>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} className={"mb-5"}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
+                 className={"mb-5"}>
                 <h1>CLIENT REQUESTS</h1>
                 {
                     orders.map((order: Order) => (
-                        <OrderTile order={order} key={order.orderId}/>
+                        <OrderTile order={order}
+                                   action={() => {
+                                       window.location.href = `/manage/orders/${order.orderId}`
+                                   }
+                                   }
+                                   key={order.orderId}/>
                     ))
                 }
-                <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages} />
+                <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}/>
 
             </div>
         </>
