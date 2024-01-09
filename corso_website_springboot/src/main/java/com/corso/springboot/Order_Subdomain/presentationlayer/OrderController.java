@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -61,6 +63,14 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrderByOrderId(orderId));
     }
 
+
+    @GetMapping("/current")
+    public ResponseEntity<List<OrderResponse>> GetCustomerOrders(@AuthenticationPrincipal OidcUser principal) {
+
+        String userId = principal.getSubject();
+
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId));
+    }
 
 
 }

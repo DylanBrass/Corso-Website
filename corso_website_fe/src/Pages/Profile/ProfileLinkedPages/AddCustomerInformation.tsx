@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import swal from "sweetalert";
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useAuth} from "../../../security/Components/AuthProvider";
+import NavigationBar from "../../../Components/NavBar/NavigationBar";
 
 
 
@@ -268,7 +269,12 @@ function AddCustomerInformation(){
     };
 
     return(
-        <div>
+        <div className={"h-100"} style={{
+            backgroundColor: "#F3F3F3",
+            minHeight: "100vh",
+            overflow: "hidden",
+        }}>
+            <NavigationBar/>
             <div className="profile-page">
                 <div className="profile-box mt-5 mb-5">
                     <h1>Profile</h1>
@@ -385,6 +391,7 @@ function AddCustomerInformation(){
                     </form>
                 </div>
             </div>
+
         </div>
     )
 }

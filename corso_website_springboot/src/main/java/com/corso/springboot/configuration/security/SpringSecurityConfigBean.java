@@ -50,6 +50,7 @@ public class SpringSecurityConfigBean {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/auth0/manage/**")).hasAuthority("Admin")
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/server/status")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/email/**")).permitAll()//.hasAuthority("Admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/galleries/carousel")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/services")).permitAll()
@@ -95,7 +96,7 @@ public class SpringSecurityConfigBean {
                 .cors(httpSecurityCorsConfigurer -> {
                     final var cors = new CorsConfiguration();
                     cors.setAllowedOrigins(List.of(frontendDomain));
-                    cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                    cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE, HEAD, PATCH"));
                     cors.setAllowedHeaders(Arrays.asList("authorization", "content-type", "xsrf-token"));
                     cors.setExposedHeaders(List.of("xsrf-token"));
                     cors.setAllowCredentials(true);

@@ -49,13 +49,15 @@ function CurrentOrdersPage() {
                 {orders.map(order => (
                     <OrderTile
                         key={order.orderTrackingNumber}
+                        action={() => {
+                        }
+                        }
                         order={{
                             orderTrackingNumber: order.orderTrackingNumber,
                             orderId: order.orderId,
                             service: order.service,
                             customerFullName: order.customerFullName,
                             orderStatus: order.orderStatus,
-                            action: order.action
                         }}
                     />
                 ))}

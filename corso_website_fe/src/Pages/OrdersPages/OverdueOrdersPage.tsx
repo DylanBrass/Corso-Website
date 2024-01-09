@@ -35,9 +35,6 @@ function OverdueOrdersPage() {
                             order.service,
                             order.customerFullName.toUpperCase(),
                             order.orderStatus.toLowerCase(),
-                            () => {
-                                console.log("Order clicked");
-                            },
                             overdueDays
                         )
                     })
@@ -74,6 +71,9 @@ function OverdueOrdersPage() {
                 <h1>OVERDUE ORDERS</h1>
                 {orders.map(order => (
                     <OrderTile
+                        action={() => {
+                        }
+                        }
                         key={order.orderTrackingNumber}
                         order={order}
                     />

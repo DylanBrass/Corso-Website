@@ -3,6 +3,7 @@ import axios from "axios";
 import OrderTile from "../../../Components/OrderTile/OrderTile";
 import {Order} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
+import NavigationBar from "../../../Components/NavBar/NavigationBar";
 
 function AllCustomerOrders() {
 
@@ -18,6 +19,9 @@ function AllCustomerOrders() {
                     const orders = res.data;
                     setOrders(orders);
 
+                    if(res.data[0] === undefined) {
+                        return;
+                    }
                     const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
                     setTotalPages(newTotalPages);
                     if (pageNumber > newTotalPages) {
@@ -43,12 +47,17 @@ function AllCustomerOrders() {
 
     return (
         <div>
+            <NavigationBar/>
             <div className={"mb-5"}>
-                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}} className={"w-100"}>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
+                     className={"w-100"}>
 
                     {
                         orders.map((order: Order) => (
-                            <OrderTile order={order} key={order.orderId}/>
+                            <OrderTile order={order}
+                                       action={()=>{
+                                window.location.href = `/orders/${order.orderId}`
+                            }} key={order.orderId}/>
                         ))
                     }
                     <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}/>

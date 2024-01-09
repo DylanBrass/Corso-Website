@@ -11,16 +11,14 @@ export class Order {
     service: Service;
     customerFullName: string;
     orderStatus: string;
-    action: () => void;
 
 
-    constructor(orderTrackingNumber: string, orderId: string, service: Service, customerFullName: string, orderStatus: string, action: () => void) {
+    constructor(orderTrackingNumber: string, orderId: string, service: Service, customerFullName: string, orderStatus: string) {
         this.orderTrackingNumber = orderTrackingNumber;
         this.orderId = orderId;
         this.service = service;
         this.customerFullName = customerFullName;
         this.orderStatus = orderStatus;
-        this.action = action;
     }
 }
 
@@ -33,16 +31,15 @@ export class OverdueOrder extends Order {
         service: Service,
         customerFullName: string,
         orderStatus: string,
-        action: () => void,
         overdueDays: number
     ) {
-        super(orderTrackingNumber, orderId, service, customerFullName, orderStatus, action);
+        super(orderTrackingNumber, orderId, service, customerFullName, orderStatus);
         this.overdueDays = overdueDays;
     }
 }
 
 
-function OrderTile({ order }: { order: Order }) {
+function OrderTile({ order, action}: { order: Order, action: () => void }) {
     if(order instanceof OverdueOrder) {
         order.orderStatus = "overdue";
     }
@@ -52,7 +49,7 @@ function OrderTile({ order }: { order: Order }) {
 
 
     return (
-        <div className="orders-tile" onClick={order.action}>
+        <div className="orders-tile" onClick={action}>
             <div className="box-body">
                 <div className={"order-data-separation col-6 text-start"}>
                     <p className="order-id"><b>ORDER NUMBER</b> {order.orderTrackingNumber}</p>

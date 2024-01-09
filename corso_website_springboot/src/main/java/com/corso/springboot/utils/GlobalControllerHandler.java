@@ -4,6 +4,7 @@ import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
+import lombok.Generated;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,15 +23,17 @@ public class GlobalControllerHandler {
         return createHttpErrorInfo(NOT_FOUND, ex);
     }
 
+    @Generated
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(InvalidRequestException.class)
     public HttpErrorInfo handleErrorWhileCreatingAdmin(InvalidRequestException ex) {
         return createHttpErrorInfo(UNPROCESSABLE_ENTITY, ex);
     }
 
+    @Generated
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(MessagingException.class)
-    public HttpErrorInfo handleErrorWhileCreatingAdmin(MessagingException ex) {
+    public HttpErrorInfo handleErrorWhileSendingEmail(MessagingException ex) {
         return createHttpErrorInfo(UNPROCESSABLE_ENTITY, ex);
     }
 

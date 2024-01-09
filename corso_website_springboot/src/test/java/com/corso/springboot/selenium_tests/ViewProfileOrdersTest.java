@@ -55,13 +55,13 @@ public class ViewProfileOrdersTest {
 
         ((JavascriptExecutor) driver)
                 .executeScript("window.scrollTo(0, document.body.scrollHeight)");
+
         sleep(1000);
+
         {
             WebElement dropdown = driver.findElement(By.id("pageSize"));
             dropdown.findElement(By.xpath("//option[. = '5']")).click();
         }
-
-
 
         //make sure 5 .box-tile are present
         int xpathCount = driver.findElements(By.className("orders-tile")).size();

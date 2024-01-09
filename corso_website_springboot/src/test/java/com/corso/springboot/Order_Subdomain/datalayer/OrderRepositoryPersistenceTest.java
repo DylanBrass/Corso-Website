@@ -26,7 +26,7 @@ public class OrderRepositoryPersistenceTest {
     public void setup(){
         orderRepository.deleteAll();
         preSavedOrder = orderRepository.save(
-                new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "",5,1)
+                new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919","","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "",5,1)
         );
 
         logger.info("preSavedOrder: " + preSavedOrder.getOrderId().getOrderId());

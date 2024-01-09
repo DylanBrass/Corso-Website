@@ -95,4 +95,14 @@ public class CustomerController {
 
         return ResponseEntity.ok(orderService.getCustomerOrders(userId, pageSize, offset));
     }
+
+    @PreAuthorize("hasAuthority('Customer')")
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<OrderResponse> GetOrderByOrderId(@AuthenticationPrincipal OidcUser principal, @PathVariable String orderId){
+        String userId = principal.getSubject();
+        log.info("Get customer order with userId: {}", userId);
+
+        return ResponseEntity.ok(orderService.getOrderByIdAndUserId(orderId, userId));
+    }
+
 }

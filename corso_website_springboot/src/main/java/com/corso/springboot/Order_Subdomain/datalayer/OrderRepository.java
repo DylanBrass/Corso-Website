@@ -36,4 +36,8 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     @Query(value = "SELECT COUNT(*) FROM orders WHERE due_date < CURRENT_DATE AND (order_status = 'IN_PROGRESS')", nativeQuery = true)
     int countOverdueOrders();
+
+    Order findByOrderId_OrderIdAndUserId(String orderId, String userId);
+
+    List<Order> findAllByUserIdAndOrderStatus(String userId, Status status);
 }

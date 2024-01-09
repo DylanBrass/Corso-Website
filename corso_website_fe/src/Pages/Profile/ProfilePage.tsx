@@ -1,22 +1,247 @@
 import NavigationBar from "../../Components/NavBar/NavigationBar";
-import AddCustomerInformation from "./Components/AddCustomerInformation";
-import AllCustomerOrders from "./Components/AllCustomerOrders";
-import Footer from "../../Components/Footer/Footer";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import Cookies from "js-cookie";
+import {useAuth} from "../../security/Components/AuthProvider";
+import "./Profile.css"
 
-
-
+import arrow from "../../images/Expand_right_light.png"
+import edit from "../../images/pen.svg"
+import review from "../../images/Group 36519.svg"
+import ordersCart from "../../images/Basket_alt_3_light.png"
+import {Link} from "react-router-dom";
+import axios from "axios";
+import CurrentOrdersProgress from "./Components/CurrentOrdersProgress";
+import Order from "../../Models/Order";
+import {CCarousel, CCarouselItem} from "@coreui/react";
 
 function ProfilePage() {
 
+    const auth = useAuth()
+
+    const [phone, setPhone] = useState("None Given")
+    const [email, setEmail] = useState("None Given")
+    const [name, setName] = useState("")
+
+
+    const [orders, setOrders] = useState<Order[]>([]);
+
+    useEffect(() => {
+        fetchOrders().then(r => console.log("Orders fetched"))
+
+        getUsername().then(r => console.log("Username set"))
+    }, [])
+
+
+    const fetchOrders = async () => {
+        try {
+
+            await axios.get(`http://localhost:8080/api/v1/corso/orders/current`)
+                .then(res => {
+                    const orders = res.data;
+                    setOrders(orders);
+                })
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+
+    const getUsername = async () => {
+        if (Cookies.get("username") !== undefined) {
+            // @ts-ignore
+            setName(Cookies.get("username"))
+        } else {
+            let counter = 0;
+            while (Cookies.get("username") === undefined) {
+
+                await new Promise(r => setTimeout(r, 50));
+                console.log("Waiting for username")
+
+                if (Cookies.get("username") !== undefined) {
+                    // @ts-ignore
+                    setName(Cookies.get("username"))
+                    break;
+                }
+                counter++;
+                if (counter === 100) {
+                    break;
+                }
+            }
+        }
+    }
+
+
+    const checkIfProfileExists = async () => {
+        await axios.get("http://localhost:8080/api/v1/corso/customers?simpleCheck=true", {
+            headers: {
+                // @ts-ignore
+                "X-XSRF-TOKEN": auth.getXsrfToken(),
+            }
+        }).then(r => {
+            console.log(r.status);
+            if (r.status === 200) {
+
+                axios.get("http://localhost:8080/api/v1/corso/customers", {
+                    headers: {
+                        // @ts-ignore
+                        "X-XSRF-TOKEN": auth.getXsrfToken(),
+                    },
+                }).then(r => {
+                    if (r.status === 200) {
+                        console.log(r.data);
+                        if (r.data.phone.length > 0) {
+                            setPhone(r.data.phone)
+                        }
+
+                        if (r.data.email.length > 0) {
+                            setEmail(r.data.email)
+                        }
+                    }
+                }).catch(e => {
+                        console.log(e);
+                        // @ts-ignore
+                        auth.authError(e.response.status)
+
+                    }
+                )
+            } else {
+                console.log("Profile doesn't exist")
+
+            }
+        }).catch(e => {
+                console.log(e);
+// @ts-ignore
+                auth.authError(e.response.status)
+            }
+        )
+
+
+    }
+
+
+    useEffect(() => {
+        checkIfProfileExists().then(r => console.log("Profile exists"))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
 
     return (
-        <div>
+        <div className={"h-100"} style={{
+            backgroundColor: "#F3F3F3",
+            minHeight: "100vh",
+            overflow: "hidden",
+        }}>
             <NavigationBar/>
-            <AddCustomerInformation/>
-            <AllCustomerOrders/>
-            <Footer/>
+            <div className="profile-page h-100">
+                <div className="row p-5 box-row">
+                    <div className={"user-box col-12 col-lg-6 p-5"}>
+                        {
+                            Cookies.get("picture") !== null && Cookies.get("picture") !== undefined &&
+                            // @ts-ignore
+                            auth.userRoles().includes("Customer") &&
+                            <img src={Cookies.get("picture")}
+                                 alt="Profile" id={"profile-image-page"}/>
+
+                        }
+
+                        <h1 className={"mt-5"}>{name}</h1>
+                        <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
+                            <button id={"logout-profile"} type={"submit"}>LOGOUT</button>
+                        </form>
+                    </div>
+                    <div className={"col-12 col-md-6 d-none d-lg-block "}>
+                        <div className={"row w-100 px-0 px-md-5"}>
+                            <div className={"col-12 col-lg-6 contact-box overflow-scroll"}>
+                                <h1 className={"contact-title"}>Contact Information</h1>
+                                <p className={"profile-text"}>Phone Number: {phone}</p>
+                                <p className={"profile-text"}>Email: {email}</p>
+                            </div>
+                        </div>
+                        {
+                            orders.length > 0 &&
+                            <div className={"row w-100 px-0 px-md-5 d-none d-lg-block"}>
+                                <div className={"current-orders-box pt-3 pb-3 overflow-scroll"}>
+                                    <CCarousel controls>
+                                        {orders.map((order: Order) => (
+
+                                            <CCarouselItem key={order.orderTrackingNumber} style={{height: "100%"}}>
+                                                <CurrentOrdersProgress
+                                                    // @ts-ignore
+                                                    order={order}
+                                                    key={order.orderTrackingNumber}/>
+
+                                            </CCarouselItem>
+                                        ))
+                                        }
+
+                                    </CCarousel>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div className={"row p-5 box-row"}>
+                    <div className={"options-box col-12 col-md-6 mb-5 mb-md-0"}>
+                        <div className={"row w-100 option-box"}>
+                            <div className={"col-2 d-none d-xl-block"}>
+                                <img src={edit} alt={"edit"} className={" m-1 float-start"}/>
+                            </div>
+                            <div className={"col-8 option-text"}>
+                                <Link className={"redirect-option"} to={"/profile/edit"}>
+                                    <h3 className={"option edit-profile-option m-auto"}>Edit Profile</h3>
+                                </Link>
+                            </div>
+                            <div className={"col-2 text-end d-none d-xl-block m-auto"}>
+                                <img src={arrow} alt={"arrow"} className={"d-none d-lg-block float-end"}/>
+                            </div>
+                        </div>
+                        <div className={"row w-100 option-box"}>
+                            <div className={"col-2 d-none d-xl-block p-3"}>
+                                <img src={ordersCart} alt={"edit"} className={" mx-2 float-start"}/>
+                            </div>
+                            <div className={"col-8 option-text"}>
+                                <Link className={"redirect-option"} to={"/profile/orders"}>
+                                    <h3 className={"option past-orders-option m-auto"}>View Your Orders</h3>
+                                </Link>
+                            </div>
+                            <div className={"col-2 text-end d-none d-xl-block m-auto"}>
+                                <img src={arrow} alt={"arrow"} className={"d-none d-lg-block float-end"}/>
+                            </div>
+                        </div>
+                        <div className={"row w-100 option-box"}>
+                            <div className={"col-2 d-none d-xl-block p-3"}>
+                                <img src={review} alt={"edit"} className={"float-start mx-3"}/>
+                            </div>
+                            <div className={"col-8 option-text"}>
+                                <Link className={"redirect-option"} to={"#"}>
+                                    <h3 className={"past-reviews-option option text-start m-auto"}>View Your
+                                        Reviews</h3>
+                                </Link>
+                            </div>
+                            <div className={"col-2 text-end d-none d-xl-block m-auto"}>
+                                <img src={arrow} alt={"arrow"} className={"d-none d-lg-block float-end"}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={"col-12 col-md-6"}>
+                        <div className={"row w-100 px-0 px-md-5 request-order-box-profile"}>
+                            <div className={"col-12 col-lg-8"}>
+                                <p>Got a problem needing fixing?</p>
+                                <p>Get started with your next order here!</p>
+                            </div>
+                            <div className={"col-12 col-lg-4"}>
+                                <button className={"request-order-btn-profile p-2"}>Request Order</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
+
     );
 }
 

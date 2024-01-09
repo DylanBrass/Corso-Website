@@ -18,4 +18,8 @@ public interface OrderService {
     OrderResponse getOrderByOrderId(String orderId);
 
     List<OrderResponse> getCustomerOrders(String userId, int pageSize, int offset);
+
+    OrderResponse getOrderByIdAndUserId(String orderId, String userId);
+
+    List<OrderResponse> getCustomerCurrentOrders(String userId);
 }

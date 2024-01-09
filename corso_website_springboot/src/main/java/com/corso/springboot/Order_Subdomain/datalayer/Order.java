@@ -30,6 +30,8 @@ public class Order {
 
     private String userId;
 
+    private String progressInformation;
+
     private String orderDate;
 
     private String dueDate;
@@ -57,11 +59,12 @@ public class Order {
 
     int daysLeft;
 
-    public Order(ServiceIdentifier serviceId, String userId, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerPostalCode, String customerApartmentNumber, int estimatedDuration, int daysLeft) {
+    public Order(ServiceIdentifier serviceId, String userId,String progressInformation, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerPostalCode, String customerApartmentNumber, int estimatedDuration, int daysLeft) {
         this.orderId = new OrderIdentifier();
         this.orderTrackingNumber = new OrderTrackingNumber();
         this.serviceId = serviceId;
         this.userId = userId;
+        this.progressInformation = progressInformation;
         this.orderDate = orderDate;
         this.dueDate = dueDate;
         this.orderStatus = orderStatus;

@@ -108,7 +108,8 @@ function CreateExternalOrderPage() {
             "customerCity": (document.getElementById("customerCity") as HTMLInputElement).value,
             "customerApartment": (document.getElementById("customerApartment") as HTMLInputElement).value,
             "estimatedDuration": (document.getElementById("estimatedDuration") as HTMLInputElement).value,
-            "daysLeft": (document.getElementById("daysLeft") as HTMLInputElement).value
+            "daysLeft": (document.getElementById("daysLeft") as HTMLInputElement).value,
+            "progressInformation": (document.getElementById("progressText") as HTMLInputElement).value,
         }
 
         axios.post("http://localhost:8080/api/v1/corso/orders/external", data, {
@@ -213,7 +214,6 @@ function CreateExternalOrderPage() {
                                                 document.getElementById("customerPostalCode")!.setAttribute("value", user.postalCode || "");
                                                 document.getElementById("customerCity")!.setAttribute("value", user.city || "");
                                                 document.getElementById("customerApartment")!.setAttribute("value", user.apartment || "");
-
                                                 setSelectedRowIndex(index);
                                             }
                                             }
@@ -298,10 +298,9 @@ function CreateExternalOrderPage() {
                                 Order Description
                             </label>
                             <div className="col-sm-9">
-                                <input
+                                <textarea
                                     name={"orderDescription"}
                                     id={"orderDescription"}
-                                    type="text"
                                     className="form-control"
                                     placeholder="Order Description"
                                 />
@@ -458,6 +457,20 @@ function CreateExternalOrderPage() {
                                 />
                             </div>
                         </div>
+
+                            <div className="row mb-3 text-start">
+                                <label htmlFor={"daysLeft"} className="col-sm-3 col-form-label">
+                                    Progress Description
+                                </label>
+                                <div className="col-sm-9">
+                                    <textarea
+                                        name={"progressText"}
+                                        id={"progressText"}
+                                        className="form-control"
+                                        placeholder="Describe what was done"
+                                    />
+                                </div>
+                            </div>
 
                         <div className="row mb-3">
                             <div className="col-sm-9 offset-sm-3">

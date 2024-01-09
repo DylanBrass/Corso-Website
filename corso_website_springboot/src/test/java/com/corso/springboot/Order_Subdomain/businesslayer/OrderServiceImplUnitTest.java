@@ -44,8 +44,8 @@ public class OrderServiceImplUnitTest {
         Map<String, String> queryParams = Map.of();
 
         List<OrderResponse> mockOrderResponses = new ArrayList<>();
-        mockOrderResponses.add(new OrderResponse("orderId1", "trackingNumber1", "serviceId1", null, "userId1", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Description1", "Customer1", "customer1@example.com", "1234567890", "123 Main St", "City1", "PostalCode1", "ApartmentNumber1", 2));
-        mockOrderResponses.add(new OrderResponse("orderId2", "trackingNumber2", "serviceId2", null, "userId2", "2023-01-02", "2023-02-02", Status.COMPLETED, "Description2", "Customer2", "customer2@example.com", "1234567890", "456 Main St", "City2", "PostalCode2", "ApartmentNumber2", 3));
+        mockOrderResponses.add(new OrderResponse("orderId1", "trackingNumber1", "serviceId1", null, "userId1","", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Description1", "Customer1", "customer1@example.com", "1234567890", "123 Main St", "City1", "PostalCode1", "ApartmentNumber1", 2,1,1));
+        mockOrderResponses.add(new OrderResponse("orderId2", "trackingNumber2", "serviceId2", null, "userId2","", "2023-01-02", "2023-02-02", Status.COMPLETED, "Description2", "Customer2", "customer2@example.com", "1234567890", "456 Main St", "City2", "PostalCode2", "ApartmentNumber2", 3,1,1));
 
         Mockito.when(orderRepository.count()).thenReturn(2L);
         Mockito.when(orderRepository.findAll()).thenReturn(new ArrayList<>());
@@ -66,10 +66,10 @@ public class OrderServiceImplUnitTest {
         // Arrange
         Map<String, String> queryParams = Map.of("status", "in_progress");
 
-        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2),
-                new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 1,2,1),
+                new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88","", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1));
 
-        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
+        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919","", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
 
         Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
 
@@ -86,10 +86,9 @@ public class OrderServiceImplUnitTest {
         // Arrange
         Map<String, String> queryParams = Map.of("status", "in_progress");
 
-        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2),
-                new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
-
-        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89",   "",
+        "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1), new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88","", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1));
+        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.IN_PROGRESS.toString(), 50, 0)).thenReturn(List.of(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
 
         Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
 
@@ -107,9 +106,9 @@ public class OrderServiceImplUnitTest {
         // Arrange
         Map<String, String> queryParams = Map.of("status", "pending");
 
-        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2), new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89","", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1), new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88","", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1));
 
-        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.PENDING.toString(), 50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
+        Mockito.when(orderRepository.findAllByOrderStatusWithPagination(Status.PENDING.toString(), 50, 0)).thenReturn(List.of(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
 
         Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
 
@@ -125,9 +124,9 @@ public class OrderServiceImplUnitTest {
     @Test
     void getAllOverdueOrders_ShouldSucceed() {
         // Arrange
-        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2), new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom dev proj", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1), new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f415", "T1YX4W", "982577e6-1909-46b8-8583-e08c9daa4e9c", null, "auth0|65702e81e9661e14ab3aac88", "","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom dev proj", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2,1,1));
 
-        Mockito.when(orderRepository.findAllOverdueOrdersWithPagination(50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
+        Mockito.when(orderRepository.findAllOverdueOrdersWithPagination(50, 0)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919","", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
 
         Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
 
@@ -147,13 +146,13 @@ public class OrderServiceImplUnitTest {
     public void getOrderById_ShouldSucceed() {
         // Arrange
 
-        Order order = new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1);
+        Order order = new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), "auth0|12548919","", "2023-01-01", "2023-02-01", Status.PENDING, "Custom web development project", "John Doe", "john@example.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1);
 
         String orderId = order.getOrderId().getOrderId();
 
         Mockito.when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(new ServiceResponse("982577e6-1909-46b8-8583-e08c9daa4e9b", "Custom web development", "Custom web development project", "https://www.google.com", "https"));
 
-        Mockito.when(orderResponseMapper.toOrderResponse(order)).thenReturn(new OrderResponse(orderId, order.getOrderTrackingNumber().getOrderTrackingNumber(), order.getServiceId().getServiceId(), null, order.getUserId(), order.getOrderDate(), order.getDueDate(), order.getOrderStatus(), order.getOrderDescription(), order.getCustomerFullName(), order.getCustomerEmail(), order.getCustomerPhone(), order.getCustomerAddress(), order.getCustomerCity(), order.getCustomerPostalCode(), order.getCustomerApartmentNumber(), 2));
+        Mockito.when(orderResponseMapper.toOrderResponse(order)).thenReturn(new OrderResponse(orderId, order.getOrderTrackingNumber().getOrderTrackingNumber(), order.getServiceId().getServiceId(), null, order.getUserId(),order.getProgressInformation(), order.getOrderDate(), order.getDueDate(), order.getOrderStatus(), order.getOrderDescription(), order.getCustomerFullName(), order.getCustomerEmail(), order.getCustomerPhone(), order.getCustomerAddress(), order.getCustomerCity(), order.getCustomerPostalCode(), order.getCustomerApartmentNumber(), 2,1,1));
         Mockito.when(orderRepository.findByOrderId_OrderId(orderId)).thenReturn(order);
 
         // Act
@@ -170,11 +169,11 @@ public class OrderServiceImplUnitTest {
         int pageSize = 10;
         int offset = 0;
 
-        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "test@email.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 2));
+        List<OrderResponse> mockOrderResponses = Arrays.asList(new OrderResponse("ac5ca2b4-d53c-4516-8d4b-17665b46f411", "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null, "auth0|65702e81e9661e14ab3aac89", "","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "test@email.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 21,1,1));
 
         Mockito.when(orderRepository.countByUserId(userId)).thenReturn(1);
 
-        Mockito.when(orderRepository.findAllByUserIdWithPagination(userId, pageSize, offset)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), userId, "2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "test@email.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
+        Mockito.when(orderRepository.findAllByUserIdWithPagination(userId, pageSize, offset)).thenReturn(Arrays.asList(new Order(new ServiceIdentifier("982577e6-1909-46b8-8583-e08c9daa4e9b"), userId, "","2023-01-01", "2023-02-01", Status.IN_PROGRESS, "Custom web development project", "John Doe", "test@email.com", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 5, 1)));
 
         Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
 

@@ -96,7 +96,7 @@ function ViewSpecificOrderAdmin() {
         getOrder().then(r => console.log("Order fetched"));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [order, setOrder] = useState(new Order("", "", new Service("", "", ""), "", "", "", "", "", "", "", "", "", "", "", ""));
+    const [order, setOrder] = useState(new Order("","", "", new Service("", "", ""), "","", "", "", "", "", "", "", "", "", "", "", "",0,0));
     return (
         <div>
             <NavigationBar/>
@@ -120,7 +120,7 @@ function ViewSpecificOrderAdmin() {
                         <div className="row text-start">
                             <h1>Client Contact Information</h1>
                             <p>Email : {order.customerEmail}</p>
-                            {order.customerPhone !== null && <p> Phone Number : {order.customerPhone}</p>}
+                            {(order.customerPhone !== null && order.customerPhone !== "") && <p> Phone Number : {order.customerPhone}</p>}
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>

@@ -197,17 +197,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getOrderByOrderId(String orderId) {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
-        if (order == null) {
-            throw new OrderNotFoundException("Order not found with id: " + orderId);
-        }
-
-        serviceService.getServiceByServiceId(order.getServiceId().getServiceId());
-
-        OrderResponse orderResponse = orderResponseMapper.toOrderResponse(order);
-
-        orderResponse.setService(serviceService.getServiceByServiceId(order.getServiceId().getServiceId()));
-
-        return orderResponse;
+        return getOrderResponse(orderId, order);
     }
 
     @Override
@@ -238,5 +228,28 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderResponses;
+    }
+
+    @Override
+    public OrderResponse getOrderByIdAndUserId(String orderId, String userId) {
+        Order order = orderRepository.findByOrderId_OrderIdAndUserId(orderId, userId);
+        return getOrderResponse(orderId, order);
+    }
+
+    @Override
+    public List<OrderResponse> getCustomerCurrentOrders(String userId) {
+        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId, Status.IN_PROGRESS));
+    }
+
+    private OrderResponse getOrderResponse(String orderId, Order order) {
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        OrderResponse orderResponse = orderResponseMapper.toOrderResponse(order);
+
+        orderResponse.setService(serviceService.getServiceByServiceId(order.getServiceId().getServiceId()));
+
+        return orderResponse;
     }
 }

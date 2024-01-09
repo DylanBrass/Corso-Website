@@ -20,6 +20,8 @@ public class OrderResponse {
 
     public String userId;
 
+    private String progressInformation;
+
     public String orderDate;
 
     public String dueDate;
@@ -42,5 +44,10 @@ public class OrderResponse {
 
     private String customerApartmentNumber;
 
+
     private int totalOrdersMatchingRequest;
+
+    private int daysLeft;
+
+    private int estimatedDuration;
 }

@@ -1,0 +1,6 @@
+.order-box{
+
+    &:hover{
+        cursor: pointer;
+    }
+}
