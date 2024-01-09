@@ -37,9 +37,8 @@ function ManageReviews() {
     const auth: {} = useAuth()
 
     const [reviews, setReviews] = useState<Reviews[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [error, ] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [searchResults, setSearchResults] = useState<Reviews[]>([]);
 
 
 /*
@@ -57,9 +56,7 @@ function ManageReviews() {
         );
     };
  */
-    useEffect(() => {
-        getReviews();
-    }, []);
+
 
     const getReviews = () => {
         axios.get("http://localhost:8080/api/v1/corso/reviews",
@@ -76,12 +73,12 @@ function ManageReviews() {
             .catch(e => {
                 console.log(e)
             })
+
+        useEffect(() => {
+            getReviews();
+        }, []);
     }
 
-    useEffect(() => {
-        getReviews()
-
-    }, []);
 
 const getReviewsBySearch = () => {
     axios.get("http://localhost:8080/api/v1/corso/reviews/search?customerFullName=" + searchTerm,
@@ -118,6 +115,10 @@ const getReviewsBySearch = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
+
+
+
+
 
     return (
 
