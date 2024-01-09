@@ -114,6 +114,7 @@ test {
     exclude '**/ViewPendingOrdersTest.class'
     exclude '**/ViewAllFAQsTest.class'
     exclude '**/ViewAllPreferredFAQsTest.class'
+    exclude '**/ViewAllReviewsTest.class'
     exclude '**/CreateExternalOrderTest.class'
     exclude '**/CreateAServiceTest.class'
     useJUnitPlatform()

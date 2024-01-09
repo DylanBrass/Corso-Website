@@ -2,8 +2,6 @@ package com.corso.springboot.FAQ_Subdomain.presentationlayer;
 
 
 import com.corso.springboot.FAQ_Subdomain.businesslayer.FAQService;
-import com.corso.springboot.Gallery_Subdomain.businesslayer.GalleryService;
-import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

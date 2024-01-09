@@ -251,6 +251,7 @@ function Dashboard() {
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon8_jbbxv9.png"}
                             action={() => {
                                 console.log("test")
+                                window.location.href = "/manage/testimonies"
                             }}
                         />
                     </div>

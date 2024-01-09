@@ -5,8 +5,6 @@ import com.corso.springboot.FAQ_Subdomain.datalayer.FAQIdentifier;
 import com.corso.springboot.FAQ_Subdomain.datalayer.FAQRepository;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQResponseMapper;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQResponse;
-import com.corso.springboot.Service_Subdomain.datalayer.Service;
-import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -88,7 +86,7 @@ class FAQServiceImplUnitTest {
 
 
         Mockito.when(faqRepository.findAll()).thenReturn(Arrays.asList(faq1, faq2
-                ));
+        ));
 
         Mockito.when(faqResponseMapper.toFAQsResponse(Mockito.anyList())).thenReturn(mockFAQResponses);
 
