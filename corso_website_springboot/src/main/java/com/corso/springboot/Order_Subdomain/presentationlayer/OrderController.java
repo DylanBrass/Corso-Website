@@ -25,6 +25,15 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/filter")
+    public ResponseEntity<List<OrderResponse>> GetAllOrders(
+            @RequestParam Map<String, String> queryParams,
+            @RequestParam(name = "pageSize") int pageSize,
+            @RequestParam(name = "offset") int offset) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOrders(queryParams, pageSize, offset));
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("")
     public ResponseEntity<List<OrderResponse>> GetAllOrdersByStatus(
             @RequestParam Map<String, String> queryParams,
