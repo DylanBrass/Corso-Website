@@ -92,27 +92,12 @@ function ViewSpecificOrderAdmin() {
 
     }
 
-    const sendOrderAcceptedEmail = async () => {
-        try {
-            await axios.post(`http://localhost:8080/api/v1/corso/email/orderAccepted`, {
-                recipient: order.customerEmail,
-                subject: "Order Accepted"
-            }, {
-                headers: {
-                    // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken()
-                }
-            });
-            swal("Email Sent", "A confirmation email has been sent to the customer.", "success");
-        } catch (error) {
-            console.error("Error sending email: ", error);
-            swal("Failed!", "Failed to send the confirmation email.", "error");
-        }
-    }
 
     const acceptStatus = async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/api/v1/corso/orders/manage/acceptOrder/${orderId}`, {}, {
+            const response = await axios.patch(`http://localhost:8080/api/v1/corso/orders/manage/acceptOrder/${orderId}`, {
+                recipient: order.customerEmail
+            }, {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -121,7 +106,6 @@ function ViewSpecificOrderAdmin() {
             if (response.status === 200) {
                 swal("Accepted!", `The order with tracking number ${order.orderTrackingNumber} has been successfully accepted.`, "success")
                     .then(() => {
-                        sendOrderAcceptedEmail();
                         window.location.href = '/dashboard';
                     });
             } else {
@@ -137,7 +121,7 @@ function ViewSpecificOrderAdmin() {
         getOrder().then(r => console.log("Order fetched"));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [order, setOrder] = useState(new Order("","", "", new Service("", "", ""), "","", "", "", "", "", "", "", "", "", "", "", "",0,0));
+    const [order, setOrder] = useState(new Order("", "", "", new Service("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     return (
         <div>
             <NavigationBar/>
@@ -161,7 +145,8 @@ function ViewSpecificOrderAdmin() {
                         <div className="row text-start">
                             <h1>Client Contact Information</h1>
                             <p>Email : {order.customerEmail}</p>
-                            {(order.customerPhone !== null && order.customerPhone !== "") && <p> Phone Number : {order.customerPhone}</p>}
+                            {(order.customerPhone !== null && order.customerPhone !== "") &&
+                                <p> Phone Number : {order.customerPhone}</p>}
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>

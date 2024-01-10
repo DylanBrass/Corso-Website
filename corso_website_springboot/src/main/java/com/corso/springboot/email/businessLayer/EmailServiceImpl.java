@@ -44,6 +44,7 @@ public class EmailServiceImpl implements EmailService {
 
         session = javax.mail.Session.getInstance(prop,
                 new javax.mail.Authenticator() {
+                    @Generated
                     protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
                         return new javax.mail.PasswordAuthentication(username, password);
                     }

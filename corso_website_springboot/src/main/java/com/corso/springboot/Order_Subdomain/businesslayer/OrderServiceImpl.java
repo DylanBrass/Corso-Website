@@ -3,27 +3,26 @@ package com.corso.springboot.Order_Subdomain.businesslayer;
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
+import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
-import com.corso.springboot.Service_Subdomain.businesslayer.ServiceServiceImpl;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.configuration.security.exceptions.Auth0Error;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
-import com.corso.springboot.configuration.security.models.UserResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
+import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
 import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,18 +41,47 @@ public class OrderServiceImpl implements OrderService {
 
     private final Auth0ManagementService auth0ManagementService;
 
+    private final EmailService emailService;
 
     @Override
     public List<OrderResponse> getAllOrders(Map<String, String> queryParams, int pageSize, int offset) {
-        if (queryParams.get("status") == null && pageSize == 0 && offset == 0) {
+        String status = queryParams.get("status");
+        String userId = queryParams.get("userId");
+
+        if (status != null) status = status.toUpperCase();
+
+        if (status == null && (userId == null || userId.isEmpty()) && pageSize == 0 && offset == 0) {
             return getAllOrdersWithDefaultSettings();
         }
 
-        if (queryParams.get("status") == null) {
+        if (status == null && (userId == null || userId.isEmpty())) {
             return getAllOrdersWithPagination(pageSize, offset);
         }
 
-        return getAllOrdersByStatus(queryParams, pageSize, offset);
+        if (status == null) {
+            return getCustomerOrders(userId, pageSize, offset);
+        }
+
+        if ((userId == null || userId.isEmpty())) {
+            return getAllOrdersByStatus(queryParams, pageSize, offset);
+        }
+
+        return getOrderByCustomerAndStatus(userId, status, pageSize, offset);
+    }
+
+
+
+
+    public List<OrderResponse> getOrderByCustomerAndStatus(String userId, String  status, int pageSize, int offset){
+        List<OrderResponse> responses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatusWithPagination(userId, pageSize, offset, status));
+
+        int totalOrders = orderRepository.countByUserIdAndOrderStatus(userId, status);
+        for(OrderResponse response : responses){
+            response.setTotalOrdersMatchingRequest(totalOrders);
+            response.setService(serviceService.getServiceByServiceId(response.getServiceId()));
+        }
+        return responses;
+
     }
 
     private List<OrderResponse> getAllOrdersWithDefaultSettings() {
@@ -237,9 +265,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getCustomerCurrentOrders(String userId) {
-        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId, Status.IN_PROGRESS));
+    public List<OrderResponse> getCustomerCurrentOrders(String userId,Status status) {
+        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId,status));
     }
+
+    @Override
+    public int countAllOrders() {
+        return orderRepository.countAllBy();
+    }
+
 
     private OrderResponse getOrderResponse(String orderId, Order order) {
         if (order == null) {
@@ -253,12 +287,28 @@ public class OrderServiceImpl implements OrderService {
         return orderResponse;
     }
 
-    public OrderResponse updateOrderStatusToAccepted(String orderId) {
+    public OrderResponse updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
         Status newStatus = Status.IN_PROGRESS;
 
         if (order == null) {
             throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("H1", "Thank you for choosing Corso.");
+        parameters.put("H2", "Your order has been accepted.");
+        parameters.put("H4", "For more information about your order, progress reports or to leave a review, " +
+                "please log in and navigate to the current orders page.");
+        parameters.put("H5", "We look forward to working with you.");
+
+        String subject = "Order #" + orderId + " has been accepted!";
+
+        int status = emailService.sendEmail(acceptOrderRequest.getRecipient(), subject, "ApproveOrder", parameters);
+
+        if (status != 200) {
+            throw new MessagingException("Failed to send email");
         }
 
         order.setOrderStatus(Status.valueOf(newStatus.toString()));

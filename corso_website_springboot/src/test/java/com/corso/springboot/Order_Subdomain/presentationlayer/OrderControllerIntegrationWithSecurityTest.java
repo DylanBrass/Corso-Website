@@ -1,8 +1,15 @@
 package com.corso.springboot.Order_Subdomain.presentationlayer;
 
+import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import com.corso.springboot.Order_Subdomain.businesslayer.OrderServiceImpl;
+import com.corso.springboot.Order_Subdomain.businesslayer.OrderServiceImplUnitTest;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
+import com.corso.springboot.email.businessLayer.EmailService;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,13 +20,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +38,9 @@ public class OrderControllerIntegrationWithSecurityTest {
 
     private final String BASE_URI_ORDERS = "/api/v1/corso/orders";
     private final String BASE_URI_CUSTOMERS = "/api/v1/corso/customers";
+
+    @MockBean
+    private EmailService emailService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -195,8 +205,12 @@ public class OrderControllerIntegrationWithSecurityTest {
         //arrange
         String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
 
+        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(200);
+
         //act
-        mockMvc.perform(put(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
+        mockMvc.perform(patch(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipient\": \"Test progress information\"}")
                         .with(csrf())
                         .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
                                 .authorities(new SimpleGrantedAuthority("Admin"))))
@@ -208,7 +222,9 @@ public class OrderControllerIntegrationWithSecurityTest {
         String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f412";
 
         //act
-        mockMvc.perform(put(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
+        mockMvc.perform(patch(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipient\": \"Test progress information\"}")
                         .with(csrf())
                         .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
                                 .authorities(new SimpleGrantedAuthority("Admin"))))

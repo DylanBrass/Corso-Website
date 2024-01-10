@@ -1,7 +1,9 @@
 package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -17,14 +20,11 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/corso/orders")
 public class OrderController {
 
     private final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/filter")
@@ -69,13 +69,13 @@ public class OrderController {
 
         String userId = principal.getSubject();
 
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId));
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId, Status.IN_PROGRESS));
     }
 
     @PreAuthorize("hasAuthority('Admin')")
-    @PutMapping("/manage/acceptOrder/{orderId}")
-    public ResponseEntity<OrderResponse> UpdateOrderStatusToAccepted(@PathVariable String orderId){
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToAccepted(orderId));
+    @PatchMapping("/manage/acceptOrder/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderStatusToAccepted(@RequestBody AcceptOrderRequest acceptOrderRequest, @PathVariable String orderId) throws MessagingException {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToAccepted(orderId, acceptOrderRequest));
     }
 
     @PreAuthorize("hasAuthority('Admin')")
@@ -83,4 +83,12 @@ public class OrderController {
     public ResponseEntity<Integer> CountByOrderStatus(@RequestParam(name = "status") String status){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.countByOrderStatus(status));
     }
+
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/all/count")
+    public ResponseEntity<Integer> CountAllOrders(){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.countAllOrders());
+    }
+
 }

@@ -30,16 +30,18 @@
     bottom: 10px;
 }
 
-h1 {
-    text-align: center;
-}
+.carousel-box {
+    h1 {
+        text-align: center;
+    }
 
-h3 {
-    background-color: dimgrey;
-    opacity: 0.8;
-    padding: 15px;
-    border-radius: 8px;
-    width: 100%;
+    h3 {
+        background-color: dimgrey;
+        opacity: 0.8;
+        padding: 15px;
+        border-radius: 8px;
+        width: 100%;
+    }
 }
 
 .carousel-control-prev,

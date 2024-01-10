@@ -16,6 +16,9 @@ function Dashboard() {
     const [pendingCount, setPendingCount] = useState(0);
     const [completedCount, setCompletedCount] = useState(0);
 
+
+        const [totalOrders, setTotalOrders] = useState(0)
+
     const getTotalAdmins = async () => {
         axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-total-admins", {
             headers: {
@@ -35,6 +38,24 @@ function Dashboard() {
             })
     }
 
+    const getTotalOrders = async () => {
+        axios.get("http://localhost:8080/api/v1/corso/orders/all/count", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => {
+                if (r.status === 200) {
+                    console.log(r.data)
+                    setTotalOrders(r.data)
+                }
+            })
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status)
+            })
+    }
 
     const getVisitors = async () => {
         axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-stats-last-30-days", {
@@ -147,14 +168,19 @@ function Dashboard() {
             console.log("Pending count fetched");
         });
 
+        getTotalOrders().then(r => {
+            console.log(r)
+        })
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
         <div style={{
+            textAlign: "center"
         }}>
             <NavigationBar/>
-            <h1>Welcome Back {Cookies.get("username")}</h1>
+            <h1 className={"w-100"}>Welcome Back {Cookies.get("username")}</h1>
 
             <div className={"admin-dashboard container"} style={{}}>
                 <div className={"row d-flex align-items-stretch mt-4"}>
@@ -203,7 +229,7 @@ function Dashboard() {
                 <div className={"row d-flex align-items-stretch mt-4"}>
                     <div className={"col-4"}>
                         <AdminDashboardTile
-                            title1={"310"}
+                            title1={totalOrders.toString()}
                             title2={""}
                             text1={"All Orders"}
                             text2={""}

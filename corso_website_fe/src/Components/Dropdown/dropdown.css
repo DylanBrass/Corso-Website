@@ -2,12 +2,12 @@
     position: relative;
     width: 200px; /* Adjust as necessary */
     font-family: sans-serif; /* Choose your font */
+
 }
 
 .dropdown-header {
     padding: 10px;
     background-color: #fff;
-    border: 1px solid #ccc;
     cursor: pointer;
     user-select: none;
     display: flex;
@@ -20,21 +20,28 @@
 }
 
 .dropdown-list {
+    border: 1px solid black !important;
+
     position: absolute;
     width: 100%;
     z-index: 10;
     list-style: none;
     padding: 0;
     margin: 0;
-    border: 1px solid #ccc;
     border-top: none;
     background-color: #fff;
 }
 
 .dropdown-option {
-    padding: 10px;
     cursor: pointer;
-    border-bottom: 1px solid #ccc;
+
+    text-transform: capitalize;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #f0f0f0;
+    }
+
 }
 
 .dropdown-option:last-child {

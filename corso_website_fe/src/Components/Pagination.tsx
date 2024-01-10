@@ -33,12 +33,14 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
         // Update localPageSize when the pageSize prop changes
         setLocalPageSize(pageSize);
         setPage(1); // Reset page to 1 when pageSize changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize]);
 
     useEffect(() => {
         // Reset local state when the resetKey (status) changes
         setPage(1);
-        setLocalPageSize(1);
+        setLocalPageSize(pageSize);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetKey]);
 
     return (

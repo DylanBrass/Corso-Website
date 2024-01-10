@@ -46,7 +46,8 @@ function CreateExternalOrderPage() {
 
         event.preventDefault()
 
-        if ((document.getElementById("search-value") as HTMLInputElement).value.replaceAll(/\s/g, '').length === 0) {
+        if ((document.getElementById("search-value") as HTMLInputElement).value.replaceAll(/\s/g, '').length < 3) {
+            swal("Enter at least 3 characters!", "", "warning")
             return
         }
         let param = "?" + selectedSearchField + "=" + (document.getElementById("search-value") as HTMLInputElement).value

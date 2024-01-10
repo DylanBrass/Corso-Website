@@ -1,0 +1,165 @@
+.all-orders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+
+
+    table {
+        width: 50vw;
+        border: 1px solid black;
+        max-height: 5vh;
+        overflow: scroll;
+
+        @media (max-width: 768px) {
+            width: 95vw;
+        }
+    }
+
+    tbody {
+        border-radius: 4px;
+        overflow: scroll;
+    }
+
+    td {
+        font-weight: bolder !important;
+        padding: 1em;
+    }
+
+    th {
+        cursor: default;
+        background: none;
+        border-radius: 4px;
+    }
+
+    tr {
+        background: white;
+        width: 100%;
+        border-bottom: 2px solid #DCDCDD !important;
+        border-top: 2px solid #DCDCDD !important;
+        cursor: pointer;
+
+
+    }
+
+    .user-row {
+        height: 5vh;
+        overflow: scroll;
+
+        &:hover {
+            background: #DCDCDD;
+        }
+
+        &:active {
+            color: white;
+            background: #376ff0;
+        }
+    }
+
+    .selected-row {
+        color: white;
+        background-color: #064BEC !important;
+    }
+
+    .user-search-order {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        form {
+
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            border-radius: 20px;
+            background: #FFF;
+            border: 1px solid grey;
+
+            padding: 1px;
+
+            @media (max-width: 768px) {
+                width: 95%;
+            }
+        }
+
+        input {
+            width: 100%;
+            flex-grow: 2;
+            border: none;
+
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        form:focus-within {
+            outline: 1px solid blue
+        }
+
+        button {
+            background: white;
+            border: none;
+            border-radius: 20px;
+        }
+    }
+
+    .dropdown-status-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+
+    }
+
+    .status-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+
+
+
+        .dropdown-container {
+
+            border-radius: 0;
+            border: 1px solid black !important;
+        }
+
+        .dropdown-list {
+
+        }
+
+
+    }
+
+    .user-selection {
+        color: white !important;
+        border: none !important;
+        padding: 10px 20px 10px 20px !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        border-radius: 50px !important;
+        background: #064BEC !important;
+        transition: box-shadow 0.3s ease, transform 0.3s ease !important;
+
+
+        &:hover {
+            background: #064BEC;
+            color: white;
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        &:active {
+            background: #064BEC;
+            color: white;
+            transform: translateY(4px);
+        }
+    }
+}

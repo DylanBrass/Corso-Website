@@ -35,7 +35,7 @@ function App() {
                 method: 'HEAD'
             }).then(
             function (response) {
-                if (response.status !== 200) {
+                if (response.status !== 200 && response.status !== 401 && response.status !== 403) {
                     console.log('Looks like there was a problem. Status Code: ' +
                         response.status);
                     // @ts-ignore
@@ -48,10 +48,20 @@ function App() {
         ).catch(function (err) {
             console.log('Fetch Error :-S', err);
             // @ts-ignore
-            swal("Error", "Server is down !", "error")
+            swal("Error", err, "error")
                 .then(() => {
                     window.location.href = "http://localhost:3000/"
                 })
+            if (err.response === undefined) {
+                // @ts-ignore
+                return;
+            }
+
+            if (err.response.status === 401) {
+                // @ts-ignore
+                return
+            }
+
         })
 
     }
@@ -59,21 +69,21 @@ function App() {
     useEffect(() => {
         checkServerConnection()
     }, []);
-  return (
-    <>
-        <AuthProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<MainPage />} />
-                    <Route path="/faq" element={<ViewAllFaq/>} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/create/orders/external" element={<CreateExternalOrderPage/>} />
-                    <Route path="/orders/all" element={<AllOrdersPage/>} />
-                    <Route path="/orders/current" element={<CurrentOrdersPage/>} />
-                    <Route path="/orders/completed" element={<CompletedOrdersPage/>} />
-                    <Route path="/orders/pending" element={<PendingOrdersPage/>} />
-                    <Route path="/orders/overdue" element={<OverdueOrdersPage/>} />
-                    <Route path="/manage/testimonies" element={<ManageReviews/>} />
+    return (
+        <>
+            <AuthProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<MainPage/>}/>
+                        <Route path="/faq" element={<ViewAllFaq/>}/>
+                        <Route path="/dashboard" element={<Dashboard/>}/>
+                        <Route path="/create/orders/external" element={<CreateExternalOrderPage/>}/>
+                        <Route path="/orders/all" element={<AllOrdersPage/>}/>
+                        <Route path="/orders/current" element={<CurrentOrdersPage/>}/>
+                        <Route path="/orders/completed" element={<CompletedOrdersPage/>}/>
+                        <Route path="/orders/pending" element={<PendingOrdersPage/>}/>
+                        <Route path="/orders/overdue" element={<OverdueOrdersPage/>}/>
+                        <Route path="/manage/testimonies" element={<ManageReviews/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>
                         <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
