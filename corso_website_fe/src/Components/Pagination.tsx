@@ -41,7 +41,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
         setPage(1);
         setLocalPageSize(pageSize);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetKey,pageSize]);
+    }, [resetKey]);
 
     return (
         <div>
