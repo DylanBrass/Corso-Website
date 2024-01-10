@@ -8,6 +8,7 @@ import Dropdown from "../../Components/Dropdown/droptown";
 import swal from "sweetalert";
 import searchIcon from "../../images/Search_light.svg";
 import {useAuth} from "../../security/Components/AuthProvider";
+import "./AllOrdersPage.css"
 
 function AllOrdersPage() {
 
@@ -35,7 +36,7 @@ function AllOrdersPage() {
 
 
     useEffect(() => {
-        fetchOrders(page, pageSize, selectedStatus);
+        fetchOrders(page, pageSize, selectedStatus, selectedUser);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, pageSize]);
 
@@ -71,7 +72,7 @@ function AllOrdersPage() {
     }
 
 
-    const fetchOrders = async (pageNumber: number, size: number, status: string | null) => {
+    const fetchOrders = async (pageNumber: number, size: number, status: string | null, user: string) => {
         try {
 
 
@@ -82,9 +83,9 @@ function AllOrdersPage() {
 
             }
 
-            if (selectedUser.length > 0) {
+            if (user.length > 0) {
                 // @ts-ignore
-                url += `&userId=${selectedUser.replace("|", "%7C")}`;
+                url += `&userId=${user.replace("|", "%7C")}`;
             }
 
 
@@ -150,35 +151,37 @@ function AllOrdersPage() {
 
         event.preventDefault();
         setPreviousStatus(selectedStatus)
+        setPreviousUser(selectedUser)
         setResetKey(selectedStatus + selectedUser)
         // @ts-ignore
         setPage(1);
-        setPageSize(1);
-        const updatedPageSize = 1;
-        fetchOrders(1, updatedPageSize, selectedStatus);
+        setPageSize(pageSize);
+        fetchOrders(1, pageSize, selectedStatus, selectedUser);
     }
 
 
     const handlePageChange = (pageNumber: number, size: number) => {
 
-
         if (previousStatus !== selectedStatus || previousUser !== selectedUser) {
-            setPreviousStatus(selectedStatus)
-            setResetKey(selectedStatus + selectedUser)
-            // @ts-ignore
+            console.log("Status changed")
             setPage(1);
-            setPageSize(1);
-            const updatedPageSize = 1;
-            fetchOrders(1, updatedPageSize, selectedStatus);
+
+            setPreviousStatus(selectedStatus)
+            setPreviousUser(selectedUser)
+            // @ts-ignore
+            fetchOrders(1, pageSize, selectedStatus, selectedUser)
             return
         }
-        setPageSize(size);
+
+        setPageSize(size)
         setPage(pageNumber)
-        fetchOrders(pageNumber, size, selectedStatus);
+        setResetKey(selectedStatus + selectedUser)
+
+        fetchOrders(pageNumber, size, selectedStatus, selectedUser)
 
 
         console.log("Page change: " + pageNumber + " PageSize: " + size)
-    };
+    }
 
     return (
         <>
@@ -186,72 +189,94 @@ function AllOrdersPage() {
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"all-orders"}>
                 <h1>ALL ORDERS</h1>
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
-                     className={"all-orders-search"}>
-                    <Dropdown
-                        label={selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)}
-                        options={["All", "Completed", "Pending", "Cancelled", "In progress"]}
-                        onSelect={(option: any) => {
-                            setPreviousStatus(selectedStatus)
-                            setSelectedStatus(option)
-                        }}
-                    />
-                    <div className={"search-bar"}>
-                        <form onSubmit={getUsers}>
-                            <Dropdown
-                                label={selectedSearchFieldUser.charAt(0).toUpperCase() + selectedSearchFieldUser.slice(1)}
-                                options={["name", "email", "username"]}
-                                onSelect={(option: any) => {
-                                    setSelectedSearchFieldUser(option)
-                                }}
-                            />
-                            <input required name={"search-value"} id={"search-value"} type="text"
-                                   placeholder="Search for user"/>
-                            <button type={"submit"}>
-                                <img src={searchIcon} alt={"Search"}/>
-                            </button>
-
-                        </form>
+                <div
+                    className={"all-orders-search w-100 row text-center"}>
+                    <div className={"search-bar col-12 col-xl-4 status-box"}>
+                        <div className={"row w-100"}>
+                            <h4 className={"col-12 col-xl-4"}>Filter by status</h4>
+                            <div className={"col-12 col-xl-8 dropdown-status-box"}>
+                                <Dropdown
+                                    label={selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)}
+                                    options={["All", "Completed", "Pending", "Cancelled", "In progress"]}
+                                    onSelect={(option: any) => {
+                                        setPreviousStatus(selectedStatus)
+                                        setSelectedStatus(option)
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <form onSubmit={handleSubmit}>
-                        <button type={"submit"}>Search</button>
-                    </form>
+                    <div className={"user-search-order col-12 col-xl-5"}>
+                        <div className={"row"}>
+
+                            <h4 className={"col-12 col-xl-2"}>Search for user</h4>
+                            <div className={"col-12 col-xl-6"}>
+                                <form onSubmit={getUsers} className={"w-100 "}>
+                                    <Dropdown
+                                        label={selectedSearchFieldUser.charAt(0).toUpperCase() + selectedSearchFieldUser.slice(1)}
+                                        options={["name", "email", "username"]}
+                                        onSelect={(option: any) => {
+                                            setSelectedSearchFieldUser(option)
+                                        }}
+                                    />
+                                    <input required name={"search-value"} id={"search-value"} type="text"
+                                           placeholder="Search for user"/>
+                                    <button type={"submit"}>
+                                        <img src={searchIcon} alt={"Search"}/>
+                                    </button>
+
+                                </form>
+                            </div>
+                            <div className={"col-12 col-xl-4"}>
+                                <button onClick={
+                                    () => {
+                                        setSelectedUser("")
+                                    }
+                                }
+                                        className={"btn-style m-3 m-xl-0 user-selection"}
+                                >
+                                    Clear Selection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={"col-12 col-xl-3"}>
+
+                    </div>
                 </div>
 
                 <div className={"all-orders-users"}>
-                    <table className={"overflow-scroll"}>
+                    <table className={"overflow-scroll text-center"}>
                         <tbody>
                         <tr>
-                            <th>Username</th>
-                            <th>Email</th>
                             <th>Name</th>
+                            <th>Email</th>
+                            <th>Username</th>
                         </tr>
+
                         {users.map((user: any) => (
-                            <tr key={user.username} onClick={
+                            <tr key={user.user_id} onClick={
                                 () => {
                                     console.log(user)
                                     setPreviousUser(selectedUser)
+
                                     setSelectedUser(user.user_id)
                                 }
-                            }>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>{user.name}</td>
+                            }
+                                className={"user-row " + (selectedUser === user.user_id ? "selected-row" : "")}
+                            >
+                                <td>{user.name || "Not Applicable"}</td>
+                                <td>{user.email || "Not Applicable"}</td>
+                                <td>{user.username || "Not Applicable"}</td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
-                    <button onClick={
-                        () => {
-                            setSelectedUser("")
-                        }
-                    }
-                            className={"mt-1 mb-5 btn-style"}
-                    >
-                        Clear User Selection
-                    </button>
-                </div>
 
+                </div>
+                <form onSubmit={handleSubmit} className={"m-4"}>
+                    <button type={"submit"} className={"user-selection"}>Search With Applied Filters</button>
+                </form>
                 {orders.map(order => (
                     <OrderTile
                         key={order.orderTrackingNumber}

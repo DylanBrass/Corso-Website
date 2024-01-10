@@ -41,6 +41,21 @@ public class OrderControllerIntegrationTest {
 
     @Test
     @WithMockUser(authorities = "Admin")
+    public void countTotalOfOrders() throws Exception {
+        //arrange
+        Integer expectedNumOrders = 5;
+
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/all/count")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody(Integer.class).isEqualTo(expectedNumOrders);
+
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
     public void whenAllOrdersExist_thenReturnAllOrdersWithoutPagination() throws Exception {
         //arrange
         Integer expectedNumOrders = 5;
@@ -212,4 +227,46 @@ public class OrderControllerIntegrationTest {
                 .exchange().expectStatus().isOk()
                 .expectBody(Integer.class).isEqualTo(expectedNumOrders);
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void getOrdersByUserIdAndStatus_thenReturnTwoOrders() {
+        //arrange
+        Integer expectedNumOrders = 2;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/filter?status=completed&pageSize=50&offset=0&userId=auth0|65702e81e9661e14ab3aac89&status=completed")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void getOrdersByUserId_thenReturnTwoOrders() {
+        //arrange
+        Integer expectedNumOrders = 5;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/filter?&pageSize=10&offset=0&userId=auth0|65702e81e9661e14ab3aac89")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void getOrdersWithOnlyStatus_ShouldReturnOneOrder() {
+        //arrange
+        Integer expectedNumOrders = 1;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/filter?status=pending&pageSize=10&offset=0")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
+    }
+
+
+
 }

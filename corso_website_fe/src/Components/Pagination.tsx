@@ -38,7 +38,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
     useEffect(() => {
         // Reset local state when the resetKey (status) changes
         setPage(1);
-        setLocalPageSize(1);
+        setLocalPageSize(pageSize);
     }, [resetKey]);
 
     return (

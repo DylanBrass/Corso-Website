@@ -1,9 +1,11 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
+import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +24,12 @@ public interface OrderService {
 
     OrderResponse getOrderByIdAndUserId(String orderId, String userId);
 
-    OrderResponse updateOrderStatusToAccepted(String orderId);
+    OrderResponse updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest) throws MessagingException;
 
     int countByOrderStatus(String status);
 
     List<OrderResponse> getCustomerCurrentOrders(String userId, Status status);
+
+    int countAllOrders();
+
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -72,15 +73,22 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAuthority('Admin')")
-    @PutMapping("/manage/acceptOrder/{orderId}")
-    public ResponseEntity<OrderResponse> UpdateOrderStatusToAccepted(@PathVariable String orderId){
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToAccepted(orderId));
+    @PatchMapping("/manage/acceptOrder/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderStatusToAccepted(@RequestBody AcceptOrderRequest acceptOrderRequest, @PathVariable String orderId) throws MessagingException {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToAccepted(orderId, acceptOrderRequest));
     }
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/manage/count")
     public ResponseEntity<Integer> CountByOrderStatus(@RequestParam(name = "status") String status){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.countByOrderStatus(status));
+    }
+
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/all/count")
+    public ResponseEntity<Integer> CountAllOrders(){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.countAllOrders());
     }
 
 }

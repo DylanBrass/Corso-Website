@@ -32,7 +32,7 @@ function OurPreviousProjects() {
     }, []);
 
     return (
-        <div>
+        <div className={"carousel-box"}>
             <h1>Our Previous Projects</h1>
             {images.length > 0 && (
                 <CCarousel controls indicators>

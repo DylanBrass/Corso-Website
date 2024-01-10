@@ -1,22 +1,24 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
-import com.corso.springboot.Order_Subdomain.businesslayer.OrderServiceImpl;
 import com.corso.springboot.Order_Subdomain.datalayer.Order;
 import com.corso.springboot.Order_Subdomain.datalayer.OrderIdentifier;
 import com.corso.springboot.Order_Subdomain.datalayer.OrderRepository;
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
+import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
-import com.corso.springboot.Service_Subdomain.datalayer.Service;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
+import com.corso.springboot.email.businessLayer.EmailService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class OrderServiceImplUnitTest {
@@ -35,6 +38,9 @@ public class OrderServiceImplUnitTest {
 
     @Mock
     private OrderResponseMapper orderResponseMapper;
+
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -196,7 +202,7 @@ public class OrderServiceImplUnitTest {
     }
 
     @Test
-    void updateOrderStatusToAccepted_ShouldSucceed() {
+    void updateOrderStatusToAccepted_ShouldSucceed() throws MessagingException {
         // Arrange
         Order mockOrder = new Order();
         mockOrder.setOrderId(new OrderIdentifier());
@@ -215,12 +221,45 @@ public class OrderServiceImplUnitTest {
         Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
         Mockito.when(orderResponseMapper.toOrderResponse(any(Order.class))).thenReturn(mockOrderResponse);
 
+
+        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(200);
+
+        AcceptOrderRequest acceptOrderRequest = new AcceptOrderRequest("John Doe");
+
         // Act
-        OrderResponse result = orderService.updateOrderStatusToAccepted(mockOrder.getOrderId().getOrderId());
+        OrderResponse result = orderService.updateOrderStatusToAccepted(mockOrder.getOrderId().getOrderId(), acceptOrderRequest);
 
         // Assert
         assertNotNull(result);
         assertEquals(Status.IN_PROGRESS, mockOrder.getOrderStatus(), "Order status should be updated to IN_PROGRESS");
         verify(orderRepository).save(mockOrder);
+
     }
+
+    @Test
+    public void whenCreatingExternalOrderServiceIdNotFound_shouldThrowServiceNotFoundException()  {
+        // Arrange
+        when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(null);
+
+        // Act & Assert
+
+        OrderRequestExternal orderRequestExternal = OrderRequestExternal.builder()
+                .serviceId("982577e6-1909-46b8-8583-e08c9daa4e9b")
+                .orderDescription("Custom web development project")
+                .customerFullName("John Doe")
+                .customerEmail("email@email.com")
+                .customerPhone("1234567890")
+                .customerAddress("123 Main St")
+                .customerCity("Montreal")
+                .customerPostalCode("J5R 5J4")
+                .build();
+
+        try {
+            orderService.createOrderExternal(orderRequestExternal);
+        } catch (Exception e) {
+            assertEquals("Service not found", e.getMessage());
+        }
+
+    }
+
 }

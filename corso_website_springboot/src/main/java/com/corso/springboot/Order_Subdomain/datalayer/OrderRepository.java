@@ -47,5 +47,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     List<Order> findAllByUserIdAndOrderStatus(String userId, Status status);
 
+    int countAllBy();
 
 }
