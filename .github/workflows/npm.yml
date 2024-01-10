@@ -1,0 +1,32 @@
+name: CI/CD Pipeline NPM
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: npm install, build, and test
+        working-directory: corso_website_fe
+        run: |
+          npm ci
+          npm run build --if-present
+          npm start & npx wait-on http://127.0.0.1:3000
+        env:
+          CI: true
+     
