@@ -221,6 +221,8 @@ public class OrderControllerIntegrationWithSecurityTest {
         //arrange
         String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f412";
 
+        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(200);
+
         //act
         mockMvc.perform(patch(BASE_URI_ORDERS + "/manage/acceptOrder/" + orderId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -230,5 +232,24 @@ public class OrderControllerIntegrationWithSecurityTest {
                                 .authorities(new SimpleGrantedAuthority("Admin"))))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void whenOrderWithStatusPendingIsSetToStatusDeclinedWithValidOrderId_thenReturnSuccessful() throws Exception {
+        // Arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+
+        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(200);
+
+        // Act and Assert
+        mockMvc.perform(patch(BASE_URI_ORDERS + "/manage/declineOrder/" + orderId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipient\": \"Test progress information\", " +
+                                "\"reasonForDecline\": \"Test progress information\"}")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
+                                .authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk());
+    }
+
 
 }

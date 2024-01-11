@@ -18,6 +18,10 @@ function ViewSpecificOrderAdmin() {
 
     const [loading, setLoading] = useState(false);
 
+    const [reasonForCancellation, setReasonForCancellation] = useState('');
+    const [openPopup, setOpenPopup] = useState(false);
+
+
     const getOrder = async () => {
         axios.get(`http://localhost:8080/api/v1/corso/orders/manage/${orderId}`,
             {
@@ -92,6 +96,9 @@ function ViewSpecificOrderAdmin() {
 
     }
 
+    useEffect(() => {
+        console.log(loading);
+    }, [loading]);
 
     const acceptStatus = async () => {
         try {
@@ -116,6 +123,39 @@ function ViewSpecificOrderAdmin() {
             swal("Failed!", `Failed to accept the order with tracking number ${order.orderTrackingNumber}.`, "error");
         }
     }
+
+    const declinedStatus = async (event: any) => {
+
+        event.preventDefault();
+
+        setLoading(true);
+
+        try {
+            const response = await axios.patch(`http://localhost:8080/api/v1/corso/orders/manage/declineOrder/${orderId}`, {
+                reasonForDecline: event.target[0].value,
+                recipient: order.customerEmail
+            }, {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                }
+            })
+            if (response.status === 200) {
+                swal("Declined!", `The order with tracking number ${order.orderTrackingNumber} has been successfully declined.`, "success")
+                    .then(() => {
+                        window.location.href = '/dashboard';
+                    });
+            } else {
+                swal("Oops!", "Something went wrong. Please try again.", "error");
+            }
+
+            setLoading(false)
+        } catch (error) {
+            console.error("Error updating order status: ", error);
+            swal("Failed!", `Failed to decline the order with tracking number ${order.orderTrackingNumber}.`, "error");
+        }
+    }
+
 
     useEffect(() => {
         getOrder().then(r => console.log("Order fetched"));
@@ -162,7 +202,29 @@ function ViewSpecificOrderAdmin() {
                             <button className={"accept-button"} onClick={acceptStatus}>Accept</button>
                         </div>
                         <div className="row">
-                            <button className={"decline-button"}>Decline</button>
+                            <button className={"decline-button"} onClick={() => setOpenPopup(true)}>Decline</button>
+                            <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
+                                <div className="popup-box">
+                                {loading &&
+                                    <div className={"spinner-box text-center"}>
+                                        <h3 className={""}>
+                                            Sending email...
+                                        </h3>
+                                        <SyncLoader className={"spinner"} color="#054AEB"/>
+                                    </div>
+                                }
+                                <form onSubmit={declinedStatus} className={" decline-popup" + (loading ? " hidden " : " ")}>
+                                    <h4>Reason for Declining</h4>
+                                    <textarea
+                                        value={reasonForCancellation}
+                                        onChange={(e) => setReasonForCancellation(e.target.value)}
+                                        placeholder="Enter the reason for declining the order"
+                                    />
+                                    <button type={"submit"} className={"decline-popup-button"}>Submit</button>
+                                </form>
+                                </div>
+                            </Popup>
+
                         </div>
                         <div className="row">
 

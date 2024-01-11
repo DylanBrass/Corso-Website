@@ -91,4 +91,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.countAllOrders());
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
+    @PatchMapping("/manage/declineOrder/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderStatusToDeclined(@PathVariable String orderId, @RequestBody DeclineOrderRequest declineOrderRequest) throws MessagingException {
+        log.info("Decline order request {}", declineOrderRequest.getReasonForDecline());
+
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToDeclined(orderId, declineOrderRequest));
+    }
+
 }

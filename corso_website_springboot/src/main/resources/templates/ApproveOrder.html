@@ -2,13 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
 </head>
 <body>
-<h1 th:utext="${H1}"></h1>
-<br>
-<h2 th:utext="${H2}"></h2>
-<hr>
-<p th:utext="${H4}"></p>
-<p th:utext="${H5}"></p>
+<div class="container">
+    <h1>Thank you for choosing Corso</h1>
+    <br>
+    <h2>Your order has been accepted!</h2>
+    <hr>
+    <br>
+    <p>For more information about your order, progress reports or to leave a review, please log in and navigate to the current orders page.</p>
+    <p>We look forward to working with you!</p>
+</div>
 </body>
 </html>

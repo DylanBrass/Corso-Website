@@ -2,6 +2,7 @@ package com.corso.springboot.Order_Subdomain.businesslayer;
 
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
+import com.corso.springboot.Order_Subdomain.presentationlayer.DeclineOrderRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 
@@ -31,5 +32,7 @@ public interface OrderService {
     List<OrderResponse> getCustomerCurrentOrders(String userId, Status status);
 
     int countAllOrders();
+
+    OrderResponse updateOrderStatusToDeclined(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException;
 
 }
