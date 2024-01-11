@@ -20,11 +20,11 @@ public class ReviewServiceImpl implements ReviewService{
     private final ReviewRepository reviewRepository;
 
     private final ReviewResponseMapper reviewResponseMapper;
+
     @Override
     public List<ReviewResponse> getAllReviews() {
         return reviewResponseMapper.toReviewsResponse(reviewRepository.findAll());
     }
-
 
     @Override
     public List<ReviewResponse> getReviewsByCustomerFullName(String customerFullName) {
@@ -33,6 +33,11 @@ public class ReviewServiceImpl implements ReviewService{
         } else {
             return reviewResponseMapper.toReviewsResponse(reviewRepository.findAll());
         }
+    }
+    @Override
+    public List<ReviewResponse> getPinnedReviews(boolean pinned) {
+        return reviewResponseMapper.toReviewsResponse(reviewRepository.getReviewByPinned(pinned));
+
     }
 
 }

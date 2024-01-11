@@ -72,4 +72,18 @@ class ReviewControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody().isEmpty();
     }
+
+    @Test
+    void getPinnedReviews_ThenReturnPinnedReviews() {
+        //arrange
+        Integer expectedNumberOFReviews= 2;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_REVIEWS + "/pinned")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(expectedNumberOFReviews);
+    }
+
 }
