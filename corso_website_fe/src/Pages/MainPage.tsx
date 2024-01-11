@@ -6,6 +6,7 @@ import BannerMainPageAnonymous from "../Main Page Components/Banner/BannerMainPa
 import AllServices from "../Main Page Components/Services/AllServices";
 import Footer from "../Components/Footer/Footer";
 import FaqPinnedMainPage from "../Main Page Components/FAQ/FaqPinnedMainPage";
+import ReviewPinned from "../Main Page Components/Reviews/ReviewPinned";
 
 
 function MainPage() {
@@ -34,6 +35,11 @@ function MainPage() {
                     <OurPreviousProjects/>
                 </div>
                 <AllServices/>
+
+                <div id={"testimonies"}>
+                    <ReviewPinned/>
+                </div>
+
                 <div id={"faq"}>
                     <FaqPinnedMainPage/>
                 </div>

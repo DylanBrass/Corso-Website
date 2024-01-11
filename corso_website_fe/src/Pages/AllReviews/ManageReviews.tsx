@@ -42,6 +42,9 @@ function ManageReviews() {
 
 
     /*
+
+    This is for my Choose Viewable Reviews
+
         const toggleReviewPinned = (reviewId: string) => {
             setReviews(prevReviews =>
                 prevReviews.map(review => {
@@ -124,7 +127,7 @@ function ManageReviews() {
 
     return (
 
-        <div className={"all-reviews"}>
+        <div>
             <NavigationBar/>
             <div className="container review-container">
                 <div className="row review-header">

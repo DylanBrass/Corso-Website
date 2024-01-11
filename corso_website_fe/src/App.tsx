@@ -88,7 +88,6 @@ function App() {
                         <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
 
-
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
                         <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>

@@ -1,6 +1,9 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
 
+import com.corso.springboot.FAQ_Subdomain.datalayer.FAQ;
+import com.corso.springboot.FAQ_Subdomain.datalayer.FAQIdentifier;
+import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQResponse;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
@@ -135,6 +138,44 @@ class ReviewServiceImplUnitTest {
         assertEquals(mockReviews, result);
 
     }
+
+    @Test
+    void getPinnedReviews() {
+
+        List<ReviewResponse> mockReviewsResponse = List.of(
+                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false),
+                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true)
+
+        );
+
+
+        Review review1 = Review.builder()
+                .id(1)
+                .reviewId(new ReviewIdentifier())
+                .customerFullName("John Doe")
+                .reviewDate(date)
+                .message("This is a review")
+                .reviewRating(3)
+                .pinned(false)
+                .build();
+
+        Review review2 = Review.builder()
+                .id(2)
+                .reviewId(new ReviewIdentifier())
+                .customerFullName("Emily Doe")
+                .reviewDate(date2)
+                .message("This is a review")
+                .reviewRating(5)
+                .pinned(true)
+                .build();
+
+        Mockito.when(reviewRepository.getReviewByPinned(review1.pinned)).thenReturn(Arrays.asList(review1, review2));
+
+        Mockito.when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
+
+    }
+
+
 }
 
 

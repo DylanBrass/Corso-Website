@@ -10,4 +10,7 @@ public interface ReviewService {
     List<ReviewResponse> getAllReviews();
 
     List<ReviewResponse> getReviewsByCustomerFullName(String customerFullName);
+
+    List<ReviewResponse> getPinnedReviews(boolean pinned);
+
 }

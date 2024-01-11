@@ -23,11 +23,3 @@ class FAQRepositoryPersistanceTest {
 
     }
 }
-
-    /*
-    @Test
-    void getFAQSByPreferenceTrue() {
-    }
-}
-
-     */
