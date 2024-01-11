@@ -9,8 +9,6 @@ EXPOSE 8080
 FROM openjdk:17
 ARG JAR_FILE=build/libs/*.jar
 COPY --from=builder /usr/src/app/${JAR_FILE} app.jar
-#RUN apt-get update; apt-get -y install curl
-#RUN microdnf update \
-#   && microdnf install curl \
-#    && microdnf install jq
+COPY src/main/resources/gcp-credentials.json /app/gcp-credentials.json  # Copy the secrets
+
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
