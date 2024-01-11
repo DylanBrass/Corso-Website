@@ -61,6 +61,7 @@ public class Auth0LoginService {
                 || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
             log.info("No roles found, adding default role");
 
+            
 
             return ResponseEntity.status(302)
                     .location(URI.create(frontendDomain+"external")).build();
@@ -76,6 +77,9 @@ public class Auth0LoginService {
 
         String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
                 .split(":")[0].replace("/","");
+
+                log.info("Formatted domain: " + formattedDomain);
+
 
         ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
                 .httpOnly(true)
