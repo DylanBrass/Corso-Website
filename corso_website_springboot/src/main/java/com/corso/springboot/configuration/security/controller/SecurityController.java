@@ -17,7 +17,7 @@ import java.net.URI;
 
 @Slf4j
 @Generated
-@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-fe.onrender.com"},allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/security")
