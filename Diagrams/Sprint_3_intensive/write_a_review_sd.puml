@@ -1,0 +1,100 @@
+@startuml
+
+actor User
+
+participant "ProfilePage" as Pfp
+
+participant "WriteReviewPage" as Wrp
+
+participant "reviewRequest : ReviewRequest" as Rq
+
+participant "ReviewController" as Rc
+
+participant "reviewResponse : ReviewResponse" as Rr
+
+participant "ReviewService" as Rs
+
+participant "review : Review" as R
+
+
+participant "ReviewRepository" as Rrep
+
+participant "reviewDb : Review" as Rdb
+
+participant "Database" as Db
+
+participant "ReviewResponseMapper" as RresM
+
+participant "ReviewRequestMapper" as RreqM
+
+
+User -> Pfp: WriteReviewPage()
+activate Pfp
+
+Pfp -> Wrp: Render()
+activate Wrp
+
+User -> Wrp: SubmitReview()
+
+Wrp -> Rq: POST /api/v1/corso/review
+
+activate Rq
+
+Rq -> Rc: createReview(reviewRequest)
+
+
+
+activate Rc
+
+Rc -> Rs: createReview()
+activate Rs
+
+Rs -> RreqM: mapToReview(reviewRequest)
+
+activate RreqM
+
+RreqM -> R: Review
+
+destroy Rq
+destroy RreqM
+
+activate R
+
+R -> Rs : review : Review
+
+
+
+Rs -> Rrep: save(review)
+destroy R
+activate Rrep
+
+Rrep -> Db: INSERT INTO review (...) VALUES (...)
+activate Db
+
+Db -> Rdb: reviewDb : Review
+deactivate Db
+
+activate Rdb
+Rdb -> Rrep: reviewDb : Review
+
+Rrep -> Rs: reviewDb : Review
+destroy Rrep
+Rs -> RresM: mapToReviewResponse(review)
+destroy Rdb
+activate RresM
+
+
+RresM --> Rr: ReviewResponse
+destroy RresM
+activate Rr
+
+Rr --> Rs : reviewResponse : ReviewResponse
+
+Rs --> Rc: reviewResponse : ReviewResponse
+
+
+Rc --> Wrp: reviewResponse : ReviewResponse
+
+destroy Rr
+
+@enduml
