@@ -68,4 +68,30 @@
         text-transform: uppercase;
     }
 
+    .testimonies-info {
+        width: 100%;
+    }
+
+    @media (min-width: 768px) {
+        .review-tile-box {
+            width: 48%;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .review-tile-box {
+            width: 30%;
+        }
+    }
+
+    @media (max-width: 1092px) {
+        .testimonies-message {
+            height: 15vh;
+        }
+        .review-tile-box {
+            transform: scale(0.8);
+        }
+    }
+
+
 }

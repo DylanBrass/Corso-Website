@@ -44,7 +44,7 @@ function ReviewPinned() {
 
                 <div className={"row"}>
                     {pinnedReviews.map((value) => (
-                        <div className={"col-12 col-md-4 review-tile-box"}>
+                        <div className={"col-12 col-md-6 col-lg-4 review-tile-box"}>
                             <ReviewsPinnedTileMainPage
                                 //@ts-ignore
                                 key={value.id}
