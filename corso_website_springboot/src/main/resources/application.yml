@@ -49,10 +49,17 @@ spring:
       platform: h2
       mode: always
 
+frontend:
+    url: http://localhost:3000
+
+backend:
+    url: http://localhost:8080
+
 logging:
   level:
     org.springframework.data.jpa: DEBUG
     org.hibernate.SQL: DEBUG
+
 
 ---
 # for docker
@@ -89,10 +96,10 @@ server:
   port: 8080
 
 frontend:
-    url: http://localhost:3000/
+    url: http://localhost:3000
 
 backend:
-    url: http://localhost:8080/
+    url: http://localhost:8080
 
 
 spring.datasource.hikari.initializationFailTimeout: 60000
