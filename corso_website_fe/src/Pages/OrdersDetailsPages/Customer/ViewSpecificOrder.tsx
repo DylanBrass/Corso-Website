@@ -18,7 +18,7 @@ function ViewSpecificOrder() {
     const auth = useAuth()
 
     const getOrder = () => {
-        axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/customers/orders/${orderId}',
+        axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders/${orderId}`,
             {
                 headers: {
                     // @ts-ignore
