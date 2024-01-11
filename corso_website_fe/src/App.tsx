@@ -26,6 +26,7 @@ import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrd
 import {useEffect} from "react";
 
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
+import EditGallery from "./Pages/Gallery/EditGallery";
 
 
 function App() {
@@ -84,6 +85,7 @@ function App() {
                         <Route path="/orders/pending" element={<PendingOrdersPage/>}/>
                         <Route path="/orders/overdue" element={<OverdueOrdersPage/>}/>
                         <Route path="/manage/testimonies" element={<ManageReviews/>}/>
+                        <Route path="/carousel/order" element={<EditGallery/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>
                         <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>

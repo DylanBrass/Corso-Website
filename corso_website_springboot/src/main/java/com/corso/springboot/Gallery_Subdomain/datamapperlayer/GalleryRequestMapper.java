@@ -1,16 +1,19 @@
 package com.corso.springboot.Gallery_Subdomain.datamapperlayer;
 
+import com.corso.springboot.Gallery_Subdomain.datalayer.Gallery;
+import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryOrderUpdateRequest;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface GalleryRequestMapper {
-/*
+
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "galleryId", ignore = true)
+            @Mapping(target = "galleryId", ignore = true),
+            @Mapping(target = "description", ignore = true),
+            @Mapping(target = "photo", ignore = true),
     })
-    Gallery toGallery(GalleryRequest galleryRequest);
-    List<Gallery> toGalleries(List<GalleryRequest> galleryRequests);
-
- */
+    Gallery toGalleryOrderUpdateRequest(GalleryOrderUpdateRequest galleryOrderUpdateRequest);
 }
