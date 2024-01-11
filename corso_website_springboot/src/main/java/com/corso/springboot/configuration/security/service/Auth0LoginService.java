@@ -75,7 +75,7 @@ public class Auth0LoginService {
         HttpHeaders headers = new HttpHeaders();
 
         String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
-                .split(":")[0];
+                .split(":")[0].replace("/","");
 
         ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
                 .httpOnly(true)
