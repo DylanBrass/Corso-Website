@@ -25,6 +25,9 @@
     "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.2",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.3",
     "react-router": "^6.20.0",
@@ -68,6 +71,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@mui/types": "^7.2.10",
     "@types/js-cookie": "^3.0.6",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-slick": "^0.23.13",
     "@types/selenium-webdriver": "^4.1.20"
   }

@@ -4,6 +4,7 @@ import lombok.*;
 
 @EqualsAndHashCode(callSuper=false)
 @Data
+@Builder
 @AllArgsConstructor
 public class GalleryResponse {
     private String galleryId;
