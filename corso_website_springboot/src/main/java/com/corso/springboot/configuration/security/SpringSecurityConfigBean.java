@@ -151,9 +151,9 @@ public class SpringSecurityConfigBean {
                 if (isSignup)
                     response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo="+ backendDomain +"oauth2/authorization/okta");
                 else if (isVerify)
-                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "/verify");
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "verify");
                 else if (isExternal)
-                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "/external");
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "external");
                 else
                     response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain);
 
