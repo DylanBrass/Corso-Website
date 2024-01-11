@@ -61,7 +61,7 @@ function AddServicePage() {
         };
 
         await axios
-            .post('http://localhost:8080/api/v1/corso/services', data, {
+            .post(process.env.REACT_APP_BE_HOST + 'api/v1/corso/services', data, {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': auth.getXsrfToken(),

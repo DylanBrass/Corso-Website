@@ -19,7 +19,7 @@ function ViewServiceDetails() {
     useEffect(() => {
         const fetchServiceDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/corso/services/${serviceId}`);
+                const response = await axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/services/${serviceId}`);
                 setServiceDetails(response.data);
             } catch (error) {
                 console.error('Error fetching service details:', error);

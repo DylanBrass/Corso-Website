@@ -18,7 +18,6 @@ function MainPage() {
 
     return (
         <div>
-
             <NavigationBar/>
             <div id={"banner"}>
                 {
