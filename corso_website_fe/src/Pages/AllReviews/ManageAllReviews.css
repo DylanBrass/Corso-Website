@@ -1,11 +1,13 @@
-.reviews-container {
-    width: 80%;
-    text-align: center;
-    margin: 50px auto;
-    border-radius: 27px;
-    background: #E8E8E8;
-    box-shadow: 12px 12px 4px 0 rgba(0, 0, 0, 0.25);
+.review-container {
+    .reviews-container {
+        width: 80%;
+        text-align: center;
+        margin: 50px auto;
+        border-radius: 27px;
+        background: #E8E8E8;
+        box-shadow: 12px 12px 4px 0 rgba(0, 0, 0, 0.25);
 
+    }
 
     .review-header {
         width: auto;
