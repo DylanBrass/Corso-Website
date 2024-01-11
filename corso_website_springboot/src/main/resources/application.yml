@@ -137,7 +137,7 @@ server:
   port: 8080
 
 frontend:
-  url: https://corso-website-eight.vercel.app/
+  url: https://corso-fe.onrender.com/
 
 backend:
   url: https://corso-pkhz.onrender.com/
