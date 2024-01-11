@@ -27,11 +27,13 @@ public class Auth0LoginService {
     @Value("${okta.oauth2.issuer}")
     private String issuer;
 
+
     @Value("${frontend.url}")
     private String frontendDomain;
 
     @Value("${backend.url}")
     private String backendDomain;
+
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
 
@@ -76,6 +78,7 @@ public class Auth0LoginService {
         ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
                 .httpOnly(true)
                 .secure(true)
+                .domain(frontendDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -83,6 +86,7 @@ public class Auth0LoginService {
         ResponseCookie authCookie = ResponseCookie.from("isAuthenticated", "true")
                 .httpOnly(false)
                 .secure(true)
+                .domain(frontendDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -91,6 +95,7 @@ public class Auth0LoginService {
                         .replace(",", "-").replace(" ", ""))
                 .httpOnly(false)
                 .secure(true)
+                .domain(frontendDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -100,6 +105,7 @@ public class Auth0LoginService {
         ResponseCookie pictureCookie = ResponseCookie.from("picture", picture)
                 .httpOnly(false)
                 .secure(true)
+                .domain(frontendDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
