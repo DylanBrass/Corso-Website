@@ -35,13 +35,13 @@ const AuthProvider = ({children}) => {
     }, [isAuthenticated])
 
     const login = () => {
-        window.location.href = "http://localhost:8080/oauth2/authorization/okta"
+        window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
     }
 
 
     const getUserInfo = async () => {
         if (isAuthenticated) {
-            axios.get("http://localhost:8080/api/v1/corso/customers", {
+            axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': csrfToken
@@ -62,7 +62,7 @@ const AuthProvider = ({children}) => {
         }
 
         const getInfo = async () => {
-            axios.get("http://localhost:8080/api/v1/corso/security/user-info", {
+            axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/security/user-info", {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': csrfToken
@@ -95,7 +95,7 @@ const AuthProvider = ({children}) => {
 
     const authError = (status: number) => {
         if (status === 401) {
-            window.location.href = "http://localhost:8080/oauth2/authorization/okta"
+            window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
         } else if (status === 403) {
             window.location.href = "/403"
         }

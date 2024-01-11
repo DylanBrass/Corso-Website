@@ -10,14 +10,14 @@ function ExternalHandling() {
             // @ts-ignore
             document.getElementById('submit').click();
         }else{
-            window.location.href = "http://localhost:8080/oauth2/authorization/okta"
+            window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
         }
     }, [])
 
     return (
         <div className={"logoutRedirect"}>
 
-            <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout?isLogoutExternal=true"} id="logoutForm">
+            <form method={"post"} action={process.env.REACT_APP_BE_HOST+"api/v1/corso/logout?isLogoutExternal=true"} id="logoutForm">
                 <button id={'submit'} type={"submit"} style={{
                     display: "none",
                     visibility: "hidden"

@@ -27,7 +27,7 @@ function LogoutRedirect() {
 
                 </div>
 
-                <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout?isLogoutSignUp=true"} id="logoutForm">
+                <form method={"post"} action={process.env.REACT_APP_BE_HOST+"api/v1/corso/logout?isLogoutSignUp=true"} id="logoutForm">
                     <button id={'submit'} type={"submit"} style={
                         {
                             display: "none",

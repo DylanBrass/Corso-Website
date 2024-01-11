@@ -12,7 +12,7 @@ function ReviewPinned() {
 
     const [pinnedReviews, setPinnedReviews] = useState([Reviews])
     const getPinnedReviews = () => {
-        axios.get("http://localhost:8080/api/v1/corso/reviews/pinned",
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/pinned",
             {
                 headers: {
                     // @ts-ignore

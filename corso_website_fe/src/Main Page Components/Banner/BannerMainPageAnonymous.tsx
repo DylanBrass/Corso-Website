@@ -25,7 +25,7 @@ function BannerMainPageAnonymous({image}) {
 
                         <button className={"banner-btn  mt-5 mb-5"}
                                 onClick={() => {
-                                    window.location.href = "http://localhost:8080/oauth2/authorization/okta"
+                                    window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
                                 }}>
                             Register Now!
                         </button>

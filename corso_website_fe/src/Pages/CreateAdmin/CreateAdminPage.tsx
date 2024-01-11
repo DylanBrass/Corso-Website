@@ -17,7 +17,7 @@ function CreateAdminPage() {
     const addAdmin = async (event: any) => {
         event.preventDefault();
         // @ts-ignore
-        await axios.post("http://localhost:8080/api/v1/corso/auth0/manage/add-admin", {
+        await axios.post(process.env.REACT_APP_BE_HOST+"api/v1/corso/auth0/manage/add-admin", {
             username: event.target[0].value,
             email: event.target[1].value,
             password: event.target[2].value
