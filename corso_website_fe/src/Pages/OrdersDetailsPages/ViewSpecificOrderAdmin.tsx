@@ -23,7 +23,7 @@ function ViewSpecificOrderAdmin() {
 
 
     const getOrder = async () => {
-        axios.get(`http://localhost:8080/api/v1/corso/orders/manage/${orderId}`,
+        axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/manage/${orderId}`,
             {
                 headers: {
                     // @ts-ignore
@@ -57,7 +57,7 @@ function ViewSpecificOrderAdmin() {
 
         setLoading(true)
 
-        axios.post(`http://localhost:8080/api/v1/corso/email`, {
+        axios.post(process.env.REACT_APP_BE_HOST + 'api/v1/corso/email', {
             recipient: email,
             subject: subject,
             message: message
@@ -102,7 +102,7 @@ function ViewSpecificOrderAdmin() {
 
     const acceptStatus = async () => {
         try {
-            const response = await axios.patch(`http://localhost:8080/api/v1/corso/orders/manage/acceptOrder/${orderId}`, {
+            const response = await axios.patch(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/manage/acceptOrder/${orderId}`, {
                 recipient: order.customerEmail
             }, {
                 headers: {

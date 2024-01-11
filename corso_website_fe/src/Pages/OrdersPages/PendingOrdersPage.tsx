@@ -16,7 +16,7 @@ function PendingOrdersPage() {
         try {
 
 
-            axios.get(`http://localhost:8080/api/v1/corso/orders?status=pending&pageSize=${size}&offset=${(pageNumber - 1) * size}`)
+            axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders?status=pending&pageSize=${size}&offset=${(pageNumber - 1) * size}`)
                 .then(res => {
                     const orders = res.data;
                     setOrders(orders);
