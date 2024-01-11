@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
-@Slf4j
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
 @RestController
 @RequestMapping("api/v1/corso/galleries")
 public class GalleryController {
@@ -32,6 +31,10 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGallery());
     }
 
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PatchMapping("/carousel/order")
+    public ResponseEntity<List<GalleryResponse>> updateGalleryOrder(@RequestBody List<GalleryOrderUpdateRequest> galleryOrderUpdateRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(galleryService.updateGalleryOrder(galleryOrderUpdateRequest));
+    }
 
 }

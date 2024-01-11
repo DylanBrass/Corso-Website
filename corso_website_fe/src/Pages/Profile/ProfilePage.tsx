@@ -35,7 +35,7 @@ function ProfilePage() {
     const fetchOrders = async () => {
         try {
 
-            await axios.get(`http://localhost:8080/api/v1/corso/orders/current`)
+            await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/orders/current')
                 .then(res => {
                     const orders = res.data;
                     setOrders(orders);
@@ -73,7 +73,7 @@ function ProfilePage() {
 
 
     const checkIfProfileExists = async () => {
-        await axios.get("http://localhost:8080/api/v1/corso/customers?simpleCheck=true", {
+        await axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers?simpleCheck=true", {
             headers: {
                 // @ts-ignore
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -82,7 +82,7 @@ function ProfilePage() {
             console.log(r.status);
             if (r.status === 200) {
 
-                axios.get("http://localhost:8080/api/v1/corso/customers", {
+                axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
                     headers: {
                         // @ts-ignore
                         "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -146,7 +146,7 @@ function ProfilePage() {
                         }
 
                         <h1 className={"mt-5"}>{name}</h1>
-                        <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
+                        <form method={"post"} action={process.env.REACT_APP_BE_HOST+"api/v1/corso/logout"}>
                             <button id={"logout-profile"} type={"submit"}>LOGOUT</button>
                         </form>
                     </div>

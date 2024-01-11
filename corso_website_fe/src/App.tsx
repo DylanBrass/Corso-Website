@@ -26,11 +26,12 @@ import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrd
 import {useEffect} from "react";
 
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
+import EditGallery from "./Pages/Gallery/EditGallery";
 
 
 function App() {
     const checkServerConnection = () => {
-        fetch("http://localhost:8080/api/v1/corso/server/status",
+        fetch( process.env.REACT_APP_BE_HOST + "api/v1/corso/server/status",
             {
                 method: 'HEAD'
             }).then(
@@ -41,16 +42,16 @@ function App() {
                     // @ts-ignore
                     swal("Error", "Server is down !", "error")
                         .then(() => {
-                            window.location.href = "http://localhost:3000/"
+                            window.location.reload()
                         })
                 }
             }
         ).catch(function (err) {
             console.log('Fetch Error :-S', err);
             // @ts-ignore
-            swal("Error", err, "error")
+            swal("Error", err.toString(), "error")
                 .then(() => {
-                    window.location.href = "http://localhost:3000/"
+                    window.location.reload()
                 })
             if (err.response === undefined) {
                 // @ts-ignore
@@ -84,6 +85,7 @@ function App() {
                         <Route path="/orders/pending" element={<PendingOrdersPage/>}/>
                         <Route path="/orders/overdue" element={<OverdueOrdersPage/>}/>
                         <Route path="/manage/testimonies" element={<ManageReviews/>}/>
+                        <Route path="/carousel/order" element={<EditGallery/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>
                         <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>

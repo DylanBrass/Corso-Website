@@ -21,7 +21,7 @@ function OurPreviousProjects() {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/corso/galleries/carousel');
+                const response = await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel');
                 console.log('Response:', response.data)
                 setImages(response.data);
             } catch (error) {

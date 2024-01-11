@@ -62,7 +62,7 @@ function ManageReviews() {
 
 
     const getReviews = () => {
-        axios.get("http://localhost:8080/api/v1/corso/reviews",
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews",
             {
                 headers: {
                     // @ts-ignore
@@ -82,7 +82,7 @@ function ManageReviews() {
 
 
     const getReviewsBySearch = () => {
-        axios.get("http://localhost:8080/api/v1/corso/reviews/search?customerFullName=" + searchTerm,
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/search?customerFullName=" + searchTerm,
             {
                 headers: {
                     // @ts-ignore

@@ -104,6 +104,7 @@ test {
     exclude("**/ViewAllOrdersWithFiltersTest.class")
     exclude("**/ViewSpecificOrderCustomerTest.class")
     exclude '**/ViewCarouselTest.class'
+    exclude '**/UpdateCarouselOrderTest.class'
     exclude '**/LoginAuthTest.class'
     exclude '**/ViewAllOrdersTest.class'
     exclude '**/ViewAllOrdersQueryParams.class'

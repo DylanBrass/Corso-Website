@@ -2,6 +2,7 @@ package com.corso.springboot.utils;
 
 import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
+import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
 import lombok.Generated;
@@ -41,6 +42,12 @@ public class GlobalControllerHandler {
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(OrderNotFoundException.class)
     public HttpErrorInfo handleErrorWhileCreatingAdmin(OrderNotFoundException ex) {
+        return createHttpErrorInfo(NOT_FOUND, ex);
+    }
+
+    @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(GalleryNotFoundException.class)
+    public HttpErrorInfo handleErrorWhileCreatingAdmin(GalleryNotFoundException ex) {
         return createHttpErrorInfo(NOT_FOUND, ex);
     }
 
