@@ -1,5 +1,6 @@
 package com.corso.springboot.selenium_tests;
 
+import com.codeborne.selenide.SelenideElement;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,20 @@ public class ViewAllReviewsTest {
 
             $(".review-card").shouldHave(text("John Doe"));
             sleep(500);
+
+        }
+
+        @Test
+    public void ViewAllPinnedReview(){
+            logger.info("Test initialized");
+
+
+            SelenideElement pinnedReviews = $(".col-12:nth-child(3)");
+            pinnedReviews.scrollIntoView("{behavior: 'smooth', block: 'center'}");
+
+           assertTrue(pinnedReviews.isDisplayed());
+
+            sleep(2000);
 
         }
     }
