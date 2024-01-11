@@ -82,6 +82,10 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public int sendEmail(String recipient, String subject, String template, Map<String, String> parameters) throws MessagingException {
         try {
+            log.info("Sending email to {}", recipient);
+            for (Map.Entry<String, String> entry : parameters.entrySet()) {
+                log.info("Parameter {} : {}", entry.getKey(), entry.getValue());
+            }
             Message message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress(username));

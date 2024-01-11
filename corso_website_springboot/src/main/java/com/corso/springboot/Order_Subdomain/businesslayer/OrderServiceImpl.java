@@ -4,6 +4,7 @@ import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
 import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
+import com.corso.springboot.Order_Subdomain.presentationlayer.DeclineOrderRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
@@ -290,20 +291,16 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
         Status newStatus = Status.IN_PROGRESS;
-
         if (order == null) {
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
+        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
 
+
+
+        String subject = "Order #" + orderTrackingNumber + " has been accepted!";
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("H1", "Thank you for choosing Corso.");
-        parameters.put("H2", "Your order has been accepted.");
-        parameters.put("H4", "For more information about your order, progress reports or to leave a review, " +
-                "please log in and navigate to the current orders page.");
-        parameters.put("H5", "We look forward to working with you.");
-
-        String subject = "Order #" + orderId + " has been accepted!";
 
         int status = emailService.sendEmail(acceptOrderRequest.getRecipient(), subject, "ApproveOrder", parameters);
 
@@ -320,6 +317,34 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int countByOrderStatus(String status) {
-        return orderRepository.countByOrderStatus(status);
+        return orderRepository.countByOrderStatus(status);}
+
+    @Override
+    public OrderResponse updateOrderStatusToDeclined(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException {
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        Status newStatus = Status.DECLINED;
+
+        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        Map<String, String> parameters = new HashMap<>();
+        log.info("Sending email to {}", declineOrderRequest.getRecipient());
+        log.info("Reason email to {}", declineOrderRequest.getReasonForDecline());
+        parameters.put("reasonForCancellation", declineOrderRequest.getReasonForDecline());
+
+        String subject = "Order #" + orderTrackingNumber + " has been denied";
+
+        int status = emailService.sendEmail(declineOrderRequest.getRecipient(), subject, "DeclineOrder", parameters);
+
+        if (status != 200) {
+            throw new MessagingException("Failed to send email");
+        }
+
+        order.setOrderStatus(Status.valueOf(newStatus.toString()));
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
     }
 }
