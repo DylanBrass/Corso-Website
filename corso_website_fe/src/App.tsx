@@ -30,46 +30,7 @@ import EditGallery from "./Pages/Gallery/EditGallery";
 
 
 function App() {
-    const checkServerConnection = () => {
-        fetch( process.env.REACT_APP_BE_HOST + "api/v1/corso/server/status",
-            {
-                method: 'HEAD'
-            }).then(
-            function (response) {
-                if (response.status !== 200 && response.status !== 401 && response.status !== 403) {
-                    console.log('Looks like there was a problem. Status Code: ' +
-                        response.status);
-                    // @ts-ignore
-                    swal("Error", "Server is down !", "error")
-                        .then(() => {
-                            window.location.reload()
-                        })
-                }
-            }
-        ).catch(function (err) {
-            console.log('Fetch Error :-S', err);
-            // @ts-ignore
-            swal("Error", err.toString(), "error")
-                .then(() => {
-                    window.location.reload()
-                })
-            if (err.response === undefined) {
-                // @ts-ignore
-                return;
-            }
-
-            if (err.response.status === 401) {
-                // @ts-ignore
-                return
-            }
-
-        })
-
-    }
-
-    useEffect(() => {
-        checkServerConnection()
-    }, []);
+    
     return (
         <>
             <AuthProvider>
