@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @Generated
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/auth0/manage")

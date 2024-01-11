@@ -102,7 +102,7 @@ function ViewSpecificOrderAdmin() {
 
     const acceptStatus = async () => {
         try {
-            const response = await axios.patch(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/manage/acceptOrder/${orderId}`, {
+            const response = await axios.patch(process.env.REACT_APP_BE_HOST + 'api/v1/corso/orders/manage/acceptOrder/${orderId}', {
                 recipient: order.customerEmail
             }, {
                 headers: {

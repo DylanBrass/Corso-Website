@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
 @RestController
 @RequestMapping("api/v1/corso/galleries")
 public class GalleryController {

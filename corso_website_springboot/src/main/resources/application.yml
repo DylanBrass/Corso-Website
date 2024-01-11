@@ -2,7 +2,12 @@
 server:
   error:
     include-message: always
+frontend:
+  url: http://localhost:3000/
 
+backend:
+  url: http://localhost:8080/
+  
 logging:
   level:
     root: INFO
@@ -44,10 +49,17 @@ spring:
       platform: h2
       mode: always
 
+frontend:
+    url: http://localhost:3000/
+
+backend:
+    url: http://localhost:8080/
+
 logging:
   level:
     org.springframework.data.jpa: DEBUG
     org.hibernate.SQL: DEBUG
+
 
 ---
 # for docker
@@ -83,6 +95,52 @@ server:
     include-message: always
   port: 8080
 
+frontend:
+    url: http://localhost:3000/
+
+backend:
+    url: http://localhost:8080/
+
+
+spring.datasource.hikari.initializationFailTimeout: 60000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  web:
+    resources:
+      add-mappings: false
+  datasource:
+    url: jdbc:mysql:///corso-dev-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
+    username: corso-dev-website-user
+    password: f#CoFJh*p\gaL+t)
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      platform: mysql
+      mode: always
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+    include-binding-errors: always
+    include-message: always
+  port: 8080
+
+frontend:
+  url: https://corso-website-eight.vercel.app/
+
+backend:
+  url: https://corso-pkhz.onrender.com/
 
 
 

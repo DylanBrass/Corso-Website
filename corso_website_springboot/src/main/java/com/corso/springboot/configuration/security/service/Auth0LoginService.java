@@ -27,6 +27,11 @@ public class Auth0LoginService {
     @Value("${okta.oauth2.issuer}")
     private String issuer;
 
+    @Value("${frontend.url}")
+    private String frontendDomain;
+
+    @Value("${backend.url}")
+    private String backendDomain;
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
 
@@ -57,7 +62,7 @@ public class Auth0LoginService {
 
 
             return ResponseEntity.status(302)
-                    .location(URI.create("http://localhost:3000/external")).build();
+                    .location(URI.create(frontendDomain+"external")).build();
 
         }
 
@@ -106,10 +111,10 @@ public class Auth0LoginService {
 
         if (principal.getClaim("https://corso-dev.com/roles").toString().contains("Admin")) {
             return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
-                    .location(URI.create("http://localhost:3000/dashboard")).build();
+                    .location(URI.create(frontendDomain+"dashboard")).build();
         } else {
             return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
-                    .location(URI.create("http://localhost:3000")).build();
+                    .location(URI.create(frontendDomain)).build();
         }
     }
 

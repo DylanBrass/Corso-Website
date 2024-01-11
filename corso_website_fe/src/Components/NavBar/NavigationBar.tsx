@@ -47,14 +47,14 @@ function NavigationBar() {
                             //@ts-ignore
                             !auth.isAuthenticated &&
                         <Nav.Item className={"item"}>
-                            <Nav.Link href="http://localhost:8080/oauth2/authorization/okta">LOGIN</Nav.Link>
+                            <Nav.Link href={process.env.REACT_APP_BE_HOST + `oauth2/authorization/okta`}>LOGIN</Nav.Link>
                         </Nav.Item>
                         }
                         {
                             //@ts-ignore
                             auth.isAuthenticated &&
                             <Nav.Item className={"item"}>
-                                <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout"}>
+                                <form method={"post"} action={ process.env.REACT_APP_BE_HOST +"api/v1/corso/logout"}>
                                     <button id={"logout-btn"} type={"submit"}>LOGOUT</button>
                                 </form>
                             </Nav.Item>
