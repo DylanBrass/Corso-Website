@@ -2,7 +2,12 @@
 server:
   error:
     include-message: always
+frontend:
+  url: http://localhost:3000/
 
+backend:
+  url: http://localhost:8080/
+  
 logging:
   level:
     root: INFO
