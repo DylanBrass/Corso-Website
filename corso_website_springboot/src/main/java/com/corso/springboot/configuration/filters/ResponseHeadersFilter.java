@@ -11,7 +11,6 @@ import java.io.IOException;
 
 import jakarta.servlet.Filter;
 import lombok.Generated;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,9 +19,6 @@ import org.springframework.stereotype.Component;
 @Generated
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ResponseHeadersFilter implements Filter {
-
-    @Value("${frontend.url}")
-    private String frontendDomain;
     @Override
     public void doFilter(
             final ServletRequest request,
