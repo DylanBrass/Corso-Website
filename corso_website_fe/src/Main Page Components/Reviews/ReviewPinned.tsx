@@ -12,7 +12,7 @@ function ReviewPinned() {
 
     const [pinnedReviews, setPinnedReviews] = useState([Reviews])
     const getPinnedReviews = () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/pinned",
+        axios.get("http://localhost:8080/api/v1/corso/reviews/pinned",
             {
                 headers: {
                     // @ts-ignore
@@ -39,12 +39,12 @@ function ReviewPinned() {
             <div className={"testimonies-main-box w-100"}>
 
                 <div className={"testimonies-title-box d-none d-md-flex"}>
-                        <h1 className={"testimonials-title"}>Testimonials</h1>
+                    <h1 className={"testimonials-title"}>Testimonials</h1>
                 </div>
 
                 <div className={"row"}>
                     {pinnedReviews.map((value) => (
-                        <div className={"col-12 col-md-4 review-tile-box"}>
+                        <div className={"col-12 col-md-6 col-lg-4 review-tile-box"}>
                             <ReviewsPinnedTileMainPage
                                 //@ts-ignore
                                 key={value.id}
