@@ -52,7 +52,7 @@ function AllOrdersPage() {
         }
         let param = "?" + selectedSearchFieldUser + "=" + (document.getElementById("search-value") as HTMLInputElement).value
 
-        axios.get("http://localhost:8080/api/v1/corso/auth0/manage/users" + param, {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/auth0/manage/users" + param, {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()

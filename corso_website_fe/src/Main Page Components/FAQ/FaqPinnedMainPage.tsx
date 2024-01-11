@@ -10,7 +10,7 @@ function FaqPinnedMainPage() {
 
     const [preferredFaq, setPreferredFaq] = useState([FAQ])
     const getPreferredFaqs = () => {
-        axios.get("http://localhost:8080/api/v1/corso/faqs/preferred",
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/faqs/preferred",
             {
                 headers: {
                     // @ts-ignore

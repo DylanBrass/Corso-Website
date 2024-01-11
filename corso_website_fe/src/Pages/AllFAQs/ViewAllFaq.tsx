@@ -10,7 +10,7 @@ function ViewAllFaq() {
     const [faqs, setFaqs] = useState([FAQ])
 
     const getFaqs = () => {
-        axios.get("http://localhost:8080/api/v1/corso/faqs",
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/faqs",
             {
                 headers: {
                     // @ts-ignore

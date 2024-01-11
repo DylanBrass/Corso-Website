@@ -50,7 +50,7 @@ function AddCustomerInformation(){
 
 
     const checkIfProfileExists = async () => {
-        await axios.get("http://localhost:8080/api/v1/corso/customers?simpleCheck=true", {
+        await axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers?simpleCheck=true", {
             headers: {
                 // @ts-ignore
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -60,7 +60,7 @@ function AddCustomerInformation(){
             if (r.status === 200) {
                 setHasProfile(true);
                 console.log(hasProfile);
-                axios.get("http://localhost:8080/api/v1/corso/customers", {
+                axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
                     headers: {
                         // @ts-ignore
                         "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -137,7 +137,7 @@ function AddCustomerInformation(){
             apartmentNumber: data.get("apartmentNumber")
         };
         if (hasProfile) {
-            axios.put("http://localhost:8080/api/v1/corso/customers", body, {
+            axios.put(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", body, {
                 headers: {
                     // @ts-ignore
                     "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -168,7 +168,7 @@ function AddCustomerInformation(){
                 });
         } else {
             axios
-                .post("http://localhost:8080/api/v1/corso/customers", body, {
+                .post(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", body, {
                     headers: {
                         // @ts-ignore
                         "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -207,7 +207,7 @@ function AddCustomerInformation(){
         event.preventDefault();
 
         try {
-            const response = await axios.delete("http://localhost:8080/api/v1/corso/customers", {
+            const response = await axios.delete(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
                 headers: {
                     // @ts-ignore
                     "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -222,7 +222,7 @@ function AddCustomerInformation(){
 
                 await swal("Profile Deleted Successfully", "Only your default profile was kept (username and email)!", "success");
 
-                axios.get("http://localhost:8080/api/v1/corso/security/user-info", {
+                axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/security/user-info", {
 
                     headers: {
                         // @ts-ignore

@@ -20,7 +20,7 @@ function Dashboard() {
         const [totalOrders, setTotalOrders] = useState(0)
 
     const getTotalAdmins = async () => {
-        axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-total-admins", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/auth0/manage/get-total-admins", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -39,7 +39,7 @@ function Dashboard() {
     }
 
     const getTotalOrders = async () => {
-        axios.get("http://localhost:8080/api/v1/corso/orders/all/count", {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/all/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -58,7 +58,7 @@ function Dashboard() {
     }
 
     const getVisitors = async () => {
-        axios.get("http://localhost:8080/api/v1/corso/auth0/manage/get-stats-last-30-days", {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/auth0/manage/get-stats-last-30-days", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -77,7 +77,7 @@ function Dashboard() {
     }
 
     const getInProgressCount = async () => {
-        axios.get("http://localhost:8080/api/v1/corso/orders/manage/count", {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/count", {
             params: {
                 status: "IN_PROGRESS"
             },
@@ -99,7 +99,7 @@ function Dashboard() {
     };
 
     const getPendingCount = async () => {
-        axios.get("http://localhost:8080/api/v1/corso/orders/manage/count", {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/count", {
             params: {
                 status: "PENDING"
             },
@@ -120,7 +120,7 @@ function Dashboard() {
             });
     };
     const getCompletedCount = async () => {
-        axios.get("http://localhost:8080/api/v1/corso/orders/manage/count", {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/count", {
             params: {
                 status: "COMPLETED"
             },

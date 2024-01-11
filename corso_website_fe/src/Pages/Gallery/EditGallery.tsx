@@ -81,7 +81,7 @@ function EditGallery() {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/corso/galleries/carousel');
+                const response = await axios.get(process.env.REACT_APP_BE_HOST+'api/v1/corso/galleries/carousel');
                 const sortedImages = response.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
                 setImages(sortedImages);
             } catch (error) {
@@ -108,7 +108,7 @@ function EditGallery() {
     const handleSubmit = async () => {
         try {
             await axios.patch(
-                'http://localhost:8080/api/v1/corso/galleries/carousel/order',
+                process.env.REACT_APP_BE_HOST+'api/v1/corso/galleries/carousel/order',
                 images.map((image) => ({
                     galleryId: image.galleryId,
                     image_position: image.image_position,
@@ -134,7 +134,7 @@ function EditGallery() {
                         })
                 })
 
-            const getResponse = await axios.get('http://localhost:8080/api/v1/corso/galleries/carousel ');
+            const getResponse = await axios.get(process.env.REACT_APP_BE_HOST+'api/v1/corso/galleries/carousel ');
             const sortedImages = getResponse.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
             setImages(sortedImages);
             setIsSubmitClicked(true);

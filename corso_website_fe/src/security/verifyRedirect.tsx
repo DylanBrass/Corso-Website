@@ -19,11 +19,11 @@ function VerifyRedirect() {
             <div className="verification-message-container">
                 <div className="verification-message">
                     <p>Your email is not verified yet. Please check your email and click on the link to login into your account.</p>
-                    <a href="http://localhost:8080/oauth2/authorization/okta">Login</a>
+                    <a href={process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"}>Login</a>
                 </div>
             </div>
 
-            <form method={"post"} action={"http://localhost:8080/api/v1/corso/logout?isLogoutVerify=true"} id="logoutForm">
+            <form method={"post"} action={process.env.REACT_APP_BE_HOST+"api/v1/corso/logout?isLogoutVerify=true"} id="logoutForm">
                 <button id={'submit'} type={"submit"} style={{
                     display: "none",
                     visibility: "hidden"
