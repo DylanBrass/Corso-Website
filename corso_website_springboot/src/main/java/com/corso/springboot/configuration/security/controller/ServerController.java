@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"})
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-fe.onrender.com"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/server")

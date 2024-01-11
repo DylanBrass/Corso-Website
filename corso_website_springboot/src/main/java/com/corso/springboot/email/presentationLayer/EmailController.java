@@ -12,7 +12,7 @@ import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-fe.onrender.com"},allowCredentials = "true")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
