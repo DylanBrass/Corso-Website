@@ -42,7 +42,12 @@ public class SpringSecurityConfigBean {
 
     @Value("${okta.oauth2.client-id}")
     private String clientId;
-    private final String frontendDomain = "http://localhost:3000";
+
+    @Value("${frontend.url}")
+    private String frontendDomain;
+
+    @Value("${backend.url}")
+    private String backendDomain;
 
     private final ObjectMapper mapper;
 
@@ -66,7 +71,7 @@ public class SpringSecurityConfigBean {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()))
                 .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
                         .loginPage("/login/oauth2/code/okta")
-                        .defaultSuccessUrl("http://localhost:8080/api/v1/corso/security/redirect", true)
+                        .defaultSuccessUrl(backendDomain+"api/v1/corso/security/redirect", true)
                         .permitAll())
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> {
@@ -144,7 +149,7 @@ public class SpringSecurityConfigBean {
             try {
 
                 if (isSignup)
-                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=http://localhost:8080/oauth2/authorization/okta");
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo="+ backendDomain +"oauth2/authorization/okta");
                 else if (isVerify)
                     response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "/verify");
                 else if (isExternal)

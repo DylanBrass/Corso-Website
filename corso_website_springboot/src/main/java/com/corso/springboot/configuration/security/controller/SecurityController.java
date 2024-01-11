@@ -10,18 +10,24 @@ import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.net.URI;
 
 @Slf4j
 @Generated
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/security")
 public class SecurityController {
 
+    @Value("${frontend.url}")
+    private String frontendDomain;
+
+    @Value("${backend.url}")
+    private String backendDomain;
 
     private final Auth0LoginService auth0LoginService;
     private final Auth0ManagementService auth0ManagementService;
@@ -34,7 +40,7 @@ public class SecurityController {
         if (principal == null) {
             log.info("Principal is null");
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("http://localhost:8080/oauth2/authorization/okta")).build();
+                    .location(URI.create(backendDomain+"oauth2/authorization/okta")).build();
         }
 
 
@@ -64,11 +70,11 @@ public class SecurityController {
                 if (!isVerified) {
                     log.info("User not verified, redirecting to verification page");
                     return ResponseEntity.status(HttpStatus.FOUND)
-                            .location(URI.create("http://localhost:3000/verify")).build();
+                            .location(URI.create(frontendDomain + "verify")).build();
                 }
 
                 return ResponseEntity.status(HttpStatus.FOUND)
-                        .location(URI.create("http://localhost:3000/logout")).build();
+                        .location(URI.create(frontendDomain + "logout")).build();
 
             }
 
@@ -76,12 +82,12 @@ public class SecurityController {
                 log.info("User not verified, redirecting to verification page");
                 auth0LoginService.sendVerificationEmail(principal.getSubject(), accessToken);
                 return ResponseEntity.status(HttpStatus.FOUND)
-                        .location(URI.create("http://localhost:3000/verify")).build();
+                        .location(URI.create(frontendDomain + "verify")).build();
             }
         }else{
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .location(URI.create("http://localhost:3000/")).build();
+                    .location(URI.create(frontendDomain)).build();
 
         }
 

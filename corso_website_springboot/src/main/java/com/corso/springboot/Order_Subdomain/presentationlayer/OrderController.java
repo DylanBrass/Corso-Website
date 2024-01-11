@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corso-website-eight.vercel.app/"},allowCredentials = "true")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
