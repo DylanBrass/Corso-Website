@@ -32,6 +32,8 @@ public class Auth0LoginService {
     @Value("${frontend.url}")
     private String frontendDomain;
 
+    @Value("${website.domain}")
+    private String websiteDomain;
 
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
@@ -84,7 +86,6 @@ public class Auth0LoginService {
         ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
                 .httpOnly(true)
                 .secure(true)
-                //.domain(formattedDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -92,7 +93,7 @@ public class Auth0LoginService {
         ResponseCookie authCookie = ResponseCookie.from("isAuthenticated", "true")
                 .httpOnly(false)
                 .secure(true)
-                //.domain(formattedDomain)
+                .domain(websiteDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -101,7 +102,7 @@ public class Auth0LoginService {
                         .replace(",", "-").replace(" ", ""))
                 .httpOnly(false)
                 .secure(true)
-                //.domain(formattedDomain)
+                .domain(websiteDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -111,7 +112,7 @@ public class Auth0LoginService {
         ResponseCookie pictureCookie = ResponseCookie.from("picture", picture)
                 .httpOnly(false)
                 .secure(true)
-                //.domain(formattedDomain)
+                .domain(websiteDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
