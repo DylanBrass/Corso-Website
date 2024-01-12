@@ -83,6 +83,7 @@ public class SpringSecurityConfigBean {
 
                                 Arrays.stream(request.getCookies()).toList().forEach(cookie -> {
                                     if (!cookie.getName().equals("JSESSIONID")) {
+                                        log.info(cookie.getName());
                                         Cookie newCookie = new Cookie(cookie.getName(), "");
                                         newCookie.setMaxAge(0);
                                         newCookie.setPath("/");
