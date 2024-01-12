@@ -1,11 +1,11 @@
-import Service from "./Service";
+import ServiceOrder from "./ServiceOrder";
 
 
 class Order {
     public orderId: string;
     public orderTrackingNumber: string;
     public serviceId: string;
-    public service: Service;
+    public service: ServiceOrder;
     public userId: string;
     public progressInformation: string;
     public orderDate: string;
@@ -23,7 +23,7 @@ class Order {
     public daysLeft: number;
 
 
-    constructor(orderId: string, orderTrackingNumber: string, serviceId: string, service: Service, userId: string, progressInformation: string, orderDate: string, dueDate: string, orderStatus: string, orderDescription: string, customerFullName: string, customerEmail: string, customerPhone: string, customerAddress: string, customerCity: string, customerPostalCode: string, customerApartmentNumber: string, estimatedDuration: number, daysLeft: number) {
+    constructor(orderId: string, orderTrackingNumber: string, serviceId: string, service: ServiceOrder, userId: string, progressInformation: string, orderDate: string, dueDate: string, orderStatus: string, orderDescription: string, customerFullName: string, customerEmail: string, customerPhone: string, customerAddress: string, customerCity: string, customerPostalCode: string, customerApartmentNumber: string, estimatedDuration: number, daysLeft: number) {
         this.orderId = orderId;
         this.orderTrackingNumber = orderTrackingNumber;
         this.serviceId = serviceId;

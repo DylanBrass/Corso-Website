@@ -5,5 +5,4 @@
       <sourceFolder url="file://$MODULE_DIR$/../../corso_website_springboot/build/generated/sources/annotationProcessor/java/test" isTestSource="true" generated="true" />
     </content>
   </component>
-  <component name="TestModuleProperties" production-module="corso-website.main" />
 </module>

@@ -36,5 +36,11 @@ public class ServiceController {
     public ResponseEntity<ServiceResponse> createService(@RequestBody ServiceRequest serviceRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceService.createService(serviceRequest));
     }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    public ResponseEntity<Integer> countAllServices(){
+        return ResponseEntity.status(HttpStatus.OK).body(serviceService.countAllServices());
+    }
 }
 

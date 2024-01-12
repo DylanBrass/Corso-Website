@@ -8,7 +8,7 @@ import swal from "sweetalert";
 import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import Order from "../../Models/Order";
-import Service from "../../Models/Service";
+import ServiceOrder from "../../Models/ServiceOrder";
 
 function ViewSpecificOrderAdmin() {
 
@@ -161,7 +161,7 @@ function ViewSpecificOrderAdmin() {
         getOrder().then(r => console.log("Order fetched"));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [order, setOrder] = useState(new Order("", "", "", new Service("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
+    const [order, setOrder] = useState(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     return (
         <div>
             <NavigationBar/>

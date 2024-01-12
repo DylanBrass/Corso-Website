@@ -22,4 +22,10 @@ class ServiceRepositoryTest {
         Service service = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
         assertEquals(serviceId, service.getServiceIdentifier().getServiceId());
     }
+
+    @Test
+    void countAllBy() {
+        int count = serviceRepository.countAllBy();
+        assertEquals(5, count);
+    }
 }

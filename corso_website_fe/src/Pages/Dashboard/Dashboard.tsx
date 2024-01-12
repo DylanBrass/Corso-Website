@@ -15,6 +15,7 @@ function Dashboard() {
     const [inProgressCount, setInProgressCount] = useState(0);
     const [pendingCount, setPendingCount] = useState(0);
     const [completedCount, setCompletedCount] = useState(0);
+    const [serviceCount, setServiceCount] = useState(0);
 
 
         const [totalOrders, setTotalOrders] = useState(0)
@@ -141,6 +142,25 @@ function Dashboard() {
             });
     };
 
+    const getServicesCount = async () => {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/services/count", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setServiceCount(response.data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching completed count", error);
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    }
+
 
 
     const auth = useAuth()
@@ -159,14 +179,12 @@ function Dashboard() {
             console.log(r)
         })
         getInProgressCount().then(() => {
-            console.log("In-progress count fetched");
         });
         getPendingCount().then(() => {
-            console.log("Pending count fetched");
         });
         getCompletedCount().then(() => {
-            console.log("Pending count fetched");
         });
+        getServicesCount()
 
         getTotalOrders().then(r => {
             console.log(r)
@@ -320,7 +338,7 @@ function Dashboard() {
                     <div className={"col-4"}>
 
                         <AdminDashboardTile
-                            title1={"10"}
+                            title1={serviceCount.toString()}
                             title2={""}
                             text1={"Services Offered"}
                             text2={""}
