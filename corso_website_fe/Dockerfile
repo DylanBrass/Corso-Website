@@ -1,8 +1,8 @@
 # Stage 1 - Build the React application
 FROM node:18-alpine as react-build
-WORKDIR /petclinic-frontend/
-COPY public /petclinic-frontend/public/
-COPY src/ /petclinic-frontend/src
+WORKDIR /corso_website_fe/
+COPY public /corso_website_fe/public/
+COPY src/ /corso_website_fe/src
 COPY package.json /frontend/
 COPY package.json .
 COPY package-lock.json .
