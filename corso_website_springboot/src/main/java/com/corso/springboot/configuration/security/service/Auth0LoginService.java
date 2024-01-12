@@ -86,6 +86,7 @@ public class Auth0LoginService {
         ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
                 .httpOnly(true)
                 .secure(true)
+                .domain(formattedDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
