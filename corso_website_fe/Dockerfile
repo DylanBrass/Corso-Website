@@ -7,8 +7,7 @@ COPY package.json /frontend/
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig.json .
-ARG REACT_APP_BACKEND_URL
-ENV REACT_APP_BE_HOST ${REACT_APP_BACKEND_URL}
+ENV REACT_APP_BE_HOST https://corso-website-backend-xtejdm3liq-nn.a.run.app/
 RUN npm install
 RUN npm run build
 
