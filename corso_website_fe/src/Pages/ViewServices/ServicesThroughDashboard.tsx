@@ -51,7 +51,7 @@ function ServicesThroughDashboard(){
                                 serviceName: service.serviceName,
                                 serviceDescription: service.serviceDescription,
                                 action: () => {
-                                    console.log("Service clicked");
+                                    window.location.href = `/adminServices/${service.serviceId}`;
                                 }
                             }}
                         />

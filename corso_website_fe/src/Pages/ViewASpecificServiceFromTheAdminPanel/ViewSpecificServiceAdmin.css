@@ -1,0 +1,42 @@
+.view-service-admin-container {
+    background: #F5F5F5;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    color: #333;
+    align-content: center;
+    margin-top: 2%;
+    padding-left: 12%;
+    padding-right: 12%;
+}
+
+    .view-service-admin-container-title h1 {
+        color: #4a4a4a;
+        font-size: 2em;
+        margin-bottom: 0.5em;
+        text-align: center;
+    }
+
+    .view-service-admin-container-content {
+        justify-content: space-around;
+        align-items: center;
+        padding: 4%;
+    }
+
+    .view-service-admin-container-content-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .view-service-admin-container-content-description h1 {
+        font-size: 1.5em;
+        margin-bottom: 0.3em;
+    }
+
+    .view-service-admin-container-content-description p {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+
+
+
+

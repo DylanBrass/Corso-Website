@@ -1,6 +1,6 @@
 import Order from "../../../Models/Order";
 import {useEffect, useState} from "react";
-import Service from "../../../Models/Service";
+import ServiceOrder from "../../../Models/ServiceOrder";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {useAuth} from "../../../security/Components/AuthProvider";
@@ -12,7 +12,7 @@ import check from "../../../images/check.svg";
 
 function ViewSpecificOrder() {
 
-    const [order, setOrder] = useState<Order>(new Order("", "", "", new Service("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
+    const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     let {orderId} = useParams();
 
     const auth = useAuth()

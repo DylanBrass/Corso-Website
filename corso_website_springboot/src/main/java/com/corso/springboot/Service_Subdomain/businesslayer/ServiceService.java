@@ -11,4 +11,6 @@ public interface ServiceService {
     List<ServiceResponse> getAllServices();
 
     ServiceResponse createService(ServiceRequest serviceRequest);
+
+    int countAllServices();
 }

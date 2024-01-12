@@ -1,19 +1,19 @@
 
 import React from 'react';
 import './OrderTile.css';
-import Service from "../../Models/Service";
+import ServiceOrder from "../../Models/ServiceOrder";
 
 export {};
 
 export class Order {
     orderTrackingNumber: string;
     orderId: string;
-    service: Service;
+    service: ServiceOrder;
     customerFullName: string;
     orderStatus: string;
 
 
-    constructor(orderTrackingNumber: string, orderId: string, service: Service, customerFullName: string, orderStatus: string) {
+    constructor(orderTrackingNumber: string, orderId: string, service: ServiceOrder, customerFullName: string, orderStatus: string) {
         this.orderTrackingNumber = orderTrackingNumber;
         this.orderId = orderId;
         this.service = service;
@@ -28,7 +28,7 @@ export class OverdueOrder extends Order {
     constructor(
         orderTrackingNumber: string,
         orderId: string,
-        service: Service,
+        service: ServiceOrder,
         customerFullName: string,
         orderStatus: string,
         overdueDays: number

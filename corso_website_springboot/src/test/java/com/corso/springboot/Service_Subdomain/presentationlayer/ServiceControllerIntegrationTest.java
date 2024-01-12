@@ -100,4 +100,16 @@ public class ServiceControllerIntegrationTest {
                 .andExpect(jsonPath("$.serviceIcon").value("mockedImageUrl"))
                 .andExpect(jsonPath("$.serviceImage").value("mockedImageUrl"));
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenGettingCountOfAllServices_thenReturnCount() throws Exception {
+        //act
+        mockMvc.perform(get(BASE_URI_SERVICES + "/count")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(oidcLogin().authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk())
+                .andExpect(content().string("1"));
+    }
 }

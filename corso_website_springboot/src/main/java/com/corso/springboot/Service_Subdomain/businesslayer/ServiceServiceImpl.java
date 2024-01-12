@@ -62,4 +62,9 @@ public class ServiceServiceImpl implements ServiceService{
             throw new RuntimeException("Failed to upload images", e);
         }
     }
+
+    @Override
+    public int countAllServices() {
+        return serviceRepository.countAllBy();
+    }
 }

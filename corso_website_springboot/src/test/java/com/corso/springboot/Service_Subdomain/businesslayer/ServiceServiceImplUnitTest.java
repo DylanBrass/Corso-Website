@@ -177,4 +177,17 @@ public class ServiceServiceImplUnitTest {
         Mockito.verify(serviceRepository, Mockito.never()).save(Mockito.any());
     }
 
+    @Test
+    void countAllServices_ShouldSucceed() {
+        // Arrange
+        when(serviceRepository.countAllBy()).thenReturn(2);
+
+        // Act
+        int result = serviceService.countAllServices();
+
+        // Assert
+        assertEquals(2, result);
+        Mockito.verify(serviceRepository, Mockito.times(1)).countAllBy();
+    }
+
 }
