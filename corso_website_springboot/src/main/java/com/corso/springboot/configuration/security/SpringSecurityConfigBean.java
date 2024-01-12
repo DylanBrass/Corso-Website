@@ -142,6 +142,10 @@ public class SpringSecurityConfigBean {
                 Cookie newCookie = new Cookie(cookie.getName(), "");
                 newCookie.setMaxAge(0);
                 newCookie.setPath("/");
+                String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
+                                                .split(":")[0].replace("/","");
+
+                newCookie.setDomain(formattedDomain);
                 response.addCookie(newCookie);
             });
 
