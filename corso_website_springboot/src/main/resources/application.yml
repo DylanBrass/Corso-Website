@@ -145,10 +145,10 @@ server:
   port: 8080
 
 frontend:
-  url: https://corso-fe.onrender.com/
+  url: https://corso-dev-frontend-xtejdm3liq-nn.a.run.app/
 
 backend:
-  url: https://corso-pkhz.onrender.com/
+  url: https://corso-website-backend-xtejdm3liq-nn.a.run.app/
 
 website:
   domain: onrender.com
