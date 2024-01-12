@@ -215,7 +215,7 @@ function ViewSpecificOrderAdmin() {
                                 }
                                 <form onSubmit={declinedStatus} className={" decline-popup" + (loading ? " hidden " : " ")}>
                                     <h4>Reason for Declining</h4>
-                                    <textarea
+                                    <textarea className="view-specific-order-admin-textarea"
                                         value={reasonForCancellation}
                                         onChange={(e) => setReasonForCancellation(e.target.value)}
                                         placeholder="Enter the reason for declining the order"

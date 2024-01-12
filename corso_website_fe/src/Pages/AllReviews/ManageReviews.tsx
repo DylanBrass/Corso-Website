@@ -134,10 +134,10 @@ function ManageReviews() {
                     <h1 className="review-title">Reviews</h1>
                 </div>
 
-                <form onSubmit={handleSearch}>
+                <form className="manage-review-form" onSubmit={handleSearch}>
                     <div className={"form-container"}>
-                        <input type="text" name="search" placeholder="Search Client Name"  value={searchTerm} onChange={handleChange}/>
-                        <button type="submit">
+                        <input className="manage-review-input" type="text" name="search" placeholder="Search Client Name"  value={searchTerm} onChange={handleChange}/>
+                        <button className="manage-review-submit-button" type="submit">
                             <img src={Search_light} alt={"searchBtn"}/>
                         </button>
                     </div>

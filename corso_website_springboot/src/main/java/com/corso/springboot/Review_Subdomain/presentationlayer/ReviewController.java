@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +43,14 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResponse>> getPinnedReviews(@CookieValue(value = "id_token", required = false) String idToken){
         log.info("Get pinned reviews : {}", idToken);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getPinnedReviews(true));
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByUserId(@AuthenticationPrincipal OidcUser principal){
+        String userId = principal.getSubject();
+        log.info("Get reviews with userId: {}", userId);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByUserId(userId));
     }
 
 }

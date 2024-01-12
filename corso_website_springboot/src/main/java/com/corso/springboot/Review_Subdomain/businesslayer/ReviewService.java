@@ -13,4 +13,6 @@ public interface ReviewService {
 
     List<ReviewResponse> getPinnedReviews(boolean pinned);
 
+    List<ReviewResponse> getReviewsByUserId(String userId);
+
 }

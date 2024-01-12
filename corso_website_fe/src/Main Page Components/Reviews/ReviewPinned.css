@@ -93,5 +93,12 @@
         }
     }
 
+    @media (min-width: 768px) {
+        .testimonies-message {
+            height: 10vh;
+            margin: 5px;
+        }
+    }
+
 
 }

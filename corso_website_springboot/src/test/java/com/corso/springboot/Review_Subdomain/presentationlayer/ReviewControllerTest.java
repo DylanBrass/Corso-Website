@@ -1,6 +1,5 @@
 package com.corso.springboot.Review_Subdomain.presentationlayer;
 
-import com.corso.springboot.FAQ_Subdomain.datalayer.FAQRepository;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,17 +8,24 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebClient
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = true)
 @ActiveProfiles("test")
 class ReviewControllerTest {
 
@@ -41,6 +47,7 @@ class ReviewControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     void getAllReviews_ReturnAllReviews() {
         //act
         webTestClient.get()
@@ -52,6 +59,7 @@ class ReviewControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     void getAllReviews_ReturnAllReviewsByCustomerFullName() {
         //act
         webTestClient.get()
@@ -64,6 +72,7 @@ class ReviewControllerTest {
 
 
     @Test
+    @WithMockUser(authorities = "Admin")
     void getReviewsByCustomerFullName_NullParameter_ReturnsBadRequest() throws Exception {
         webTestClient.get()
                 .uri(BASE_URI_REVIEWS + "/search?customerFullName=")
@@ -84,6 +93,21 @@ class ReviewControllerTest {
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(expectedNumberOFReviews);
+    }
+
+    @Test
+    void getReviewsByUserId_ThenReturnReviewsByUserId() throws Exception {
+        //arrange
+        Integer expectedNumberOfReviews= 5;
+        //act
+
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/user")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()")
+                        .value(expectedNumberOfReviews));
     }
 
 }

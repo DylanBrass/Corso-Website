@@ -4,6 +4,7 @@ package com.corso.springboot.Review_Subdomain.businesslayer;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,17 @@ public class ReviewServiceImpl implements ReviewService{
     public List<ReviewResponse> getPinnedReviews(boolean pinned) {
         return reviewResponseMapper.toReviewsResponse(reviewRepository.getReviewByPinned(pinned));
 
+    }
+
+    @Override
+    public List<ReviewResponse> getReviewsByUserId(String userId) {
+        List<ReviewResponse> reviews = reviewResponseMapper.toReviewsResponse(reviewRepository.findAllByUserId(userId));
+
+        if (reviews.isEmpty()) {
+            throw new ReviewsNotFoundException("No reviews were found for this user");
+        }
+
+        return reviews;
     }
 
 }
