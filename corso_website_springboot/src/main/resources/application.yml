@@ -151,6 +151,6 @@ backend:
   url: https://corso-website-backend-xtejdm3liq-nn.a.run.app/
 
 website:
-  domain: onrender.com
+  domain: corso-dev.com 
 
 spring.datasource.hikari.initializationFailTimeout: 60000
