@@ -6,18 +6,22 @@ COPY src/ /corso_website_fe/src
 COPY package.json /frontend/
 COPY package.json .
 COPY package-lock.json .
+COPY tsconfig.json .
+ARG REACT_APP_BACKEND_URL
+ENV REACT_APP_BE_HOST ${REACT_APP_BACKEND_URL}
 RUN npm install
 RUN npm run build
 
 # Stage 2 - Serve the React application using NGINX
-FROM nginx:1.19.0
-WORKDIR /usr/share/nginx/html
+FROM nginx:alpine
 
-# Copy the built React application from the first stage
-COPY --from=react-build /build /usr/share/nginx/html
+# copy the .conf template
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-# Optionally, if you have a custom NGINX configuration (nginx.conf), uncomment and modify this line:
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+## Remove default nginx index page and replace it with the static files we created in the first step
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=react-build /corso_website_fe/build /usr/share/nginx/html
+EXPOSE 80
 
-# Configure NGINX to serve the application
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD nginx -g 'daemon off;'
+

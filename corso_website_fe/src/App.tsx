@@ -28,7 +28,7 @@ import ManageReviews from "./Pages/AllReviews/ManageReviews";
 import EditGallery from "./Pages/Gallery/EditGallery";
 
 
-function App() {
+export default function App() {
     
     return (
         <>
@@ -66,4 +66,3 @@ function App() {
     )
 }
 
-export default App;
