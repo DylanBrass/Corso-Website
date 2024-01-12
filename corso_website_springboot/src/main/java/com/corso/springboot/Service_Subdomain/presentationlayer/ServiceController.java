@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corso-dev-frontend-xtejdm3liq-nn.a.run.app/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectricdev.tech/"},allowCredentials = "true")
 @Slf4j
 @RestController
 @RequestMapping("api/v1/corso/services")
