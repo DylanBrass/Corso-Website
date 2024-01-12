@@ -50,7 +50,6 @@ public class SpringSecurityConfigBean {
     private String backendDomain;
 
 
-
     private final ObjectMapper mapper;
 
     @Bean
@@ -73,7 +72,7 @@ public class SpringSecurityConfigBean {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()))
                 .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
                         .loginPage("/login/oauth2/code/okta")
-                        .defaultSuccessUrl(backendDomain+"api/v1/corso/security/redirect", true)
+                        .defaultSuccessUrl(backendDomain + "api/v1/corso/security/redirect", true)
                         .permitAll())
                 .oauth2ResourceServer(jwt -> jwt.jwt(withDefaults()))
                 .logout(logout -> {
@@ -95,7 +94,7 @@ public class SpringSecurityConfigBean {
                             });
                 })
                 .csrf((csrf) -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(csrfTokenRepository())
                         .csrfTokenRequestHandler(new SpaCsrfToken())
                         .ignoringRequestMatchers(
                                 new AntPathRequestMatcher("/api/v1/corso/logout", HttpMethod.POST.toString()),
@@ -143,7 +142,7 @@ public class SpringSecurityConfigBean {
                 newCookie.setMaxAge(0);
                 newCookie.setPath("/");
                 String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
-                                                .split(":")[0].replace("/","");
+                        .split(":")[0].replace("/", "");
 
                 newCookie.setDomain(formattedDomain);
                 response.addCookie(newCookie);
@@ -156,7 +155,7 @@ public class SpringSecurityConfigBean {
             try {
 
                 if (isSignup)
-                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo="+ backendDomain +"oauth2/authorization/okta");
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + backendDomain + "oauth2/authorization/okta");
                 else if (isVerify)
                     response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendDomain + "verify");
                 else if (isExternal)
@@ -169,6 +168,18 @@ public class SpringSecurityConfigBean {
             }
         };
     }
+
+
+    public CookieCsrfTokenRepository csrfTokenRepository() {
+        CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
+        cookieCsrfTokenRepository.setCookieCustomizer(cookie -> {
+            cookie.domain(frontendDomain.replace("https://", "").replace("http://", "")
+                    .split(":")[0].replace("/", ""));
+        });
+
+        return cookieCsrfTokenRepository;
+    }
+
 }
 
 
