@@ -82,5 +82,10 @@
         flex-shrink: 0;
     }
 
+    @media (min-width: 990px) {
+        .testimonies-rating {
+            padding: 20px;
+        }
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.corso.springboot.Review_Subdomain.presentationlayer;
 
-import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

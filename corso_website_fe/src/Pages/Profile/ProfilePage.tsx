@@ -216,7 +216,7 @@ function ProfilePage() {
                                 <img src={review} alt={"edit"} className={"float-start mx-3"}/>
                             </div>
                             <div className={"col-8 option-text"}>
-                                <Link className={"redirect-option"} to={"#"}>
+                                <Link className={"redirect-option"} to={"/profile/reviews"}>
                                     <h3 className={"past-reviews-option option text-start m-auto"}>View Your
                                         Reviews</h3>
                                 </Link>

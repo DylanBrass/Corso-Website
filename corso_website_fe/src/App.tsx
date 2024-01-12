@@ -27,6 +27,7 @@ import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrd
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
 import EditGallery from "./Pages/Gallery/EditGallery";
 import ViewSpecificServiceAdmin from "./Pages/ViewASpecificServiceFromTheAdminPanel/ViewSpecificServiceAdmin";
+import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
 
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
                         <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
                         <Route path="/adminServices/:serviceId" element={<ViewSpecificServiceAdmin/>}/>
+                        <Route path="/profile/reviews" element={<CustomerReviews/>}/>
 
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
