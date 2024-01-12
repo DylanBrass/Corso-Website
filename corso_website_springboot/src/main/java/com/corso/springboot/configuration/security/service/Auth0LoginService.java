@@ -78,7 +78,7 @@ public class Auth0LoginService {
         HttpHeaders headers = new HttpHeaders();
 
         String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
-                .split(":")[0].replace("/","");
+                .split(":")[0].replace("/","").replace(".","");
 
                 log.info("Formatted domain: " + formattedDomain);
 
