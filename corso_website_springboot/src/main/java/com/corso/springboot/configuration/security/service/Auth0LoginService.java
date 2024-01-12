@@ -93,7 +93,7 @@ public class Auth0LoginService {
         ResponseCookie authCookie = ResponseCookie.from("isAuthenticated", "true")
                 .httpOnly(false)
                 .secure(true)
-                .domain(websiteDomain)
+                .domain(formattedDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -102,7 +102,7 @@ public class Auth0LoginService {
                         .replace(",", "-").replace(" ", ""))
                 .httpOnly(false)
                 .secure(true)
-                .domain(websiteDomain)
+                .domain(formattedDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
@@ -112,7 +112,7 @@ public class Auth0LoginService {
         ResponseCookie pictureCookie = ResponseCookie.from("picture", picture)
                 .httpOnly(false)
                 .secure(true)
-                .domain(websiteDomain)
+                .domain(formattedDomain)
                 .path("/")
                 .sameSite("None")
                 .build();
