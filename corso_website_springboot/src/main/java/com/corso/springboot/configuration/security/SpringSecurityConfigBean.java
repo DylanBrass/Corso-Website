@@ -175,7 +175,15 @@ public class SpringSecurityConfigBean {
         cookieCsrfTokenRepository.setCookieCustomizer(cookie -> {
             cookie.domain(frontendDomain.replace("https://", "").replace("http://", "")
                     .split(":")[0].replace("/", ""));
+            cookie.httpOnly(false);
+            cookie.path("/");
+            cookie.secure(false);
+            
         });
+
+
+
+
 
         return cookieCsrfTokenRepository;
     }
