@@ -23,7 +23,6 @@ import AllOrdersPage from "./Pages/OrdersPages/AllOrdersPage";
 import ViewSpecificOrder from "./Pages/OrdersDetailsPages/Customer/ViewSpecificOrder";
 import AddCustomerInformation from "./Pages/Profile/ProfileLinkedPages/AddCustomerInformation";
 import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrders";
-import {useEffect} from "react";
 
 import ManageReviews from "./Pages/AllReviews/ManageReviews";
 import EditGallery from "./Pages/Gallery/EditGallery";

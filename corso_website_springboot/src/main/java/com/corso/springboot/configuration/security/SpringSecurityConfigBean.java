@@ -49,6 +49,8 @@ public class SpringSecurityConfigBean {
     @Value("${backend.url}")
     private String backendDomain;
 
+
+
     private final ObjectMapper mapper;
 
     @Bean

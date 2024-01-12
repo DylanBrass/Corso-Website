@@ -8,6 +8,9 @@ frontend:
 backend:
   url: http://localhost:8080/
 
+website:
+  domain: localhost
+
 logging:
   level:
     root: INFO
@@ -50,10 +53,13 @@ spring:
       mode: always
 
 frontend:
-    url: http://localhost:3000/
+  url: http://localhost:3000/
 
 backend:
-    url: http://localhost:8080/
+  url: http://localhost:8080/
+
+website:
+  domain: localhost
 
 logging:
   level:
@@ -81,9 +87,9 @@ spring:
     hibernate:
       ddl-auto: none
   sql:
-      init:
-        platform: mysql
-        mode: always
+    init:
+      platform: mysql
+      mode: always
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
@@ -96,11 +102,13 @@ server:
   port: 8080
 
 frontend:
-    url: http://localhost:3000/
+  url: http://localhost:3000/
 
 backend:
-    url: http://localhost:8080/
+  url: http://localhost:8080/
 
+website:
+  domain: localhost
 
 spring.datasource.hikari.initializationFailTimeout: 60000
 
@@ -142,6 +150,7 @@ frontend:
 backend:
   url: https://corso-pkhz.onrender.com/
 
-
+website:
+  domain: onrender.com
 
 spring.datasource.hikari.initializationFailTimeout: 60000
