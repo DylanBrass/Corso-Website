@@ -37,8 +37,9 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/pinned")
-    public ResponseEntity<List<ReviewResponse>> getPinnedReviews(){
+   @GetMapping("/pinned")
+    public ResponseEntity<List<ReviewResponse>> getPinnedReviews(@CookieValue(value = "id_token", required = false) String idToken){
+        log.info("Get pinned reviews : {}", idToken);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getPinnedReviews(true));
     }
 
