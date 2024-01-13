@@ -16,7 +16,9 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     Review findReviewByReviewId_ReviewId(String reviewId);
 
+    int countAllByPinned(boolean pinned);
 
+    int countAllBy();
 
     @Query("SELECT r FROM Review r WHERE r.customerFullName LIKE ?1%")
     List<Review> findAllByCustomerFullNameStartingWith(String customerFullName);

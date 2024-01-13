@@ -13,8 +13,7 @@ import {useAuth} from "../../security/Components/AuthProvider";
 import CustomPagination from "../../Components/Pagination";
 import {PuffLoader} from 'react-spinners';
 import {Bounce, toast, ToastContainer} from "react-toastify";
-import swal from "sweetalert";
-import {Link} from "react-router-dom";
+import Pagination from "../../Components/Pagination";
 
 
 class Reviews {
@@ -195,8 +194,8 @@ function ManageReviews() {
         if(newPage > reviews.length){
             return currentPage;
         }else{
-        setCurrentPage(newPage);
-        fetchReviews(newPage, pageSize);
+            setCurrentPage(newPage);
+            fetchReviews(newPage, pageSize);
         }
     };
 

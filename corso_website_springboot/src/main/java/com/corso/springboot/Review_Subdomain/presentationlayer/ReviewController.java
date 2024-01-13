@@ -22,7 +22,6 @@ import java.util.Map;
 public class ReviewController {
     private final ReviewService reviewService;
 
-
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
@@ -61,21 +60,13 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByUserId(userId));
     }
 
-    @PostMapping
-    @PreAuthorize("hasAnyAuthority('Customer')")
-    public ResponseEntity<ReviewResponse> customerCreateReview(@AuthenticationPrincipal OidcUser principal, @RequestBody ReviewRequest reviewRequest){
-        String userId = principal.getSubject();
-        log.info("Create review with userId: {}", userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.customerCreateReview(userId, reviewRequest));
-    }
-
-
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> updateReview(@PathVariable String reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest) throws MessagingException, IOException, InterruptedException {
         log.info("reviewId: {}", reviewId);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.updatePinnedReviewByReviewId(reviewId,reviewUpdateRequest));
     }
+
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/count/pinned")
@@ -87,6 +78,15 @@ public class ReviewController {
     @GetMapping("/count")
     public ResponseEntity<Integer> getAllReviewsCount(){
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getCountAllReviews());
+    }
+
+
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<ReviewResponse> customerCreateReview(@AuthenticationPrincipal OidcUser principal, @RequestBody ReviewRequest reviewRequest){
+        String userId = principal.getSubject();
+        log.info("Create review with userId: {}", userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.customerCreateReview(userId, reviewRequest));
     }
 
 

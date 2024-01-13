@@ -18,6 +18,7 @@ public interface ReviewService {
 
     List<ReviewResponse> getReviewsByUserId(String userId);
     ReviewResponse getReviewByReviewId(String reviewId);
+    ReviewResponse getReviewByReviewId(String reviewId, ReviewUpdateRequest reviewRequest);
 
     ReviewResponse customerCreateReview(String userId, ReviewRequest reviewRequest);
 
