@@ -14,8 +14,6 @@ function MainPage() {
     const auth = useAuth();
 
 
-
-
     return (
         <div>
             <NavigationBar/>
@@ -46,7 +44,8 @@ function MainPage() {
             </div>
 
         </div>
-    );
+    )
+        ;
 }
 
 export default MainPage;

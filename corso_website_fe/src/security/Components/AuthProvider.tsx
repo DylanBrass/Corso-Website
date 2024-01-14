@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import Cookies from "js-cookie";
 import axios from "axios";
-import {Bounce, toast} from "react-toastify";
+import {Bounce, toast, ToastContainer} from "react-toastify";
 
 // @ts-ignore
 const AuthContext = createContext();
@@ -128,6 +128,18 @@ const AuthProvider = ({children}) => {
     return (
         <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles,getUserInfo}}>
             {children}
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </AuthContext.Provider>
     )
 }

@@ -48,6 +48,9 @@
 
     }
 
+    #to-profile {
+       text-decoration: none;
+    }
 
     #profile-image {
         border-radius: 50%;

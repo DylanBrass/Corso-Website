@@ -13,16 +13,18 @@ function AllCustomerOrders() {
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
-            axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders?pageSize=${size}&offset=${(pageNumber - 1) * size}`)
+            await axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders?pageSize=${size}&offset=${(pageNumber - 1) * size}`)
                 .then(res => {
                     const orders = res.data;
-                    setOrders(orders);
 
                     if (res.data[0] === undefined) {
                         return;
                     }
-                    const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
+                    setOrders(orders);
+
+                    const newTotalPages = Math.ceil(orders[0].totalOrdersMatchingRequest / size);
                     setTotalPages(newTotalPages);
+
                     if (pageNumber > newTotalPages) {
                         setPage(newTotalPages);
                     }
@@ -39,35 +41,37 @@ function AllCustomerOrders() {
 
     const handlePageChange = (pageNumber: number, size: number) => {
         setPage(pageNumber);
-        fetchOrders(pageNumber, size).then(r => console.log(r))
+        fetchOrders(pageNumber, size)
     };
 
     useEffect(() => {
-        fetchOrders(page, pageSize).then(r => console.log(r))
+        fetchOrders(page, pageSize)
     }, [page, pageSize]);
 
     return (
         <div>
             <NavigationBar/>
-            <div className={"mb-5"}>
-                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
+            <div className={"mb-5 container"}>
+                <div
                      className={"w-100"}>
 
                     {orders.length <= 0 &&
                         <div className="row">
                             <div className="col-12">
-                                <h1 className="error">No orders found, you can request one <a href={"/create/orders"}>here</a></h1>
+                                <h1 className="error">No orders found, you can request one <a
+                                    href={"/create/orders"}>here</a></h1>
                             </div>
                         </div>
                     }
                     {orders.length > 0 &&
-                        <div>
+                        <div className={"w-100 d-flex flex-column align-items-center"}>
+
                             {
                                 orders.map((order: Order) => (
-                                    <OrderTile order={order}
-                                               action={() => {
-                                                   window.location.href = `/orders/${order.orderId}`
-                                               }} key={order.orderId}/>
+                                        <OrderTile order={order}
+                                                   action={() => {
+                                                       window.location.href = `/orders/${order.orderId}`
+                                                   }} key={order.orderId}/>
                                 ))
                             }
                             <CustomPagination onPageChange={handlePageChange} pageSize={pageSize}

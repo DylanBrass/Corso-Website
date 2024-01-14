@@ -20,5 +20,4 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
     @Query(value = "SELECT CASE WHEN EXISTS ( SELECT 1 FROM reviews WHERE user_id = :userId AND review_date > CURRENT_DATE() - INTERVAL '7' DAY) THEN 'true' ELSE 'false' END AS has_reviewed;", nativeQuery = true)
     Boolean reviewInLastWeekForUser(@Param("userId") String userId);
 
-
 }
