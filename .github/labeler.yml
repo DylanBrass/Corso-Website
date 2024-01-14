@@ -1,41 +1,34 @@
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: corso_website_fe/**
+
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: corso_website_springboot/**
+
+
 Documentation:
   - changed-files:
-      - any-glob-to-any-file:
-          - docs/**
-          - guides/**
-  - changed-files:
-      - any-glob-to-any-file: '**/*.md'
-  - changed-files:
-      - any-glob-to-any-file: '**/*.puml'
- 
-Frontend:
-  - changed-files:
-      - any-glob-to-any-file: ['**/*.tsx', '**/*.css', '**/*.js', '**/*.jsx', '**/*.html']
+    - any-glob-to-any-file: '**/*.puml'
+  - head-branch: ['^doc', 'doc']
 
-source:
-  - all:
-      - changed-files:
-          - any-glob-to-any-file: 'src/**/*'
-          - all-globs-to-all-files: '!src/docs/*'
 
 feature:
-  - head-branch: ['^feature', 'feature']
+ - head-branch: ['^feat', 'feat']
 
-Backend:
+bug:
+ - head-branch: ['^bug', 'bug']
+
+config:
   - changed-files:
-      - any-glob-to-any-file: ['src/main/java/**/*.java', 'src/main/resources/**']
+    - any-glob-to-any-file: ['**/*.yml','**/*.properties']
 
-Testing:
+security:
+   - changed-files:
+    - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/security/**'
+
+tests:
   - changed-files:
-      - any-glob-to-any-file: ['src/test/**', 'tests/**']
+    - any-glob-to-any-file: 'corso_website_springboot/src/test/**'
 
-Database:
-  - changed-files:
-      - any-glob-to-any-file: 'src/main/resources/db/**'
 
-Security:
-  - changed-files:
-      - any-glob-to-any-file: 'java/com/corso/springboot/configuration/security/**'
-
-release:
-  - base-branch: 'main'
