@@ -16,11 +16,10 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v4 # Uploads repository content to the runner
       with:
-         ref: ${{ github.event.pull_request.head.sha }}
-         fetch-depth: 0
-    - uses: actions/labeler@v4
+        repository: "DylanBrass/Corso-Website" # The one of the available inputs, visit https://github.com/actions/checkout#readme to find more
+    - uses: actions/labeler@v5
       with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: '.github/labeler.yml'
+  
