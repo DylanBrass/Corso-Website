@@ -1,5 +1,5 @@
 import Order from "../../../Models/Order";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import ServiceOrder from "../../../Models/ServiceOrder";
 import {useParams} from "react-router-dom";
 import axios from "axios";
@@ -10,6 +10,9 @@ import {ProgressBar, Step} from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
 import check from "../../../images/check.svg";
 import {useNavigate} from "react-router";
+import Popup from "reactjs-popup";
+import {SyncLoader} from "react-spinners";
+import {CCarousel, CCarouselItem} from "@coreui/react";
 
 function ViewSpecificOrder() {
 
@@ -18,7 +21,14 @@ function ViewSpecificOrder() {
     const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     let {orderId} = useParams();
 
+    const [showCancelOrderModal, setShowCancelOrderModal] = useState(false);
+
+
+    const [loading, setLoading] = useState(false);
+
     const auth = useAuth()
+
+    const [messagesLoading,] = useState(["This may take a few seconds", "Please wait a moment", "We are Notifying our electricians"]);
 
     const getOrder = () => {
         axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders/${orderId}`,
@@ -49,15 +59,17 @@ function ViewSpecificOrder() {
     }
 
 
-    const handleCancelOrder = () => {
+    const handleCancelOrder = (event: any) => {
+        event.preventDefault();
+        setLoading(true);
         axios.delete(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders/${orderId}`,
             {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': auth.getXsrfToken(),
                     'Content-Type': 'application/json'
-                },data: {
-                    reason: "Customer requested cancellation"
+                }, data: {
+                    reason: event.target.reason.value
                 }
             }
         )
@@ -77,6 +89,9 @@ function ViewSpecificOrder() {
                     auth.authError(err.response.status);
                 }
             }
+        ).finally(() => {
+                setLoading(false);
+            }
         )
     }
 
@@ -85,6 +100,10 @@ function ViewSpecificOrder() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+
+    const handleCancelOrderModal = () => {
+        setShowCancelOrderModal(!showCancelOrderModal);
+    }
 
     return (
         <div>
@@ -200,13 +219,60 @@ function ViewSpecificOrder() {
                                     </button>
                                 </div>
                                 {order.orderStatus.toLowerCase() === "pending" &&
-                                <div className={"col-12"}>
-                                    <button className={"m-4 float-end customer-interactions-btn p-2"}
-                                            onClick={handleCancelOrder}
-                                    >Request Cancellation
-                                    </button>
-                                </div>
+
+                                    <Popup trigger={<div className={"col-12"}>
+                                        <button className={"m-4 float-end customer-interactions-btn p-2"}
+                                                onClick={handleCancelOrderModal}
+                                        >Request Cancellation
+                                        </button>
+                                    </div>
+                                    } modal>
+                                        <div className="popup-box">
+                                            {loading &&
+                                                <div className={"spinner-box text-center"}>
+                                                    <CCarousel interval={1500}>
+                                                        {messagesLoading.map((message: String) => (
+
+                                                            <CCarouselItem key={message.length} style={{height: "100%"}} >
+                                                               <h3 className={"text-center"}>{message}</h3>
+                                                            </CCarouselItem>
+                                                        ))
+                                                        }
+
+                                                    </CCarousel>
+
+                                                    <SyncLoader className={"spinner"} color="#054AEB"/>
+                                                </div>
+                                            }
+                                            <form onSubmit={handleCancelOrder}
+                                                  className={"p-4" + (loading ? " hidden" : "")}>
+                                                <div className="row">
+                                                    <div className="col-12">
+                                                        <h1 className={"text-center"}>Request Cancellation</h1>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-12">
+                                                        <textarea className="form-control" id="reason"
+                                                               placeholder="Reason for cancellation" required/>
+                                                    </div>
+                                                    <div className="row mt-3">
+                                                        <div className="col-12 text-center">
+                                                            <button type="submit"
+                                                                    className="btn btn-primary send-email-btn">
+                                                                Submit
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                                    </Popup>
                                 }
+
+
                             </div>
                         </div>
                     </div>
