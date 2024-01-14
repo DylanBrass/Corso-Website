@@ -1,14 +1,14 @@
 frontend:
   - changed-files:
-      - any-glob-to-any-file: corso_website_fe/**
+      - all-globs-to-all-files: corso_website_fe/**
 
 backend:
   - changed-files:
-      - any-glob-to-any-file: corso_website_springboot/**
+      - all-globs-to-all-files: corso_website_springboot/**
 
 Documentation:
   - changed-files:
-      - any-glob-to-any-file: '**/*.puml'
+      - all-globs-to-all-files: '**/*.puml'
   - head-branch: ['^doc', 'doc']
 
 feature:
@@ -19,59 +19,59 @@ bug:
 
 config:
   - changed-files:
-      - any-glob-to-any-file: ['**/*.yml', '**/*.properties']
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/security/**'
+      - all-globs-to-all-files: ['**/*.yml', '**/*.properties']
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/security/**'
 
 
 security:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/security/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/**'
 
 tests:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/test/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/test/**'
 
 
 
 utils:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/utils/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/utils/**'
 
 
 
 reviews:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Review_Subdomain/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/Review_Subdomain/**'
 
 orders:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Order_Subdomain/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/Order_Subdomain/**'
 
 
 service:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Service_Subdomain/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/Service_Subdomain/**'
 
 
 galleries:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Gallery_Subdomain/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/Gallery_Subdomain/**'
 
 
 FAQ:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/FAQ_Subdomain/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/FAQ_Subdomain/**'
 
 
 email:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/email/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/email/**'
 
 configuration:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/**'
   
 
 customers:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Customer_Subdomain/**'
+      - all-globs-to-all-files: 'corso_website_springboot/src/main/java/com/corso/springboot/Customer_Subdomain/**'
