@@ -1,60 +1,53 @@
-# Add 'Documentation' label to any changes within 'docs' folder or any subfolders
 Documentation:
-- changed-files:
-  - any-glob-to-any-file: 
-    - docs/**
-    - guides/**
-- changed-files:
-  - any-glob-to-any-file: '**/*.md'
-- changed-files:
-  - any-glob-to-any-file: '**/*.puml'
-- title: 
-  contains: ['doc']
-  
-Frontend:
--changed-files:
-  - any-glob-to-any-file: ['**/*.tsx', '**/*.css','**/*.js','**/*.jsx', '**/*.html']
-
-
-# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
-source:
-- all:
   - changed-files:
-    - any-glob-to-any-file: 'src/**/*'
-    - all-globs-to-all-files: '!src/docs/*'
+      - any-glob-to-any-file:
+          - docs/**
+          - guides/**
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+  - changed-files:
+      - any-glob-to-any-file: '**/*.puml'
+  - title:
+      contains: ['doc']
 
-# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
+Frontend:
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.tsx', '**/*.css', '**/*.js', '**/*.jsx', '**/*.html']
+
+source:
+  - all:
+      - changed-files:
+          - any-glob-to-any-file: 'src/**/*'
+          - all-globs-to-all-files: '!src/docs/*'
+
 feature:
-- title:
-  contains: ['feat']
- - head-branch: ['^feature', 'feature']
+  - title:
+      contains: ['feat']
+  - head-branch: ['^feature', 'feature']
 
 BugFix:
-- title:
-    contains: ['bug', 'fix']
+  - title:
+      contains: ['bug', 'fix']
 
 Enhancement:
-- title:
-    contains: ['enhance', 'improve']
+  - title:
+      contains: ['enhance', 'improve']
 
 Backend:
-- changed-files:
-  - any-glob-to-any-file: ['src/main/java/**/*.java', 'src/main/resources/**']
+  - changed-files:
+      - any-glob-to-any-file: ['src/main/java/**/*.java', 'src/main/resources/**']
 
 Testing:
-- changed-files:
-  - any-glob-to-any-file: ['src/test/**', 'tests/**']
+  - changed-files:
+      - any-glob-to-any-file: ['src/test/**', 'tests/**']
 
 Database:
-- changed-files:
-  - any-glob-to-any-file: 'src/main/resources/db/**'
+  - changed-files:
+      - any-glob-to-any-file: 'src/main/resources/db/**'
 
 Security:
-- changed-files:
-  - any-glob-to-any-file: 'java/com/corso/springboot/configuration/security/**'
+  - changed-files:
+      - any-glob-to-any-file: 'java/com/corso/springboot/configuration/security/**'
 
-    
-# Add 'release' label to any PR that is opened against the `main` branch
 release:
- - base-branch: 'main'
-
+  - base-branch: 'main'
