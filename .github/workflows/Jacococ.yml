@@ -1,4 +1,5 @@
 name: CI/CD JaCoCo Coverage
+uses: PavanMudigonda/jacoco-reporter@v4.9
 on: [pull_request_target]
 
 jobs:
