@@ -7,9 +7,7 @@ Documentation:
       - any-glob-to-any-file: '**/*.md'
   - changed-files:
       - any-glob-to-any-file: '**/*.puml'
-  - title:
-      contains: ['doc']
-
+ 
 Frontend:
   - changed-files:
       - any-glob-to-any-file: ['**/*.tsx', '**/*.css', '**/*.js', '**/*.jsx', '**/*.html']
@@ -21,17 +19,7 @@ source:
           - all-globs-to-all-files: '!src/docs/*'
 
 feature:
-  - title:
-      contains: ['feat']
   - head-branch: ['^feature', 'feature']
-
-BugFix:
-  - title:
-      contains: ['bug', 'fix']
-
-Enhancement:
-  - title:
-      contains: ['enhance', 'improve']
 
 Backend:
   - changed-files:
