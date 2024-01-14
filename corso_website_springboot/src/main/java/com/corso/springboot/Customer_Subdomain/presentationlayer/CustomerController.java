@@ -107,8 +107,8 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAuthority('Customer')")
-    @DeleteMapping(name = "/orders/{orderId}", consumes = "application/json")
-    public ResponseEntity<Void> DeleteOrderByOrderId(@RequestBody CustomerCancelOrderRequest cancelOrderRequest, @AuthenticationPrincipal OidcUser principal, @PathVariable String orderId) throws MessagingException {
+    @DeleteMapping(value = "/orders/{orderId}", consumes = "application/json")
+    public ResponseEntity<Void> DeleteOrderByOrderId(@PathVariable String orderId,@RequestBody CustomerCancelOrderRequest cancelOrderRequest, @AuthenticationPrincipal OidcUser principal) throws MessagingException {
         String userId = principal.getSubject();
         log.info("Delete customer order with userId: {}", userId);
 

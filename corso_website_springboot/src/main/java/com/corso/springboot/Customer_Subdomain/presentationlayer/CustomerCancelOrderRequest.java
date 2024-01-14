@@ -5,9 +5,11 @@ import lombok.*;
 
 @Value
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomerCancelOrderRequest {
 
     public String reason;
 
+    public CustomerCancelOrderRequest(String reason) {
+        this.reason = reason;
+    }
 }

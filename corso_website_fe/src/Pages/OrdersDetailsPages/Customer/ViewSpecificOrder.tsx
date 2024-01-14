@@ -54,7 +54,8 @@ function ViewSpecificOrder() {
             {
                 headers: {
                     // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                    'X-XSRF-TOKEN': auth.getXsrfToken(),
+                    'Content-Type': 'application/json'
                 },data: {
                     reason: "Customer requested cancellation"
                 }
