@@ -1,7 +1,8 @@
 package com.corso.springboot.utils;
 
-import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
+import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
+import com.corso.springboot.utils.exceptions.FAQ.ThreePrefferedFaqsException;
 import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
@@ -70,6 +71,18 @@ public class GlobalControllerHandler {
     @ExceptionHandler(ReviewsNotFoundException.class)
     public HttpErrorInfo handleErrorWhileGettingReviews(ReviewsNotFoundException ex) {
         return createHttpErrorInfo(NOT_FOUND, ex);
+    }
+
+    @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(FAQNotFoundException.class)
+    public HttpErrorInfo handleErrorWhileCreatingAdmin(FAQNotFoundException ex) {
+        return createHttpErrorInfo(NOT_FOUND, ex);
+    }
+
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(ThreePrefferedFaqsException.class)
+    public HttpErrorInfo handleErrorWhileCreatingAdmin(ThreePrefferedFaqsException ex) {
+        return createHttpErrorInfo(CONFLICT, ex);
     }
 
     private HttpErrorInfo createHttpErrorInfo(HttpStatus httpStatus, Exception ex) {

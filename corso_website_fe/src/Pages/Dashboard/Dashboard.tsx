@@ -317,8 +317,8 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon6_wbpr29.png"}
                             action={() => {
-                console.log("test")
-            }}
+                                window.location.href = "manage/faqs"
+                            }}
                         />
                     </div>
                 </div>

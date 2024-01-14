@@ -1,6 +1,6 @@
 @startuml
 
-title Edit Order of Carousel use case SSD
+title Edit Order of Carousel
 
 actor Admin
 
@@ -8,19 +8,19 @@ participant Dashboard as "<<view>>\nDashboard"
 
 participant EditOrderOfCarousel as "<<view>>\nEditOrderOfCarousel"
 
-participant OrderRequest as "orderRequest: OrderRequest"
+participant OrderRequest as "orderRequests: List<OrderRequest>"
 
 participant OrderController as "<<Controller>>\nOrderController"
 
-participant OrderResponse as "response: OrderResponse"
+participant OrderResponse as "responses: List<OrderResponse>"
 
 participant OrderService as "<<Service>>\nOrderService"
 
-participant Order as "order: Order"
+participant Order as "orders: List<Order>"
 
 participant OrderRepository as "<<Repository>>\nOrderRepository"
 
-participant "orderDb : Order" as orderDb
+participant "orderDbs : List<Order>" as orderDb
 
 participant Database as "<<Database>>\nDatabase"
 
@@ -50,7 +50,7 @@ OrderController -> OrderService : updateGalleryOrder()
 
 activate OrderService
 
-OrderService -> OrderRequestMapper : mapToGalleryOrderUpdateRequest(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequests)
+OrderService -> OrderRequestMapper : mapToGallery(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequests)
 
 activate OrderRequestMapper
 
@@ -64,7 +64,7 @@ activate Order
 
 Order -> OrderService: orders : List<Order>
 
-OrderService -> OrderRepository : updateOrder(List<Order> orders)
+OrderService -> OrderRepository : saveAll(List<Order> orders)
 
 destroy Order
 
@@ -72,9 +72,9 @@ activate OrderRepository
 
 loop for each order in orders
     OrderRepository -> Database : UPDATE gallery SET image_position = :imagePosition WHERE gallery_id = :galleryId
+    activate Database
 end loop
 
-activate Database
 
 Database -> orderDb : orderDbs : List<Order>
 
@@ -100,13 +100,13 @@ destroy OrderResponseMapper
 
 activate OrderResponse
 
-OrderResponse --> OrderService : orderResponse : List<OrderResponse>
+OrderResponse --> OrderService : orderResponses : List<OrderResponse>
 
-OrderService --> OrderController : orderResponse : List<OrderResponse>
+OrderService --> OrderController : orderResponses : List<OrderResponse>
 
-OrderController --> OrderRequest : orderResponse : List<OrderResponse>
+OrderController --> OrderRequest : orderResponses : List<OrderResponse>
 
-OrderRequest --> EditOrderOfCarousel : orderResponse : List<OrderResponse>
+OrderRequest --> EditOrderOfCarousel : orderResponses : List<OrderResponse>
 
 destroy OrderResponse
 

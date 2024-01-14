@@ -29,6 +29,7 @@ import EditGallery from "./Pages/Gallery/EditGallery";
 import ViewSpecificServiceAdmin from "./Pages/ViewASpecificServiceFromTheAdminPanel/ViewSpecificServiceAdmin";
 import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
 import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
+import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
 
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/faq" element={<ViewAllFaq/>}/>
+                        <Route path="/manage/faqs" element={<ViewAllFaqThroughDashboard/>}/>
                         <Route path="/dashboard" element={<Dashboard/>}/>
                         <Route path="/create/orders/external" element={<CreateExternalOrderPage/>}/>
                         <Route path="/orders/all" element={<AllOrdersPage/>}/>

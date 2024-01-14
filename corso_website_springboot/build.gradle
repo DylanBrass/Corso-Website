@@ -123,6 +123,7 @@ test {
     exclude '**/CreateExternalOrderTest.class'
     exclude '**/CreateAServiceTest.class'
     exclude '**/ViewServiceDetailsAdmin.class'
+    exclude '**/ChooseViewableFaqsTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

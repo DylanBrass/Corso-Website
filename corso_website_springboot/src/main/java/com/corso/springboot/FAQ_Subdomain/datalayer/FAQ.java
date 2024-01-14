@@ -24,4 +24,11 @@ public class FAQ{
 
     public boolean preference;
 
+    public FAQ(String question, String answer, boolean preference) {
+        this.FAQId = new FAQIdentifier();
+        this.question = question;
+        this.answer = answer;
+        this.preference = preference;
+    }
+
 }
