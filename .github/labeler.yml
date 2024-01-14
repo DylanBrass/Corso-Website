@@ -2,7 +2,7 @@ frontend:
   - changed-files:
     - any-glob-to-any-file: corso_website_fe/**
 
-frontend:
+backend:
   - changed-files:
     - any-glob-to-any-file: corso_website_springboot/**
 
