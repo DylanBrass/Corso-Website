@@ -20,6 +20,8 @@ bug:
 config:
   - changed-files:
       - any-glob-to-any-file: ['**/*.yml', '**/*.properties']
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/security/**'
+
 
 security:
   - changed-files:
@@ -28,3 +30,48 @@ security:
 tests:
   - changed-files:
       - any-glob-to-any-file: 'corso_website_springboot/src/test/**'
+
+
+
+utils:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/utils/**'
+
+
+
+reviews:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Review_Subdomain/**'
+
+orders:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Order_Subdomain/**'
+
+
+service:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Service_Subdomain/**'
+
+
+galleries:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Gallery_Subdomain/**'
+
+
+FAQ:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/FAQ_Subdomain/**'
+
+
+email:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/email/**'
+
+configuration:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/**'
+  
+
+customers:
+  - changed-files:
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/Customer_Subdomain/**'
