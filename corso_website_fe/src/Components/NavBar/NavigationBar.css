@@ -1,51 +1,170 @@
-CNavbar {
-    background-color: #24252A;
-}
+#nav-bar-box {
+    .navbar-custom {
+        background: #24252A;
+        padding: 15px 0;
+    }
 
-.navbar-custom {
-    background-color: #24252A;
-    justify-content: center;
-}
+    #profile-text{
+        text-decoration: none;
+        text-underline: none !important;
+    }
 
-.navbar-custom img {
-    max-height: 125px;
-}
-
-.navbar-custom{
-    max-height: 125px;
-}
-
-.navbar-custom .navbar-nav .nav-link {
-    color: white;
-    margin-right: 50px;
-}
-
-#profile-image {
-    border-radius: 50%;
-    max-height: 6vh;
-    margin-left: 15px;
-}
-
-#profile-image:hover {
-    cursor: pointer;
-}
+    .navbar-custom img {
+        max-height: 100px;
+    }
 
 
-.item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 20px;
-}
+    .item-nav-text{
+        color: #fff;
+        margin-right: 20px;
+        position: relative;
+        transition: color 0.3s ease, transform 0.3s ease;
 
-#logout-btn{
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-    color: white;
-    margin-right: 50px;
+    }
+
+    .item-nav-text::before {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #fff;
+        transition: width 0.3s ease, left 0.3s ease;
+
+    }
+
+    .item-nav-text:hover {
+        color: white;
+        transform: translateY(-2px);
+        transition: transform 0.3s ease;
+
+    }
+
+    .item-nav-text:hover::before {
+        width: 100%;
+        left: 0;
+        transition: transform 0.3s ease;
+
+    }
+
+    #to-profile {
+       text-decoration: none;
+    }
+
+    #profile-image {
+        border-radius: 50%;
+        max-height: 60px;
+        margin-left: 15px;
+        transition: transform 0.3s ease;
+    }
+
+    #profile-image:hover {
+        cursor: pointer;
+        transform: rotate(360deg);
+        transition: transform 0.3s ease;
+
+    }
+
+
+    #logout-btn {
+        background: none;
+        color: #fff;
+        border: none;
+        position: relative;
+        transition: transform 0.3s ease;
+
+    }
+
+
+    #logout-btn::before {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #fff;
+        transition: transform 0.3s ease;
+
+    }
+
+    #logout-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        transition: transform 0.3s ease;
+
+    }
+
+    #logout-btn:hover::before {
+        width: 100%;
+        left: 0;
+        transition: transform 0.3s ease;
+
+    }
+
+    #logout-btn {
+        .logout-btn-text {
+            color: #FFF;
+            text-align: center;
+            font-family: Nunito;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+            text-transform: uppercase;
+        }
+    }
+
+
+    .item {
+        display: flex;
+        align-items: center;
+        color: #FFF;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+        margin-right: 3em;
+
+
+    }
+
+    /* Optional: Add some media queries for responsiveness */
+    @media (max-width: 992px) {
+        .navbar-custom img {
+            max-height: 50px;
+        }
+
+        .navbar-custom .navbar-nav .nav-link {
+            margin-right: 10px;
+        }
+
+        #profile-image {
+            max-height: 120px;
+        }
+
+
+        .item {
+            margin-right: 0;
+            margin: 0.5em
+        }
+
+
+    }
+
+    .show {
+        animation: fadeIn 0s ease-in-out forwards !important;
+    }
+
+    .navbar-toggler-icon{
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    #logo{
+        max-height: 100px;
+    }
 }

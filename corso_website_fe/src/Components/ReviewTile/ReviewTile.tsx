@@ -36,7 +36,7 @@ function ReviewTile({ review, index }: { review: Review, index: number }) {
     }
 
     return (
-        <div className="customer-review-tile">
+        <div className="customer-review-tile w-100">
             <p className="review-number"><b>Rating: # {index + 1}</b></p>
             <p className="review-date"><b>Date:</b> {review.reviewDate}</p>
             <p className="review-message">{review.message}</p>

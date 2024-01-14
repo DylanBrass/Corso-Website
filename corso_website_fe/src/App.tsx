@@ -28,10 +28,11 @@ import ManageReviews from "./Pages/AllReviews/ManageReviews";
 import EditGallery from "./Pages/Gallery/EditGallery";
 import ViewSpecificServiceAdmin from "./Pages/ViewASpecificServiceFromTheAdminPanel/ViewSpecificServiceAdmin";
 import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
+import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 
 
 export default function App() {
-    
+
     return (
         <>
             <AuthProvider>
@@ -53,7 +54,7 @@ export default function App() {
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
                         <Route path="/adminServices/:serviceId" element={<ViewSpecificServiceAdmin/>}/>
                         <Route path="/profile/reviews" element={<CustomerReviews/>}/>
-
+                        <Route path="/profile/reviews/create" element={<CreateReview/>}/>
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
                         <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>

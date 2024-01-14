@@ -49,4 +49,8 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     int countAllBy();
 
+    boolean existsByUserId(String userId);
+
+
+
 }

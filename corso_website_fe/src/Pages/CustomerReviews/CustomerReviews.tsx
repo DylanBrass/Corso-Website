@@ -11,7 +11,8 @@ interface Review {
     reviewRating: number;
     pinned: boolean;
 }
-function CustomerReviews () {
+
+function CustomerReviews() {
     const [error, setError] = useState<string | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
 
@@ -30,17 +31,19 @@ function CustomerReviews () {
                 setError('Error fetching reviews.');
             }
         };
-        fetchReviews();
+        fetchReviews()
     }, []);
 
     return (
         <>
             <NavigationBar/>
-            {error && <div className="row"><div className="col-12"><p className="error">Error: {error}</p></div></div>}
+            {error && <div className="row">
+                <div className="col-12"><p className="error">Error: {error}</p></div>
+            </div>}
             <div className="customer-review-container">
                 <h1>My Reviews</h1>
-                <div className="customer-review-tiles-container">
-                    {reviews.map((review, index) => (
+                <div className="customer-review-tiles-container w-75">
+                    {reviews.length > 0 ? reviews.map((review, index) => (
                         <ReviewTile
                             index={index}
                             key={review.reviewId}
@@ -55,7 +58,9 @@ function CustomerReviews () {
                                 }
                             }}
                         />
-                    ))}
+                    )) : <h1 className="error">No reviews found, create one <a
+                        href={"/profile/reviews/create"}>here</a></h1>
+                    }
                 </div>
             </div>
         </>

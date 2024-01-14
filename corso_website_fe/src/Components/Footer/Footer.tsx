@@ -47,7 +47,7 @@ function Footer() {
                                 <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1702592644/Email_rv756e.png" alt="Email Icon" className="img-fluid"/>
                             </div>
                             <div className="col-9">
-                                <p>corsoelectriqueinc@gmail.com</p>
+                                <p className={"text-break"}>corsoelectriqueinc@gmail.com</p>
                             </div>
                         </div>
 
