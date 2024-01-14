@@ -14,10 +14,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectricdev.tech/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectricdev.tech/"}, allowCredentials = "true")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -46,8 +47,8 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> getCustomerByUserId(@AuthenticationPrincipal OidcUser principal, @RequestParam Map<String, String> requestParams) {
         log.info("Get customer with userId: {}", principal.getSubject());
 
-       if (requestParams.containsKey("simpleCheck") && requestParams.get("simpleCheck").equals("true")) {
-            if(customerService.checkIfCustomerExists(principal.getSubject()))
+        if (requestParams.containsKey("simpleCheck") && requestParams.get("simpleCheck").equals("true")) {
+            if (customerService.checkIfCustomerExists(principal.getSubject()))
                 return ResponseEntity.ok().build();
             else
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -63,7 +64,7 @@ public class CustomerController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<CustomerResponse> createCustomer(@AuthenticationPrincipal OidcUser principal,
-                                                          @Valid @RequestBody CustomerRequest customerRequest) {
+                                                           @Valid @RequestBody CustomerRequest customerRequest) {
         String userId = principal.getSubject();
         log.info("Create customer with userId: {}", userId);
 
@@ -98,11 +99,22 @@ public class CustomerController {
 
     @PreAuthorize("hasAuthority('Customer')")
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderResponse> GetOrderByOrderId(@AuthenticationPrincipal OidcUser principal, @PathVariable String orderId){
+    public ResponseEntity<OrderResponse> GetOrderByOrderId(@AuthenticationPrincipal OidcUser principal, @PathVariable String orderId) {
         String userId = principal.getSubject();
         log.info("Get customer order with userId: {}", userId);
 
         return ResponseEntity.ok(orderService.getOrderByIdAndUserId(orderId, userId));
+    }
+
+    @PreAuthorize("hasAuthority('Customer')")
+    @DeleteMapping(name = "/orders/{orderId}", consumes = "application/json")
+    public ResponseEntity<Void> DeleteOrderByOrderId(@RequestBody CustomerCancelOrderRequest cancelOrderRequest, @AuthenticationPrincipal OidcUser principal, @PathVariable String orderId) throws MessagingException {
+        String userId = principal.getSubject();
+        log.info("Delete customer order with userId: {}", userId);
+
+        orderService.deleteOrderByOrderId(orderId, userId, cancelOrderRequest);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

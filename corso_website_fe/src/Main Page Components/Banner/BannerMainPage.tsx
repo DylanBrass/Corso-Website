@@ -44,45 +44,36 @@ function BannerMainPage({image}) {
 
             <h1 id={"greeting"} className={"mt-5"}>Hello {name}!</h1>
             <div className={"row row-banner"}>
-            <div className={"row d-none d-lg-flex"}>
-                <div className={"col-12 col-lg-4 text-center"}>
-                    <h3 className={"mt-5"}>View All past orders</h3>
+                <div className={"row d-none d-lg-flex"}>
+                    <div className={"col-12 col-lg-6 text-center"}>
+                        <h3 className={"mt-5"}>View All past orders</h3>
+
+                    </div>
+                    <div className={"col-12 col-lg-6 text-center"}>
+                        <h3 className={"mt-5"}>View current Orders</h3>
+
+                    </div>
+                </div>
+                <div className={"row"}>
+                    <div className={"col-12 col-lg-6 text-center"}>
+
+                        <button className={"banner-btn mt-5 mb-5"}
+                                onClick={() => {
+                                    console.log("Hello")
+                                    window.location.href = "/profile/orders"
+                                }}>Past Orders
+                        </button>
+                    </div>
+                    <div className={"col-12 col-lg-6 text-center"}>
+
+                        <button className={"banner-btn mt-5 mb-5"}
+                                onClick={() => {
+                                    console.log("Hello")
+                                }}>Request Now!
+                        </button>
+                    </div>
 
                 </div>
-                <div className={"col-12 col-lg-4 text-center"}>
-                    <h3 className={"mt-5"}>Request a new Order</h3>
-
-                </div>
-                <div className={"col-12 col-lg-4 text-center"}>
-                    <h3 className={"mt-5"}>View current Orders</h3>
-
-                </div>
-            </div>
-            <div className={"row"}>
-                <div className={"col-12 col-lg-4 text-center"}>
-
-                    <button className={"banner-btn mt-5 mb-5"}
-                            onClick={() => {
-                                console.log("Hello")
-                            }}>Past Orders
-                    </button>
-                </div>
-                <div className={"col-12 col-lg-4 text-center"}>
-
-                    <button className={"banner-btn mt-5 mb-5"}
-                            onClick={() => {
-                                console.log("Hello")
-                            }}>Request Now!
-                    </button>
-                </div>
-                <div className={"col-12 col-lg-4 text-center"}>
-
-                    <button className={"banner-btn  mt-5 mb-5"}
-                            onClick={() => {
-                            }}>Current order
-                    </button>
-                </div>
-            </div>
             </div>
         </div>
     )
