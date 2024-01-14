@@ -135,6 +135,9 @@ function ViewSpecificOrder() {
 
                                     </ProgressBar>
                                 }
+                                {order.estimatedDuration <= 0&&
+                                <p>We haven't started to work on your order, but we will soon !</p>
+                                }
                             </div>
                             <div className={"row"}>
                                 <h4 className={"notes-title"}>Electrician Notes</h4>
@@ -151,7 +154,9 @@ function ViewSpecificOrder() {
                             </div>
                             <div className={"row"}>
                                 <div className={"col-12"}>
-                                    <button className={"m-4 float-end customer-interactions-btn p-2"}>Leave a Review</button>
+                                    <button className={"m-4 float-end customer-interactions-btn p-2"} onClick={()=>{
+                                        window.location.href = `/profile/reviews/create`;
+                                    }}>Leave a Review</button>
                                 </div>
                                 <div className={"col-12"}>
                                     <button className={"m-4 float-end customer-interactions-btn p-2"}>Request Edit</button>

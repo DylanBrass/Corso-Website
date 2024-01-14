@@ -13,17 +13,9 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReviewRequest {
 
-
-
-    public String userId;
-
     public String customerFullName;
-
-    public LocalDate reviewDate;
 
     public String message;
 
     public int reviewRating;
-
-    public boolean pinned;
 }

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import OrderTile from "../../../Components/OrderTile/OrderTile";
-import {Order} from "../../../Components/OrderTile/OrderTile";
+import OrderTile, {Order} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 
@@ -19,7 +18,7 @@ function AllCustomerOrders() {
                     const orders = res.data;
                     setOrders(orders);
 
-                    if(res.data[0] === undefined) {
+                    if (res.data[0] === undefined) {
                         return;
                     }
                     const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
@@ -27,7 +26,9 @@ function AllCustomerOrders() {
                     if (pageNumber > newTotalPages) {
                         setPage(newTotalPages);
                     }
-                })
+                }).catch(err => {
+                console.log(err);
+            })
 
 
         } catch (error) {
@@ -52,15 +53,27 @@ function AllCustomerOrders() {
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                      className={"w-100"}>
 
-                    {
-                        orders.map((order: Order) => (
-                            <OrderTile order={order}
-                                       action={()=>{
-                                window.location.href = `/orders/${order.orderId}`
-                            }} key={order.orderId}/>
-                        ))
+                    {orders.length <= 0 &&
+                        <div className="row">
+                            <div className="col-12">
+                                <h1 className="error">No orders found, you can request one <a href={"/create/orders"}>here</a></h1>
+                            </div>
+                        </div>
                     }
-                    <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}/>
+                    {orders.length > 0 &&
+                        <div>
+                            {
+                                orders.map((order: Order) => (
+                                    <OrderTile order={order}
+                                               action={() => {
+                                                   window.location.href = `/orders/${order.orderId}`
+                                               }} key={order.orderId}/>
+                                ))
+                            }
+                            <CustomPagination onPageChange={handlePageChange} pageSize={pageSize}
+                                              totalPages={totalPages}/>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -28,6 +28,8 @@ import ManageReviews from "./Pages/AllReviews/ManageReviews";
 import EditGallery from "./Pages/Gallery/EditGallery";
 import ViewSpecificServiceAdmin from "./Pages/ViewASpecificServiceFromTheAdminPanel/ViewSpecificServiceAdmin";
 import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
+import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
+import {ToastContainer} from "react-toastify";
 
 
 export default function App() {
@@ -53,7 +55,7 @@ export default function App() {
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
                         <Route path="/adminServices/:serviceId" element={<ViewSpecificServiceAdmin/>}/>
                         <Route path="/profile/reviews" element={<CustomerReviews/>}/>
-
+                        <Route path="/profile/reviews/create" element={<CreateReview/>}/>
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
                         <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>
@@ -66,6 +68,19 @@ export default function App() {
                     </Routes>
                 </BrowserRouter>
             </AuthProvider>
+
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </>
     )
 }

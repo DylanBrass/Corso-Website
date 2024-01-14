@@ -1,5 +1,6 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface ReviewService {
     List<ReviewResponse> getPinnedReviews(boolean pinned);
 
     List<ReviewResponse> getReviewsByUserId(String userId);
+
+    ReviewResponse customerCreateReview(String userId, ReviewRequest reviewRequest);
 
 }

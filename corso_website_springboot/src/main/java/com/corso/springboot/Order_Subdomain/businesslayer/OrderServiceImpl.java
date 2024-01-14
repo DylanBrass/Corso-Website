@@ -71,13 +71,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
-
-    public List<OrderResponse> getOrderByCustomerAndStatus(String userId, String  status, int pageSize, int offset){
+    public List<OrderResponse> getOrderByCustomerAndStatus(String userId, String status, int pageSize, int offset) {
         List<OrderResponse> responses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatusWithPagination(userId, pageSize, offset, status));
 
         int totalOrders = orderRepository.countByUserIdAndOrderStatus(userId, status);
-        for(OrderResponse response : responses){
+        for (OrderResponse response : responses) {
             response.setTotalOrdersMatchingRequest(totalOrders);
             response.setService(serviceService.getServiceByServiceId(response.getServiceId()));
         }
@@ -235,18 +233,18 @@ public class OrderServiceImpl implements OrderService {
 
         int totalOrders = orderRepository.countByUserId(userId);
 
-        if(totalOrders == 0){
-           throw new OrderNotFoundException("No orders found for user: " + userId);
+        if (totalOrders == 0) {
+            throw new OrderNotFoundException("No orders found for user: " + userId);
         }
 
         if (pageSize == 0 && offset == 0) {
-             orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, 10, 0));
-                for (OrderResponse orderResponse : orderResponses) {
-                    orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
-                    orderResponse.setTotalOrdersMatchingRequest(totalOrders);
-                }
+            orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, 10, 0));
+            for (OrderResponse orderResponse : orderResponses) {
+                orderResponse.setService(serviceService.getServiceByServiceId(orderResponse.getServiceId()));
+                orderResponse.setTotalOrdersMatchingRequest(totalOrders);
+            }
 
-                return orderResponses;
+            return orderResponses;
         }
 
         orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdWithPagination(userId, pageSize, offset));
@@ -266,8 +264,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getCustomerCurrentOrders(String userId,Status status) {
-        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId,status));
+    public List<OrderResponse> getCustomerCurrentOrders(String userId, Status status) {
+        return orderResponseMapper.toOrdersResponse(orderRepository.findAllByUserIdAndOrderStatus(userId, status));
     }
 
     @Override
@@ -297,7 +295,6 @@ public class OrderServiceImpl implements OrderService {
         String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
 
 
-
         String subject = "Order #" + orderTrackingNumber + " has been accepted!";
 
         Map<String, String> parameters = new HashMap<>();
@@ -317,18 +314,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int countByOrderStatus(String status) {
-        return orderRepository.countByOrderStatus(status);}
+        return orderRepository.countByOrderStatus(status);
+    }
 
     @Override
     public OrderResponse updateOrderStatusToDeclined(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
-        Status newStatus = Status.DECLINED;
-
-        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
 
         if (order == null) {
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
+
+        Status newStatus = Status.DECLINED;
+
+        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
+
 
         Map<String, String> parameters = new HashMap<>();
         log.info("Sending email to {}", declineOrderRequest.getRecipient());
@@ -346,5 +346,10 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(Status.valueOf(newStatus.toString()));
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
+
+    @Override
+    public boolean findAnyUserOrders(String userId) {
+        return orderRepository.existsByUserId(userId);
     }
 }

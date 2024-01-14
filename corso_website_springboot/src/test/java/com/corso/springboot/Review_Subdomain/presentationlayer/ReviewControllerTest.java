@@ -19,6 +19,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,7 +86,7 @@ class ReviewControllerTest {
     @Test
     void getPinnedReviews_ThenReturnPinnedReviews() {
         //arrange
-        Integer expectedNumberOFReviews= 2;
+        Integer expectedNumberOFReviews = 2;
         //act
         webTestClient.get()
                 .uri(BASE_URI_REVIEWS + "/pinned")
@@ -98,7 +99,7 @@ class ReviewControllerTest {
     @Test
     void getReviewsByUserId_ThenReturnReviewsByUserId() throws Exception {
         //arrange
-        Integer expectedNumberOfReviews= 5;
+        Integer expectedNumberOfReviews = 5;
         //act
 
         mockMvc.perform(get(BASE_URI_REVIEWS + "/user")
@@ -110,4 +111,54 @@ class ReviewControllerTest {
                         .value(expectedNumberOfReviews));
     }
 
+    @Test
+    void createReviewByCustomer_ThenReturnReview() throws Exception {
+        //arrange
+        // act
+        mockMvc.perform(post(BASE_URI_REVIEWS)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"reviewRating\": 5," +
+                                " \"message\": \"I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!\", " +
+                                "\"customerFullName\": \"John Doe\"}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.reviewRating")
+                        .value(5))
+                .andExpect(jsonPath("$.message")
+                        .value("I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!"))
+                .andExpect(jsonPath("$.customerFullName")
+                        .value("John Doe"));
+
+        mockMvc.perform(post(BASE_URI_REVIEWS)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"reviewRating\": 5," +
+                                " \"message\": \"I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!\", " +
+                                "\"customerFullName\": \"John Doe\"}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message")
+                        .value("You have already left a review this week!"));
+
+    }
+
+    @Test
+    void postReviewWithRatingGreaterThenFive() throws Exception {
+        //arrange
+        //act
+        mockMvc.perform(post(BASE_URI_REVIEWS)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"reviewRating\": 6," +
+                                " \"message\": \"I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!\", " +
+                                "\"customerFullName\": \"John Doe\"}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message")
+                        .value("Review rating must be between 1 and 5"));
+    }
 }

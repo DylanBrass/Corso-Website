@@ -73,7 +73,7 @@ function ProfilePage() {
 
 
     const checkIfProfileExists = async () => {
-        await axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers?simpleCheck=true", {
+        await axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers?simpleCheck=true", {
             headers: {
                 // @ts-ignore
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -82,7 +82,7 @@ function ProfilePage() {
             console.log(r.status);
             if (r.status === 200) {
 
-                axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
+                axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
                     headers: {
                         // @ts-ignore
                         "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -146,7 +146,7 @@ function ProfilePage() {
                         }
 
                         <h1 className={"mt-5"}>{name}</h1>
-                        <form method={"post"} action={process.env.REACT_APP_BE_HOST+"api/v1/corso/logout"}>
+                        <form method={"post"} action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"}>
                             <button id={"logout-profile"} type={"submit"}>LOGOUT</button>
                         </form>
                     </div>
@@ -187,11 +187,11 @@ function ProfilePage() {
                     <div className={"options-box col-12 col-md-6 mb-5 mb-md-0"}>
                         <div className={"row w-100 option-box"}>
                             <div className={"col-2 d-none d-xl-block"}>
-                                <img src={edit} alt={"edit"} className={" m-1 float-start"}/>
+                                <img src={edit} alt={"edit"} className={"m-1 float-start"}/>
                             </div>
-                            <div className={"col-8 option-text"}>
+                            <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/edit"}>
-                                    <h3 className={"option edit-profile-option m-auto"}>Edit Profile</h3>
+                                    <h3 className={"option edit-profile-option m-auto text-center text-xl-start"}>Edit Profile</h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>
@@ -202,9 +202,9 @@ function ProfilePage() {
                             <div className={"col-2 d-none d-xl-block p-3"}>
                                 <img src={ordersCart} alt={"edit"} className={" mx-2 float-start"}/>
                             </div>
-                            <div className={"col-8 option-text"}>
+                            <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/orders"}>
-                                    <h3 className={"option past-orders-option m-auto"}>View Your Orders</h3>
+                                    <h3 className={"option past-orders-option m-auto text-center text-xl-start"}>View Your Orders</h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>
@@ -215,10 +215,11 @@ function ProfilePage() {
                             <div className={"col-2 d-none d-xl-block p-3"}>
                                 <img src={review} alt={"edit"} className={"float-start mx-3"}/>
                             </div>
-                            <div className={"col-8 option-text"}>
+                            <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/reviews"}>
-                                    <h3 className={"past-reviews-option option text-start m-auto"}>View Your
-                                        Reviews</h3>
+                                    <h3 className={"past-reviews-option option text-center text-xl-start m-auto"}>
+                                        View Your Reviews
+                                    </h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>

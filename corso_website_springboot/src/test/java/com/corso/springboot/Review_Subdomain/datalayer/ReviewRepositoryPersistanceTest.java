@@ -1,11 +1,13 @@
 package com.corso.springboot.Review_Subdomain.datalayer;
 
 
+import jnr.constants.platform.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,6 +33,32 @@ class ReviewRepositoryPersistanceTest {
     }
 
 
+    @Test
+    void reviewInLastWeekForUser_ThenReturnFalse() {
+        String userId = "google|123456789";
+        Boolean hasReviewed = reviewRepository.reviewInLastWeekForUser(userId);
+        assertFalse(hasReviewed);
+    }
+
+    @Test
+    void reviewInLastWeekForUser_ThenReturnTrue() {
+        String userId = "google|123456789";
+
+        Review review = new Review();
+        review.setUserId(userId);
+        review.setReviewId(new ReviewIdentifier());
+        review.setCustomerFullName("John Doe");
+        review.setReviewDate(LocalDate.now());
+        review.setReviewRating(5);
+        review.setPinned(false);
+        review.setMessage("This is a test message");
+
+        reviewRepository.save(review);
+
+
+        Boolean hasReviewed = reviewRepository.reviewInLastWeekForUser(userId);
+        assertTrue(hasReviewed);
+    }
 
 
 

@@ -35,4 +35,5 @@ public interface OrderService {
 
     OrderResponse updateOrderStatusToDeclined(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException;
 
+    boolean findAnyUserOrders(String userId);
 }

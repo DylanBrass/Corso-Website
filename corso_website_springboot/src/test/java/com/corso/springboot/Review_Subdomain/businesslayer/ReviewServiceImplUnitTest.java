@@ -1,11 +1,14 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
 
+import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersException;
 import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -38,8 +41,9 @@ class ReviewServiceImplUnitTest {
     @InjectMocks
     private ReviewServiceImpl reviewServiceImpl;
 
+
     @Mock
-    private ReviewService reviewService;
+    private OrderService orderService;
 
 
     @Test
@@ -87,6 +91,7 @@ class ReviewServiceImplUnitTest {
         Mockito.verify(reviewResponseMapper, Mockito.times(1)).toReviewsResponse(Mockito.anyList());
 
     }
+
     @Test
     void getReviewsByCustomerFullName_ShouldReturnReviews() {
         // Arrange
@@ -221,6 +226,22 @@ class ReviewServiceImplUnitTest {
         assertThrows(ReviewsNotFoundException.class, () -> reviewServiceImpl.getReviewsByUserId(userId));
     }
 
+    @Test
+    void whenUserCreatesReviewAndHasNoOrders_ThenThrowUserHasNoOrdersException() {
+        // Arrange
+        String userId = "google|123456789";
+        ReviewRequest reviewRequest = ReviewRequest.builder()
+                .reviewRating(5)
+                .message("This is a test message")
+                .customerFullName("John Doe")
+                .build();
+
+        when(orderService.findAnyUserOrders(userId)).thenReturn(false);
+
+
+        // Act and Assert
+        assertThrows(ReviewUserHasNoOrdersException.class, () -> reviewServiceImpl.customerCreateReview(userId, reviewRequest));
+    }
 
 }
 
