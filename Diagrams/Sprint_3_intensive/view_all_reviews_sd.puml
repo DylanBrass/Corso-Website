@@ -1,0 +1,80 @@
+@startuml
+title View All Reviews 
+
+actor User
+
+participant ProfilePage as "<<View>> ProfilePage"
+
+participant ReviewsPage as "<<View>> ReviewsPage"
+
+participant ReviewController as "<<Controller>> ReviewController"
+
+participant ReviewService as "<<Service>> ReviewService"
+
+participant ReviewResponses as "all: List<ReviewResponse>"
+
+participant ReviewRepository as "<<Repository>> ReviewRepository"
+
+participant Reviews as "all: List<Review>"
+
+participant Database as "<<Database>> Database"
+
+participant ReviewResponseMapper as "<<Mapper>> ReviewResponseMapper"
+
+
+User -> ProfilePage: viewAllReviewsOfCustomer()
+activate ProfilePage
+ProfilePage -> ReviewsPage: render()
+activate ReviewsPage
+ReviewsPage -> ReviewController: GET api/v1/corso/reviews/user HTTP/1.1
+activate ReviewController
+ReviewController -> ReviewService: getAllReviewsOfCustomer(OidcUser principal)
+
+activate ReviewService
+
+ReviewService -> ReviewRepository: findAllByUser(String userId)
+
+activate ReviewRepository
+
+ReviewRepository -> Database: SELECT * FROM reviews WHERE user_id = ?
+
+activate Database
+
+Database --> ReviewRepository: List<Review>
+
+deactivate Database
+
+ReviewRepository --> Reviews: List<Review>
+activate Reviews
+Reviews --> ReviewService: all: List<Review>
+
+destroy ReviewRepository
+
+ReviewService -> ReviewResponseMapper: mapToReviewResponses(List<Review> reviews)
+
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponses: all: List<ReviewResponse>
+destroy Reviews
+
+activate ReviewResponses
+
+destroy ReviewResponseMapper
+
+ReviewResponses --> ReviewService: all: List<ReviewResponse>
+
+ReviewService --> ReviewController: all: List<ReviewResponse>
+
+destroy ReviewService
+
+ReviewController --> ReviewsPage: all: List<ReviewResponse>
+
+destroy ReviewResponses
+destroy ReviewController
+
+User -> ReviewsPage: Back()
+
+ReviewsPage --> ProfilePage: render()
+destroy ReviewsPage
+
+@enduml

@@ -1,0 +1,114 @@
+.faqs-dashboard-container {
+    justify-items: center;
+    align-items: center;
+
+    .faq-header {
+        width: auto;
+
+        .faq-title {
+            color: #000;
+            text-align: center;
+            font-family: Nunito;
+            font-size: 36px;
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+    }
+
+    .error {
+        text-align: center;
+        color: red;
+        font-size: 1.2em;
+        margin: 10px 0;
+    }
+
+    .faq-card {
+        position: relative;
+        border: 1px solid #ccc;
+        transition: box-shadow 0.3s ease-in-out;
+        overflow: clip;
+        margin-top: 50px;
+        border-radius: 27px;
+        box-shadow: 12px 12px 4px 0px rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.72);
+
+        &:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .faq-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .faq-box-question {
+                background-color: #E8E8E8;
+
+                .faq-question {
+                    margin: 10px 0;
+                    font-size: 1.2em;
+                }
+
+                .faq-pinned .faq-not-pinned {
+                    padding: 10px;
+                }
+            }
+        }
+
+        .faq-content {
+            margin: 10px 0;
+
+            .faq-message{
+                margin: 5px;
+                padding-left: 15px;
+            }
+
+        }
+
+    }
+
+    @media (min-width: 765px) and (max-width: 990px) {
+        .faq-card {
+            width: 345px;
+            min-height: 250px;
+
+            .faq-message {
+                margin: 5px;
+                text-align: justify-all;
+            }
+        }
+    }
+
+    @media (min-width:410px) {
+        .faq-card {
+            margin-top: 5px;
+            padding-left: 0px;
+        }
+    }
+
+    .submission {
+        text-align: center;
+        .save-viewable-faqs-button {
+            margin-top: 5px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #064BEC;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: #0336A9;
+            }
+        }
+    }
+
+}

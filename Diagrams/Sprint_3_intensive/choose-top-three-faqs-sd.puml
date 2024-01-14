@@ -1,0 +1,84 @@
+@startuml
+
+actor Admin
+
+participant Dashboard as "<<View>> Dashboard"
+
+participant EditFaqPage as "<<View>> EditFaqPage"
+
+participant FaqRequest as "faqRequests: List<FaqRequest>"
+
+participant FaqController as "FaqController: FaqController"
+
+participant FaqResponse as "faqResponses: List<FaqResponse>"
+
+participant FaqService as "FaqService"
+
+participant Faq as "faqs: List<Faq>"
+
+participant FaqRepository as "FaqRepository"
+
+participant Faqdb as "faqDbs: List<Faq>"
+
+participant Database as "Database"
+
+participant FaqResponseMapper as "FaqResponseMapper"
+
+participant FaqRequestMapper as "FaqRequestMapper"
+
+Admin -> Dashboard: ChooseTopThreeFaqs()
+activate Dashboard
+
+Dashboard -> EditFaqPage : render()
+activate EditFaqPage
+
+Admin -> EditFaqPage : getTopThreeFaqs()
+
+EditFaqPage -> FaqRequest : PATCH /api/faqs/viewable
+activate FaqRequest
+FaqRequest -> FaqController : chooseTopThreeFaqs(List<ThreeFaqsRequest> threeFaqsRequests)
+
+activate FaqController
+FaqController -> FaqService : chooseTopThreeFaqs()
+activate FaqService
+
+FaqService -> "FaqRequestMapper" : mapToFaq(List<ThreeFaqsRequest> threeFaqsRequests)
+activate FaqRequestMapper
+
+"FaqRequestMapper" -> Faq : List<Faqs>
+destroy FaqRequest
+destroy FaqRequestMapper
+
+activate Faq
+Faq -> "FaqService" : faqs : List<Faq>
+
+"FaqService" -> "FaqRepository" : saveAll(List<Faq> faqs)
+destroy Faq
+activate FaqRepository
+
+"FaqRepository" -> "Database" : UPDATE faq SET faq_preference = :faqPreference WHERE faq_id = :faqId
+activate Database
+
+"Database" -> "Faqdb" : faqDbs : List<Faq>
+deactivate Database
+
+activate Faqdb
+Faqdb -> FaqRepository : faqDbs : List<Faq>
+
+FaqRepository -> FaqService : faqsDbs : List<Faq>
+destroy FaqRepository
+
+FaqService -> "FaqResponseMapper" : mapToFaqsResponses(List<Faq> faqDbs)
+destroy Faqdb
+
+activate FaqResponseMapper
+"FaqResponseMapper" --> FaqResponse : List<FaqResponse>
+destroy FaqResponseMapper
+
+activate FaqResponse
+FaqResponse --> FaqService : faqResponses : List<FaqResponse>
+FaqService --> FaqController : faqResponses : List<FaqResponse>
+FaqController --> EditFaqPage : faqResponses : List<FaqResponse>
+destroy FaqResponse
+
+@enduml
