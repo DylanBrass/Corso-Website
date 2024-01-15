@@ -401,7 +401,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
 
-        int emailStatus = 0;
+        int emailStatus;
         for (UserInfoResponse admin : admins) {
             emailStatus = emailService.sendEmail(admin.getEmail(),
                     "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled",
