@@ -359,9 +359,6 @@ public class OrderServiceImpl implements OrderService {
         Status newStatus = Status.CANCELLED;
         String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
 
-        if (order == null) {
-            throw new OrderNotFoundException("Order not found with id: " + orderId);
-        }
 
         Map<String, String> parameters = new HashMap<>();
         log.info("Sending email to {}", declineOrderRequest.getRecipient());
