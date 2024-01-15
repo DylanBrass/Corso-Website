@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.corso.corso-website.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.corso.corso-website.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.corso.corso-website.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.corso.corso-website.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/corso-website.main.iml" filepath="$PROJECT_DIR$/.idea/modules/corso-website.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/corso-website.test.iml" filepath="$PROJECT_DIR$/.idea/modules/corso-website.test.iml" />
     </modules>
   </component>
 </project>
