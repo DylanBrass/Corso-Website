@@ -189,7 +189,13 @@ function ViewSpecificOrder() {
                                     }
                                 </div>
                             </div>
-                            <div className={"row"}>
+                            <div className={"col-12"}>
+                                <button className={"m-4 float-end complete-order-btn p-2"}>Complete This Order</button>
+                            </div>
+                            <div className={"col-12"}>
+                                <button className={"m-4 float-end edit-order-btn p-2"}>Edit This Order</button>
+                            </div>
+                            <div className={"col-12"}>
                                 <button className={"m-4 float-end cancel-order-btn p-2"} onClick={() => setOpenPopup(true)}>Cancel This Order</button>
                                     <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
                                         <div className="popup-box">
@@ -212,12 +218,6 @@ function ViewSpecificOrder() {
                                             </form>
                                         </div>
                                     </Popup>
-                                <div className={"col-12"}>
-                                    <button className={"m-4 float-end complete-order-btn p-2"}>Complete This Order</button>
-                                </div>
-                                <div className={"col-12"}>
-                                    <button className={"m-4 float-end edit-order-btn p-2"}>Edit This Order</button>
-                                </div>
                             </div>
                         </div>
                     </div>

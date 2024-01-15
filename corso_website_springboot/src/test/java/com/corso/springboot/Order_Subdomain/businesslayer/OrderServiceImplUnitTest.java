@@ -296,7 +296,38 @@ public class OrderServiceImplUnitTest {
 
     }
 
+    @Test
+    void updateOrderStatusToCancelled_ShouldSucceed() throws MessagingException {
 
+        // Arrange
+        Order mockOrder = new Order();
+        mockOrder.setOrderId(new OrderIdentifier());
+        mockOrder.setOrderStatus(Status.IN_PROGRESS);
+        mockOrder.setOrderTrackingNumber(new OrderTrackingNumber());
 
+        OrderResponse mockOrderResponse = new OrderResponse(mockOrder.getOrderId().getOrderId(),
+                "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null,
+                "auth0|65702e81e9661e14ab3aac89", "", "2023-01-01",
+                "2023-02-01", Status.IN_PROGRESS, "Custom web development project",
+                "John Doe", "john@example.com", "1234567890",
+                "123 Main St", "Montreal", "J5R 5J4", "",
+                1, 2, 1);
 
-}
+        Mockito.when(orderRepository.findByOrderId_OrderId(mockOrder.getOrderId().getOrderId())).thenReturn(mockOrder);
+        Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
+        Mockito.when(orderResponseMapper.toOrderResponse(any(Order.class))).thenReturn(mockOrderResponse);
+
+        DeclineOrderRequest orderRequest = new DeclineOrderRequest("test", "test");
+
+        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(200);
+
+        // Act
+        OrderResponse result = orderService.updateOrderStatusToCancelled(mockOrder.getOrderId().getOrderId(), orderRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(Status.CANCELLED, mockOrder.getOrderStatus(), "Order status should be updated to Cancelled");
+        verify(orderRepository).save(mockOrder);
+    }
+
+    }
