@@ -28,7 +28,7 @@ class ReviewRepositoryPersistanceTest {
     @Test
     void findAllByCustomerFullNameStartingWith() {
         String customerFullName = "John Doe";
-        List<Review> reviews = reviewRepository.findAllByCustomerFullNameStartingWith(customerFullName);
+        List<Review> reviews = reviewRepository.findAllByCustomerFullNameStartingWithAndPagination(customerFullName, 10, 0);
         assertEquals(1, reviews.size());
     }
 

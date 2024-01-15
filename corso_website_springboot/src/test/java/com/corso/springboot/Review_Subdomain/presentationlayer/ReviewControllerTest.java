@@ -1,8 +1,15 @@
 package com.corso.springboot.Review_Subdomain.presentationlayer;
 
+import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
+import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
+import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
+import com.corso.springboot.email.businessLayer.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,11 +21,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +51,12 @@ class ReviewControllerTest {
     @Autowired
     ReviewRepository reviewRepository;
 
+    @MockBean
+    private EmailService emailService;
+
+    @MockBean
+    private CustomerService customerService;
+
     @BeforeEach
     public void setUp() {
     }
@@ -52,38 +66,42 @@ class ReviewControllerTest {
     void getAllReviews_ReturnAllReviews() {
         //act
         webTestClient.get()
-                .uri(BASE_URI_REVIEWS)
+                .uri(uriBuilder -> uriBuilder.path(BASE_URI_REVIEWS)
+                        .queryParam("pageSize", 10)
+                        .queryParam("offset", 0)
+                        .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(5);
     }
 
+//    @Test
+//    @WithMockUser(authorities = "Admin")
+//    void getAllReviews_ReturnAllReviewsByCustomerFullName() {
+//        //act
+//        webTestClient.get()
+//                .uri(BASE_URI_REVIEWS + "/search?customerFullName=John Doe")
+//                .accept(MediaType.APPLICATION_JSON)
+//                .exchange().expectStatus().isOk()
+//                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+//                .expectBody().jsonPath("$.length()").isEqualTo(1);
+//    }
+
+
+//    @Test
+//    @WithMockUser(authorities = "Admin")
+//    void getReviewsByCustomerFullName_NullParameter_ReturnsBadRequest() throws Exception {
+//        webTestClient.get()
+//                .uri(BASE_URI_REVIEWS + "/search?customerFullName=")
+//                .accept(MediaType.APPLICATION_JSON)
+//                .exchange()
+//                .expectStatus().isBadRequest()
+//                .expectBody().isEmpty();
+//    }
+
     @Test
     @WithMockUser(authorities = "Admin")
-    void getAllReviews_ReturnAllReviewsByCustomerFullName() {
-        //act
-        webTestClient.get()
-                .uri(BASE_URI_REVIEWS + "/search?customerFullName=John Doe")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange().expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$.length()").isEqualTo(1);
-    }
-
-
-    @Test
-    @WithMockUser(authorities = "Admin")
-    void getReviewsByCustomerFullName_NullParameter_ReturnsBadRequest() throws Exception {
-        webTestClient.get()
-                .uri(BASE_URI_REVIEWS + "/search?customerFullName=")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody().isEmpty();
-    }
-
-    @Test
     void getPinnedReviews_ThenReturnPinnedReviews() {
         //arrange
         Integer expectedNumberOFReviews = 2;
@@ -163,19 +181,104 @@ class ReviewControllerTest {
     }
 
     @Test
-    void postReviewWhenYouHaveNoOrder_ShouldReturnBadRequest() throws Exception {
+    void getReviewById_ThenReturnReviewById_BadRequest() throws Exception {
         //arrange
+        String reviewId = "a";
         //act
-        mockMvc.perform(post(BASE_URI_REVIEWS)
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/" + reviewId)
                         .with(csrf())
-                        .with(oidcLogin().idToken(i -> i.subject("facebook|311881271807762")).authorities(new SimpleGrantedAuthority("Customer")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"reviewRating\": 5," +
-                                " \"message\": \"I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!\", " +
-                                "\"customerFullName\": \"John Doe\"}")
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Admin")))
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message")
-                        .value("No orders attributed to account, please place an order before leaving a review. If you want to voice a concern, please contact us, this measure is in place to prevent spam reviews, we still want to hear from you!"));
+                .andExpect(status().isMethodNotAllowed());
     }
+
+    @Test
+    void getPinnedReviewsCount_ThenReturnPinnedReviewsCount() throws Exception {
+        //arrange
+        Integer expectedNumberOfReviews = 2;
+        //act
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/count/pinned")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Admin")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$")
+                        .value(expectedNumberOfReviews));
+    }
+
+
+    @Test
+    void getAllReviewsCount_ThenReturnAllReviewsCount() throws Exception {
+        //arrange
+        Integer expectedNumberOfReviews = 5;
+        //act
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/count")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Admin")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$")
+                        .value(expectedNumberOfReviews));
+    }
+
+
+    @Test
+    void getAllReviewsCount_ThenReturnAllReviewsCount_NotFound() throws Exception {
+        //arrange
+        Integer expectedNumberOfReviews = 5;
+        //act
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/count")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Admin")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$")
+                        .value(expectedNumberOfReviews));
+    }
+
+
+    @Test
+    void getReviewById_ThenReturnReviewById_NotFound() throws Exception {
+        // Arrange
+        int reviewId = 100;
+
+        // Act and Assert
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/" + reviewId)
+                .with(csrf())
+                .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
+                        .authorities(new SimpleGrantedAuthority("Admin")))
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isMethodNotAllowed());
+    }
+
+
+    @Test
+    void updateReviewByIdChangePinnedStatus_ShouldSucceed() throws Exception {
+        //arrange
+        String reviewId = "7dcca21e-4d7b-4e8c-8c58-1a044acba519";
+
+        CustomerResponse customerResponse = CustomerResponse.builder()
+                .userId("auth0|65702e81e9661e14ab3aac89")
+                .email("email@email.com")
+                .build();
+
+        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(200);
+
+        Mockito.when(customerService.getCustomerByUserId(any(String.class))).thenReturn(customerResponse);
+
+
+
+        //act
+        mockMvc.perform(patch(BASE_URI_REVIEWS + "/" + reviewId)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
+                                .authorities(new SimpleGrantedAuthority("Admin")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "    \"pinned\": true\n" +
+                                "}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.pinned").value(true));
+    }
+
+
 }

@@ -32,4 +32,6 @@ public class Review {
     public int reviewRating;
 
     public boolean pinned;
+
+
 }

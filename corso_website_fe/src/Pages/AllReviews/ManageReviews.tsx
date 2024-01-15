@@ -1,129 +1,179 @@
 import './ManageAllReviews.css';
 import NavigationBar from "../../Components/NavBar/NavigationBar";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-
 import star_fill from "../../images/Star_fill.svg";
-
 import star_empty from "../../images/Star.svg";
 import Search_light from "../../images/Search_light_white.svg";
 import View_light from "../../images/View_light.png";
 import CrossedOutEye from "../../images/Crossed-out_Eye.png";
-
-import React from "react";
 import {useAuth} from "../../security/Components/AuthProvider";
+import CustomPagination from "../../Components/Pagination";
+import {PuffLoader} from 'react-spinners';
+import {Bounce, toast, ToastContainer} from "react-toastify";
 
 
 class Reviews {
-    id: string;
+    reviewId: string;
     customerFullName: string;
     reviewDate: Date;
     message: string;
     reviewRating: number;
     pinned: boolean;
+    image: string;
 
 
-    constructor(id: string, customerFullName: string, reviewDate: Date, message: string, reviewRating: number, pinned: boolean) {
-        this.id = id;
+    constructor(reviewId: string, customerFullName: string, reviewDate: Date, message: string, reviewRating: number, pinned: boolean) {
+        this.reviewId = reviewId;
         this.customerFullName = customerFullName;
         this.reviewDate = reviewDate;
         this.message = message;
         this.reviewRating = reviewRating;
         this.pinned = pinned;
+        this.image = pinned ? View_light : CrossedOutEye;
     }
 }
 
 function ManageReviews() {
     const auth: {} = useAuth()
 
+
+    const [previousNameSearch, setPreviousNameSearch] = useState<string>('');
+
     const [reviews, setReviews] = useState<Reviews[]>([]);
-    const [error,] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
 
-    /*
+    useEffect(() => {
+        fetchReviews(currentPage, pageSize);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, pageSize]);
 
-    This is for my Choose Viewable Reviews
 
-        const toggleReviewPinned = (reviewId: string) => {
-            setReviews(prevReviews =>
-                prevReviews.map(review => {
-                    if (review.id === reviewId) {
-                        return {
-                            ...review,
-                            pinned: !review.pinned
-                        };
+    const toggleReviewPinned = async (reviewId: string) => {
+
+        document.getElementById(reviewId + "-spinner")?.classList.remove("d-none");
+        document.getElementById(reviewId + "-button")?.classList.add("d-none");
+
+        setIsLoading(true)
+
+
+        await
+            axios
+                .patch(`http://localhost:8080/api/v1/corso/reviews/${reviewId}`, {
+                    pinned: !reviews.find((review) => review.reviewId === reviewId)?.pinned,
+                }, {
+                    headers: {
+                        // @ts-ignore
+                        'X-XSRF-TOKEN': auth.getXsrfToken(),
                     }
-                    return review;
                 })
-            );
-        };
-     */
+                .then((response) => {
+                    console.log('API Response:', response.data)
+                    const updatedReviews = reviews.map((review) => {
+                        if (review.reviewId === response.data.reviewId) {
+                            return response.data;
+                        }
+                        return review;
+                    });
 
+                    setReviews(updatedReviews);
 
-    const getReviews = () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews",
-            {
-                headers: {
-                    // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                })
+                .catch((error) => {
+                    console.error('API Error:', error);
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        // @ts-ignore
+                        auth.authError(error.response.status);
+
+                    }
+                    if (error.response.status === 409) {
+                        // @ts-ignore
+                        swal("Warning!", error.response.data.message, "warning")
+                    }
+                }).finally(() => {
+                    console.log("Done")
+                    document.getElementById(reviewId + "-spinner")?.classList.add("d-none");
+                    document.getElementById(reviewId + "-button")?.classList.remove("d-none");
+                    setIsLoading(false)
                 }
-            })
-            .then(r => {
-                const sortedReviews = r.data.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-                setReviews(sortedReviews);
-            })
-            .catch(e => {
-                console.log(e)
-            })
-
-
+            )
     }
 
+    const fetchReviews = async (pageNumber: number, size: number) => {
+        try {
 
-    const getReviewsBySearch = () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/search?customerFullName=" + searchTerm,
-            {
+            let reviewUrl = `http://localhost:8080/api/v1/corso/reviews?pageSize=${size}&offset=${(pageNumber - 1) * size}`;
+
+            if (searchTerm.trim()) {
+                reviewUrl += `&customerFullName=${searchTerm}`;
+            }
+
+            const reviewResponse = await axios.get(reviewUrl, {
                 headers: {
                     // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken()
-                }
-            })
-            .then(r => {
-                const searchResults = r.data;
-                if (searchResults && searchResults.length > 0) {
-                    const sortedReviews = searchResults.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-                    setReviews(sortedReviews);
-                } else {
-                    getReviews(); // Fetch all reviews if no search results found
-                }
-                setSearchTerm('');
-            })
-            .catch(e => {
-                console.log(e)
-            })
-    }
+                    'X-XSRF-TOKEN': auth.getXsrfToken(),
+                },
+            });
 
-    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!searchTerm.trim()) {
-            getReviews();
-        } else {
-            getReviewsBySearch();
+
+            if (reviewResponse.data.length <= 0) {
+                // @ts-ignore
+                swal("Warning!", "No reviews found!", "warning")
+
+                setReviews([])
+                setTotalPages(0)
+                setPage(1)
+                setCurrentPage(1)
+
+                return;
+            }
+
+            const totalCount = reviewResponse.data[0].totalReviewsMatchingRequest;
+
+
+            setReviews(reviewResponse.data);
+            setTotalPages(Math.ceil(totalCount / size))
+        } catch (error) {
+            console.error(error);
+            setError('Error fetching reviews.');
+            // @ts-ignore
+            auth.authError(error.response.status);
         }
     };
+
+
+    const handlePageChange = (pageNumber: number, size: number) => {
+        setPage(pageNumber);
+        setPageSize(size);
+        fetchReviews(pageNumber, size);
+    };
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
 
-    useEffect(() => {
-        getReviews();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (searchTerm.trim() === previousNameSearch) {
+            return;
+        }
 
+        setPreviousNameSearch(searchTerm)
+        // Brings you to the first page when searching
+        setPageSize(pageSize);
+        setCurrentPage(1);
+        fetchReviews(currentPage, pageSize);
 
+    };
 
     return (
 
@@ -136,7 +186,9 @@ function ManageReviews() {
 
                 <form className="manage-review-form" onSubmit={handleSearch}>
                     <div className={"form-container"}>
-                        <input className="manage-review-input" type="text" name="search" placeholder="Search Client Name"  value={searchTerm} onChange={handleChange}/>
+
+                        <input className="manage-review-input" type="text" name="search"
+                               placeholder="Search Client Name" value={searchTerm} onChange={handleChange}/>
                         <button className="manage-review-submit-button" type="submit">
                             <img src={Search_light} alt={"searchBtn"}/>
                         </button>
@@ -144,13 +196,16 @@ function ManageReviews() {
                 </form>
 
 
-                {error && <div className="row">
-                    <div className="col-12"><p className="error">Error: {error}</p></div>
-                </div>}
+                {
+                    error && <div className="row">
+                        <div className="col-12"><p className="error">Error: {error}</p></div>
+                    </div>
+                }
                 <div className="row">
                     {reviews.map(review => (
-                        <div className="col-md-6 col-sm-12 mb-4">
+                        <div className="col-md-6 col-sm-12 mb-4" key={review.reviewId}>
                             <div className="review-card">
+
                                 <div className="review-info">
                                     <div className="review-box-name row w-100 h-100">
                                         <div className="col-6">
@@ -159,27 +214,47 @@ function ManageReviews() {
 
                                         <div className={"col-2"}/>
                                         <div className={"col-4 text-end"}>
-                                            {review.pinned && <span className="review-pinned">
-                                                  {
-                                                      Array.from(Array(review.pinned), (e, i) => {
-                                                          return <img src={View_light} alt={"review-pinned"}
-                                                                      id={"pinnedId"}/>
-                                                      })
-                                                  }
-                                            </span>
-                                            }
 
-                                            {!review.pinned &&
-                                                <span className="review-not-pinned">
-                                                    {
-                                                        Array.from(Array(review.pinned), (e, i) => (
-                                                            <img key={i} src={CrossedOutEye} alt={"review-not-pinned"}
-                                                                 id={"notPinnedId"}/>
-                                                        ))
-                                                    }
-                                                </span>
+                                            <div className={"float-end d-none"} id={review.reviewId + "-spinner"}>
 
+                                                <PuffLoader
+                                                    color="#1e90ff"/>
+                                            </div>
+
+
+                                            <button style={{
+                                                border: "none",
+                                                background: "none"
                                             }
+                                            }
+                                                    id={review.reviewId + "-button"}
+
+                                                    className={review.pinned ? " review-eye review-pinned" : "review-eye review-not-pinned"}
+                                                    onClick={() => {
+                                                        if (isLoading) {
+                                                            toast.warn('Your previous request is still ongoing!', {
+                                                                position: "top-right",
+                                                                autoClose: 5000,
+                                                                hideProgressBar: false,
+                                                                closeOnClick: true,
+                                                                pauseOnHover: true,
+                                                                draggable: true,
+                                                                progress: undefined,
+                                                                theme: "dark",
+                                                                transition: Bounce,
+                                                            });
+                                                            return;
+                                                        }
+                                                        toggleReviewPinned(review.reviewId).then(r => {
+                                                            console.log(r)
+                                                        })
+                                                    }}>
+                                                <img
+                                                    src={review.pinned ? View_light : CrossedOutEye}
+                                                    alt="View_Light"/>
+                                            </button>
+
+
                                         </div>
                                     </div>
 
@@ -190,21 +265,14 @@ function ManageReviews() {
                                                 <p className="review-date">{review.reviewDate.toString()}</p>
                                             </div>
                                             <p className="review-message">{review.message}</p>
-                                            <div className={"review-rating text-center"}>
-                                                {
-
-                                                    Array.from(Array(review.reviewRating), (e, i) => {
-                                                        return <img src={star_fill} alt={"Filled Star"}/>
-                                                    })
-
-                                                }
-
-                                                {
-                                                    Array.from(Array(5 - review.reviewRating), (e, i) => {
-                                                        return <img src={star_empty} alt={"Empty Star"}/>
-                                                    })
-                                                }
-
+                                            <div className="review-rating text-center"
+                                                 title={`Rating: ${review.reviewRating}`}>
+                                                {Array.from(Array(review.reviewRating), (e, i) => (
+                                                    <img src={star_fill} alt={"Filled Star"} key={i}/>
+                                                ))}
+                                                {Array.from(Array(5 - review.reviewRating), (e, i) => (
+                                                    <img src={star_empty} alt={"Empty Star"} key={i}/>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
@@ -214,6 +282,28 @@ function ManageReviews() {
                     ))}
                 </div>
             </div>
+            <div className={"review-pagination-container"}>
+                <CustomPagination
+                    onPageChange={handlePageChange}
+                    pageSize={pageSize}
+                    totalPages={totalPages}
+                    resetKey={previousNameSearch}
+                />
+
+            </div>
+
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </div>
     );
 

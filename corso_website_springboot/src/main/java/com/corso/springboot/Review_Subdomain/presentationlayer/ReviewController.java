@@ -10,9 +10,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectricdev.tech/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectricdev.tech/"}, allowCredentials = "true")
 @Slf4j
 @RestController
 @RequestMapping("api/v1/corso/reviews")
@@ -24,34 +27,47 @@ public class ReviewController {
     }
 
 
-    @GetMapping()
-    public ResponseEntity<List<ReviewResponse>> getAllReviews(){
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllReviews());
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping
+    public ResponseEntity<List<ReviewResponse>> getAllReviews(@RequestParam Map<String, String> queryParams,
+                                                              @RequestParam(name = "pageSize") int pageSize,
+                                                              @RequestParam(name = "offset") int offset) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews(queryParams, pageSize, offset));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByCustomerFullName(@RequestParam(value = "customerFullName", required = false) String customerFullName){
-        if (customerFullName != null && !customerFullName.isEmpty()) {
-            List<ReviewResponse> reviews = reviewService.getReviewsByCustomerFullName(customerFullName);
-            return ResponseEntity.ok(reviews);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-   @GetMapping("/pinned")
-    public ResponseEntity<List<ReviewResponse>> getPinnedReviews(@CookieValue(value = "id_token", required = false) String idToken){
+    @GetMapping("/pinned")
+    public ResponseEntity<List<ReviewResponse>> getPinnedReviews(@CookieValue(value = "id_token", required = false) String idToken) {
         log.info("Get pinned reviews : {}", idToken);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getPinnedReviews(true));
     }
 
     @GetMapping("/user")
     @PreAuthorize("hasAnyAuthority('Customer')")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByUserId(@AuthenticationPrincipal OidcUser principal){
+    public ResponseEntity<List<ReviewResponse>> getReviewsByUserId(@AuthenticationPrincipal OidcUser principal) {
         String userId = principal.getSubject();
         log.info("Get reviews with userId: {}", userId);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByUserId(userId));
     }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable String reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest) throws MessagingException, IOException, InterruptedException {
+        log.info("reviewId: {}", reviewId);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updatePinnedReviewByReviewId(reviewId,reviewUpdateRequest));
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/count/pinned")
+    public ResponseEntity<Integer> getPinnedReviewsCount(){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getCountAllByState(true));
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getAllReviewsCount(){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getCountAllReviews());
+    }
+
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Customer')")
@@ -60,5 +76,6 @@ public class ReviewController {
         log.info("Create review with userId: {}", userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.customerCreateReview(userId, reviewRequest));
     }
+
 
 }

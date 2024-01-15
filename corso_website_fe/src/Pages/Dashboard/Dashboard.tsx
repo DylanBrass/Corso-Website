@@ -18,7 +18,48 @@ function Dashboard() {
     const [serviceCount, setServiceCount] = useState(0);
 
 
-        const [totalOrders, setTotalOrders] = useState(0)
+    const [totalOrders, setTotalOrders] = useState(0)
+
+    const [totalReviews, setTotalReviews] = useState(0)
+
+    const [totalPinnedReviews, setTotalPinnedReviews] = useState(0)
+    const getTotalReviews = async () => {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/count", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => {
+                if (r.status === 200) {
+                    console.log(r.data)
+                    setTotalReviews(r.data)
+                }
+            })
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status)
+            })
+    }
+
+    const getTotalPinnedReviews = async () => {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/count/pinned", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(r => {
+                if (r.status === 200) {
+                    console.log(r.data)
+                    setTotalPinnedReviews(r.data)
+                }
+            })
+            .catch(e => {
+                // @ts-ignore
+                auth.authError(e.response.status)
+            })
+    }
 
     const getTotalAdmins = async () => {
         axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/auth0/manage/get-total-admins", {
@@ -187,6 +228,14 @@ function Dashboard() {
         getServicesCount()
 
         getTotalOrders().then(r => {
+            console.log(r)
+        })
+
+        getTotalReviews().then(r => {
+            console.log(r)
+        })
+
+        getTotalPinnedReviews().then(r => {
             console.log(r)
         })
 
@@ -368,8 +417,8 @@ function Dashboard() {
                     <div className={"col-4"}>
 
                         <AdminDashboardTile
-                            title1={"2"}
-                            title2={"6/6"}
+                            title1={totalReviews.toString()}
+                            title2={totalPinnedReviews+"/6"}
                             text1={"Total Testimonies"}
                             text2={"Pinned Testimonies"}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon8_jbbxv9.png"}

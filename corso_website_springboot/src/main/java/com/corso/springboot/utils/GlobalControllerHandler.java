@@ -1,14 +1,20 @@
 package com.corso.springboot.utils;
 
+import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
+import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
+import com.corso.springboot.utils.exceptions.FAQ.ThreePrefferedFaqsException;
 import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
 import com.corso.springboot.utils.exceptions.FAQ.ThreePrefferedFaqsException;
 import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
 import com.corso.springboot.utils.exceptions.Review.ReviewBadRequestException;
+import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
 import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersException;
-import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
+import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
+import com.corso.springboot.utils.exceptions.Review.ReviewStateConflictException;
+import com.corso.springboot.utils.exceptions.Review.*;
 import lombok.Generated;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,11 +34,24 @@ public class GlobalControllerHandler {
         return createHttpErrorInfo(BAD_REQUEST, ex);
     }
 
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(ReviewPinnedLimitReachedException.class)
+    public HttpErrorInfo handleErrorPinnedLimitReached(ReviewPinnedLimitReachedException ex) {
+        return createHttpErrorInfo(CONFLICT, ex);
+    }
+
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(ReviewBadRequestException.class)
     public HttpErrorInfo handleErrorWhileCreatingReview(ReviewBadRequestException ex) {
         return createHttpErrorInfo(BAD_REQUEST, ex);
     }
+
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(ReviewStateConflictException.class)
+    public HttpErrorInfo handleErrorWhileUpdatingReviewStateConflict(ReviewStateConflictException ex) {
+        return createHttpErrorInfo(CONFLICT, ex);
+    }
+
 
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(CustomerNotFoundException.class)
