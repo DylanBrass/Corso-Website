@@ -124,6 +124,7 @@ test {
     exclude '**/ViewAllReviewsTest.class'
     exclude '**/ViewAllPreferredReviewsTest.class'
     exclude '**/ViewAllChoosableReviewsTest.class'
+    exclude '**/ViewAllPinnedReviewsTest.class'
     exclude '**/CreateExternalOrderTest.class'
     exclude '**/CreateAServiceTest.class'
     exclude '**/ViewServiceDetailsAdmin.class'

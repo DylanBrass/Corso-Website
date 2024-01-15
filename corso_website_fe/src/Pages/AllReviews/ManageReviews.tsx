@@ -11,7 +11,6 @@ import {useAuth} from "../../security/Components/AuthProvider";
 import CustomPagination from "../../Components/Pagination";
 import {PuffLoader} from 'react-spinners';
 import {Bounce, toast, ToastContainer} from "react-toastify";
-import Pagination from "../../Components/Pagination";
 
 
 class Reviews {
@@ -24,7 +23,7 @@ class Reviews {
     image: string;
 
 
-    constructor(reviewId: string, customerFullName: string, reviewDate: Date, message: string, reviewRating: number, pinned: boolean, image: string) {
+    constructor(reviewId: string, customerFullName: string, reviewDate: Date, message: string, reviewRating: number, pinned: boolean) {
         this.reviewId = reviewId;
         this.customerFullName = customerFullName;
         this.reviewDate = reviewDate;
@@ -38,23 +37,23 @@ class Reviews {
 function ManageReviews() {
     const auth: {} = useAuth()
 
+
+    const [previousNameSearch, setPreviousNameSearch] = useState<string>('');
+
     const [reviews, setReviews] = useState<Reviews[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(10); // Updated to use state for pageSize
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [totalReviews, setTotalReviews] = useState(0);
-    const [localPageSize, setLocalPageSize] = useState<number>(pageSize);
 
 
     useEffect(() => {
-        // Fetch reviews when the component mounts or when there's a change in dependencies
         fetchReviews(currentPage, pageSize);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, pageSize]);
-
 
 
     const toggleReviewPinned = async (reviewId: string) => {
@@ -63,6 +62,8 @@ function ManageReviews() {
         document.getElementById(reviewId + "-button")?.classList.add("d-none");
 
         setIsLoading(true)
+
+
         await
             axios
                 .patch(`http://localhost:8080/api/v1/corso/reviews/${reviewId}`, {
@@ -74,9 +75,7 @@ function ManageReviews() {
                     }
                 })
                 .then((response) => {
-                    console.log('API Response:', response.data) // Log the API response
-                    // Update the pinned status in the local state
-
+                    console.log('API Response:', response.data)
                     const updatedReviews = reviews.map((review) => {
                         if (review.reviewId === response.data.reviewId) {
                             return response.data;
@@ -107,67 +106,15 @@ function ManageReviews() {
             )
     }
 
-
-    /*
-        const getReviews = () => {
-            axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/reviews?pageSize=10",
-                {
-                    headers: {
-                        // @ts-ignore
-                        'X-XSRF-TOKEN': auth.getXsrfToken()
-                    }
-                })
-                .then(r => {
-                    const sortedReviews = r.data.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-                    setReviews(sortedReviews);
-                })
-                .catch(e => {
-                    console.log(e)
-                    // @ts-ignore
-                    auth.authError(e.response.status);
-                })
-
-
-        }
-            axios.get(`${process.env.REACT_APP_BE_HOST}api/v1/corso/reviews?pageSize=${size}&page=${page}`,
-
-
-
-    const getReviews = (page: number, size: number) => {
-        axios.get(`${process.env.REACT_APP_BE_HOST}api/v1/corso/reviews?pageSize=${size}&page=${page}`,
-            {
-                headers: {
-                    // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken(),
-                }
-            })
-            .then(r => {
-                const sortedReviews = r.data.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-                setReviews(sortedReviews);
-            })
-            .catch(e => {
-                console.log(e)
-                // @ts-ignore
-                auth.authError(e.response.status);
-            });
-    }
-
-     */
-
-
-
     const fetchReviews = async (pageNumber: number, size: number) => {
         try {
-            const countResponse = await axios.get(`${process.env.REACT_APP_BE_HOST}api/v1/corso/reviews/count`, {
-                headers: {
-                    // @ts-ignore
-                    'X-XSRF-TOKEN': auth.getXsrfToken(),
-                },
-            });
 
-            const totalCount = countResponse.data.count;
+            let reviewUrl = `http://localhost:8080/api/v1/corso/reviews?pageSize=${size}&offset=${(pageNumber - 1) * size}`;
 
-            const reviewUrl = `${process.env.REACT_APP_BE_HOST}api/v1/corso/reviews?pageSize=${size}&offset=${(pageNumber - 1) * size}`;
+            if (searchTerm.trim()) {
+                reviewUrl += `&customerFullName=${searchTerm}`;
+            }
+
             const reviewResponse = await axios.get(reviewUrl, {
                 headers: {
                     // @ts-ignore
@@ -175,10 +122,24 @@ function ManageReviews() {
                 },
             });
 
-            const sortedReviews = reviewResponse.data.sort((a: Reviews, b: Reviews) => b.reviewRating - a.reviewRating);
 
-            setReviews(sortedReviews);
-            setTotalReviews(totalCount);
+            if (reviewResponse.data.length <= 0) {
+                // @ts-ignore
+                swal("Warning!", "No reviews found!", "warning")
+
+                setReviews([])
+                setTotalPages(0)
+                setPage(1)
+                setCurrentPage(1)
+
+                return;
+            }
+
+            const totalCount = reviewResponse.data[0].totalReviewsMatchingRequest;
+
+
+            setReviews(reviewResponse.data);
+            setTotalPages(Math.ceil(totalCount / size))
         } catch (error) {
             console.error(error);
             setError('Error fetching reviews.');
@@ -188,67 +149,31 @@ function ManageReviews() {
     };
 
 
-
-    const handlePageChange = (newPage: number) => {
-        if(newPage > reviews.length){
-            return currentPage;
-        }else{
-            setCurrentPage(newPage);
-            fetchReviews(newPage, pageSize);
-        }
+    const handlePageChange = (pageNumber: number, size: number) => {
+        setPage(pageNumber);
+        setPageSize(size);
+        fetchReviews(pageNumber, size);
     };
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
 
-    const getReviewsBySearch = () => {
-        axios.get(`${process.env.REACT_APP_BE_HOST}api/v1/corso/reviews/search?customerFullName=${searchTerm}`, {
-            headers: {
-                // @ts-ignore
-                'X-XSRF-TOKEN': auth.getXsrfToken(),
-            },
-        })
-            .then((response) => {
-                const searchResults = response.data;
-                if (searchResults && searchResults.length > 0) {
-                    const sortedReviews = searchResults.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-                    setReviews(sortedReviews);
-                } else {
-                    fetchReviews(currentPage, pageSize);
-                }
-                setSearchTerm('');
-            })
-            .catch((error) => {
-                console.error(error);
-                setError('Error searching reviews.');
-                // @ts-ignore
-                auth.authError(error.response.status);
-            });
-    };
-
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Brings you to the first page when searching
-        setCurrentPage(1);
-        if (!searchTerm.trim()) {
-            fetchReviews(currentPage, pageSize);
-        } else {
-            getReviewsBySearch();
+        if (searchTerm.trim() === previousNameSearch) {
+            return;
         }
-    };
 
-
-
-    const handlePageSizeChange = (newSize: number) => {
-        setLocalPageSize(newSize);
-        setPageSize(newSize);
+        setPreviousNameSearch(searchTerm)
+        // Brings you to the first page when searching
+        setPageSize(pageSize);
         setCurrentPage(1);
-        fetchReviews(1, newSize);
+        fetchReviews(currentPage, pageSize);
+
     };
-
-
 
     return (
 
@@ -304,7 +229,7 @@ function ManageReviews() {
                                             }
                                                     id={review.reviewId + "-button"}
 
-                                                    className={review.pinned ? "review-pinned" : "review-not-pinned"}
+                                                    className={review.pinned ? " review-eye review-pinned" : "review-eye review-not-pinned"}
                                                     onClick={() => {
                                                         if (isLoading) {
                                                             toast.warn('Your previous request is still ongoing!', {
@@ -360,9 +285,9 @@ function ManageReviews() {
             <div className={"review-pagination-container"}>
                 <CustomPagination
                     onPageChange={handlePageChange}
-                    pageSize={localPageSize}
-                    totalPages={Math.ceil(totalReviews / localPageSize)}
-                    resetKey={null}
+                    pageSize={pageSize}
+                    totalPages={totalPages}
+                    resetKey={previousNameSearch}
                 />
 
             </div>

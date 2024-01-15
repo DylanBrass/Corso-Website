@@ -14,13 +14,13 @@ participant ReviewController as "<<Controller>>\nReviewController"
 
 participant ReviewResponse as "response: ReviewResponse"
 
-participant OrderService as "<<Service>>\nOrderService"
+participant ReviewService as "<<Service>>\nReviewService"
 
-participant Order as "order: Order"
+participant Review as "Review: Review"
 
-participant OrderRepository as "<<Repository>>\nOrderRepository"
+participant ReviewRepository as "<<Repository>>\nReviewRepository"
 
-participant "orderDb : Order" as orderDb
+participant "ReviewDb : Review" as ReviewDb
 
 participant Database as "<<Database>>\nDatabase"
 
@@ -28,7 +28,7 @@ participant ReviewResponseMapper as "<<Mapper>>\nReviewResponseMapper"
 
 participant reviewRequestMapper as "<<Mapper>>\nreviewRequestMapper"
 
-Admin -> Dashboard : EditCarouselOrder()
+Admin -> Dashboard : ChooseViewableReviews()
 
 activate Dashboard
 
@@ -36,61 +36,60 @@ Dashboard -> ChooseViewableReviews : render()
 
 activate ChooseViewableReviews
 
-Admin -> ChooseViewableReviews : getCarouselOrder()
+Admin -> ChooseViewableReviews : getReview()
 
-ChooseViewableReviews -> reviewRequest : PATCH api/v1/corso/reviews/{reviewId}
+ChooseViewableReviews -> reviewRequest : GET http://localhost:8080/api/v1/corso/reviews?pageSize=${size}&offset=${(pageNumber - 1) * size}
 
 activate reviewRequest
 
-reviewRequest -> ReviewController : updateGalleryOrder(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequests)
+reviewRequest -> ReviewController : updatePinnedReviewByReviewId(ReviewResponse)
 
 activate ReviewController
 
-ReviewController -> OrderService : updateGalleryOrder()
+ReviewController -> ReviewService : updatePinnedReviewByReviewId()
 
-activate OrderService
+activate ReviewService
 
-OrderService -> reviewRequestMapper : mapToGalleryOrderUpdateRequest(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequests)
 
 activate reviewRequestMapper
 
-reviewRequestMapper -> Order : List<Order>
 
 destroy reviewRequest
 
 destroy reviewRequestMapper
 
-activate Order
+activate Review
 
-Order -> OrderService: orders : List<Order>
+Review -> ReviewService: Reviews : List<Review>
 
-OrderService -> OrderRepository : updateOrder(List<Order> orders)
+ReviewService -> ReviewRepository : updatePinnedReviewByReviewId(ReviewResponse)
 
-destroy Order
+destroy Review
 
-activate OrderRepository
+activate ReviewRepository
 
-loop for each order in orders
-    OrderRepository -> Database : UPDATE gallery SET image_position = :imagePosition WHERE gallery_id = :galleryId
+loop for each Review in Reviews
+    ReviewRepository -> Database : "SELECT * FROM reviews WHERE customer_full_name LIKE concat(:customerFullName,'%') ORDER BY pinned LIMIT :pageSize OFFSET :offset"
+
 end loop
 
 activate Database
 
-Database -> orderDb : orderDbs : List<Order>
+Database -> ReviewDB : ReviewDB : List<Review>
 
 deactivate Database
 
-activate orderDb
+activate ReviewDb
 
-orderDb --> OrderRepository : orderDbs : List<Order>
+ReviewDb --> ReviewRepository : ReviewDbs : List<Review>
 
-OrderRepository -> OrderService : orderDbs : List<Order>
+ReviewRepository -> ReviewService : ReviewDbs : List<Review>
 
-destroy OrderRepository
+destroy ReviewRepository
 
-OrderService -> ReviewResponseMapper : mapToGalleriesResponse(List<Order> orders)
+ReviewService -> ReviewResponseMapper : toReviewResponse(Review)
 
-destroy orderDb
+destroy ReviewDb
 
 activate ReviewResponseMapper
 
@@ -100,9 +99,9 @@ destroy ReviewResponseMapper
 
 activate ReviewResponse
 
-ReviewResponse --> OrderService : ReviewResponse : List<ReviewResponse>
+ReviewResponse --> ReviewService : ReviewResponse : List<ReviewResponse>
 
-OrderService --> ReviewController : ReviewResponse : List<ReviewResponse>
+ReviewService --> ReviewController : ReviewResponse : List<ReviewResponse>
 
 ReviewController --> reviewRequest : ReviewResponse : List<ReviewResponse>
 

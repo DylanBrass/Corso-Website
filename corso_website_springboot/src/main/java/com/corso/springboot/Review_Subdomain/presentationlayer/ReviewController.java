@@ -28,22 +28,11 @@ public class ReviewController {
 
 
     @PreAuthorize("hasAnyAuthority('Admin')")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ReviewResponse>> getAllReviews(@RequestParam Map<String, String> queryParams,
                                                               @RequestParam(name = "pageSize") int pageSize,
                                                               @RequestParam(name = "offset") int offset) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllReviews(queryParams, pageSize, offset));
-    }
-
-    @PreAuthorize("hasAnyAuthority('Admin')")
-    @GetMapping("/search")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByCustomerFullName(@RequestParam(value = "customerFullName", required = false) String customerFullName) {
-        if (customerFullName != null && !customerFullName.isEmpty()) {
-            List<ReviewResponse> reviews = reviewService.getReviewsByCustomerFullName(customerFullName);
-            return ResponseEntity.ok(reviews);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviews(queryParams, pageSize, offset));
     }
 
     @GetMapping("/pinned")

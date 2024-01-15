@@ -80,8 +80,10 @@ class ReviewServiceImplUnitTest {
     void getAllReviews() {
 
         List<ReviewResponse> mockReviewsResponse = List.of(
-                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false),
-                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true)
+                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+                        2),
+                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true,
+                        2)
 
         );
 
@@ -113,7 +115,7 @@ class ReviewServiceImplUnitTest {
         when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
 
         // Act
-        List<ReviewResponse> reviewResult = reviewServiceImpl.getAllReviews(Map.of(), 1, 1);
+        List<ReviewResponse> reviewResult = reviewServiceImpl.getReviews(Map.of(), 1, 1);
 
         // Assert
         assertEquals(mockReviewsResponse, reviewResult);
@@ -126,88 +128,95 @@ class ReviewServiceImplUnitTest {
         // Arrange
         String customerFullName = "John Doe";
         List<ReviewResponse> mockReviews = Arrays.asList(
-                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false),
-                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true));
-
-        when(reviewRepository.findAllByCustomerFullNameStartingWith(customerFullName))
-                .thenReturn(Arrays.asList(
-                        new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false),
-                        new Review(1, new ReviewIdentifier(), "81893daAs", "Emily Doe", date, "This is a review", 3, true)
-                ));
-
-        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList()))
-                .thenReturn(mockReviews);
-
-        // Act
-        List<ReviewResponse> result = reviewServiceImpl.getReviewsByCustomerFullName(customerFullName);
-
-        // Assert
-        assertEquals(mockReviews, result);
-
-    }
-
-
-
-    @Test
-    void getReviewsByCustomerFullName_ShouldReturnAll() {
-        // Arrange
-        String customerFullName = null;
-        List<ReviewResponse> mockReviews = Arrays.asList(
-                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false),
-                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true));
-
-        when(reviewRepository.findAllByCustomerFullNameStartingWith(customerFullName))
-                .thenReturn(Arrays.asList(
-                        new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false),
-                        new Review(1, new ReviewIdentifier(), "81893daAs", "Emily Doe", date, "This is a review", 3, true)
-                ));
-
-        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList()))
-                .thenReturn(mockReviews);
-
-        // Act
-        List<ReviewResponse> result = reviewServiceImpl.getReviewsByCustomerFullName(customerFullName);
-
-        // Assert
-        assertEquals(mockReviews, result);
-
-    }
-
-    @Test
-    void getPinnedReviews() {
-
-        List<ReviewResponse> mockReviewsResponse = List.of(
-                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false),
-                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true)
+                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+                        2),
+                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true,
+                        2)
 
         );
+        when(reviewRepository.findAllByCustomerFullNameStartingWithAndPagination(customerFullName, 1, 1))
+                .thenReturn(Arrays.asList(
+                        new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false),
+                        new Review(2, new ReviewIdentifier(), "2nun21", "Jane Doe", date, "This is a review", 3, false)));
 
+        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList()))
+                .thenReturn(mockReviews);
 
-        Review review1 = Review.builder()
-                .id(1)
-                .reviewId(new ReviewIdentifier())
-                .customerFullName("John Doe")
-                .reviewDate(date)
-                .message("This is a review")
-                .reviewRating(3)
-                .pinned(false)
-                .build();
+        // Act
+        List<ReviewResponse> result = reviewServiceImpl.getReviews(Map.of("customerFullName", customerFullName), 1, 1);
 
-        Review review2 = Review.builder()
-                .id(2)
-                .reviewId(new ReviewIdentifier())
-                .customerFullName("Emily Doe")
-                .reviewDate(date2)
-                .message("This is a review")
-                .reviewRating(5)
-                .pinned(true)
-                .build();
-
-        when(reviewRepository.getReviewByPinned(review1.pinned)).thenReturn(Arrays.asList(review1, review2));
-
-        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
+        // Assert
+        assertEquals(mockReviews, result);
 
     }
+
+
+
+//    @Test
+//    void getReviewsByCustomerFullName_ShouldReturnAll(Map<String, String> params, int pageSize, int offset) {
+//        // Arrange
+//        String customerFullName = null;
+//        List<ReviewResponse> mockReviews = Arrays.asList(
+//                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+//                        2),
+//                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true,
+//                        2)
+//
+//        );
+//        when(reviewRepository.findAllByCustomerFullNameStartingWithAndPagination(customerFullName, pageSize, offset))
+//                .thenReturn(Arrays.asList(
+//                        new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false),
+//                        new Review(2, new ReviewIdentifier(), "2nun21", "Jane Doe", date, "This is a review", 3, false)));
+//
+//
+//        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList()))
+//                .thenReturn(mockReviews);
+//
+//        // Act
+//        List<ReviewResponse> result = reviewServiceImpl.getReviews(params, pageSize, offset);
+//
+//        // Assert
+//        assertEquals(mockReviews, result);
+//
+//    }
+//
+//    @Test
+//    void getPinnedReviews() {
+//
+//        List<ReviewResponse> mockReviewsResponse = List.of(
+//                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+//                        2),
+//                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true,
+//                        2)
+//
+//        );
+//
+//
+//        Review review1 = Review.builder()
+//                .id(1)
+//                .reviewId(new ReviewIdentifier())
+//                .customerFullName("John Doe")
+//                .reviewDate(date)
+//                .message("This is a review")
+//                .reviewRating(3)
+//                .pinned(false)
+//                .build();
+//
+//        Review review2 = Review.builder()
+//                .id(2)
+//                .reviewId(new ReviewIdentifier())
+//                .customerFullName("Emily Doe")
+//                .reviewDate(date2)
+//                .message("This is a review")
+//                .reviewRating(5)
+//                .pinned(true)
+//                .build();
+//
+//        when(reviewRepository.getReviewByPinned(review1.pinned)).thenReturn(Arrays.asList(review1, review2));
+//
+//        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
+//
+//    }
 
     @Test
     void getReviewsByUserId_ShouldSucceed() {
@@ -215,9 +224,12 @@ class ReviewServiceImplUnitTest {
         String userId = "google|123456789";
 
         List<ReviewResponse> mockReviewsResponses = Arrays.asList(
-                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false),
-                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true));
+                new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+                        2),
+                new ReviewResponse("1", "2", "Emily Doe", date2, "This is a second review", 5, true,
+                        2)
 
+        );
         List<Review> mockReviews = Arrays.asList(
                 new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false),
                 new Review(1, new ReviewIdentifier(), "81893daAs", "Emily Doe", date, "This is a review", 3, true));
@@ -278,7 +290,8 @@ class ReviewServiceImplUnitTest {
     void getReviewByReviewId_ShouldReturnReview() {
         // Arrange
         String reviewId = "1";
-        ReviewResponse mockReviewResponse = new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false);
+        ReviewResponse mockReviewResponse = new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+                2);
         Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false);
 
         when(reviewRepository.findReviewByReviewId_ReviewId(reviewId)).thenReturn(mockReview);

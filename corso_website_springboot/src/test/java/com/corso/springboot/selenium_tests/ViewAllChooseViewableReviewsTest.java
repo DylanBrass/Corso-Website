@@ -28,30 +28,45 @@ public class ViewAllChooseViewableReviewsTest {
     public void ViewAllPinnedReviewsTest() {
         logger.info("Test initialized");
 
-                $(By.linkText("LOGIN")).click();
-                $("#username").setValue("Admin");
-                $("[name='action']").click();
-                $("#password").setValue("Password!!").pressEnter();
-                $(By.linkText("DASHBOARD")).click();
-                open("http://localhost:3000/manage/testimonies");
+//        $(By.linkText("LOGIN")).click();
+//        $("#username").setValue("Admin");
+//        $("[name='action']").click();
+//        $("#password").setValue("Password!!").pressEnter();
+//        $(By.linkText("DASHBOARD")).click();
+//        open("http://localhost:3000/manage/testimonies");
+//
+//        $(By.cssSelector(".row:nth-child(5) .col-12:nth-child(1)")).click();
+//        $("#e2d2cb36-5a3e-4180-afdd-b416b66a4546-button > img").click();
+//        $(By.linkText("HOME")).click();
+//        $(".testimonies-main-box > .row").click();
 
-                $(By.cssSelector("li:nth-child(2) .MuiSvgIcon-root")).hover().click();
-                sleep(1000);
+        $(By.linkText("LOGIN")).click();
+        $("#username").setValue("Admin");
+        $("[name='action']").click();
+        $("#password").setValue("Password!!").pressEnter();
+        $(By.linkText("DASHBOARD")).click();
+        open("http://localhost:3000/manage/testimonies");
 
-                $("body").hover();
+        $(".review-eye").click();
+        sleep(5000);
 
-                $(By.cssSelector("li:nth-child(1) .MuiSvgIcon-root")).hover().click();
-                sleep(1000);
+        $("#pageSize").selectOption("5");
 
-                $("body").hover();
+        sleep(3000);
 
-                $("#f0ea91e3-5cee-43ec-b7c6-93edc810a4a8-button > img").click();
-                $(By.linkText("HOME")).click();
-                $(By.cssSelector(".col-12:nth-child(4) .testimonies-message")).click();
+        $(By.linkText("HOME")).click();
 
-                sleep(2000);
-            }
+
+        SelenideElement pinnedReviews = $(".col-12:nth-child(3)");
+        pinnedReviews.scrollIntoView("{behavior: 'smooth', block: 'center'}");
+
+        assertTrue(pinnedReviews.isDisplayed());
+
+        sleep(2000);
+
+
     }
+}
 
 
 

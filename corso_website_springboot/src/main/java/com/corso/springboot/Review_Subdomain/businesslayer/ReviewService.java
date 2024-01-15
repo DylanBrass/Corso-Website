@@ -12,9 +12,7 @@ import java.util.Map;
 
 public interface ReviewService {
 
-    List<ReviewResponse> getAllReviews(Map<String, String> queryParams, int pageSize, int offset);
-
-    List<ReviewResponse> getReviewsByCustomerFullName(String customerFullName);
+    List<ReviewResponse> getReviews(Map<String, String> params, int pageSize, int offset);
 
     List<ReviewResponse> getPinnedReviews(boolean pinned);
 

@@ -60,18 +60,41 @@ public class ReviewServiceImpl implements ReviewService {
     private final EmailService emailService;
     private final ReviewRequestMapper reviewRequestMapper;
 
-    @Override
-    public List<ReviewResponse> getAllReviews(Map<String, String> queryParams, int pageSize, int offset) {
-        return reviewResponseMapper.toReviewsResponse(reviewRepository.findAllReviews(pageSize, offset));
-    }
+
 
     @Override
-    public List<ReviewResponse> getReviewsByCustomerFullName(String customerFullName) {
-        if (customerFullName != null && !customerFullName.isEmpty()) {
-            return reviewResponseMapper.toReviewsResponse(reviewRepository.findAllByCustomerFullNameStartingWith(customerFullName));
-        } else {
-            return reviewResponseMapper.toReviewsResponse(reviewRepository.findAll());
+    public List<ReviewResponse> getReviews(Map<String, String> params, int pageSize, int offset) {
+
+        String search = params.get("customerFullName");
+
+        List<ReviewResponse> reviews;
+
+        int totalReviews;
+        if (search != null && !search.isEmpty()) {
+
+            totalReviews = reviewRepository.countAllByCustomerFullNameStartingWith(search);
+
+            reviews = reviewResponseMapper.toReviewsResponse(reviewRepository.findAllByCustomerFullNameStartingWithAndPagination(search, pageSize, offset));
+
+            for (ReviewResponse review : reviews) {
+                review.setTotalReviewsMatchingRequest(totalReviews);
+            }
+
+            return reviews;
         }
+
+        else {
+
+            totalReviews = reviewRepository.countAllBy();
+
+            reviews = reviewResponseMapper.toReviewsResponse(reviewRepository.findAllReviews(pageSize, offset));
+
+            for (ReviewResponse review : reviews) {
+                review.setTotalReviewsMatchingRequest(totalReviews);
+            }
+            return reviews;
+        }
+
     }
 
     @Override

@@ -12,25 +12,26 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     List<Review> getReviewByPinned(boolean pinned);
 
-//    @Query("SELECT r FROM Review r WHERE r.id = :reviewId")
-//    List<Review> getReviewById(@Param("reviewId") String reviewId);
-
     Review findReviewByReviewId_ReviewId(String reviewId);
 
     int countAllByPinned(boolean pinned);
 
-    int countAllBy();
 
-    @Query("SELECT r FROM Review r WHERE r.customerFullName LIKE ?1%")
-    List<Review> findAllByCustomerFullNameStartingWith(String customerFullName);
+    @Query(value = "SELECT * FROM reviews WHERE customer_full_name LIKE concat(:customerFullName,'%') ORDER BY pinned LIMIT :pageSize OFFSET :offset", nativeQuery = true)
+    List<Review> findAllByCustomerFullNameStartingWithAndPagination(@Param("customerFullName") String customerFullName, @Param("pageSize") int pageSize, @Param("offset") int offset);
 
     List<Review> findAllByUserId(String userId);
 
-    @Query(value = "SELECT * FROM reviews ORDER BY id DESC LIMIT :#{#pageSize} OFFSET :#{#offset}", nativeQuery = true)
+    @Query(value = "SELECT * FROM reviews ORDER BY pinned LIMIT :#{#pageSize} OFFSET :#{#offset}", nativeQuery = true)
     List<Review> findAllReviews(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
 
     @Query(value = "SELECT CASE WHEN EXISTS ( SELECT 1 FROM reviews WHERE user_id = :userId AND review_date > CURRENT_DATE() - INTERVAL '7' DAY) THEN 'true' ELSE 'false' END AS has_reviewed;", nativeQuery = true)
     Boolean reviewInLastWeekForUser(@Param("userId") String userId);
+
+    int countAllByCustomerFullNameStartingWith(String customerFullName);
+
+    int countAllBy();
+
 
 }

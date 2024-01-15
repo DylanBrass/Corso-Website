@@ -27,5 +27,7 @@ public class ReviewResponse {
 
     public boolean pinned;
 
+    public int totalReviewsMatchingRequest;
+
 
 }
