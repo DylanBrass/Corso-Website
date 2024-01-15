@@ -15,21 +15,23 @@ import {useAuth} from "../../security/Components/AuthProvider";
 
 
 class Reviews {
-    id: string;
+    reviewId: string;
     customerFullName: string;
     reviewDate: Date;
     message: string;
     reviewRating: number;
     pinned: boolean;
+    image:string;
 
 
-    constructor(id: string, customerFullName: string, reviewDate: Date, message: string, reviewRating: number, pinned: boolean) {
-        this.id = id;
+    constructor(reviewId: string, customerFullName: string, reviewDate: Date, message: string, reviewRating: number, pinned: boolean,image:string) {
+        this.reviewId = reviewId;
         this.customerFullName = customerFullName;
         this.reviewDate = reviewDate;
         this.message = message;
         this.reviewRating = reviewRating;
         this.pinned = pinned;
+        this.image = pinned ? View_light : CrossedOutEye;
     }
 }
 
@@ -41,24 +43,39 @@ function ManageReviews() {
     const [searchTerm, setSearchTerm] = useState<string>('');
 
 
-    /*
 
-    This is for my Choose Viewable Reviews
+//REDO THIS
+    const toggleReviewPinned = (reviewId: string) => {
+        axios
+            .get(`http://localhost:8080/api/v1/corso/reviews/${reviewId}`, {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken(),
+                },
+            })
+            .then((response) => {
+                console.log('API Response:', response.data); // Log the API response
+                // Update the pinned status in the local state
+                setReviews((prevReviews) =>
+                    prevReviews.map((review) => {
+                        if (review.reviewId === reviewId) {
+                            const updatedReview = {
+                                ...review,
+                                pinned: !review.pinned,
+                                image: !review.pinned ? View_light : CrossedOutEye,
+                            };
 
-        const toggleReviewPinned = (reviewId: string) => {
-            setReviews(prevReviews =>
-                prevReviews.map(review => {
-                    if (review.id === reviewId) {
-                        return {
-                            ...review,
-                            pinned: !review.pinned
-                        };
-                    }
-                    return review;
-                })
-            );
-        };
-     */
+                            return updatedReview;
+                        }
+                        return review;
+                    })
+                );
+            })
+            .catch((error) => {
+                console.error('API Error:', error);
+            });
+    };
+
 
 
     const getReviews = () => {
@@ -95,7 +112,7 @@ function ManageReviews() {
                     const sortedReviews = searchResults.sort((a: any, b: any) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
                     setReviews(sortedReviews);
                 } else {
-                    getReviews(); // Fetch all reviews if no search results found
+                    getReviews();
                 }
                 setSearchTerm('');
             })
@@ -158,34 +175,20 @@ function ManageReviews() {
                                         </div>
 
                                         <div className={"col-2"}/>
-                                        <div className={"col-4 text-end"}>
-                                            {review.pinned && <span className="review-pinned">
-                                                  {
-                                                      Array.from(Array(review.pinned), (e, i) => {
-                                                          return <img src={View_light} alt={"review-pinned"}
-                                                                      id={"pinnedId"}/>
-                                                      })
-                                                  }
-                                            </span>
-                                            }
-
-                                            {!review.pinned &&
-                                                <span className="review-not-pinned">
-                                                    {
-                                                        Array.from(Array(review.pinned), (e, i) => (
-                                                            <img key={i} src={CrossedOutEye} alt={"review-not-pinned"}
-                                                                 id={"notPinnedId"}/>
-                                                        ))
-                                                    }
-                                                </span>
-
-                                            }
+                                        < div className={"col-4 text-end"}>
+                                        <span>
+                                          <button
+                                              className={review.pinned ? "review-pinned" : "review-not-pinned"}
+                                              onClick={() => toggleReviewPinned(review.reviewId)}>
+        <img src={review.image} alt="View_Light"/>
+    </button>
+                                          </span>
                                         </div>
                                     </div>
 
 
                                     <div className="row review-content">
-                                        <div className="col-12">
+                                    <div className="col-12">
                                             <div className={"review-date text-center"}>
                                                 <p className="review-date">{review.reviewDate.toString()}</p>
                                             </div>

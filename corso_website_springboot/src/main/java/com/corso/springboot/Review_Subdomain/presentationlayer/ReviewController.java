@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectricdev.tech/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectricdev.tech/"}, allowCredentials = "true")
 @Slf4j
 @RestController
 @RequestMapping("api/v1/corso/reviews")
@@ -25,12 +25,12 @@ public class ReviewController {
 
 
     @GetMapping()
-    public ResponseEntity<List<ReviewResponse>> getAllReviews(){
+    public ResponseEntity<List<ReviewResponse>> getAllReviews() {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllReviews());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByCustomerFullName(@RequestParam(value = "customerFullName", required = false) String customerFullName){
+    public ResponseEntity<List<ReviewResponse>> getReviewsByCustomerFullName(@RequestParam(value = "customerFullName", required = false) String customerFullName) {
         if (customerFullName != null && !customerFullName.isEmpty()) {
             List<ReviewResponse> reviews = reviewService.getReviewsByCustomerFullName(customerFullName);
             return ResponseEntity.ok(reviews);
@@ -39,15 +39,15 @@ public class ReviewController {
         }
     }
 
-   @GetMapping("/pinned")
-    public ResponseEntity<List<ReviewResponse>> getPinnedReviews(@CookieValue(value = "id_token", required = false) String idToken){
+    @GetMapping("/pinned")
+    public ResponseEntity<List<ReviewResponse>> getPinnedReviews(@CookieValue(value = "id_token", required = false) String idToken) {
         log.info("Get pinned reviews : {}", idToken);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getPinnedReviews(true));
     }
 
     @GetMapping("/user")
     @PreAuthorize("hasAnyAuthority('Customer')")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByUserId(@AuthenticationPrincipal OidcUser principal){
+    public ResponseEntity<List<ReviewResponse>> getReviewsByUserId(@AuthenticationPrincipal OidcUser principal) {
         String userId = principal.getSubject();
         log.info("Get reviews with userId: {}", userId);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewsByUserId(userId));
@@ -59,6 +59,12 @@ public class ReviewController {
         String userId = principal.getSubject();
         log.info("Create review with userId: {}", userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.customerCreateReview(userId, reviewRequest));
+    }
+
+    @PatchMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponse> getReviewById(@PathVariable String reviewId) {
+        log.info("reviewId: {}", reviewId);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByReviewId(reviewId));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
-
+import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
@@ -94,5 +94,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     }
 
+
+    public ReviewResponse getReviewByReviewId(String reviewId) {
+        return reviewResponseMapper.toReviewResponse(reviewRepository.findReviewByReviewId_ReviewId(reviewId));
+    }
 
 }

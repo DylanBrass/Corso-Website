@@ -11,6 +11,13 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     List<Review> getReviewByPinned(boolean pinned);
 
+//    @Query("SELECT r FROM Review r WHERE r.id = :reviewId")
+//    List<Review> getReviewById(@Param("reviewId") String reviewId);
+
+    Review findReviewByReviewId_ReviewId(String reviewId);
+
+
+
     @Query("SELECT r FROM Review r WHERE r.customerFullName LIKE ?1%")
     List<Review> findAllByCustomerFullNameStartingWith(String customerFullName);
 
