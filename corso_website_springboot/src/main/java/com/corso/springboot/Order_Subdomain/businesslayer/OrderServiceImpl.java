@@ -27,6 +27,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -375,15 +379,42 @@ public class OrderServiceImpl implements OrderService {
 
         List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
 
-        int emailStatus;
-        for (UserInfoResponse admin : admins) {
-            emailStatus = emailService.sendEmail(admin.getEmail(),
-                    "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled",
-                    "CustomerCancelOrder", parameters);
-            if (emailStatus != 200) {
-                log.error("Failed to send email to " + admin.getEmail());
-                throw new MessagingException("Failed to send email to one of the admins");
+
+        ExecutorService executorService = Executors.newFixedThreadPool(admins.size());
+        AtomicInteger emailSent = new AtomicInteger();
+        try {
+            for (UserInfoResponse admin : admins) {
+                executorService.submit(() -> {
+                    try {
+                        int emailStatus = emailService.sendEmail(admin.getEmail(),
+                                "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled",
+                                "CustomerCancelOrder", parameters);
+
+                        if (emailStatus != 200) {
+                            log.error("Failed to send email to " + admin.getEmail());
+                            throw new MessagingException("Failed to send email to one of the admins");
+                        }
+
+                        emailSent.getAndIncrement();
+                    } catch (Exception e) {
+                        log.error("Exception while sending email to " + admin.getEmail(), e);
+                    }
+                });
             }
+        } finally {
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        if (emailSent.get() != admins.size()) {
+            throw new MessagingException("Failed to notify our electricians, please try again later");
         }
 
         order.setOrderStatus(Status.CANCELLED);

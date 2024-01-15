@@ -30,7 +30,7 @@ public class CancelOrderRequestCustomerTest {
     }
 
     @Test
-    public void cancelOrderRequestCustomerTest() throws InterruptedException {
+    public void cancelOrderRequestCustomerTest()  {
         driver.get("http://localhost:3000/");
         driver.manage().window().maximize();
         driver.findElement(By.linkText("LOGIN")).click();
@@ -68,7 +68,7 @@ public class CancelOrderRequestCustomerTest {
 
 
 
-        sleep(15000);
+        sleep(7000);
         assert driver.findElement(By.cssSelector(".swal-title")).isDisplayed();
         assert driver.findElement(By.cssSelector(".swal-icon--success__ring")).isDisplayed();
 
