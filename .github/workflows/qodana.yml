@@ -17,16 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0  # a full history is required for pull request analysis
+          ref: ${{ github.event.pull_request.head.sha }}  
+          fetch-depth: 0  
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2023.3.0
+        uses: JetBrains/qodana-action@v2023.3
         with:
-          upload-result: true
           pr-mode: false
+          args: --apply-fixes
+          push-fixes: pull-request
+          upload-result: true
         env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }} # read the steps about it below
-      - uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+  
     
