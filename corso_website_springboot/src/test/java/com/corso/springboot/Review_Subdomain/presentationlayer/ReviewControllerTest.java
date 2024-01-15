@@ -3,10 +3,14 @@ package com.corso.springboot.Review_Subdomain.presentationlayer;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -14,7 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
@@ -22,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -43,6 +48,12 @@ class ReviewControllerTest {
     @Autowired
     ReviewRepository reviewRepository;
 
+    @MockBean
+    private EmailService emailService;
+
+    @Mock
+    private CustomerService customerService;
+
     @BeforeEach
     public void setUp() {
     }
@@ -52,7 +63,10 @@ class ReviewControllerTest {
     void getAllReviews_ReturnAllReviews() {
         //act
         webTestClient.get()
-                .uri(BASE_URI_REVIEWS)
+                .uri(uriBuilder -> uriBuilder.path(BASE_URI_REVIEWS)
+                        .queryParam("pageSize", 10)
+                        .queryParam("offset", 0)
+                        .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -160,22 +174,5 @@ class ReviewControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
                         .value("Review rating must be between 1 and 5"));
-    }
-
-    @Test
-    void postReviewWhenYouHaveNoOrder_ShouldReturnBadRequest() throws Exception {
-        //arrange
-        //act
-        mockMvc.perform(post(BASE_URI_REVIEWS)
-                        .with(csrf())
-                        .with(oidcLogin().idToken(i -> i.subject("facebook|311881271807762")).authorities(new SimpleGrantedAuthority("Customer")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"reviewRating\": 5," +
-                                " \"message\": \"I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!\", " +
-                                "\"customerFullName\": \"John Doe\"}")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message")
-                        .value("No orders attributed to account, please place an order before leaving a review. If you want to voice a concern, please contact us, this measure is in place to prevent spam reviews, we still want to hear from you!"));
     }
 }

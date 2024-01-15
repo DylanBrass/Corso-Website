@@ -1,6 +1,7 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
 
+import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
@@ -8,20 +9,30 @@ import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
+import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
 import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersException;
 import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -41,6 +52,20 @@ class ReviewServiceImplUnitTest {
     @InjectMocks
     private ReviewServiceImpl reviewServiceImpl;
 
+    @Mock
+    private ReviewService reviewService;
+
+    @Mock
+    private ReviewUpdateRequest reviewUpdateRequest;
+
+    @Mock
+    private CustomerService customerService;
+
+    @Mock
+    private Auth0ManagementService auth0ManagementService;
+
+    @Mock
+    private EmailService emailService;
 
     @Mock
     private OrderService orderService;
@@ -76,20 +101,15 @@ class ReviewServiceImplUnitTest {
                 .build();
 
         when(reviewRepository.findAll()).thenReturn(List.of(review1, review2));
-
-        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
-
-
         when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
 
         // Act
-        List<ReviewResponse> reviewResult = reviewServiceImpl.getAllReviews();
+        List<ReviewResponse> reviewResult = reviewServiceImpl.getAllReviews(Map.of(), 1, 1);
 
         // Assert
         assertEquals(mockReviewsResponse, reviewResult);
-        Mockito.verify(reviewRepository, Mockito.times(1)).findAll();
+        Mockito.verify(reviewRepository, Mockito.times(1)).findAllReviews(1, 1);
         Mockito.verify(reviewResponseMapper, Mockito.times(1)).toReviewsResponse(Mockito.anyList());
-
     }
 
     @Test
@@ -116,6 +136,8 @@ class ReviewServiceImplUnitTest {
         assertEquals(mockReviews, result);
 
     }
+
+
 
     @Test
     void getReviewsByCustomerFullName_ShouldReturnAll() {
@@ -241,6 +263,77 @@ class ReviewServiceImplUnitTest {
 
         // Act and Assert
         assertThrows(ReviewUserHasNoOrdersException.class, () -> reviewServiceImpl.customerCreateReview(userId, reviewRequest));
+    }
+
+    @Test
+    void getReviewByReviewId_ShouldReturnReview() {
+        // Arrange
+        String reviewId = "1";
+        ReviewResponse mockReviewResponse = new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false);
+        Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false);
+
+        when(reviewRepository.findReviewByReviewId_ReviewId(reviewId)).thenReturn(mockReview);
+        when(reviewResponseMapper.toReviewResponse(mockReview)).thenReturn(mockReviewResponse);
+
+        // Act
+        ReviewResponse result = reviewServiceImpl.getReviewByReviewId(reviewId);
+
+        // Assert
+        assertEquals(mockReviewResponse, result);
+        assertEquals(mockReviewResponse.getReviewId(), result.getReviewId());
+        assertEquals(mockReviewResponse.getCustomerFullName(), result.getCustomerFullName());
+        assertEquals(mockReviewResponse.getReviewDate(), result.getReviewDate());
+        assertEquals(mockReviewResponse.getMessage(), result.getMessage());
+        assertEquals(mockReviewResponse.getReviewRating(), result.getReviewRating());
+        assertEquals(mockReviewResponse.isPinned(), result.isPinned());
+    }
+
+    @Test
+    void getReviewByReviewId_ShouldThrowException() {
+        // Arrange
+        String reviewId = "1";
+
+        // Mock behavior
+        when(reviewRepository.findReviewByReviewId_ReviewId(reviewId)).thenReturn(null);
+
+        // Act
+        try {
+            reviewServiceImpl.getReviewByReviewId(reviewId);
+        } catch (Exception e) {
+            System.out.println("Exception message: " + e.getMessage());
+        }
+    }
+
+
+
+
+    @Test
+    void getCountOfAllReviews() {
+        // Arrange
+        int expectedCount = 0;
+
+        when(reviewRepository.countAllBy()).thenReturn(expectedCount);
+
+        // Act
+        int result = reviewServiceImpl.getCountAllReviews();
+
+        // Assert
+        assertEquals(expectedCount, result);
+    }
+
+    @Test
+    void getCountOfAllReviewsByState() {
+        // Arrange
+        int expectedCount = 0;
+        boolean state = true;
+
+        when(reviewRepository.countAllByPinned(state)).thenReturn(expectedCount);
+
+        // Act
+        int result = reviewServiceImpl.getCountAllByState(state);
+
+        // Assert
+        assertEquals(expectedCount, result);
     }
 
 }

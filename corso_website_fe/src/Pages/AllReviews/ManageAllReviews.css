@@ -134,6 +134,9 @@
 .review-pinnedBtn {
     background-color: #45a049;
 
+
+
+
 }
 
 .btnPinnedClassName{
@@ -145,4 +148,17 @@
 .btnNotPinnedClassName{
     border:none;
     background-color: #E8E8E8;
+
+}
+
+.review-pagination-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.review-card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
 }

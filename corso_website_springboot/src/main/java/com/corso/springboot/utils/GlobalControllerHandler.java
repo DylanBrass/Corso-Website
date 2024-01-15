@@ -7,6 +7,7 @@ import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
 import com.corso.springboot.utils.exceptions.Review.ReviewBadRequestException;
+import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
 import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersException;
 import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
 import lombok.Generated;
@@ -26,6 +27,12 @@ public class GlobalControllerHandler {
     @ExceptionHandler(ReviewUserHasNoOrdersException.class)
     public HttpErrorInfo handleErrorUserHasNoOrdersForReview(ReviewUserHasNoOrdersException ex) {
         return createHttpErrorInfo(BAD_REQUEST, ex);
+    }
+
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(ReviewPinnedLimitReachedException.class)
+    public HttpErrorInfo handleErrorPinnedLimitReached(ReviewPinnedLimitReachedException ex) {
+        return createHttpErrorInfo(CONFLICT, ex);
     }
 
     @ResponseStatus(BAD_REQUEST)

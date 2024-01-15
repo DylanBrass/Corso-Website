@@ -10,7 +10,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectricdev.tech/"}, allowCredentials = "true")
 @Slf4j
@@ -19,16 +22,21 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
+
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping()
-    public ResponseEntity<List<ReviewResponse>> getAllReviews() {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllReviews());
+    public ResponseEntity<List<ReviewResponse>> getAllReviews(@RequestParam Map<String, String> queryParams,
+                                                              @RequestParam(name = "pageSize") int pageSize,
+                                                              @RequestParam(name = "offset") int offset) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllReviews(queryParams, pageSize, offset));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/search")
     public ResponseEntity<List<ReviewResponse>> getReviewsByCustomerFullName(@RequestParam(value = "customerFullName", required = false) String customerFullName) {
         if (customerFullName != null && !customerFullName.isEmpty()) {
@@ -61,10 +69,25 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.customerCreateReview(userId, reviewRequest));
     }
 
+
+    @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/{reviewId}")
-    public ResponseEntity<ReviewResponse> getReviewById(@PathVariable String reviewId) {
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable String reviewId, @RequestBody ReviewUpdateRequest reviewUpdateRequest) throws MessagingException, IOException, InterruptedException {
         log.info("reviewId: {}", reviewId);
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByReviewId(reviewId));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updatePinnedReviewByReviewId(reviewId,reviewUpdateRequest));
     }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/count/pinned")
+    public ResponseEntity<Integer> getPinnedReviewsCount(){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getCountAllByState(true));
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getAllReviewsCount(){
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getCountAllReviews());
+    }
+
 
 }
