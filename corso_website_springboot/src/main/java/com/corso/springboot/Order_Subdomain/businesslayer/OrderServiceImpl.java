@@ -93,6 +93,7 @@ public class OrderServiceImpl implements OrderService {
         return orderResponses;
     }
 
+
     private List<OrderResponse> getAllOrdersWithPagination(int pageSize, int offset) {
         int totalOrders = (int) orderRepository.count();
         List<OrderResponse> orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllOrders(pageSize, offset));
@@ -287,6 +288,7 @@ public class OrderServiceImpl implements OrderService {
         return orderResponse;
     }
 
+    @Override
     public OrderResponse updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
         Status newStatus = Status.IN_PROGRESS;
