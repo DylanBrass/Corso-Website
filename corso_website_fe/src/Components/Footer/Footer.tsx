@@ -1,5 +1,8 @@
 import React from 'react';
 import './Footer.css';
+import instagramIcon from "../../images/Insta-Logo.png";
+import emailIcon from "../../images/Email-Logo.png";
+import phoneIcon from "../../images/Phone-Logo.png";
 
 function Footer() {
     return (
@@ -35,28 +38,34 @@ function Footer() {
 
                         <div className="row">
                             <div className="col-3">
-                                <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1702592644/Phone_fwm41y.png" alt="Phone Icon" className="img-fluid"/>
+                                <img src={phoneIcon} alt="Phone Icon" className="img-footer"/>
                             </div>
                             <div className="col-9">
-                                <p>(514) 703-8552</p>
+                                <div className="centered-content">
+                                    <p>(514) 703-8552</p>
+                                </div>
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="col-3">
-                                <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1702592644/Email_rv756e.png" alt="Email Icon" className="img-fluid"/>
+                                <img src={emailIcon} alt="Email Icon" className="img-footer"/>
                             </div>
                             <div className="col-9">
-                                <p className={"text-break"}>corsoelectriqueinc@gmail.com</p>
+                                <div className="centered-content">
+                                    <p className={"text-break"}>corsoelectriqueinc@gmail.com</p>
+                                </div>
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="col-3">
-                                <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1702592644/Instagram-logo_tinm9u.png" alt="Instagram Logo" className="img-fluid"/>
+                                <img src={instagramIcon} alt="Instagram Logo" className="img-footer"/>
                             </div>
                             <div className="col-9">
-                                <p>Future link to instagram</p>
+                                <div className="centered-content">
+                                    <p>Future link to instagram</p>
+                                </div>
                             </div>
                         </div>
 
