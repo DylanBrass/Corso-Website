@@ -46,21 +46,9 @@ public class GlobalControllerHandler {
         return createHttpErrorInfo(BAD_REQUEST, ex);
     }
 
-    @ResponseStatus(NOT_FOUND)
-    @ExceptionHandler(ReviewsNotFoundException.class)
-    public HttpErrorInfo handleErrorWhileGettingReviewsNotFound(ReviewsNotFoundException ex) {
-        return createHttpErrorInfo(NOT_FOUND, ex);
-    }
-
     @ResponseStatus(CONFLICT)
     @ExceptionHandler(ReviewStateConflictException.class)
     public HttpErrorInfo handleErrorWhileUpdatingReviewStateConflict(ReviewStateConflictException ex) {
-        return createHttpErrorInfo(CONFLICT, ex);
-    }
-
-    @ResponseStatus(CONFLICT)
-    @ExceptionHandler(ReviewPinnedLimitReachedException.class)
-    public HttpErrorInfo handleErrorWhileUpdatingReviewLimitReached(ReviewPinnedLimitReachedException ex) {
         return createHttpErrorInfo(CONFLICT, ex);
     }
 

@@ -54,7 +54,7 @@ class ReviewControllerTest {
     @MockBean
     private EmailService emailService;
 
-    @Mock
+    @MockBean
     private CustomerService customerService;
 
     @BeforeEach
@@ -101,6 +101,7 @@ class ReviewControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "Admin")
     void getPinnedReviews_ThenReturnPinnedReviews() {
         //arrange
         Integer expectedNumberOFReviews = 2;
