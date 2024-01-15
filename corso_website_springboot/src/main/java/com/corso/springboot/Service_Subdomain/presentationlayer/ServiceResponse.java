@@ -8,9 +8,9 @@ import lombok.*;
 @Builder
 @Value
 public class ServiceResponse {
-    private String serviceId;
-    private String serviceName;
-    private String serviceDescription;
-    private String serviceIcon;
-    private String serviceImage;
+    String serviceId;
+    String serviceName;
+    String serviceDescription;
+    String serviceIcon;
+    String serviceImage;
 }

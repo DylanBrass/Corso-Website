@@ -99,4 +99,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToDeclined(orderId, declineOrderRequest));
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
+    @PatchMapping("/manage/cancelOrder/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderStatusToCancelled(@PathVariable String orderId, @RequestBody DeclineOrderRequest declineOrderRequest) throws MessagingException {
+        log.info("Cancel order request {}", declineOrderRequest.getReasonForDecline());
+
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToCancelled(orderId, declineOrderRequest));
+    }
+
 }

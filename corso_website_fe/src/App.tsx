@@ -28,6 +28,7 @@ import ManageReviews from "./Pages/AllReviews/ManageReviews";
 import EditGallery from "./Pages/Gallery/EditGallery";
 import ViewSpecificServiceAdmin from "./Pages/ViewASpecificServiceFromTheAdminPanel/ViewSpecificServiceAdmin";
 import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
+import ViewOnGoingOrderDetailsPage from "./Pages/OrdersPages/ViewOnGoingOrderDetailsPage";
 import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
 
@@ -55,6 +56,7 @@ export default function App() {
                         <Route path="/profile/edit" element={<AddCustomerInformation/>}/>
                         <Route path="/profile/orders" element={<AllCustomerOrders/>}/>
                         <Route path="/adminServices/:serviceId" element={<ViewSpecificServiceAdmin/>}/>
+                        <Route path="/manage/currentOrder/:orderId" element={<ViewOnGoingOrderDetailsPage/>}/>
                         <Route path="/profile/reviews" element={<CustomerReviews/>}/>
                         <Route path="/profile/reviews/create" element={<CreateReview/>}/>
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
