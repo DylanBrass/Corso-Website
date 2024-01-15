@@ -16,7 +16,6 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     int countAllByPinned(boolean pinned);
 
-
     @Query(value = "SELECT * FROM reviews WHERE customer_full_name LIKE concat(:customerFullName,'%') ORDER BY pinned LIMIT :pageSize OFFSET :offset", nativeQuery = true)
     List<Review> findAllByCustomerFullNameStartingWithAndPagination(@Param("customerFullName") String customerFullName, @Param("pageSize") int pageSize, @Param("offset") int offset);
 

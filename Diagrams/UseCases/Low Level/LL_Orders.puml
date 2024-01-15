@@ -19,22 +19,26 @@ rectangle "Corso System"{
       usecase "4.3 : Request Order" as UC10
       usecase "4.4 : Manage Order" as UC11
       usecase "4.5 : Cancel Order" as UC12
+    usecase "5.2 : Leave a review" as UC14
 
       User -[#green]-> UC9
       User -[#green]-> UC10
       Admin -[#red]-> UC8
       Admin -[#red]-> UC9
       Admin -[#red]-> UC11
-      UC11 -[dashed]-> UC8 : <<includes>>
+      UC11 -[dashed]-> UC8 : <<extends>>
       UC10 <-[#red]- Sec_Admin
-
       UC11 -[dashed]-> UC12 : <<includes>>
+
+
       UC8 -[dashed]> UC9 : <<includes>>
-      UC12 -[dashed]-> UC8  : <<extends>>
+UC10 -[dashed]-> UC8 : <<extends>>
+
 
       UC8 -[hidden]-> Sec_Admin
       UC9 -[hidden]-> Sec_Admin
-
+    User -[#green]-> UC14
+UC14 -[dashed]-> UC8 : <<extends>>
       User -[#green]-> UC8
       User -[#green]-> UC12
   }

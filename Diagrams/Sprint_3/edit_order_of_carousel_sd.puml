@@ -36,8 +36,6 @@ Dashboard -> EditOrderOfCarousel : render()
 
 activate EditOrderOfCarousel
 
-Admin -> EditOrderOfCarousel : getCarouselOrder()
-
 EditOrderOfCarousel -> OrderRequest : PATCH api/v1/corso/galleries/carousel/order
 
 activate OrderRequest
