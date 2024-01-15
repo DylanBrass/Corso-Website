@@ -50,6 +50,7 @@ function CurrentOrdersPage() {
                     <OrderTile
                         key={order.orderTrackingNumber}
                         action={() => {
+                            window.location.href = `/manage/currentOrder/${order.orderId}`
                         }
                         }
                         order={{

@@ -352,4 +352,33 @@ public class OrderServiceImpl implements OrderService {
     public boolean findAnyUserOrders(String userId) {
         return orderRepository.existsByUserId(userId);
     }
+
+    public OrderResponse updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException {
+
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        Status newStatus = Status.CANCELLED;
+        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        Map<String, String> parameters = new HashMap<>();
+        log.info("Sending email to {}", declineOrderRequest.getRecipient());
+        log.info("Reason email to {}", declineOrderRequest.getReasonForDecline());
+        parameters.put("reasonForCancellation", declineOrderRequest.getReasonForDecline());
+
+        String subject = "Order #" + orderTrackingNumber + " has been canceled";
+
+        int status = emailService.sendEmail(declineOrderRequest.getRecipient(), subject, "CancelOrder", parameters);
+
+        if (status != 200) {
+            throw new MessagingException("Failed to send email");
+        }
+
+        order.setOrderStatus(Status.valueOf(newStatus.toString()));
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+
+    }
 }
