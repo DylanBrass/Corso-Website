@@ -28,27 +28,30 @@ public class ViewAllChooseViewableReviewsTest {
     public void ViewAllPinnedReviewsTest() {
         logger.info("Test initialized");
 
-        $(By.linkText("LOGIN")).click();
-        $("#username").setValue("Admin");
-        $("[name='action']").click();
-        $("#password").setValue("Password!!").pressEnter();
-        $(By.linkText("DASHBOARD")).click();
-        open("http://localhost:3000/manage/testimonies");
+                $(By.linkText("LOGIN")).click();
+                $("#username").setValue("Admin");
+                $("[name='action']").click();
+                $("#password").setValue("Password!!").pressEnter();
+                $(By.linkText("DASHBOARD")).click();
+                open("http://localhost:3000/manage/testimonies");
 
-        $(By.cssSelector("li:nth-child(2) .MuiSvgIcon-root")).hover().click();
-        sleep(1000);
+                $(By.cssSelector("li:nth-child(2) .MuiSvgIcon-root")).hover().click();
+                sleep(1000);
 
-        $("body").hover();
+                $("body").hover();
 
-        $(By.cssSelector("li:nth-child(1) .MuiSvgIcon-root")).hover().click();
-        sleep(1000);
+                $(By.cssSelector("li:nth-child(1) .MuiSvgIcon-root")).hover().click();
+                sleep(1000);
 
-        $("body").hover();
+                $("body").hover();
 
-        $("#f0ea91e3-5cee-43ec-b7c6-93edc810a4a8-button > img").click();
-        $(By.linkText("HOME")).click();
-        $(By.cssSelector(".col-12:nth-child(4) .testimonies-message")).click();
+                $("#f0ea91e3-5cee-43ec-b7c6-93edc810a4a8-button > img").click();
+                $(By.linkText("HOME")).click();
+                $(By.cssSelector(".col-12:nth-child(4) .testimonies-message")).click();
 
-        sleep(2000);
+                sleep(2000);
+            }
     }
-}
+
+
+

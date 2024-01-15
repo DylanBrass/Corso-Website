@@ -67,7 +67,6 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.updatePinnedReviewByReviewId(reviewId,reviewUpdateRequest));
     }
 
-
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/count/pinned")
     public ResponseEntity<Integer> getPinnedReviewsCount(){

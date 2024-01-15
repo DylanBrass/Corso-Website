@@ -9,6 +9,10 @@ import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewRequestMapper
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
+import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
+import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import com.corso.springboot.utils.exceptions.Review.ReviewNotFoundException;
@@ -32,6 +36,9 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +53,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewResponseMapper reviewResponseMapper;
 
-    private final ReviewRequestMapper reviewRequestMapper;
-
     private final CustomerService customerService;
 
     private final Auth0ManagementService auth0ManagementService;
 
     private final EmailService emailService;
+    private final ReviewRequestMapper reviewRequestMapper;
 
     @Override
     public List<ReviewResponse> getAllReviews(Map<String, String> queryParams, int pageSize, int offset) {

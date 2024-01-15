@@ -12,26 +12,19 @@ import java.util.Map;
 
 public interface ReviewService {
 
+    List<ReviewResponse> getAllReviews(Map<String, String> queryParams, int pageSize, int offset);
+
     List<ReviewResponse> getReviewsByCustomerFullName(String customerFullName);
 
     List<ReviewResponse> getPinnedReviews(boolean pinned);
 
     List<ReviewResponse> getReviewsByUserId(String userId);
     ReviewResponse getReviewByReviewId(String reviewId);
-    ReviewResponse getReviewByReviewId(String reviewId, ReviewUpdateRequest reviewRequest);
+    ReviewResponse updatePinnedReviewByReviewId(String reviewId, ReviewUpdateRequest reviewRequest) throws MessagingException, IOException, InterruptedException;
 
     ReviewResponse customerCreateReview(String userId, ReviewRequest reviewRequest);
-
-    List<ReviewResponse> getAllReviews(Map<String, String> queryParams, int pageSize, int offset);
-
-    ReviewResponse updatePinnedReviewByReviewId(String reviewId, ReviewUpdateRequest reviewRequest) throws MessagingException, IOException, InterruptedException;
 
     Integer getCountAllByState(boolean state);
 
     Integer getCountAllReviews();
-
-
-
-
-
 }

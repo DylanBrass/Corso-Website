@@ -1,0 +1,113 @@
+@startuml
+
+title Choose Review to Pin of Reviews SSD
+
+actor Admin
+
+participant Dashboard as "<<View>>\nDashboard"
+
+participant ChooseViewableReviews as "<<View>>\nTestimonies"
+
+participant ReviewRequest as "reviewRequest: ReviewRequest"
+
+participant ReviewController as "<<Controller>>\nReviewController"
+
+participant ReviewResponse as "response: ReviewResponse"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant Order as "order: Order"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant "orderDb : Order" as orderDb
+
+participant Database as "<<Database>>\nDatabase"
+
+participant ReviewResponseMapper as "<<Mapper>>\nReviewResponseMapper"
+
+participant reviewRequestMapper as "<<Mapper>>\nreviewRequestMapper"
+
+Admin -> Dashboard : EditCarouselOrder()
+
+activate Dashboard
+
+Dashboard -> ChooseViewableReviews : render()
+
+activate ChooseViewableReviews
+
+Admin -> ChooseViewableReviews : getCarouselOrder()
+
+ChooseViewableReviews -> reviewRequest : PATCH api/v1/corso/reviews/{reviewId}
+
+activate reviewRequest
+
+reviewRequest -> ReviewController : updateGalleryOrder(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequests)
+
+activate ReviewController
+
+ReviewController -> OrderService : updateGalleryOrder()
+
+activate OrderService
+
+OrderService -> reviewRequestMapper : mapToGalleryOrderUpdateRequest(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequests)
+
+activate reviewRequestMapper
+
+reviewRequestMapper -> Order : List<Order>
+
+destroy reviewRequest
+
+destroy reviewRequestMapper
+
+activate Order
+
+Order -> OrderService: orders : List<Order>
+
+OrderService -> OrderRepository : updateOrder(List<Order> orders)
+
+destroy Order
+
+activate OrderRepository
+
+loop for each order in orders
+    OrderRepository -> Database : UPDATE gallery SET image_position = :imagePosition WHERE gallery_id = :galleryId
+end loop
+
+activate Database
+
+Database -> orderDb : orderDbs : List<Order>
+
+deactivate Database
+
+activate orderDb
+
+orderDb --> OrderRepository : orderDbs : List<Order>
+
+OrderRepository -> OrderService : orderDbs : List<Order>
+
+destroy OrderRepository
+
+OrderService -> ReviewResponseMapper : mapToGalleriesResponse(List<Order> orders)
+
+destroy orderDb
+
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponse : List<ReviewResponse>
+
+destroy ReviewResponseMapper
+
+activate ReviewResponse
+
+ReviewResponse --> OrderService : ReviewResponse : List<ReviewResponse>
+
+OrderService --> ReviewController : ReviewResponse : List<ReviewResponse>
+
+ReviewController --> reviewRequest : ReviewResponse : List<ReviewResponse>
+
+reviewRequest --> ChooseViewableReviews : ReviewResponse : List<ReviewResponse>
+
+destroy ReviewResponse
+
+@endpuml

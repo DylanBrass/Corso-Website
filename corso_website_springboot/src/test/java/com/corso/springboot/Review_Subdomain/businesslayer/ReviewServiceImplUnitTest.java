@@ -3,12 +3,17 @@ package com.corso.springboot.Review_Subdomain.businesslayer;
 
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
+import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.exceptions.Review.ReviewNotFoundException;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
@@ -101,6 +106,10 @@ class ReviewServiceImplUnitTest {
                 .build();
 
         when(reviewRepository.findAll()).thenReturn(List.of(review1, review2));
+
+        when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
+
+
         when(reviewResponseMapper.toReviewsResponse(Mockito.anyList())).thenReturn(mockReviewsResponse);
 
         // Act

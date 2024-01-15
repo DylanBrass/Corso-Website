@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewRepository extends JpaRepository<Review, String> {
 
@@ -25,17 +26,11 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     List<Review> findAllByUserId(String userId);
 
+    @Query(value = "SELECT * FROM reviews ORDER BY id DESC LIMIT :#{#pageSize} OFFSET :#{#offset}", nativeQuery = true)
+    List<Review> findAllReviews(@Param("pageSize") int pageSize, @Param("offset") int offset);
+
 
     @Query(value = "SELECT CASE WHEN EXISTS ( SELECT 1 FROM reviews WHERE user_id = :userId AND review_date > CURRENT_DATE() - INTERVAL '7' DAY) THEN 'true' ELSE 'false' END AS has_reviewed;", nativeQuery = true)
     Boolean reviewInLastWeekForUser(@Param("userId") String userId);
-
-        int countAllByPinned(boolean pinned);
-
-        int countAllBy();
-
-        @Query(value = "SELECT * FROM reviews ORDER BY id DESC LIMIT :#{#pageSize} OFFSET :#{#offset}", nativeQuery = true)
-        List<Review> findAllReviews(@Param("pageSize") int pageSize, @Param("offset") int offset);
-
-
 
 }

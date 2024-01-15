@@ -2,9 +2,7 @@ import './ManageAllReviews.css';
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-
 import star_fill from "../../images/Star_fill.svg";
-
 import star_empty from "../../images/Star.svg";
 import Search_light from "../../images/Search_light_white.svg";
 import View_light from "../../images/View_light.png";
@@ -39,6 +37,7 @@ class Reviews {
 
 function ManageReviews() {
     const auth: {} = useAuth()
+
     const [reviews, setReviews] = useState<Reviews[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -259,6 +258,7 @@ function ManageReviews() {
                 <div className="row review-header">
                     <h1 className="review-title">Reviews</h1>
                 </div>
+
                 <form className="manage-review-form" onSubmit={handleSearch}>
                     <div className={"form-container"}>
 
