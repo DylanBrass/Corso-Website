@@ -3,8 +3,11 @@ import axios from "axios";
 import OrderTile, {Order} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
+import {useAuth} from "../../../security/Components/AuthProvider";
 
 function AllCustomerOrders() {
+
+    const auth = useAuth();
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
@@ -30,11 +33,17 @@ function AllCustomerOrders() {
                     }
                 }).catch(err => {
                 console.log(err);
+
+                if (err.response.status === 401 || err.response.status === 403) {
+                    // @ts-ignore
+                    auth.authError(err.response.status)
+                }
             })
 
 
         } catch (error) {
             console.error('Error fetching data:', error);
+
         }
 
     };
@@ -46,6 +55,7 @@ function AllCustomerOrders() {
 
     useEffect(() => {
         fetchOrders(page, pageSize)
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, pageSize]);
 
     return (

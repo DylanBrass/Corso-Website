@@ -380,7 +380,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException {
+    public void cancelByCustomerOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderIdAndUserId(orderId, userId);
 
         if (order == null) {
@@ -395,6 +395,8 @@ public class OrderServiceImpl implements OrderService {
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("reasonForCancellation", cancelOrderRequest.getReason());
 
+        parameters.put("name", order.getCustomerFullName());
+
         List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
 
         int emailStatus = 0;
@@ -402,17 +404,14 @@ public class OrderServiceImpl implements OrderService {
             emailStatus = emailService.sendEmail(admin.getEmail(),
                     "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled",
                     "CustomerCancelOrder", parameters);
+            if (emailStatus != 200) {
+                log.error("Failed to send email to " + admin.getEmail());
+                throw new MessagingException("Failed to send email to one of the admins");
+            }
         }
-
-        if (emailStatus != 200) {
-            throw new MessagingException("Failed to send email to one of the admins");
-        }
-
 
         order.setOrderStatus(Status.CANCELLED);
 
         orderRepository.save(order);
-
-
     }
 }

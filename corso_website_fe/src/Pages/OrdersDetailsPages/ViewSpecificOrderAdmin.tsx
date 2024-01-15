@@ -119,6 +119,7 @@ function ViewSpecificOrderAdmin() {
                 swal("Oops!", "Something went wrong. Please try again.", "error");
             }
         } catch (error) {
+
             console.error("Error updating order status: ", error);
             swal("Failed!", `Failed to accept the order with tracking number ${order.orderTrackingNumber}.`, "error");
         }

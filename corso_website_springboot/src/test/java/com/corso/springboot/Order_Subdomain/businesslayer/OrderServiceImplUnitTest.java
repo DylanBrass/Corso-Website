@@ -1,5 +1,6 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
+import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
 import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
@@ -9,22 +10,26 @@ import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.mail.MessagingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +44,9 @@ public class OrderServiceImplUnitTest {
 
     @Mock
     private EmailService emailService;
+
+    @Mock
+    private Auth0ManagementService auth0ManagementService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -297,6 +305,29 @@ public class OrderServiceImplUnitTest {
     }
 
     @Test
+    public void testCancelByCustomerOrderFailsToSendEmail() throws MessagingException {
+        // Arrange
+        Order mockOrder = new Order();
+        mockOrder.setOrderId(new OrderIdentifier());
+        mockOrder.setOrderStatus(Status.PENDING);
+        mockOrder.setUserId("auth0|65702e81e9661e14ab3aac89");
+        mockOrder.setCustomerFullName("John Doe");
+        mockOrder.setOrderTrackingNumber(new OrderTrackingNumber());
+
+        when(orderRepository.findByOrderId_OrderIdAndUserId(mockOrder.getOrderId().getOrderId(), mockOrder.getUserId())).thenReturn(mockOrder);
+
+        List<UserInfoResponse> admins = new ArrayList<>();
+        admins.add(new UserInfoResponse("auth0|65702e81e9661e14ab3aac89", "test@email.com",
+                "Doe", new HashMap<>()));
+        when(auth0ManagementService.getAllAdmins()).thenReturn(admins);
+
+
+        CustomerCancelOrderRequest customerCancelOrderRequest = new CustomerCancelOrderRequest("test");
+
+        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(500);
+
+
+    @Test
     void updateOrderStatusToCancelled_ShouldSucceed() throws MessagingException {
 
         // Arrange
@@ -312,6 +343,9 @@ public class OrderServiceImplUnitTest {
                 "John Doe", "john@example.com", "1234567890",
                 "123 Main St", "Montreal", "J5R 5J4", "",
                 1, 2, 1);
+        assertThrows(MessagingException.class, () -> orderService.cancelByCustomerOrderByOrderId(mockOrder.getOrderId().getOrderId(), mockOrder.getUserId(), customerCancelOrderRequest));
+
+    }
 
         Mockito.when(orderRepository.findByOrderId_OrderId(mockOrder.getOrderId().getOrderId())).thenReturn(mockOrder);
         Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
@@ -330,4 +364,4 @@ public class OrderServiceImplUnitTest {
         verify(orderRepository).save(mockOrder);
     }
 
-    }
+}

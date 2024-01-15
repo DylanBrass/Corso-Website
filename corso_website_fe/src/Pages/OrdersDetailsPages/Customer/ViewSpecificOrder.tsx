@@ -28,7 +28,7 @@ function ViewSpecificOrder() {
 
     const auth = useAuth()
 
-    const [messagesLoading,] = useState(["This may take a few seconds", "Please wait a moment", "We are Notifying our electricians"]);
+    const [messagesLoading,] = useState(["This may take a few seconds", "Please wait a moment", "We are notifying our electricians"]);
 
     const getOrder = () => {
         axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders/${orderId}`,
@@ -223,7 +223,7 @@ function ViewSpecificOrder() {
                                     <Popup trigger={<div className={"col-12"}>
                                         <button className={"m-4 float-end customer-interactions-btn p-2"}
                                                 onClick={handleCancelOrderModal}
-                                        >Request Cancellation
+                                        >Cancel Request
                                         </button>
                                     </div>
                                     } modal>
@@ -234,7 +234,7 @@ function ViewSpecificOrder() {
                                                         {messagesLoading.map((message: String) => (
 
                                                             <CCarouselItem key={message.length} style={{height: "100%"}} >
-                                                               <h3 className={"text-center"}>{message}</h3>
+                                                               <h3 className={"text-center mb-3"}>{message}</h3>
                                                             </CCarouselItem>
                                                         ))
                                                         }
@@ -248,7 +248,7 @@ function ViewSpecificOrder() {
                                                   className={"p-4" + (loading ? " hidden" : "")}>
                                                 <div className="row">
                                                     <div className="col-12">
-                                                        <h1 className={"text-center"}>Request Cancellation</h1>
+                                                        <h1 className={"text-center"}>Cancel Request</h1>
                                                     </div>
                                                 </div>
                                                 <div className="row">

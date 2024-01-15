@@ -161,4 +161,21 @@ class ReviewControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Review rating must be between 1 and 5"));
     }
+
+    @Test
+    void postReviewWhenYouHaveNoOrder_ShouldReturnBadRequest() throws Exception {
+        //arrange
+        //act
+        mockMvc.perform(post(BASE_URI_REVIEWS)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("facebook|311881271807762")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"reviewRating\": 5," +
+                                " \"message\": \"I had a great experience with Corso Electric, they were very professional and courteous. I would recommend them to anyone!\", " +
+                                "\"customerFullName\": \"John Doe\"}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message")
+                        .value("No orders attributed to account, please place an order before leaving a review. If you want to voice a concern, please contact us, this measure is in place to prevent spam reviews, we still want to hear from you!"));
+    }
 }
