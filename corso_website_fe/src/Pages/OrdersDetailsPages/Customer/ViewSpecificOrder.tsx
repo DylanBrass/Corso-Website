@@ -44,7 +44,6 @@ function ViewSpecificOrder() {
 
                 setOrder(order);
 
-
             })
             .catch(err => {
                 console.log(err);
@@ -233,8 +232,9 @@ function ViewSpecificOrder() {
                                                     <CCarousel interval={1500}>
                                                         {messagesLoading.map((message: String) => (
 
-                                                            <CCarouselItem key={message.length} style={{height: "100%"}} >
-                                                               <h3 className={"text-center mb-3"}>{message}</h3>
+                                                            <CCarouselItem key={message.length}
+                                                                           style={{height: "100%"}}>
+                                                                <h3 className={"text-center mb-3"}>{message}</h3>
                                                             </CCarouselItem>
                                                         ))
                                                         }
@@ -254,7 +254,7 @@ function ViewSpecificOrder() {
                                                 <div className="row">
                                                     <div className="col-12">
                                                         <textarea className="form-control" id="reason"
-                                                               placeholder="Reason for cancellation" required/>
+                                                                  placeholder="Reason for cancellation" required/>
                                                     </div>
                                                     <div className="row mt-3">
                                                         <div className="col-12 text-center">
