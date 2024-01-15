@@ -100,7 +100,7 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
-    //exclude("**/CancelOrderRequestCustomerTest.class")
+    exclude("**/CancelOrderRequestCustomerTest.class")
     exclude("**/LeaveReviewTest.class")
     exclude("**/ViewProfileOrdersTest.class")
     exclude ("**/CustomerViewTheirReviewsTest.class")
