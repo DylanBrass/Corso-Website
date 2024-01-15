@@ -213,4 +213,46 @@ class CustomerControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderTrackingNumber").value("T1YX4S"));
     }
+
+    @Test
+    void customerRequestsToCancelOrderRequest_ShouldSucceed() throws Exception {
+        mockMvc.perform(delete(BASE_URI_CUSTOMERS + "/orders/a0119367-4963-4019-b433-ba639fdf6b41")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "reason": "I don't want it anymore"
+                                }"""))
+                .andExpect(status().isNoContent());
+    }
+
+
+    @Test
+    void customerRequestsToCancelOrderWithIn_ProgressStatus_ShouldReturn422() throws Exception {
+        mockMvc.perform(delete(BASE_URI_CUSTOMERS + "/orders/ac5ca2b4-d53c-4516-8d4b-17665b46f411")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "reason": "I don't want it anymore"
+                                }"""))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void customerRequestsToCancelOrderThatDoesNotExist_ShouldReturn404() throws Exception {
+        mockMvc.perform(delete(BASE_URI_CUSTOMERS + "/orders/does-not-exist")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "reason": "I don't want it anymore"
+                                }"""))
+                .andExpect(status().isNotFound());
+    }
+
+
 }

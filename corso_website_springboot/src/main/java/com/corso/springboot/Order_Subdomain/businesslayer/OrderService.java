@@ -1,5 +1,6 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
+import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.DeclineOrderRequest;
@@ -38,4 +39,5 @@ public interface OrderService {
     boolean findAnyUserOrders(String userId);
 
     OrderResponse updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException;
+    void cancelByCustomerOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException;
 }

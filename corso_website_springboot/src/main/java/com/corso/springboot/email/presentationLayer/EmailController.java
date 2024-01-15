@@ -35,22 +35,4 @@ public class EmailController {
     }
 
 
-    @PostMapping("/template")
-    public ResponseEntity<Void> sendEmailWithTemplate() throws MessagingException {
-
-        Map<String, String> parameters = new HashMap<>();
-
-        parameters.put("message", "testing pls work");
-
-        parameters.put("cool", "Dylan");
-
-        int status = emailService.sendEmail("dylan.brassard@outlook.com", "emailRequest.getSubject()", "test", parameters);
-
-        if (status == 200)
-            return ResponseEntity.ok().build();
-        else
-            return ResponseEntity.status(status).build();
-    }
-
-
 }

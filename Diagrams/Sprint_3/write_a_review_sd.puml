@@ -14,6 +14,7 @@ participant "reviewResponse : ReviewResponse" as Rr
 
 participant "ReviewService" as Rs
 
+
 participant "review : Review" as R
 
 
@@ -40,7 +41,7 @@ Wrp -> Rq: POST /api/v1/corso/review
 
 activate Rq
 
-Rq -> Rc: createReview(reviewRequest)
+Rq -> Rc
 
 
 
@@ -48,6 +49,20 @@ activate Rc
 
 Rc -> Rs: createReview()
 activate Rs
+
+Rs -> Rrep :reviewInLastWeekForUser(userId: String): Boolean
+activate Rrep
+
+Rrep -> Db : SELECT CASE WHEN EXISTS ( SELECT 1 FROM reviews WHERE user_id = :userId AND review_date > CURRENT_DATE() - INTERVAL '7' DAY) THEN 'true' ELSE 'false' END AS has_reviewed;
+activate Db
+Db --> Rrep: bool:Boolean
+deactivate Db
+
+Rrep --> Rs: bool:Boolean
+
+deactivate Rrep
+
+
 
 Rs -> RreqM: mapToReview(reviewRequest)
 
@@ -66,7 +81,6 @@ R -> Rs : review : Review
 
 Rs -> Rrep: save(review)
 destroy R
-activate Rrep
 
 Rrep -> Db: INSERT INTO review (...) VALUES (...)
 activate Db

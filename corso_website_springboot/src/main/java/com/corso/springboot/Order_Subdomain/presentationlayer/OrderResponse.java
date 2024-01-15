@@ -20,7 +20,7 @@ public class OrderResponse {
 
     public String userId;
 
-    private String progressInformation;
+    public String progressInformation;
 
     public String orderDate;
 
@@ -30,24 +30,24 @@ public class OrderResponse {
 
     public String orderDescription;
 
-    private String customerFullName;
+    public String customerFullName;
 
-    private String customerEmail;
+    public String customerEmail;
 
-    private String customerPhone;
+    public String customerPhone;
 
-    private String customerAddress;
+    public String customerAddress;
 
-    private String customerCity;
+    public String customerCity;
 
-    private String customerPostalCode;
+    public String customerPostalCode;
 
-    private String customerApartmentNumber;
+    public String customerApartmentNumber;
 
 
-    private int totalOrdersMatchingRequest;
+    public int totalOrdersMatchingRequest;
 
-    private int daysLeft;
+    public int daysLeft;
 
-    private int estimatedDuration;
+    public int estimatedDuration;
 }

@@ -383,6 +383,30 @@ public class Auth0ManagementService {
 
     }
 
+    public List<UserInfoResponse> getAllAdmins() {
+        try {
+            String accessToken = getAccessToken();
+            String url = issuer + "api/v2/roles/rol_5AZt4iZ6HOc5TMa5/users";
+
+            HttpResponse<String> response = sendHttpRequest(accessToken, url);
+
+            List<UserInfoResponse> admins = new ArrayList<>();
+
+            new ObjectMapper().readTree(response.body()).forEach(node -> {
+                try {
+                    admins.add(getUserInfo(node.path("user_id").asText()));
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            return admins;
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private HttpResponse<String> sendHttpRequest(String accessToken, String url) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

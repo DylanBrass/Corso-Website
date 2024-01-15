@@ -51,13 +51,13 @@ public class Order {
 
     private String customerCity;
 
-    String customerPostalCode;
+    private String customerPostalCode;
 
-    String customerApartmentNumber;
+    private String customerApartmentNumber;
 
-    int estimatedDuration;
+    private int estimatedDuration;
 
-    int daysLeft;
+    private int daysLeft;
 
     public Order(ServiceIdentifier serviceId, String userId,String progressInformation, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerPostalCode, String customerApartmentNumber, int estimatedDuration, int daysLeft) {
         this.orderId = new OrderIdentifier();

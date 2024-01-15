@@ -1,0 +1,112 @@
+@startuml
+
+title Customer cancels request for an order UC12
+
+actor Customer
+
+participant SpecificOrderPage as "<<Page>>\nSpecificOrderPage"
+
+participant CancelOrderRequest as "cancelOrderRequest: CancelOrderRequest"
+
+participant CustomerController as "<<Controller>>\nCustomerController"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant Auth0ManagementService as "<<Service>>\nAuth0ManagementService"
+
+participant Admins as "admins: List<UserInfoReponse>"
+
+participant EmailService as "EmailService"
+
+participant Response as "response: OrderResponse"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant Order as "order: Order"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+
+
+Customer -> SpecificOrderPage: cancelOrder()
+activate SpecificOrderPage
+
+SpecificOrderPage -> CancelOrderRequest: DELETE /api/v1/corso/customers/orders/{orderId}
+activate CancelOrderRequest
+
+CancelOrderRequest -> CustomerController
+activate CustomerController
+
+CustomerController -> OrderService: cancelByCustomerOrderByOrderId(orderId: String, cancelOrderRequest: CancelOrderRequest)
+activate OrderService
+
+OrderService -> OrderRepository: findByOrderId_OrderIdAndUserId(orderId: String, userId: String)
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE order_id = ? AND user_id = ?
+activate Database
+Database --> Order: order: Order
+deactivate Database
+activate Order
+OrderRepository <-- Order: order: Order
+
+OrderService <-- OrderRepository: order: Order
+deactivate OrderRepository
+
+OrderService -> Auth0ManagementService: getAllAdmins()
+activate Auth0ManagementService
+
+Auth0ManagementService -> Admins: admins: List<UserInfoReponse>
+activate Admins
+
+OrderService <-- Admins: admins: List<UserInfoReponse>
+destroy Auth0ManagementService
+
+loop for each admin
+    OrderService -> EmailService: sendEmail(admin: UserInfoReponse.getEmail, String, String, Map<String, String>)
+    activate EmailService
+    EmailService --> OrderService: int
+end
+destroy Admins
+destroy EmailService
+destroy CancelOrderRequest
+
+OrderService -> OrderRepository: save(order: Order)
+destroy Order
+activate OrderRepository
+
+OrderRepository -> Database: UPDATE INTO orders (order_id, user_id, status, total_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)
+activate Database
+
+
+Database --> Order
+activate Order
+deactivate Database
+
+OrderRepository <-- Order: order: Order
+
+OrderService <-- OrderRepository: order: Order
+deactivate OrderRepository
+
+OrderService --> OrderResponseMapper: map(order: Order)
+activate OrderResponseMapper
+
+OrderResponseMapper --> Response: response: OrderResponse
+destroy Order
+destroy OrderResponseMapper
+activate Response
+
+OrderService <-- Response: response: OrderResponse
+
+OrderService --> CustomerController: response: OrderResponse
+
+CustomerController --> SpecificOrderPage: response: OrderResponse
+
+destroy Response
+
+
+
+
+
+@enduml

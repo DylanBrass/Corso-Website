@@ -1,0 +1,404 @@
+@startuml
+
+package "Order_Subdomain"{
+    package "presentationlayer" {
+        class "<<controller>>\nOrderController" as orderController {
+            - orderService: OrderService
+            + GetAllOrders(querryParams: Map<String, String>, pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + GetAllOrdersByStatus(querryParams: Map<String, String>, pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + GetAllOverdueOrders(pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + createOrderExternal(orderRequestExternal: OrderRequestExternal): ResponseEntity<OrderResponse>
+            + GetOrderByOrderId(orderId: String): ResponseEntity<OrderResponse>
+            + GetCustomerOrders(principal: OidcUser): ResponseEntity<List<OrderResponse>>
+            + UpdateOrderStatusToAccepted(acceptOrderRequest:AcceptOrderRequest, orderId: String): ResponseEntity<OrderResponse>
+            + CountByOrderStatus(status: String): ResponseEntity<Integer>
+            + CountAllOrders(): ResponseEntity<Integer>
+            + UpdateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+        }
+        class "OrderResponse" as orderResponse{
+            + orderId: String
+            + orderTrackingNumber: String
+            + serviceId: String
+            + service: ServiceResponse
+            + userId: String
+            + progressInformation: String
+            + orderDate: String
+            + dueDate: String
+            + orderStatus: Status
+            + orderDescription: String
+            + customerFullName: String
+            + customerEmail: String
+            + customerPhone: String
+            + customerAddress: String
+            + customerCity: String
+            + customerPostalCode: String
+            + customerApartmentNumber: String
+            + estimatedDuration: int
+            + daysLeft: int
+
+        }
+
+        class "OrderRequestExternal" as orderRequestExternal{
+            + serviceId: String
+            + userId: String
+            + progressInformation: String
+            + dueDate: String
+            + orderDescription: String
+            + customerFullName: String
+            + customerEmail: String
+            + customerPhone: String
+            + customerAddress: String
+            + customerCity: String
+            + customerPostalCode: String
+            + customerApartmentNumber: String
+            + estimatedDuration: int
+            + daysLeft: int
+        }
+
+        class "AcceptOrderRequest" as acceptOrderRequest{
+            + recipient: String
+            + AcceptOrderRequest(recipient: String)
+            + AcceptOrderRequest()
+
+        }
+        class "DeclineOrderRequest" as declineOrderRequest{
+            + recipient: String
+            + reasonForDecline: String
+            + DeclineOrderRequest(recipient: String)
+            + DeclineOrderRequest()
+        }
+
+
+
+    }
+
+    package "businesslayer" {
+        interface "OrderService" as orderService{
+            + getAllOrders(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOrdersByStatus(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOverdueOrders(pageSize: int, offset: int): List<OrderResponse>
+            + createOrderExternal(orderRequestExternal: OrderRequestExternal): OrderResponse
+            + getOrderByOrderId(orderId: String): OrderResponse
+            + getCustomerOrders(userId: String, pageSize: int, offset: int): List<OrderResponse>
+            + getOrderByIdAndUserId(orderId: String, userId: String): Order
+            + updateOrderStatusToAccepted(orderId: String, acceptOrderRequest:AcceptOrderRequest): OrderResponse
+            + countByOrderStatus(status: String): Integer
+            + getCustomerCurrentOrders(userId: String, status: String): List<OrderResponse>
+            + countAllOrders(): int
+            + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + findAnyUserOrders(userId: String): List<Order>
+            + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
+
+
+        }
+
+
+        class "<<service>>\nOrderServiceImpl" as orderServiceImpl{
+            - orderRepository: OrderRepository
+            - orderResponseMapper: OrderResponseMapper
+            - orderRequestMapper: OrderRequestMapper
+            - serviceService: ServiceService
+            - auth0ManagementService: Auth0ManagementService
+            - emailService: EmailService
+            ---
+            + getAllOrders(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOrdersByStatus(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOverdueOrders(pageSize: int, offset: int): List<OrderResponse>
+            + createOrderExternal(orderRequestExternal: OrderRequestExternal): OrderResponse
+            + getOrderByOrderId(orderId: String): OrderResponse
+            + getCustomerOrders(userId: String, pageSize: int, offset: int): List<OrderResponse>
+            + getOrderByIdAndUserId(orderId: String, userId: String): Order
+            + updateOrderStatusToAccepted(orderId: String, acceptOrderRequest:AcceptOrderRequest): OrderResponse
+            + countByOrderStatus(status: String): Integer
+            + getCustomerCurrentOrders(userId: String, status: String): List<OrderResponse>
+            + countAllOrders(): int
+            + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + findAnyUserOrders(userId: String): List<Order>
+            + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
+
+            + getOrderResponse(orderId: String, order: Order): OrderResponse
+            + setOrderResponseDetails(orderResponse: OrderResponse, totalOrders: int): OrderResponse
+            + getAllOrdersWithPagination(pageSize: int, offset: int): List<OrderResponse>
+            + getAllOrdersWithDefaultSettings(): List<OrderResponse>
+            + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
+
+
+        }
+
+        class orderServiceImpl implements orderService
+
+    }
+
+    package "datalayer" {
+
+        interface "<<repository>>\nOrderRepository" as orderRepository{
+            + findAllByOrderStatusEquals(status: String): List<Order>
+            + findAllByOrderStatusWithPagination(status: String, pageSize: int, offset: int): List<Order>
+            + findAllOrders(pageSize: int, offset: int): List<Order>
+            + findAllOverdueOrdersWithPagination(pageSize: int, offset: int): List<Order>
+            + findAllOverdueOrders(): List<Order>
+            + findByOrderId_OrderId(orderId: String): Order
+            + findAllByUserIdWithPagination(userId: String, pageSize: int, offset: int): List<Order>
+            + countByUserId(userId: String): Integer
+            + countByOrderStatus(status: String): Integer
+            + countOverdueOrders(): Integer
+            + findByOrderId_OrderIdAndUserId_UserId(orderId: String, userId: String): Order
+            + findAllByUserIdAndOrderStatusWithPagination(userId: String, pageSize: int, offset: int, status: String): List<Order>
+            + countByUserIdAndOrderStatus(userId: String, status: String): Integer
+            + findAllByUserIdAndOrderStatus(userId: String, status: String): List<Order>
+            + countAllBy(): Integer
+            + existsByUserId(userId: String): Boolean
+        }
+        class OrderIdentifier {
+            - orderId: String
+            + OrderIdentifier()
+            + getOrderId(): String
+        }
+
+        class OrderTrackingNumber {
+            - orderTrackingNumber: String
+            + OrderTrackingNumber()
+            + generateRandomString(length: int): String
+        }
+
+        enum Status {
+            PENDING,
+             IN_PROGRESS,
+             COMPLETED,
+             CANCELLED,
+             DEClINED
+        }
+
+        class "Order" as order{
+            - id: String
+            - orderIdentifier: OrderIdentifier
+            - orderTrackingNumber: OrderTrackingNumber
+            - serviceId: String
+            - service: Service
+            - userId: String
+            - progressInformation: String
+            - orderDate: String
+            - dueDate: String
+            - orderStatus: Status
+            - orderDescription: String
+            - customerFullName: String
+            - customerEmail: String
+            - customerPhone: String
+            - customerAddress: String
+            - customerCity: String
+            - customerPostalCode: String
+            - customerApartmentNumber: String
+            - estimatedDuration: int
+            - daysLeft: int
+
+            + Order(serviceId: String, userId: String, progressInformation: String, dueDate: String, orderDescription: String, customerFullName: String, customerEmail: String, customerPhone: String, customerAddress: String, customerCity: String, customerPostalCode: String, customerApartmentNumber: String, estimatedDuration: int, daysLeft: int)
+        }
+
+        interface orderRepository extends JpaRepository
+    }
+
+    package "datamapperlayer" {
+
+        interface "<<Mapper>>\nOrderRequestMapper" as orderRequestMapper{
+            + requestModelToOrder(requestModel: OrderRequestExternal): Order
+        }
+
+        interface "<<Mapper>>\nOrderResponseMapper" as orderResponseMapper{
+            + toOrderResponse(order: Order): OrderResponse
+            + toOrdersResponse(orders: List<Order>): List<OrderResponse>
+        }
+    }
+}
+
+
+
+
+package "Service_Subdomain"{
+    package "presentationlayer" {
+        class "<<controller>>\nServicesController" as serviceController {
+            - serviceService: ServiceService
+        ---
+            + ServicesController(serviceService: ServiceService)
+            + countAllServices(): ResponseEntity<Integer>
+            + createService(serviceRequest: ServiceRequest): ResponseEntity<ServiceResponse>
+            + getAllServices(): ResponseEntity<List<ServiceResponse>>
+            + getServiceById(String serviceId): ResponseEntity<ServiceResponse>
+        }
+
+
+
+        class "ServiceResponse" as serviceResponse{
+            - serviceId: String
+            - serviceName: String
+            - serviceDescription: String
+            - serviceIcon: String
+            - serviceImage: String
+        }
+
+        class "ServiceRequest" as serviceRequest{
+            - serviceName: String
+            - serviceDescription: String
+            - serviceIcon: String
+            - serviceImage: String
+        }
+
+
+
+
+
+
+    }
+
+    package "businesslayer" {
+        interface "ServiceService" as serviceService{
+        ---
+            + getServiceByServiceId(serviceId: String): ServiceResponse
+            + getAllServices(): List<ServiceResponse>
+            + createService(serviceRequest: ServiceRequest): ServiceResponse
+            + countAllServices(): Integer
+
+        }
+
+
+        class "<<service>>\nServiceServiceImpl" as serviceServiceImpl{
+
+            - serviceResponseMapper: ServiceResponseMapper
+            - serviceRequestMapper: ServiceRequestMapper
+            - serviceRepository: ServiceRepository
+            - cloudinaryService: CloudinaryService
+
+            + getServiceByServiceId(serviceId: String): ServiceResponse
+            + getAllServices(): List<ServiceResponse>
+            + createService(serviceRequest: ServiceRequest): ServiceResponse
+            + countAllServices(): Integer
+
+
+        }
+
+        class "<<service>>CloudinaryService" as cloudinaryService{
+            - cloudinary: Cloudinary
+            ---
+            + CloudinaryService()
+            + uploadBase64Image(base64Image: String): String
+        }
+
+        class serviceServiceImpl implements serviceService
+
+    }
+
+    package "datalayer" {
+
+        interface "<<repository>>\nServiceRepository" as serviceRepository{
+            + findByServiceIdentifier_ServiceId(serviceId: String): Service
+            + countAllBy(): Integer
+        }
+
+        class ServiceIdentifier {
+            - serviceId: String
+            + ServiceIdentifier(serviceId: String)
+            + ServiceIdentifier()
+            + getServiceId(): String
+
+        }
+
+        class "Service" as service{
+            + Service()
+            + Service(serviceName: String, serviceDescription: String, serviceIcon: String, serviceImage: String)
+            - id: String
+            - serviceIdentifier: ServiceIdentifier
+            - serviceName: String
+            - serviceDescription: String
+            - serviceIcon: String
+            - serviceImage: String
+
+        }
+
+        interface serviceRepository extends JpaRepository
+
+
+    }
+
+    package "datamapperlayer" {
+
+        interface "<<Mapper>>\nServiceRequestMapper" as serviceRequestMapper{
+            + toService(serviceRequest: ServiceRequest): Service
+        }
+
+        interface "<<Mapper>>\nServiceResponseMapper" as serviceResponseMapper{
+            + toServiceResponse(service: Service): ServiceResponse
+            + toServicesResponse(services: List<Service>): List<ServiceResponse>
+        }
+
+
+    }
+
+}
+
+
+
+serviceController ..> serviceService
+
+
+serviceController ..> serviceResponse
+serviceController ..> serviceRequest
+
+serviceServiceImpl ..> serviceRepository
+
+serviceServiceImpl ..> serviceRequestMapper
+
+serviceServiceImpl ..> serviceResponseMapper
+
+serviceRepository ..> service
+
+serviceRequestMapper ..> serviceRequest
+
+serviceResponseMapper ..> serviceResponse
+
+service *-> ServiceIdentifier
+
+orderResponse ..> serviceResponse
+orderResponse ..> Status
+
+orderController ..> orderService
+
+orderController ..> orderResponse
+
+orderController ..> orderRequestExternal
+
+orderController ..> acceptOrderRequest
+
+orderController ..> declineOrderRequest
+
+orderServiceImpl ..> orderRepository
+
+orderServiceImpl ..> orderResponseMapper
+
+orderServiceImpl ..> orderRequestMapper
+
+orderServiceImpl ..> serviceService
+
+orderServiceImpl ..> auth0ManagementService
+
+orderServiceImpl ..> emailService
+
+orderRepository ..> order
+
+orderRequestMapper ..> orderRequestExternal
+
+orderResponseMapper ..> orderResponse
+
+order *--> OrderIdentifier
+
+order *--> OrderTrackingNumber
+
+order ..> Status
+
+
+
+
+
+
+
+
+
+@endpuml
