@@ -70,10 +70,8 @@ destroy Order
 
 activate OrderRepository
 
-loop for each order in orders
     OrderRepository -> Database : UPDATE gallery SET image_position = :imagePosition WHERE gallery_id = :galleryId
     activate Database
-end loop
 
 
 Database -> orderDb : orderDbs : List<Order>

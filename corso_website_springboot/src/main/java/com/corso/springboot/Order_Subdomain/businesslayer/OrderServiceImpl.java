@@ -1,5 +1,6 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
+import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
@@ -376,6 +377,42 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(Status.valueOf(newStatus.toString()));
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
+
+    @Override
+    public void deleteOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException {
+        Order order = orderRepository.findByOrderId_OrderIdAndUserId(orderId, userId);
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+
+        if (order.getOrderStatus() != Status.PENDING) {
+            throw new InvalidRequestException("Order cannot be cancelled, it is not in pending status, meaning it was accepted or cancelled already!");
+        }
+
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("reasonForCancellation", cancelOrderRequest.getReason());
+
+        List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
+
+        int emailStatus = 0;
+        for (UserInfoResponse admin : admins) {
+            emailStatus = emailService.sendEmail(admin.getEmail(),
+                    "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled",
+                    "CustomerCancelOrder", parameters);
+        }
+
+        if (emailStatus != 200) {
+            throw new MessagingException("Failed to send email to one of the admins");
+        }
+
+
+        order.setOrderStatus(Status.CANCELLED);
+
+        orderRepository.save(order);
+
 
     }
 }
