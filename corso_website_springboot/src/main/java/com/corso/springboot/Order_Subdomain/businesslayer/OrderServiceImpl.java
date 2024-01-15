@@ -93,7 +93,6 @@ public class OrderServiceImpl implements OrderService {
         return orderResponses;
     }
 
-
     private List<OrderResponse> getAllOrdersWithPagination(int pageSize, int offset) {
         int totalOrders = (int) orderRepository.count();
         List<OrderResponse> orderResponses = orderResponseMapper.toOrdersResponse(orderRepository.findAllOrders(pageSize, offset));
@@ -288,7 +287,6 @@ public class OrderServiceImpl implements OrderService {
         return orderResponse;
     }
 
-    @Override
     public OrderResponse updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
         Status newStatus = Status.IN_PROGRESS;
@@ -356,30 +354,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.existsByUserId(userId);
     }
 
-    public OrderResponse updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException {
-
-        Order order = orderRepository.findByOrderId_OrderId(orderId);
-        Status newStatus = Status.CANCELLED;
-        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
-
-
-        Map<String, String> parameters = new HashMap<>();
-        log.info("Sending email to {}", declineOrderRequest.getRecipient());
-        log.info("Reason email to {}", declineOrderRequest.getReasonForDecline());
-        parameters.put("reasonForCancellation", declineOrderRequest.getReasonForDecline());
-
-        String subject = "Order #" + orderTrackingNumber + " has been canceled";
-
-        int status = emailService.sendEmail(declineOrderRequest.getRecipient(), subject, "CancelOrder", parameters);
-
-        if (status != 200) {
-            throw new MessagingException("Failed to send email");
-        }
-
-        order.setOrderStatus(Status.valueOf(newStatus.toString()));
-
-        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
-    }
 
     @Override
     public void cancelByCustomerOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException {
@@ -415,5 +389,33 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(Status.CANCELLED);
 
         orderRepository.save(order);
+    }
+
+
+    @Override
+    public OrderResponse updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException {
+
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        Status newStatus = Status.CANCELLED;
+        String orderTrackingNumber = order.getOrderTrackingNumber().getOrderTrackingNumber();
+
+
+        Map<String, String> parameters = new HashMap<>();
+        log.info("Sending email to {}", declineOrderRequest.getRecipient());
+        log.info("Reason email to {}", declineOrderRequest.getReasonForDecline());
+        parameters.put("reasonForCancellation", declineOrderRequest.getReasonForDecline());
+
+        String subject = "Order #" + orderTrackingNumber + " has been canceled";
+
+        int status = emailService.sendEmail(declineOrderRequest.getRecipient(), subject, "CancelOrder", parameters);
+
+        if (status != 200) {
+            throw new MessagingException("Failed to send email");
+        }
+
+        order.setOrderStatus(Status.valueOf(newStatus.toString()));
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+
     }
 }

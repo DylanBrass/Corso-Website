@@ -229,7 +229,7 @@ public class OrderServiceImplUnitTest {
         Mockito.when(orderResponseMapper.toOrderResponse(any(Order.class))).thenReturn(mockOrderResponse);
 
 
-        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(200);
+        Mockito.when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(200);
 
         AcceptOrderRequest acceptOrderRequest = new AcceptOrderRequest("John Doe");
 
@@ -244,7 +244,7 @@ public class OrderServiceImplUnitTest {
     }
 
     @Test
-    public void whenCreatingExternalOrderServiceIdNotFound_shouldThrowServiceNotFoundException()  {
+    public void whenCreatingExternalOrderServiceIdNotFound_shouldThrowServiceNotFoundException() {
         // Arrange
         when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(null);
 
@@ -290,9 +290,9 @@ public class OrderServiceImplUnitTest {
         Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
         Mockito.when(orderResponseMapper.toOrderResponse(any(Order.class))).thenReturn(mockOrderResponse);
 
-        DeclineOrderRequest orderRequest = new DeclineOrderRequest("test","test");
+        DeclineOrderRequest orderRequest = new DeclineOrderRequest("test", "test");
 
-        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(200);
+        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(200);
 
         // Act
         OrderResponse result = orderService.updateOrderStatusToDeclined(mockOrder.getOrderId().getOrderId(), orderRequest);
@@ -303,7 +303,6 @@ public class OrderServiceImplUnitTest {
         verify(orderRepository).save(mockOrder);
 
     }
-
     @Test
     public void testCancelByCustomerOrderFailsToSendEmail() throws MessagingException {
         // Arrange
@@ -327,6 +326,11 @@ public class OrderServiceImplUnitTest {
         when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(500);
 
 
+
+        assertThrows(MessagingException.class, () -> orderService.cancelByCustomerOrderByOrderId(mockOrder.getOrderId().getOrderId(), mockOrder.getUserId(), customerCancelOrderRequest));
+    }
+
+
     @Test
     void updateOrderStatusToCancelled_ShouldSucceed() throws MessagingException {
 
@@ -343,9 +347,6 @@ public class OrderServiceImplUnitTest {
                 "John Doe", "john@example.com", "1234567890",
                 "123 Main St", "Montreal", "J5R 5J4", "",
                 1, 2, 1);
-        assertThrows(MessagingException.class, () -> orderService.cancelByCustomerOrderByOrderId(mockOrder.getOrderId().getOrderId(), mockOrder.getUserId(), customerCancelOrderRequest));
-
-    }
 
         Mockito.when(orderRepository.findByOrderId_OrderId(mockOrder.getOrderId().getOrderId())).thenReturn(mockOrder);
         Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
@@ -363,5 +364,4 @@ public class OrderServiceImplUnitTest {
         assertEquals(Status.CANCELLED, mockOrder.getOrderStatus(), "Order status should be updated to Cancelled");
         verify(orderRepository).save(mockOrder);
     }
-
 }
