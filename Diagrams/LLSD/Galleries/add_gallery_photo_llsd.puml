@@ -1,35 +1,40 @@
 @startuml
 
-actor User
+actor Admin
 
-participant "ProfilePage" as Pfp
+participant "<<View>>\nProfilePage" as Pfp
 
-participant "AddGalleryPage" as Wrp
+participant "<<View>>\nAddGalleryPage" as Wrp
 
 participant "galleryRequest : GalleryRequest" as Gq
 
-participant "GalleryController" as Rc
+participant "<<Controller>>\nGalleryController" as Rc
 
 participant "galleryResponse : GalleryResponse" as Gr
 
-participant "GalleryService" as Gs
+participant "<<Service>>\nGalleryService" as Gs
 
 
 participant "gallery : Gallery" as G
 
 
-participant "GalleryRepository" as Grep
+participant "<<Repository>>\nGalleryRepository" as Grep
 
 participant "galleryDb : Gallery" as Gdb
 
-participant "Database" as Db
+participant "<<MySQL>>\nDatabase" as Db
 
-participant "GalleryResponseMapper" as GresM
+participant "<<Mapper>>\nGalleryResponseMapper" as GresM
 
-participant "GalleryRequestMapper" as GreqM
+participant "<<Mapper>>\nGalleryRequestMapper" as GreqM
 
+ref over Pfp, Wrp, Gq, Rc, Gr, Gs, G, Grep, Gdb, Db, GresM, GreqM
 
-User -> Pfp: AddGalleryPage()
+    ViewCarousel
+end
+
+opt
+Admin -> Pfp: AddGalleryPage()
 activate Pfp
 
 Pfp -> Wrp: Render()
@@ -59,7 +64,7 @@ destroy GreqM
 
 activate G
 
-R -> Gs : gallery : Gallery
+G -> Gs : gallery : Gallery
 
 
 
@@ -94,5 +99,5 @@ Gs --> Rc: galleryResponse : GalleryResponse
 Rc --> Wrp: galleryResponse : GalleryResponse
 
 destroy Gr
-
+end opt
 @enduml

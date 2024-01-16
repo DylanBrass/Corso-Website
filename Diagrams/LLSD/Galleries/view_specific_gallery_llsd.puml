@@ -21,7 +21,13 @@ participant Database as "<<Database>> Database"
 
 participant GalleryResponseMapper as "<<Mapper>> GalleryResponseMapper"
 
+ref over Dashboard, EditGalleryPage, GalleryController, GalleryService, GalleryResponse, GalleryRepository, Gallery, Database, GalleryResponseMapper
 
+    ViewCarousel
+
+end
+
+opt
 Admin -> Dashboard: viewSpecificGallery()
 activate Dashboard
 Dashboard -> EditGalleryPage: render()
@@ -76,5 +82,5 @@ Admin -> EditGalleryPage: Back()
 
 EditGalleryPage --> Dashboard: render()
 destroy EditGalleryPage
-
+end opt
 @enduml

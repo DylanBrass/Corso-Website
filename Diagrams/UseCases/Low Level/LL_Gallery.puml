@@ -21,7 +21,7 @@ rectangle "Corso System"{
     Anonymous -[#blue]-> UC6
     User --|> Anonymous
     Admin --|> User
-    UC7 -[dashed]> UC6 : <<includes>>
+    UC7 -[dashed]> UC6 : <<extends>>
   }
 }
 

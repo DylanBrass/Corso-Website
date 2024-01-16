@@ -13,6 +13,8 @@ participant ReviewsPage as "<<View>>\n ReviewsPage"
 
 participant ManagePinnedReviewsPage as "<<View>>\n ManagePinnedReviewsPage"
 
+participant ReviewRequest as "reviewRequests: List<ReviewRequest>"
+
 participant ReviewController as "<<Controller>>\n ReviewController"
 
 participant ReviewService as "<<Service>>\n ReviewService"
@@ -23,9 +25,16 @@ participant ReviewRepository as "<<Repository>> ReviewRepository"
 
 participant Reviews as "all: List<Review>"
 
+participant Reviewdb as "reviewDbs: List<Review>"
+
 participant Database as "<<MySQL>>\n Database"
 
+participant ReviewResponse as "reviewResponse: ReviewResponse"
+
 participant ReviewResponseMapper as "<<Mapper>>\n ReviewResponseMapper"
+
+participant ReviewRequestMapper as "<<Mapper>>\nReviewRequestMapper"
+
 
 alt User is Customer
 
@@ -89,6 +98,7 @@ activate AdminDashboard
 
 activate ManagePinnedReviewsPage
 
+alt
 ManagePinnedReviewsPage -> ReviewController: GET api/v1/corso/reviews HTTP/1.1
 
 activate ReviewController
@@ -136,6 +146,131 @@ ReviewService --> ReviewController: all: List<ReviewResponse>
 deactivate ReviewService
 
 ReviewController --> ManagePinnedReviewsPage: all: List<ReviewResponse>
+
+deactivate ReviewResponses
+
+deactivate ReviewController
+
+deactivate ReviewService
+
+
+else if is Search By Customer Name
+
+ManagePinnedReviewsPage -> ReviewController: GET api/v1/corso/reviews?customerFullName={name} HTTP/1.1
+activate ReviewController
+
+ReviewController -> ReviewService: getAllReviewsByCustomerName(String name)
+activate ReviewService
+
+ReviewService -> ReviewRepository: findAllByCustomerFullName(String name)
+
+activate ReviewRepository
+
+ReviewRepository -> Database: SELECT * FROM reviews WHERE customer_full_name LIKE %:name%
+
+activate Database
+
+Database --> ReviewRepository: List<Review>
+
+deactivate Database
+
+ReviewRepository --> Reviews: List<Review>
+
+activate Reviews
+
+Reviews --> ReviewService: all: List<Review>
+
+deactivate ReviewRepository
+
+ReviewService -> ReviewResponseMapper: mapToReviewResponses(List<Review> reviews)
+
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponses: all: List<ReviewResponse>
+
+deactivate Reviews
+
+activate ReviewResponses
+
+deactivate ReviewResponseMapper
+
+ReviewResponses --> ReviewService: all: List<ReviewResponse>
+
+ReviewService --> ReviewController: all: List<ReviewResponse>
+
+deactivate ReviewService
+
+ReviewController --> ManagePinnedReviewsPage: all: List<ReviewResponse>
+
+deactivate ReviewResponses
+
+deactivate ReviewController
+
+deactivate ReviewService
+
+end alt
+
+
+
+opt
+
+
+        ManagePinnedReviewsPage -> ReviewRequest : GET /api/faqs/review/pinned
+        activate ReviewRequest
+        ReviewRequest -> ReviewController : chooseViewableReview(ReviewUpdateRequest reviewUpdateRequest)
+
+        activate ReviewController
+        ReviewController -> ReviewService : chooseViewableReview()
+        activate ReviewService
+
+        ReviewService -> "ReviewRequestMapper" : mapToReview(ReviewUpdateRequest reviewUpdateRequest)
+        activate ReviewRequestMapper
+
+        "ReviewRequestMapper" -> Reviews : reviews: List<Reviews>
+        deactivate ReviewRequest
+        deactivate ReviewRequestMapper
+
+        activate Reviews
+        Reviews -> "ReviewService" : reviews : List<Review>
+
+        "ReviewService" -> "ReviewRepository" : saveAll(List<Review> reviews)
+        deactivate Reviews
+        activate ReviewRepository
+
+        "ReviewRepository" -> "Database" : UPDATE review SET pinned = :pinned WHERE review_id = :reviewId
+        activate Database
+
+        "Database" -> "Reviewdb" : reviewDbs : List<Review>
+        deactivate Database
+
+        activate Reviewdb
+        Reviewdb -> ReviewRepository : reviewDbs : List<Review>
+
+        ReviewRepository -> ReviewService : reviewsDbs : List<Review>
+        deactivate ReviewRepository
+
+        ReviewService -> "ReviewResponseMapper" : mapToReviewResponses(List<Review> reviewDbs)
+        deactivate Reviewdb
+
+        activate ReviewResponseMapper
+        "ReviewResponseMapper" --> ReviewResponse : List<ReviewResponse>
+        deactivate ReviewResponseMapper
+
+        activate ReviewResponse
+        ReviewResponse --> ReviewService : reviewResponses : List<ReviewResponse>
+        ReviewService --> ReviewController : reviewResponses : List<ReviewResponse>
+        ReviewController --> ManagePinnedReviewsPage : reviewResponses : List<ReviewResponse>
+        deactivate ReviewResponse
+
+        deactivate ReviewService
+
+
+end opt
+deactivate ManagePinnedReviewsPage
+
+
+
+
 
 deactivate ReviewResponses
 

@@ -1,0 +1,67 @@
+@startuml
+actor User
+
+participant "Profile" as DashB
+
+participant "ReviewsPage" as AllServP
+
+participant "ReviewController" as Sc
+
+participant "ReviewService" as Rs
+
+participant "EmailService" as Semail
+
+participant "ReviewRepository" as Rrep
+
+participant "review : Review" as R
+
+participant "Database" as Db
+
+ref over User, DashB, AllServP, Sc, Rs, Semail, Rrep, R, Db
+    ViewReviewById
+end ref
+
+opt
+
+User -> DashB : deleteAReview(reviewId:String)
+
+DashB -> AllServP : render()
+
+AllServP -> Sc : DELETE api/v1/corso/reviews/{reviewId}
+
+Sc -> Rs : deleteReview(reviewId:String)
+
+alt Review is Pinned
+Rs -> Rrep : isPinned(reviewId:String)
+
+Rrep -> Db : DELETE FROM reviews WHERE review_id = reviewId AND pinned = true
+
+Db --> R : review: Review
+
+R --> Rrep : review: Review
+
+Rrep --> Rs : review: Review
+
+Rs -> Semail : sendEmail(review:Review)
+activate Semail
+destroy Semail
+
+else Review is not Pinned
+
+Rs -> Rrep : deleteReview(reviewId:String)
+
+Rrep -> Db : DELETE FROM reviews WHERE review_id = reviewId
+
+Db --> Rrep : void
+
+Rrep --> Rs : void
+
+Rs --> Sc : void
+
+Sc --> AllServP : void
+
+end
+
+end
+
+@enduml

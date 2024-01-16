@@ -1,0 +1,87 @@
+@startuml
+actor User
+
+participant Dashboard as "<<View>>\nDashboard"
+
+participant EditGalleryCarousel as "<<View>>\nEditGalleryCarousel"
+
+participant MainPage as "<<View>>\nMain Page"
+
+participant GalleryController as "<<RestController>>\nGalleryController"
+
+participant galleryResponses as "galleryResponses: List<GalleryResponse>"
+
+participant GalleryService as "<<Service>>\nGalleryService"
+
+participant GalleryRepository as "<<Repository>>\nGalleryRepository"
+
+participant Galleries as "galleries: List<Gallery>"
+
+participant Database as "<<MySQL>>\nDatabase"
+
+participant GalleryResponseMapper as "<<Mapper>>\nGalleryResponseMapper"
+
+
+
+
+alt if from Main Page
+
+User -> MainPage: visits https://corsoelectricdev.tech/
+activate MainPage
+MainPage -> GalleryController: GET /api/v1/corso/galleries/carousel
+
+else if from Dashboard && user is Admin
+
+User -> Dashboard: visits https://corsoelectricdev.tech/dashboard
+activate Dashboard
+Dashboard -> EditGalleryCarousel: render()
+activate EditGalleryCarousel
+EditGalleryCarousel -> GalleryController: GET /api/v1/corso/galleries/carousel
+
+end
+activate GalleryController
+
+GalleryController -> GalleryService: getCarouselGalleries()
+activate GalleryService
+
+GalleryService -> GalleryRepository: findAllByCarouselIsTrue()
+activate GalleryRepository
+
+GalleryRepository -> Database: SELECT * FROM galleries
+activate Database
+
+Database --> Galleries: galleries: List<Gallery>
+deactivate Database
+activate Galleries
+
+Galleries --> GalleryRepository
+GalleryRepository --> GalleryService: galleries: List<Gallery>
+deactivate GalleryRepository
+
+GalleryService --> GalleryResponseMapper: mapToGalleryResponse(galleries: List<Gallery>)
+deactivate Galleries
+activate GalleryResponseMapper
+
+GalleryResponseMapper --> GalleryService: galleryResponses: List<GalleryResponse>
+deactivate GalleryResponseMapper
+deactivate GalleryResponseMapper
+GalleryService --> GalleryController: galleryResponses: List<GalleryResponse>
+
+alt if from Main Page
+
+GalleryController --> MainPage: galleryResponses: List<GalleryResponse>
+
+else if from Dashboard && user is Admin
+
+GalleryController --> EditGalleryCarousel: galleryResponses: List<GalleryResponse>
+
+EditGalleryCarousel -[hidden]--> Dashboard
+end
+
+
+
+
+
+
+
+@enduml

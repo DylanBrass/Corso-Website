@@ -27,6 +27,11 @@ participant "ReviewResponseMapper" as RresM
 
 participant "ReviewRequestMapper" as RreqM
 
+ref over User, Pfp, Urp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
+    ViewReviewById
+end ref
+
+opt
 User -> Pfp : UpdateReview()
 activate Pfp
 
@@ -78,6 +83,9 @@ activate RresM
 
 
 RresM --> Rr: ReviewResponse
+
+
+
 destroy RresM
 activate Rr
 
@@ -88,6 +96,10 @@ Rs --> Rc: reviewResponse : ReviewResponse
 
 Rc --> Urp: reviewResponse : ReviewResponse
 
+
+
 destroy Rr
+
+end opt
 
 @enduml
