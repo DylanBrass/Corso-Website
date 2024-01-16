@@ -131,7 +131,7 @@ test {
     exclude '**/ViewServiceDetailsAdmin.class'
     exclude '**/ChooseViewableFaqsTest.class'
     exclude '**/AdminAcceptRequestTest.class'
-    exclude '**/AdminDeclineRequestTest.class'
+    exclude '**/AdminDeclinesRequestTest.class'
     exclude '**/AdminCancelsOrderTest.class'
     useJUnitPlatform()
     testLogging {
