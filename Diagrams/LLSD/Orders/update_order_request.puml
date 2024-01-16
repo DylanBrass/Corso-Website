@@ -1,0 +1,124 @@
+@startuml
+
+actor Customer
+
+participant SpecificOrderPage as "<<View>>\nSpecificOrderPage"
+
+participant UpdateOrderPage as "<<View>>\nUpdateOrderPage"
+
+participant OrderCustomerRequest as "orderCustomerRequest: OrderCustomerRequest"
+
+participant CustomerController as "<<Controller>>\nCustomerController"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant Auth0ManagementService as "<<Service>>\nAuth0ManagementService"
+
+participant Admins as "admins: List<UserInfoReponse>"
+
+participant EmailService as "<<Service>>\nEmailService"
+
+participant Response as "response: OrderResponse"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant Order as "order: Order"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+
+
+ref over SpecificOrderPage, OrderCustomerRequest, OrderService, OrderRepository, Order, Database, OrderResponseMapper
+    ViewOrderById
+end ref
+
+
+opt
+
+Customer -> SpecificOrderPage: updateOrderInforamtion
+activate SpecificOrderPage
+
+SpecificOrderPage -> UpdateOrderPage: render()
+activate UpdateOrderPage
+
+UpdateOrderPage -> OrderCustomerRequest: PATCH /api/v1/corso/customers/orders/{orderId} HTTP/1.1
+
+activate OrderCustomerRequest
+
+OrderCustomerRequest -> CustomerController: updateOrderInformation(userId,orderId, orderCustomerRequest)
+
+activate CustomerController
+
+CustomerController -> OrderService: updateOrderInformation(userId,orderId, orderCustomerRequest)
+
+
+activate OrderService
+
+OrderService -> Auth0ManagementService: getAllAdmins()
+activate Auth0ManagementService
+
+Auth0ManagementService -> Admins: admins: List<UserInfoReponse>
+activate Admins
+
+OrderService <-- Admins: admins: List<UserInfoReponse>
+destroy Auth0ManagementService
+
+    OrderService -> EmailService: sendEmail(admin: UserInfoReponse.getEmail, String, String, Map<String, String>)
+    activate EmailService
+    EmailService --> OrderService: int
+destroy Admins
+destroy EmailService
+
+
+OrderService -> OrderRequestMapper: map(orderCustomerRequest): order: Order
+activate OrderRequestMapper
+
+
+OrderRequestMapper --> Order: order: Order
+activate Order
+
+deactivate OrderRequestMapper
+
+Order --> OrderService: order: Order
+
+OrderService -> OrderRepository: save(order)
+deactivate Order
+
+activate OrderRepository
+
+OrderRepository -> Database: UPDATE INTO orders VALUES (order)
+
+activate Database
+
+Database --> Order
+deactivate Database
+activate Order
+
+Order -> OrderRepository: order: Order
+
+OrderRepository --> OrderService: order: Order
+
+deactivate OrderRepository
+
+OrderService -> OrderResponseMapper: map(order)
+deactivate Order
+activate OrderResponseMapper
+
+OrderResponseMapper -> Response: response: OrderResponse
+deactivate OrderResponseMapper
+activate Response
+
+Response --> OrderService: response: OrderResponse
+
+OrderService --> CustomerController: response: OrderResponse
+
+CustomerController --> UpdateOrderPage: response: OrderResponse
+
+UpdateOrderPage -> SpecificOrderPage: render()
+
+end opt
+
+
+@enduml

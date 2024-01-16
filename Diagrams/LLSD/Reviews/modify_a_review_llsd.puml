@@ -1,10 +1,9 @@
 @startuml
-
 actor User
 
 participant "ProfilePage" as Pfp
 
-participant "WriteReviewPage" as Wrp
+participant "UpdateReviewPage" as Urp
 
 participant "reviewRequest : ReviewRequest" as Rq
 
@@ -28,52 +27,29 @@ participant "ReviewResponseMapper" as RresM
 
 participant "ReviewRequestMapper" as RreqM
 
-ref over Pfp, Wrp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
-    ViewOrders
+ref over User, Pfp, Urp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
+    ViewReviewById
 end ref
 
-
-ref over Pfp, Wrp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
-    ViewOrderById
-end ref
-
-User -> Pfp: WriteReviewPage()
+opt
+User -> Pfp : UpdateReview()
 activate Pfp
 
-Pfp -> Wrp: Render()
-activate Wrp
 
-User -> Wrp: SubmitReview()
+Pfp -> Urp : Render()
+activate Urp
 
-Wrp -> Rq: POST /api/v1/corso/review
-
+Urp -> Rq : PUT api/v1/corso/reviews/{reviewId}
 activate Rq
 
 Rq -> Rc
 
-
-
 activate Rc
 
-Rc -> Rs: createReview()
+Rc -> Rs : updateReview(reviewId, reviewRequest)
 activate Rs
 
-Rs -> Rrep :reviewInLastWeekForUser(userId: String): Boolean
-activate Rrep
-
-Rrep -> Db : SELECT CASE WHEN EXISTS ( SELECT 1 FROM reviews WHERE user_id = :userId AND review_date > CURRENT_DATE() - INTERVAL '7' DAY) THEN 'true' ELSE 'false' END AS has_reviewed;
-activate Db
-Db --> Rrep: bool:Boolean
-deactivate Db
-
-Rrep --> Rs: bool:Boolean
-
-deactivate Rrep
-
-
-
-Rs -> RreqM: mapToReview(reviewRequest)
-
+Rs -> RreqM : mapToReview(reviewRequest)
 activate RreqM
 
 RreqM -> R: Review
@@ -90,7 +66,7 @@ R -> Rs : review : Review
 Rs -> Rrep: save(review)
 destroy R
 
-Rrep -> Db: INSERT INTO review (...) VALUES (...)
+Rrep -> Db: UPDATE review SET review_date = :reviewDate, message = :message, review_rating = :reviewRating, WHERE user_id = :userId AND review_id = :reviewId;
 activate Db
 
 Db -> Rdb: reviewDb : Review
@@ -107,6 +83,9 @@ activate RresM
 
 
 RresM --> Rr: ReviewResponse
+
+
+
 destroy RresM
 activate Rr
 
@@ -115,8 +94,12 @@ Rr --> Rs : reviewResponse : ReviewResponse
 Rs --> Rc: reviewResponse : ReviewResponse
 
 
-Rc --> Wrp: reviewResponse : ReviewResponse
+Rc --> Urp: reviewResponse : ReviewResponse
+
+
 
 destroy Rr
+
+end opt
 
 @enduml

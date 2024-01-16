@@ -29,6 +29,10 @@ participant Database as "<<Database>>\nDatabase"
 participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
 
 
+ref over Customer, SpecificOrderPage, CancelOrderRequest, CustomerController, OrderService, Auth0ManagementService, Admins, EmailService, Response, OrderRepository, Order, Database, OrderResponseMapper
+    ViewOrdersById
+end ref
+
 Customer -> SpecificOrderPage: cancelOrder()
 activate SpecificOrderPage
 

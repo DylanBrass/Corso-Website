@@ -30,22 +30,33 @@ allowmixing
 
 rectangle "Users Computer \n[Deployment Node: Windows OS, MacOS, Linux]" as computer{
     node "Web Browser \n[Deployment Node: Chrome, Firefox, Edge, Safari]"{
-    Container(browser, "Single-Page Application", "Container: Javascript and REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
-
-    }
+        Container(reactPage, "Web Application", "Container: Html, CSS and JS","Delivers the static content for the Single Page Application.",  $tags="webApp")
+           }
 }
 
 rectangle "Users Phone \n[Deployment Node: Android, IOS]" as phone{
     node "Web Browser \n[Deployment Node: Chrome, Firefox, Edge, Safari]" as mobileBrowser{
-        Container(mobileBrowser, "Single-Page Application",  "Container: Javascript and REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
+            Container(reactPage_mobile, "Web Application", "Container: Html, CSS and JS","Delivers the static content for the Single Page Application.",  $tags="webApp")
+
     }
 }
 
-cloud GCP as "Google Cloud \n[Deployment Node: Google Clouds Standard Environnent]"{
-    node "Google Cloud App Engine \n[Deployment Node: Google Clouds Standard Environnent]" as GCAE{
-        Container(frontend, "Web Application", "Container : HTML, Javascript and React JS", "Delivers the static content for the Single Page Application.", $sprite="html5", $tags="webApp")
-        Container(api, "API", "Container : Spring boot: Java", "Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
+cloud render as "Render \n[Deployment Node: Render.com]"{
+        node "Web Service\n[Deployment Node: ]Docker" as backend{
+                node "Apache Tomcat\n[Deployment Node : Apache Tomcat/10.1.13]" as tom {
+
+                    Container(api, "API", "Container : Spring boot: Java", "Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
+
+                }
+        }
+
+        node "Static Site\n[Deployment Node:  webpack-server/^4.6.0]" as frontendNode{
+            Container(frontend, "Single-Page Application", "Container: REACT TS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
+        }
     }
+
+cloud GCP as "Google Cloud \n[Deployment Node: Google Clouds Standard Environnent]"{
+
     database "Google Cloud SQL \n[Deployment Node: Google Clouds Standard Environnent]" as database{
         ContainerDb(db, "Database", "Container : MySQL", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
     }
@@ -59,22 +70,21 @@ Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable a
 Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
 
 
+api <---> database: SQL/TCP\n[JBDC]
 
-cloudinary <-[dashed]-- api : Makes API calls to \n[JSON/HTTPS]
-auth <-[dashed]-- api : Makes API calls to \n[OAuth2/OpenID]
-email <-[dashed]- api : Sends email to \n[SMTP/TCP/IP]
+api <-> frontend: Makes Api calls\n[JSON/HTTPS]
 
+api <---> cloudinary: Makes Api calls\n[JSON/HTTPS]
 
-frontend -[dashed]----> browser : Delivers to the users web browser
-frontend -[dashed]> mobileBrowser : Delivers to the users web browser
+api <---> auth: Authenticates\n[OAuth2/OpenID]
 
-db -[hidden]--> auth
-db -[hidden]---> email
-
-browser -[dashed]----> api : Makes API calls to \n[JSON/HTTPS]
-mobileBrowser -[dashed]> api : Makes API calls to \n[JSON/HTTPS]  
+api <---> email: Sends Emails\n[SMTP/TCP/IP]
 
 
-api -[dashed]----> database : SQL/TCP\n[JDBC]
+reactPage <--> frontend: Uses website and delivers it\n[HTML/CSS/JS]
+
+reactPage_mobile <--> frontend: Uses website and delivers it\n[HTML/CSS/JS]
+
+
 SHOW_LEGEND()
 @endpuml

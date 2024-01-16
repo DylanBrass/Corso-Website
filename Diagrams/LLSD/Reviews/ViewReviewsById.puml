@@ -1,14 +1,15 @@
 @startuml
 title View All Reviews
 
-actor User
+actor Customer
 
+participant "<<View>>\nProfilePage" as Pfp
 
 participant SpecificReviewPage as "<<View>>\n SpecificReviewPage"
 
-participant ShowALlAccountReviewsPage as "<<View>>\n ShowALlAccountReviewsPage"
+participant EditReviewPage as "<<View>>\n EditReviewPage"
 
-participant ManagePinnedReviewsPage as "<<View>>\n ManagePinnedReviewsPage"
+participant "reviewRequest : ReviewRequest" as reviewRequest
 
 participant ReviewController as "<<Controller>>\n ReviewController"
 
@@ -18,22 +19,144 @@ participant ReviewResponse as "reviewResponse: ReviewResponse"
 
 participant ReviewRepository as "<<Repository>> ReviewRepository"
 
-participant Reviews as "review: Review"
+participant Review as "review: Review"
 
 participant Database as "<<MySQL>>\n Database"
 
+participant "reviewDb : Review" as Rdb
+
 participant ReviewResponseMapper as "<<Mapper>>\n ReviewResponseMapper"
+
+participant ReviewRequestMapper as "<<Mapper>>\n ReviewRequestMapper"
+
 
 ref over ReviewController, ReviewService, ReviewRepository, ReviewResponseMapper
 ViewReviews
 end ref
 
-alt User is Admin
+opt
+Customer -> SpecificReviewPage: viewSpecificReviewPage()
+activate SpecificReviewPage
+
+SpecificReviewPage -> ReviewController: GET /api/v1/coReviewServiceo/reviews/{reviewId}
+activate ReviewController
+
+ReviewController -> ReviewService: getReviewById(reviewId, CustomerId)
+activate ReviewService
+
+ReviewService -> ReviewRepository: findByReviewIdAndCustomerId(reviewId)
+activate ReviewRepository
+
+ReviewRepository -> Database: SELECT * FROM reviews WHERE review_id = ? AND Customer_id = ?
+activate Database
+Database --> Review : review: Review
+activate Review
+
+ReviewRepository <-- Review: review: Review
+deactivate Database
+
+ReviewService <-- ReviewRepository: review: Review
+deactivate ReviewRepository
+
+ReviewService -> ReviewResponseMapper: mapReviewToReviewResponse(review)
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponse: ReviewResponse
+activate ReviewResponse
+deactivate Review
+
+
+deactivate ReviewResponseMapper
+
+ReviewService <-- ReviewResponse: reviewResponse: ReviewResponse
+
+
+ReviewController <-- ReviewService: reviewResponse: ReviewResponse
+deactivate ReviewService
+
+ReviewController -> SpecificReviewPage: reviewResponse: ReviewResponse
+deactivate ReviewResponse
+opt
+
+
+Customer -> Pfp : UpdateReview()
+activate Pfp
+
+
+Pfp -> EditReviewPage : Render()
+activate EditReviewPage
+
+EditReviewPage -> reviewRequest : PUT api/v1/coReviewServiceo/reviews/{reviewId}
+activate reviewRequest
+
+reviewRequest -> ReviewController
+
+
+ReviewController -> ReviewService : updateReview(reviewId, reviewRequest)
+activate ReviewService
+
+ReviewService -> ReviewRequestMapper : mapToReview(reviewRequest)
+activate ReviewRequestMapper
+
+ReviewRequestMapper -> Review: review: Review
+
+deactivate reviewRequest
+deactivate ReviewRequestMapper
+
+activate Review
+
+Review -> ReviewService : review : Review
+
+
+
+ReviewService -> ReviewRepository: save(review)
+activate ReviewRepository
+deactivate Review
+
+ReviewRepository -> Database: UPDATE review SET review_date = :reviewDate, message = :message, review_rating = :reviewRating, WHERE user_id = :userId AND review_id = :reviewId;
+activate Database
+
+Database -> Rdb: reviewDb : Review
+deactivate Database
+
+activate Rdb
+Rdb -> ReviewRepository: reviewDb : Review
+
+ReviewRepository -> ReviewService: reviewDb : Review
+deactivate ReviewRepository
+ReviewService -> ReviewResponseMapper: mapToReviewResponse(review)
+deactivate Rdb
+activate ReviewResponseMapper
+
+
+ReviewResponseMapper --> ReviewResponse: ReviewResponse
+deactivate ReviewResponseMapper
+activate ReviewResponse
+
+ReviewResponse --> ReviewService : reviewResponse : ReviewResponse
+
+ReviewService --> ReviewController: reviewResponse : ReviewResponse
+
+
+ReviewController --> EditReviewPage: reviewResponse : ReviewResponse
+
+EditReviewPage --> SpecificReviewPage: render()
+deactivate ReviewResponse
+
+deactivate ReviewController
 
 
 
 
-else User is Customer
+end opt
+
+deactivate EditReviewPage
+
+deactivate Pfp
+
+deactivate SpecificReviewPage
+
+deactivate Customer
 
 end
 

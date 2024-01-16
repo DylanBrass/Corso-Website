@@ -66,7 +66,7 @@ function ManageReviews() {
 
         await
             axios
-                .patch(`http://localhost:8080/api/v1/corso/reviews/${reviewId}`, {
+                .patch(process.env.REACT_APP_BE_HOST+`api/v1/corso/reviews/${reviewId}`, {
                     pinned: !reviews.find((review) => review.reviewId === reviewId)?.pinned,
                 }, {
                     headers: {
@@ -109,7 +109,7 @@ function ManageReviews() {
     const fetchReviews = async (pageNumber: number, size: number) => {
         try {
 
-            let reviewUrl = `http://localhost:8080/api/v1/corso/reviews?pageSize=${size}&offset=${(pageNumber - 1) * size}`;
+            let reviewUrl = process.env.REACT_APP_BE_HOST+`api/v1/corso/reviews?pageSize=${size}&offset=${(pageNumber - 1) * size}`;
 
             if (searchTerm.trim()) {
                 reviewUrl += `&customerFullName=${searchTerm}`;

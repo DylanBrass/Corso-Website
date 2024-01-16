@@ -28,6 +28,11 @@ participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
 
 participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
 
+ref over Dashboard, EditCarouselOrder, OrderResponseMapper, OrderRequestMapper
+    ViewCarousel
+end ref
+
+opt
 Admin -> Dashboard : EditCarouselOrder()
 
 activate Dashboard
@@ -105,5 +110,5 @@ OrderController --> OrderRequest : orderResponses : List<OrderResponse>
 OrderRequest --> EditOrderOfCarousel : orderResponses : List<OrderResponse>
 
 destroy OrderResponse
-
+end opt
 @endpuml

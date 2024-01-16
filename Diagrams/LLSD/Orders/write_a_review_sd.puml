@@ -28,10 +28,6 @@ participant "ReviewResponseMapper" as RresM
 
 participant "ReviewRequestMapper" as RreqM
 
-ref over Pfp, Wrp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
-    ViewOrders
-end ref
-
 
 ref over Pfp, Wrp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
     ViewOrderById
