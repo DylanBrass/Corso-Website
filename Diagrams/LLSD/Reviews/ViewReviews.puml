@@ -24,8 +24,10 @@ participant ReviewResponses as "all: List<ReviewResponse>"
 participant ReviewRepository as "<<Repository>> ReviewRepository"
 
 participant Reviews as "all: List<Review>"
+participant Review as "review: Review"
 
 participant Reviewdb as "reviewDbs: List<Review>"
+participant ReviewdbOne as "reviewDb: Review"
 
 participant Database as "<<MySQL>>\n Database"
 
@@ -215,51 +217,51 @@ end alt
 opt
 
 
-        ManagePinnedReviewsPage -> ReviewRequest : GET /api/faqs/review/pinned
+        ManagePinnedReviewsPage -> ReviewRequest : PATCH /api/faqs/review/{reviewId} HTTP/1.1
         activate ReviewRequest
-        ReviewRequest -> ReviewController : chooseViewableReview(ReviewUpdateRequest reviewUpdateRequest)
+        ReviewRequest -> ReviewController : chooseViewableReview(reviewId,ReviewUpdateRequest reviewUpdateRequest)
 
         activate ReviewController
         ReviewController -> ReviewService : chooseViewableReview()
         activate ReviewService
 
-        ReviewService -> "ReviewRequestMapper" : mapToReview(ReviewUpdateRequest reviewUpdateRequest)
+        ReviewService -> "ReviewRequestMapper" : mapToReview(reviewId, ReviewUpdateRequest reviewUpdateRequest)
         activate ReviewRequestMapper
 
-        "ReviewRequestMapper" -> Reviews : reviews: List<Reviews>
+        "ReviewRequestMapper" -> Review : review: Reviews
         deactivate ReviewRequest
         deactivate ReviewRequestMapper
 
-        activate Reviews
-        Reviews -> "ReviewService" : reviews : List<Review>
+        activate Review
+        Review -> "ReviewService" : review : Review
 
-        "ReviewService" -> "ReviewRepository" : saveAll(List<Review> reviews)
-        deactivate Reviews
+        "ReviewService" -> "ReviewRepository" : save(review)
+        deactivate Review
         activate ReviewRepository
 
         "ReviewRepository" -> "Database" : UPDATE review SET pinned = :pinned WHERE review_id = :reviewId
         activate Database
 
-        "Database" -> "Reviewdb" : reviewDbs : List<Review>
+        "Database" -> ReviewdbOne : reviewDbs : List<Review>
         deactivate Database
 
-        activate Reviewdb
-        Reviewdb -> ReviewRepository : reviewDbs : List<Review>
+        activate ReviewdbOne
+        ReviewdbOne -> ReviewRepository : reviewDb : Review
 
-        ReviewRepository -> ReviewService : reviewsDbs : List<Review>
+        ReviewRepository -> ReviewService : ReviewdbOne : Review
         deactivate ReviewRepository
 
-        ReviewService -> "ReviewResponseMapper" : mapToReviewResponses(List<Review> reviewDbs)
-        deactivate Reviewdb
+        ReviewService -> "ReviewResponseMapper" : mapToReviewResponses(Review reviewDb)
+        deactivate ReviewdbOne
 
         activate ReviewResponseMapper
-        "ReviewResponseMapper" --> ReviewResponse : List<ReviewResponse>
+        "ReviewResponseMapper" --> ReviewResponse : ReviewResponse
         deactivate ReviewResponseMapper
 
         activate ReviewResponse
-        ReviewResponse --> ReviewService : reviewResponses : List<ReviewResponse>
-        ReviewService --> ReviewController : reviewResponses : List<ReviewResponse>
-        ReviewController --> ManagePinnedReviewsPage : reviewResponses : List<ReviewResponse>
+        ReviewResponse --> ReviewService : reviewResponse : ReviewResponse
+        ReviewService --> ReviewController : reviewResponse : ReviewResponse
+        ReviewController --> ManagePinnedReviewsPage : reviewResponse : ReviewResponse
         deactivate ReviewResponse
 
         deactivate ReviewService
@@ -279,7 +281,7 @@ deactivate ReviewController
 deactivate ManagePinnedReviewsPage
 
 deactivate AdminDashboard
-else User is not logged in
+else User is on main page
     User -> LandingPage: viewAllPinnedReviews()
     activate LandingPage
     LandingPage -> ReviewController: GET api/v1/corso/reviews/pinned HTTP/1.1

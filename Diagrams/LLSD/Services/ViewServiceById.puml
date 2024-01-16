@@ -1,0 +1,128 @@
+@startuml
+
+
+actor User
+
+participant ManageServicesPage as "<<View>>\nManageServicesPage"
+
+participant EditSpecificService as "<<View>>\nEditSpecificService"
+
+participant HomePage as "<<View>>\nHomePage"
+
+participant ServiceDetailsPage as "<<View>>\nServiceDetailsPage"
+
+participant ServiceController as "<<Controller>>\nServiceController"
+
+participant ServiceService as "<<Service>>\nServiceService"
+
+participant all as "all:List<Service>"
+
+participant Service as "service:Service"
+
+participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant allResponse as "allResponse:List<ServiceResponse>"
+
+participant ServiceResponse as "response:ServiceResponse"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant ServiceResponseMapper as "<<Mapper>>\nServiceResponseMapper"
+
+ref over User, ServiceController, ServiceService, ServiceResponseMapper
+ViewServices
+end
+
+opt
+
+alt User is Customer
+User -> HomePage:ViewServiceDetails()
+activate HomePage
+HomePage -> ServiceDetailsPage: render()
+
+activate ServiceDetailsPage
+
+ServiceDetailsPage -> ServiceController: GET /api/v1/corso/services/{id} HTTP/1.1
+activate ServiceController
+
+
+
+else User is Admin
+
+User -> ManageServicesPage:ViewServiceDetails()
+
+activate ManageServicesPage
+
+ManageServicesPage -> EditSpecificService
+activate EditSpecificService
+
+EditSpecificService -> ServiceController: GET /api/v1/corso/services/{id} HTTP/1.1
+
+
+
+
+end
+
+
+ServiceController -> ServiceService: getServiceById(id)
+
+activate ServiceService
+
+ServiceService -> ServiceRepository: findById(id)
+
+activate ServiceRepository
+
+ServiceRepository -> Database: SELECT * FROM service WHERE id = ?
+
+activate Database
+
+Database --> ServiceRepository: Service
+
+deactivate Database
+
+ServiceRepository --> Service: Service
+deactivate ServiceRepository
+
+activate Service
+
+Service --> ServiceService: service:Service
+
+
+
+
+
+
+ServiceService -> ServiceResponseMapper: mapToResponse(Service)
+
+
+deactivate Service
+activate ServiceResponseMapper
+
+ServiceResponseMapper --> ServiceResponse: ServiceResponse
+
+activate ServiceResponse
+
+deactivate ServiceResponseMapper
+
+ServiceResponse --> ServiceService: response:ServiceResponse
+
+ServiceService --> ServiceController: response:ServiceResponse
+
+deactivate ServiceService
+
+
+alt User is Customer
+ServiceController -> ServiceDetailsPage: render(response:ServiceResponse)
+else User is Admin
+ServiceController -> ManageServicesPage: render(response:ServiceResponse)
+end
+
+
+deactivate ServiceResponse
+deactivate ServiceController
+deactivate ServiceDetailsPage
+end opt
+
+
+
+@enduml

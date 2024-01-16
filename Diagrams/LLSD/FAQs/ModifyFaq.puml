@@ -1,0 +1,101 @@
+@startuml
+actor Admin
+
+participant "Dashboard" as DashB
+
+participant "ModifyAFAQ" as ModFAQP
+
+participant "faqRequest : FAQRequest" as Fq
+
+participant "FAQController" as Fc
+
+participant "faqResponse : FAQResponse" as Fr
+
+participant "FAQService" as Fs
+
+
+participant "faq : FAQ" as F
+
+
+participant "FAQRepository" as Frep
+
+participant "faqDb : FAQ" as Fdb
+
+participant "Database" as Db
+
+participant "FAQResponseMapper" as FresM
+
+participant "FAQRequestMapper" as FreqM
+
+
+ref over FreqM, FreqM, F, Fc, Fs, Frep, FresM, Fr, Db, Fdb, ModFAQP, DashB
+
+ViewFaqById
+
+end
+
+
+opt
+Admin -> DashB : ModifyFAQ()
+activate DashB
+
+DashB -> ModFAQP : Render()
+activate ModFAQP
+
+ModFAQP -> Fq : PUT api/v1/corso/faq/{faqId}
+activate Fq
+
+Fq -> Fc
+
+activate Fc
+
+Fc -> Fs : modifyFAQ(faqId, faqRequest)
+activate Fs
+
+Fs -> FreqM : mapToFAQ(faqRequest)
+activate FreqM
+
+FreqM -> F: FAQ
+
+deactivate Fq
+deactivate FreqM
+
+activate F
+
+F -> Fs : faq : FAQ
+
+
+
+Fs -> Frep: save(faq)
+deactivate F
+
+Frep -> Db: UPDATE faqs SET question = :question, answer = :answer, preference = :preference WHERE faq_id = :faqId;
+activate Db
+
+Db -> Fdb: faqDb : FAQ
+deactivate Db
+
+activate Fdb
+Fdb -> Frep: faqDB : FAQ
+
+Frep -> Fs: faqDB : FAQ
+deactivate Frep
+Fs -> FresM: mapToFAQResponse(faq)
+deactivate Fdb
+activate FresM
+
+
+FresM --> Fr: FerviceResponse
+deactivate FresM
+activate Fr
+
+Fr --> Fs : faqResponse : FAQResponse
+
+Fs --> Fc: faqResponse : FAQResponse
+
+
+Fc --> ModFAQP: faqResponse : FAQResponse
+
+deactivate Fr
+end opt
+@enduml

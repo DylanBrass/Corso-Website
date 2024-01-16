@@ -55,7 +55,7 @@ GalleryRepository --> Gallery: Gallery
 activate Gallery
 Gallery --> GalleryService: all: Gallery
 
-destroy GalleryRepository
+deactivate GalleryRepository
 
 GalleryService -> GalleryResponseMapper: mapToGalleryResponse(Gallery gallery)
 
@@ -65,22 +65,22 @@ GalleryResponseMapper --> GalleryResponse: all: Gallery: gallery
 
 activate GalleryResponse
 
-destroy GalleryResponseMapper
+deactivate GalleryResponseMapper
 
 GalleryResponse --> GalleryService: Gallery: gallery
 
 GalleryService --> GalleryController: Gallery: gallery
 
-destroy GalleryService
+deactivate GalleryService
 
 GalleryController --> EditGalleryPage: Gallery: gallery
 
-destroy GalleryResponse
-destroy GalleryController
+deactivate GalleryResponse
+deactivate GalleryController
 
 Admin -> EditGalleryPage: Back()
 
 EditGalleryPage --> Dashboard: render()
-destroy EditGalleryPage
+deactivate EditGalleryPage
 end opt
 @enduml

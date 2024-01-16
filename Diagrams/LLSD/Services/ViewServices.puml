@@ -1,0 +1,99 @@
+@startuml
+
+title View Service Section Use Case Sequence Diagram
+
+actor User
+
+participant HomePage as "<<View>>\nHomePage"
+
+participant Dashboard as "<<View>>\nDashboard"
+
+participant ManageAllServices as "<<View>>\nManageAllServices"
+
+
+participant ServiceController as "<<Controller>>\nServiceController"
+
+participant ServiceService as "<<Service>>\nServiceService"
+
+participant all as "all:List<Service>"
+
+participant Service as "service:Service"
+
+participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant allResponse as "allResponse:List<ServiceResponse>"
+
+participant ServiceResponse as "response:ServiceResponse"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant ServiceResponseMapper as "<<Mapper>>\nServiceResponseMapper"
+
+alt User is Customer
+User -> HomePage:ViewServiceCard()
+activate HomePage
+
+HomePage -> ServiceController: GET /api/v1/corso/services/card HTTP/1.1
+activate ServiceController
+
+else User is Admin
+
+User -> Dashboard:ViewServiceCard()
+
+activate Dashboard
+
+Dashboard -> ManageAllServices
+
+activate ManageAllServices
+
+ManageAllServices -> ServiceController: GET /api/v1/corso/services/card HTTP/1.1
+
+end
+
+
+
+
+ServiceController -> ServiceService: getServicesCard()
+
+activate ServiceService
+
+ServiceService -> ServiceRepository: findAll()
+
+activate ServiceRepository
+
+ServiceRepository -> Database: SELECT * FROM service
+
+activate Database
+
+Database --> ServiceRepository: List<Service>
+
+deactivate Database
+
+ServiceRepository --> all : List<Service>
+deactivate ServiceRepository
+activate all
+
+all --> ServiceService: all:List<Service>
+
+ServiceService -> ServiceResponseMapper: mapToResponse(all)
+deactivate all
+activate ServiceResponseMapper
+ServiceResponseMapper --> allResponse: List<ServiceResponse>
+activate allResponse
+deactivate ServiceResponseMapper
+allResponse --> ServiceService: allResponse:List<ServiceResponse>
+ServiceService --> ServiceController: allResponse:List<ServiceResponse>
+deactivate ServiceService
+
+alt User is Customer
+ServiceController --> HomePage: allResponse:List<ServiceResponse>
+deactivate HomePage
+else User is Admin
+ServiceController --> ManageAllServices: allResponse:List<ServiceResponse>
+end
+
+deactivate allResponse
+deactivate ServiceController
+
+
+@endpuml

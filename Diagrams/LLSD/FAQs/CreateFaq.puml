@@ -1,0 +1,93 @@
+@startuml
+
+actor User
+
+participant "Dashboard" as Dashboard
+participant "WriteFAQPage" as WriteFAQPage
+participant "faqRequest : FAQRequest" as FAQRquest
+participant "FAQController" as FAQController
+participant "faqResponse : FAQResponse" as FAQRsponse
+participant "FAQService" as FAQService
+participant "faq : FAQ" as Fq
+participant "FAQRepository" as FAQRpository
+participant "faqDb : FAQ" as Fdb
+participant "Database" as Db
+participant "FAQResponseMapper" as FAQRsponseMapper
+participant "FAQRequestMapper" as FAQRquestMapper
+
+
+
+ref over Dashboard, WriteFAQPage, FAQRquest, FAQController, FAQRsponse, FAQService, Fq, FAQRpository, Fdb, Db, FAQResponseMapper, FAQRequestMapper
+    ViewFAQs
+end ref
+
+opt
+User -> Dashboard: WriteFAQPage()
+activate Dashboard
+
+Dashboard -> WriteFAQPage: Render()
+activate WriteFAQPage
+
+User -> WriteFAQPage: SubmitReview()
+
+WriteFAQPage -> FAQRquest: POST /api/v1/corso/faq
+activate FAQRquest
+
+FAQRquest -> FAQController: faqRequest : FAQRequest
+activate FAQController
+
+FAQController -> FAQService: createFAQ()
+activate FAQService
+
+FAQService -> Db : SELECT CASE WHEN EXISTS ( SELECT 1 FROM faqs WHERE faq_id = faqRequest.faq_id)
+activate Db
+Db --> FAQRpository: bool:Boolean
+activate FAQRpository
+deactivate Db
+
+FAQRpository --> FAQService: bool:Boolean
+deactivate FAQRpository
+
+FAQService -> FAQRquestMapper: mapToFAQ(faqRequest)
+activate FAQRquestMapper
+
+FAQRquestMapper -> Fq: FAQ
+deactivate FAQRquest
+deactivate FAQRquestMapper
+activate Fq
+
+Fq -> FAQService : faq : FAQ
+FAQService -> FAQRpository: save(faq)
+activate FAQRpository
+deactivate Fq
+
+FAQRpository -> Db: INSERT INTO FAQ (...) VALUES (...)
+activate Db
+
+Db -> Fdb: faqDb : FAQ
+activate Fdb
+
+deactivate Db
+
+Fdb -> FAQRpository: faqDb : FAQ
+FAQRpository -> FAQService: faqDb : FAQ
+deactivate FAQRpository
+FAQService -> FAQResponseMapper: mapToFAQResponse(faq)
+deactivate Fdb
+activate FAQResponseMapper
+
+FAQResponseMapper --> FAQRpository: FAQResponse
+deactivate FAQResponseMapper
+activate FAQRpository
+
+FAQRpository --> FAQService : faqResponse : FAQResponse
+FAQService --> FAQController: faqResponse : FAQResponse
+FAQController --> WriteFAQPage: faqResponse : FAQResponse
+deactivate FAQRpository
+
+deactivate FAQService
+deactivate FAQController
+deactivate WriteFAQPage
+deactivate Dashboard
+end
+@enduml
