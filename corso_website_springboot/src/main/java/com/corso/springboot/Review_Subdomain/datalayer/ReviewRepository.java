@@ -21,7 +21,7 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     List<Review> findAllByUserId(String userId);
 
-    @Query(value = "SELECT * FROM reviews ORDER BY pinned LIMIT :#{#pageSize} OFFSET :#{#offset}", nativeQuery = true)
+    @Query(value = "SELECT * FROM reviews ORDER BY pinned DESC LIMIT :#{#pageSize} OFFSET :#{#offset}", nativeQuery = true)
     List<Review> findAllReviews(@Param("pageSize") int pageSize, @Param("offset") int offset);
 
 
