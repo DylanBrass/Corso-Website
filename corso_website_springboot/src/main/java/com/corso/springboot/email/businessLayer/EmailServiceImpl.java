@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true"); //TLS
+        prop.put("mail.smtp.starttls.enable", "true");
 
         session = javax.mail.Session.getInstance(prop,
                 new javax.mail.Authenticator() {
@@ -110,14 +110,10 @@ public class EmailServiceImpl implements EmailService {
 
 
             Transport.send(message);
-
-            //if no error is thrown, return 200
             return HttpStatus.SC_OK;
         } catch (MessagingException e) {
-            //if an error is thrown, return 500
             throw new MessagingException();
         } catch (Exception e) {
-            //if an error is thrown, return 500
             log.error(e.getMessage());
             return HttpStatus.SC_UNPROCESSABLE_ENTITY;
         }
