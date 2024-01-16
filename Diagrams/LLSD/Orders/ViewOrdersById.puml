@@ -10,6 +10,9 @@ participant viewOrdersDetailsAdmin as "<<View>>\nviewOrdersDetailsAdmin"
 
 participant viewOrdersDetailsCustomers as "<<View>>\nviewOrdersDetailsCustomers"
 
+participant AcceptOrderRequest as "acceptOrderRequest: AcceptOrderRequest"
+
+
 participant DeclineOrderRequest as "declineOrderRequest: DeclineOrderRequest"
 
 participant CancelOrderRequest as "cancelOrderRequest: CancelOrderRequest"
@@ -110,16 +113,16 @@ alt if order status is pending
 
 opt
 
+User -> viewOrdersDetailsAdmin: updateOrderStatusToAccepted()
+activate viewOrdersDetailsAdmin
 
-User -> viewOrdersDetailsAdmin: updateOrderStatusToCancelled()
+viewOrdersDetailsAdmin -> AcceptOrderRequest: PATCH /api/v1/corso/orders/manage/acceptOrder/{orderId}
+activate AcceptOrderRequest
 
-viewOrdersDetailsAdmin -> DeclineOrderRequest: PATCH /api/v1/corso/orders/manage/cancelOrder/{orderId}
-activate DeclineOrderRequest
-
-DeclineOrderRequest -> OrderController
+AcceptOrderRequest -> OrderController
 activate OrderController
 
-OrderController -> OrderService: updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest)
+OrderController -> OrderService: updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest)
 activate OrderService
 
 OrderService -> OrderRepository: findByOrderId_OrderId(orderId)
@@ -135,10 +138,10 @@ OrderRepository <-- Order: order: Order
 OrderService <-- OrderRepository: order: Order
 deactivate OrderRepository
 
-OrderService -> EmailService: sendEmail(declineOrderRequest.getRecipient(), String, String, Map<String, String>)
+OrderService -> EmailService: sendEmail(acceptOrderRequest.getRecipient(), String, String, Map<String, String>)
 activate EmailService
 deactivate EmailService
-deactivate DeclineOrderRequest
+deactivate AcceptOrderRequest
 
 OrderService -> OrderRepository: save(order: Order)
 deactivate Order
@@ -169,7 +172,6 @@ OrderService --> OrderController: response: OrderResponse
 OrderController --> viewOrdersDetailsAdmin: response: OrderResponse
 
 deactivate Response
-
 
 
 

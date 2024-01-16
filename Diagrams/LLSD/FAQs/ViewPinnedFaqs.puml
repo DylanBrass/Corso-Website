@@ -1,0 +1,69 @@
+@startuml
+actor User
+
+participant HomePage as "<<View>>\nHomePage"
+
+participant ViewAllFaqPage as "<<View>>\nViewAllFaqPage"
+
+participant FaqController as "<<Controller>>\nFaqController"
+
+participant FaqService as "<<Service>>\nFaqService"
+
+participant allFaq as "all:List<Faq>"
+
+participant FaqRepository as "<<Repository>>\nFaqRepository"
+
+participant allResponse as "allResponse:List<FaqResponse>"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant FaqResponseMapper as "<<Mapper>>\nFaqResponseMapper"
+
+User -> HomePage: viewTopFaq()
+activate HomePage
+HomePage -> FaqController: GET /api/v1/faq/pinned HTTP/1.1
+activate FaqController
+FaqController -> FaqService: getTopPinnedFaq()
+activate FaqService
+FaqService -> FaqRepository: findByPreferedTrue()
+activate FaqRepository
+FaqRepository -> Database: SELECT * FROM faq WHERE prefered = true
+activate Database
+Database --> FaqRepository: List<Faq>
+deactivate Database
+FaqRepository --> allFaq: List<Faq>
+activate allFaq
+
+allFaq --> FaqService: all:List<Faq>
+
+deactivate FaqRepository
+
+FaqService -> FaqResponseMapper: mapToResponse(all)
+deactivate allFaq
+activate FaqResponseMapper
+
+FaqResponseMapper --> allResponse: List<FaqResponse>
+
+activate allResponse
+
+allResponse --> FaqService: allResponse:List<FaqResponse>
+deactivate FaqResponseMapper
+
+FaqService --> FaqController: allResponse:List<FaqResponse>
+
+deactivate FaqService
+
+FaqController --> HomePage: allResponse:List<FaqResponse>
+deactivate allResponse
+
+deactivate FaqController
+
+opt
+ref over HomePage, FaqController, FaqService, FaqRepository, Database, allFaq, allResponse
+    ViewFaqs
+
+end
+end opt
+
+
+@enduml

@@ -54,8 +54,8 @@ activate RreqM
 
 RreqM -> R: Review
 
-destroy Rq
-destroy RreqM
+deactivate Rq
+deactivate RreqM
 
 activate R
 
@@ -64,7 +64,7 @@ R -> Rs : review : Review
 
 
 Rs -> Rrep: save(review)
-destroy R
+deactivate R
 
 Rrep -> Db: UPDATE review SET review_date = :reviewDate, message = :message, review_rating = :reviewRating, WHERE user_id = :userId AND review_id = :reviewId;
 activate Db
@@ -76,9 +76,9 @@ activate Rdb
 Rdb -> Rrep: reviewDb : Review
 
 Rrep -> Rs: reviewDb : Review
-destroy Rrep
+deactivate Rrep
 Rs -> RresM: mapToReviewResponse(review)
-destroy Rdb
+deactivate Rdb
 activate RresM
 
 
@@ -86,7 +86,7 @@ RresM --> Rr: ReviewResponse
 
 
 
-destroy RresM
+deactivate RresM
 activate Rr
 
 Rr --> Rs : reviewResponse : ReviewResponse
@@ -98,7 +98,7 @@ Rc --> Urp: reviewResponse : ReviewResponse
 
 
 
-destroy Rr
+deactivate Rr
 
 end opt
 

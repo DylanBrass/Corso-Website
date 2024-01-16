@@ -59,8 +59,8 @@ activate GreqM
 
 GreqM -> G: Gallery
 
-destroy Gq
-destroy GreqM
+deactivate Gq
+deactivate GreqM
 
 activate G
 
@@ -69,7 +69,7 @@ G -> Gs : gallery : Gallery
 
 
 Gs -> Grep: save(gallery)
-destroy G
+deactivate G
 
 Grep -> Db: INSERT INTO galleries (...) VALUES (...)
 activate Db
@@ -81,14 +81,14 @@ activate Gdb
 Gdb -> Grep: galleryDb : Gallery
 
 Grep -> Gs: galleryDb : Gallery
-destroy Grep
+deactivate Grep
 Gs -> GresM: mapToGalleryResponse(gallery)
-destroy Gdb
+deactivate Gdb
 activate GresM
 
 
 GresM --> Gr: GalleryResponse
-destroy GresM
+deactivate GresM
 activate Gr
 
 Gr --> Gs : galleryResponse : GalleryResponse
@@ -98,6 +98,6 @@ Gs --> Rc: galleryResponse : GalleryResponse
 
 Rc --> Wrp: galleryResponse : GalleryResponse
 
-destroy Gr
+deactivate Gr
 end opt
 @enduml

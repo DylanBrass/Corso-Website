@@ -59,9 +59,9 @@ activate OrderRequestMapper
 
 OrderRequestMapper -> Order : List<Order>
 
-destroy OrderRequest
+deactivate OrderRequest
 
-destroy OrderRequestMapper
+deactivate OrderRequestMapper
 
 activate Order
 
@@ -69,7 +69,7 @@ Order -> OrderService: orders : List<Order>
 
 OrderService -> OrderRepository : saveAll(List<Order> orders)
 
-destroy Order
+deactivate Order
 
 activate OrderRepository
 
@@ -87,17 +87,17 @@ orderDb --> OrderRepository : orderDbs : List<Order>
 
 OrderRepository -> OrderService : orderDbs : List<Order>
 
-destroy OrderRepository
+deactivate OrderRepository
 
 OrderService -> OrderResponseMapper : mapToGalleriesResponse(List<Order> orders)
 
-destroy orderDb
+deactivate orderDb
 
 activate OrderResponseMapper
 
 OrderResponseMapper --> OrderResponse : List<OrderResponse>
 
-destroy OrderResponseMapper
+deactivate OrderResponseMapper
 
 activate OrderResponse
 
@@ -109,6 +109,6 @@ OrderController --> OrderRequest : orderResponses : List<OrderResponse>
 
 OrderRequest --> EditOrderOfCarousel : orderResponses : List<OrderResponse>
 
-destroy OrderResponse
+deactivate OrderResponse
 end opt
 @endpuml

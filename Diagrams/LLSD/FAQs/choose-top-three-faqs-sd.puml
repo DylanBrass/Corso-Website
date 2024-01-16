@@ -26,6 +26,12 @@ participant FaqResponseMapper as "FaqResponseMapper"
 
 participant FaqRequestMapper as "FaqRequestMapper"
 
+ref over Admin, Dashboard, EditFaqPage, FaqRequest, FaqController, FaqResponse, FaqService, Faq, FaqRepository, Faqdb, Database, FaqResponseMapper, FaqRequestMapper
+    ViewFaqs
+end
+
+
+opt
 Admin -> Dashboard: ChooseTopThreeFaqs()
 activate Dashboard
 
@@ -44,14 +50,14 @@ FaqService -> "FaqRequestMapper" : mapToFaq(List<ThreeFaqsRequest> threeFaqsRequ
 activate FaqRequestMapper
 
 "FaqRequestMapper" -> Faq : List<Faqs>
-destroy FaqRequest
-destroy FaqRequestMapper
+deactivate FaqRequest
+deactivate FaqRequestMapper
 
 activate Faq
 Faq -> "FaqService" : faqs : List<Faq>
 
 "FaqService" -> "FaqRepository" : saveAll(List<Faq> faqs)
-destroy Faq
+deactivate Faq
 activate FaqRepository
 
 "FaqRepository" -> "Database" : UPDATE faq SET faq_preference = :faqPreference WHERE faq_id = :faqId
@@ -64,19 +70,19 @@ activate Faqdb
 Faqdb -> FaqRepository : faqDbs : List<Faq>
 
 FaqRepository -> FaqService : faqsDbs : List<Faq>
-destroy FaqRepository
+deactivate FaqRepository
 
 FaqService -> "FaqResponseMapper" : mapToFaqsResponses(List<Faq> faqDbs)
-destroy Faqdb
+deactivate Faqdb
 
 activate FaqResponseMapper
 "FaqResponseMapper" --> FaqResponse : List<FaqResponse>
-destroy FaqResponseMapper
+deactivate FaqResponseMapper
 
 activate FaqResponse
 FaqResponse --> FaqService : faqResponses : List<FaqResponse>
 FaqService --> FaqController : faqResponses : List<FaqResponse>
 FaqController --> EditFaqPage : faqResponses : List<FaqResponse>
-destroy FaqResponse
-
+deactivate FaqResponse
+end
 @enduml

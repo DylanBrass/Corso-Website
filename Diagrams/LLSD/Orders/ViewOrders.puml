@@ -58,31 +58,31 @@ OrderRepository --> allOrders : List<Order>
 activate allOrders
 allOrders --> OrderService: all: List<Order>
 
-destroy OrderRepository
+deactivate OrderRepository
 
 OrderService -> OrderResponseMapper: mapToOrderResponseList(all)
 
 activate OrderResponseMapper
 
 OrderResponseMapper --> allResponse: List<OrderResponse>
-destroy allOrders
+deactivate allOrders
 
 activate allResponse
 
-destroy OrderResponseMapper
+deactivate OrderResponseMapper
 
 allResponse --> OrderService : all: List<OrderResponse>
 
 OrderService --> OrderController : all: List<OrderResponse>
 
-destroy OrderService
+deactivate OrderService
 
 OrderController --> viewAllActiveOrders : all: List<OrderResponse>
 
-destroy allResponse
-destroy OrderController
+deactivate allResponse
+deactivate OrderController
 
-destroy viewAllActiveOrders
+deactivate viewAllActiveOrders
 deactivate View
 else Admin views all orders by status
 
@@ -144,34 +144,34 @@ OrderRepository --> allOrders : List<Order>
 activate allOrders
 allOrders --> OrderService: all: List<Order>
 
-destroy OrderRepository
+deactivate OrderRepository
 
 OrderService -> OrderResponseMapper: mapToOrderResponseList(all)
 
 activate OrderResponseMapper
 
 OrderResponseMapper --> allResponse: List<OrderResponse>
-destroy allOrders
+deactivate allOrders
 
 activate allResponse
 
-destroy OrderResponseMapper
+deactivate OrderResponseMapper
 
 allResponse --> OrderService : all: List<OrderResponse>
 
 OrderService --> OrderController : all: List<OrderResponse>
 
-destroy OrderService
+deactivate OrderService
 
 OrderController --> viewAllActiveOrders : all: List<OrderResponse>
 
-destroy allResponse
-destroy OrderController
+deactivate allResponse
+deactivate OrderController
 
 Admin -> viewAllActiveOrders: Back()
 
 viewAllActiveOrders --> View: render()
-destroy viewAllActiveOrders
+deactivate viewAllActiveOrders
 
 deactivate View
 

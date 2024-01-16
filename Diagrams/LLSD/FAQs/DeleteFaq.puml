@@ -1,0 +1,51 @@
+@startuml
+title Delete FAQ of FAQ
+
+actor Admin
+
+participant "Dashboard" as Dashboard
+participant "CurrentFAQ" as CurrentFAQ
+participant "FAQController" as FAQController
+participant "FAQService" as FAQService
+participant "FAQRepository" as FAQRepository
+participant "Database" as Db
+
+ref over Dashboard, CurrentFAQ, FAQController, FAQService, FAQRepository, Db
+
+    ViewFaqs
+
+end
+
+
+opt
+Admin -> Dashboard: deleteFAQ(faqId: String)
+activate Dashboard
+
+Dashboard -> CurrentFAQ: render()
+activate CurrentFAQ
+
+CurrentFAQ -> FAQController: DELETE api/v1/corso/faqs/{faqId}
+activate FAQController
+
+FAQController -> FAQService: deleteFAQ(faqId: String)
+activate FAQService
+
+FAQService -> FAQRepository: deleteFAQ(faqId: String)
+activate FAQRepository
+
+FAQRepository -> Db: DELETE FROM faqs WHERE faq_id = faqId
+activate Db
+
+Db --> FAQRepository: void
+deactivate Db
+
+FAQRepository --> FAQService: void
+deactivate FAQRepository
+
+FAQService --> FAQController: void
+deactivate FAQService
+
+FAQController --> CurrentFAQ: void
+deactivate FAQController
+end
+@enduml

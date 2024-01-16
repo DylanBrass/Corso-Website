@@ -1,6 +1,6 @@
 @startuml
 
-title Admin declines request for a customer UC12
+title Admin cancels order for a customer UC12
 
 actor Admin
 
@@ -24,16 +24,16 @@ participant Database as "<<Database>>\nDatabase"
 
 participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
 
-Admin -> SpecificOrderPage: updateOrderStatusToDeclined()
+Admin -> SpecificOrderPage: updateOrderStatusToCancelled()
 activate SpecificOrderPage
 
-SpecificOrderPage -> DeclineOrderRequest: PATCH /api/v1/corso/orders/manage/declineOrder/{orderId}
+SpecificOrderPage -> DeclineOrderRequest: PATCH /api/v1/corso/orders/manage/cancelOrder/{orderId}
 activate DeclineOrderRequest
 
 DeclineOrderRequest -> OrderController
 activate OrderController
 
-OrderController -> OrderService: updateOrderStatusToDeclined(String orderId, DeclineOrderRequest declineOrderRequest)
+OrderController -> OrderService: updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest)
 activate OrderService
 
 OrderService -> OrderRepository: findByOrderId_OrderId(orderId)
@@ -51,11 +51,11 @@ deactivate OrderRepository
 
 OrderService -> EmailService: sendEmail(declineOrderRequest.getRecipient(), String, String, Map<String, String>)
 activate EmailService
-destroy EmailService
-destroy DeclineOrderRequest
+deactivate EmailService
+deactivate DeclineOrderRequest
 
 OrderService -> OrderRepository: save(order: Order)
-destroy Order
+deactivate Order
 activate OrderRepository
 
 OrderRepository -> Database: UPDATE INTO orders (order_id, user_id, status, total_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)
@@ -74,15 +74,15 @@ OrderService --> OrderResponseMapper: map(order: Order)
 activate OrderResponseMapper
 
 OrderResponseMapper --> Response: response: OrderResponse
-destroy Order
-destroy OrderResponseMapper
+deactivate Order
+deactivate OrderResponseMapper
 activate Response
 
 OrderService <-- Response: response: OrderResponse
 OrderService --> OrderController: response: OrderResponse
 OrderController --> SpecificOrderPage: response: OrderResponse
 
-destroy Response
+deactivate Response
 
 
 @enduml

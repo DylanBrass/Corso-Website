@@ -44,7 +44,7 @@ Rrep --> Rs : review: Review
 
 Rs -> Semail : sendEmail(review:Review)
 activate Semail
-destroy Semail
+deactivate Semail
 
 else Review is not Pinned
 

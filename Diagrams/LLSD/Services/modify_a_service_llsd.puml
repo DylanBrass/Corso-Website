@@ -27,6 +27,12 @@ participant "ServiceResponseMapper" as SresM
 
 participant "ServiceRequestMapper" as SreqM
 
+ref over User, DashB, ModServP, Sq, Sc, Sr, Ss, S, Srep, Sdb, Db, SresM, SreqM
+    ViewServiceById
+end ref
+
+opt
+
 User -> DashB : ModifyService()
 activate DashB
 
@@ -48,8 +54,8 @@ activate SreqM
 
 SreqM -> S: Service
 
-destroy Sq
-destroy SreqM
+deactivate Sq
+deactivate SreqM
 
 activate S
 
@@ -58,7 +64,7 @@ S -> Ss : service : Service
 
 
 Ss -> Srep: save(service)
-destroy S
+deactivate S
 
 Srep -> Db: UPDATE service SET service_name = :serviceName, service_description = :serviceDescription, service_icon = :serviceIcon, service_image WHERE user_id = :userId AND review_id = :reviewId
 activate Db
@@ -70,14 +76,14 @@ activate Sdb
 Sdb -> Srep: serviceDb : Service
 
 Srep -> Ss: serviceDb : Service
-destroy Srep
+deactivate Srep
 Ss -> SresM: mapToServiceResponse(service)
-destroy Sdb
+deactivate Sdb
 activate SresM
 
 
 SresM --> Sr: ServiceResponse
-destroy SresM
+deactivate SresM
 activate Sr
 
 Sr --> Ss : serviceResponse : ServiceResponse
@@ -87,6 +93,8 @@ Ss --> Sc: serviceResponse : ServiceResponse
 
 Sc --> ModServP: serviceResponse : ServiceResponse
 
-destroy Sr
+deactivate Sr
+
+end opt
 
 @enduml

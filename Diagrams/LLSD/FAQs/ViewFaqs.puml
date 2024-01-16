@@ -6,6 +6,10 @@ actor User
 
 participant HomePage as "<<View>>\nHomePage"
 
+participant Dashboard as "<<View>>\nDashboard"
+
+participant ManageFaqPage as "<<View>>\nManageFaqPage"
+
 participant ViewAllFaqPage as "<<View>>\nViewAllFaqPage"
 
 participant FaqController as "<<Controller>>\nFaqController"
@@ -22,53 +26,37 @@ participant Database as "<<Database>>\nDatabase"
 
 participant FaqResponseMapper as "<<Mapper>>\nFaqResponseMapper"
 
-User -> HomePage: viewTopFaq()
-activate HomePage
-HomePage -> FaqController: GET /api/v1/faq/pinned HTTP/1.1
-activate FaqController
-FaqController -> FaqService: getTopPinnedFaq()
-activate FaqService
-FaqService -> FaqRepository: findByPreferedTrue()
-activate FaqRepository
-FaqRepository -> Database: SELECT * FROM faq WHERE prefered = true
-activate Database
-Database --> FaqRepository: List<Faq>
-deactivate Database
-FaqRepository --> allFaq: List<Faq>
-activate allFaq
+ref over User, HomePage, ViewAllFaqPage, FaqController, FaqService, allFaq, FaqRepository, allResponse, Database, FaqResponseMapper
+ViewPinnedFaqs
+end ref
 
-allFaq --> FaqService: all:List<Faq>
+opt
 
-destroy FaqRepository
+alt User is Admin
 
-FaqService -> FaqResponseMapper: mapToResponse(all)
-destroy allFaq
-activate FaqResponseMapper
+User -> Dashboard: viewAllFaq()
+activate Dashboard
 
-FaqResponseMapper --> allResponse: List<FaqResponse>
+Dashboard -> ManageFaqPage: render()
 
-activate allResponse
+activate ManageFaqPage
 
-allResponse --> FaqService: allResponse:List<FaqResponse>
-destroy FaqResponseMapper
-
-FaqService --> FaqController: allResponse:List<FaqResponse>
-
-destroy FaqService
-
-FaqController --> HomePage: allResponse:List<FaqResponse>
-destroy allResponse
-
-destroy FaqController
+ManageFaqPage -> FaqController: GET /api/v1/corso/faq HTTP/1.1
 
 
+
+else User is Customer
 User -> HomePage: viewAllFaq()
+activate HomePage
 
 HomePage -> ViewAllFaqPage: render()
 
 activate ViewAllFaqPage
 
 ViewAllFaqPage -> FaqController: GET /api/v1/corso/faq HTTP/1.1
+
+end
+
 
 activate FaqController
 
@@ -115,28 +103,30 @@ FaqService --> FaqController: allResponse:List<FaqResponse>
 
 destroy FaqService
 
-FaqController --> ViewAllFaqPage: allResponse:List<FaqResponse>
+alt User is Admin
+
+FaqController -> ManageFaqPage: render(allResponse)
+
+
+
+else User is Customer
+
+FaqController -> ViewAllFaqPage: render(allResponse)
+
+end
+
+
 destroy allResponse
 
 destroy FaqController
 
-User -> ViewAllFaqPage: back()
-ViewAllFaqPage -> HomePage: render()
 deactivate ViewAllFaqPage
 
 
 
 
 
-
-
-
-
-
-
-
-
-
+end opt
 
 
 @endpuml
