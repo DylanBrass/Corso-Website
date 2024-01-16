@@ -52,22 +52,31 @@ public class EditOrderInformationTest {
             Actions builder = new Actions(driver);
             builder.moveToElement(element, 0, 0).perform();
         }
-        driver.findElement(By.id("profile-image")).click();
-        driver.findElement(By.linkText("View Your Orders")).click();
-        sleep(3000);
-        // click order
-//        driver.findElement(By.cssSelector(".box-body")).click();
-//        driver.findElement(By.cssSelector(".col-12:nth-child(2) > .m-4")).click();
-//        driver.findElement(By.cssSelector(".order-status")).click();
-//        driver.findElement(By.cssSelector(".col-12:nth-child(2) > .m-4")).click();
-//        sleep(3000);
-        driver.findElement(By.id("edit-request")).click();
+        driver.findElement(By.cssSelector(".order-status")).click();
+        sleep(2000);
+        driver.findElement(By.cssSelector(".col-12:nth-child(2) > .m-4")).click();
         driver.findElement(By.id("customerApartment")).click();
+        driver.findElement(By.id("customerApartment")).clear();
         driver.findElement(By.id("customerApartment")).sendKeys("478");
+
         driver.findElement(By.id("customerPostalCode")).click();
+        driver.findElement(By.id("customerPostalCode")).clear();
+
         driver.findElement(By.id("customerPostalCode")).sendKeys("M3C 5C4");
-        sleep(7000);
-        driver.findElement(By.cssSelector("button[type='submit']")).click();
+        driver.findElement(By.cssSelector(".m-3 > button")).click();
+        sleep(15000);
+        assert driver.findElement(By.cssSelector(".swal-title")).isDisplayed();
+        assert driver.findElement(By.cssSelector(".swal-icon--success__ring")).isDisplayed();
+
+        driver.findElement(By.cssSelector(".swal-button")).click();
+
+        sleep(1000);
+        assert driver.findElement(By.id("title")).getText().contains("LRM3KT");
+
+
+
+        driver.findElement(By.cssSelector(".logout-btn-text")).click();
         driver.quit();
+
     }
 }
