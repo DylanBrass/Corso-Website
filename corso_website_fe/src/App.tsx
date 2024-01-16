@@ -31,6 +31,7 @@ import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
 import ViewOnGoingOrderDetailsPage from "./Pages/OrdersPages/ViewOnGoingOrderDetailsPage";
 import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
+import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
 
 
 export default function App() {
@@ -50,6 +51,9 @@ export default function App() {
                         <Route path="/orders/completed" element={<CompletedOrdersPage/>}/>
                         <Route path="/orders/pending" element={<PendingOrdersPage/>}/>
                         <Route path="/orders/overdue" element={<OverdueOrdersPage/>}/>
+
+                        <Route path="/profile/manage/orders/:orderId" element={<UpdateOrder/>}/>
+
                         <Route path="/manage/testimonies" element={<ManageReviews/>}/>
                         <Route path="/carousel/order" element={<EditGallery/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>

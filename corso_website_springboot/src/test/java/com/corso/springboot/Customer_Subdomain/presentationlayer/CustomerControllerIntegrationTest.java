@@ -16,6 +16,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -235,9 +236,10 @@ class CustomerControllerIntegrationTest {
                         .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {
-                                    "reason": "I don't want it anymore"
-                                }"""))
+                                    {
+                                        "reason": "I don't want it anymore"
+                                    }
+                                """))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -252,6 +254,49 @@ class CustomerControllerIntegrationTest {
                                     "reason": "I don't want it anymore"
                                 }"""))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateOrderRequest_ShouldSucceed() throws Exception {
+
+
+        mockMvc.perform(patch(BASE_URI_CUSTOMERS + "/orders/a0119367-4963-4019-b433-ba639fdf6b41")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "customerPhone": "4506597338",
+                                    "customerAddress": "123 Main St",
+                                    "customerCity": "New York",
+                                    "customerPostalCode": "J5R 5J4",
+                                    "customerApartmentNumber": "1"
+                                }"""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerPhone").value("4506597338"))
+                .andExpect(jsonPath("$.customerAddress").value("123 Main St"))
+                .andExpect(jsonPath("$.customerCity").value("New York"))
+                .andExpect(jsonPath("$.customerPostalCode").value("J5R 5J4"));
+
+    }
+
+    @Test
+    void updateOrderRequestWithNotPendingOrder_ShouldReturn422() throws Exception {
+        mockMvc.perform(patch(BASE_URI_CUSTOMERS + "/orders/ac5ca2b4-d53c-4516-8d4b-17665b46f411")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "customerPhone": "4506597338",
+                                    "customerAddress": "123 Main St",
+                                    "customerCity": "New York",
+                                    "customerPostalCode": "J5R 5J4",
+                                    "customerApartmentNumber": "1"
+                                }"""))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.message").value("Order cannot be updated, it is not in pending status, meaning it was accepted or cancelled already!"));
+
     }
 
 

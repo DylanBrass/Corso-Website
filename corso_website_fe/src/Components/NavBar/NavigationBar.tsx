@@ -50,9 +50,10 @@ function NavigationBar() {
                             {
                                 //@ts-ignore
                                 !auth.isAuthenticated &&
-                                <Nav.Item className={"item"} >
+                                <Nav.Item className={"item"}>
                                     <Nav.Link
-                                        href={process.env.REACT_APP_BE_HOST + `oauth2/authorization/okta`} className={"m-auto item-nav-text"}>LOGIN</Nav.Link>
+                                        href={process.env.REACT_APP_BE_HOST + `oauth2/authorization/okta`}
+                                        className={"m-auto item-nav-text"}>LOGIN</Nav.Link>
                                 </Nav.Item>
                             }
                             {
@@ -60,7 +61,8 @@ function NavigationBar() {
                                 auth.isAuthenticated &&
                                 <Nav.Item className={"item"}>
                                     <form method={"post"}
-                                          action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"} className={"m-auto"}>
+                                          action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"}
+                                          className={"m-auto"}>
                                         <button id={"logout-btn"} type={"submit"}>
                                             <span className={"logout-btn-text"}>
                                                 LOGOUT
@@ -74,11 +76,15 @@ function NavigationBar() {
                                     Cookies.get("picture") != null &&
                                     // @ts-ignore
                                     auth.userRoles().includes("Customer") &&
-                                    <Link id={"to-profile"} to={"/profile"} className={"m-auto"}>
-                                        <img src={Cookies.get("picture")}
-                                             alt="See Profile" id={"profile-image"} className={"d-none d-lg-block"}/>
-                                        <Nav.Link href={"/profile"} id={"profile-text"} className={"d-block d-lg-none item item-nav-text"}>PROFILE</Nav.Link>
-                                    </Link>
+                                    <div className={"m-auto"}>
+                                        <Link id={"to-profile"} to={"/profile"} className={"m-auto"}>
+                                            <img src={Cookies.get("picture")}
+                                                 alt="See Profile" id={"profile-image"}
+                                                 className={"d-none d-lg-block"}/>
+                                        </Link>
+                                        <Nav.Link href={"/profile"} id={"profile-text"}
+                                                  className={"d-block d-lg-none item item-nav-text"}>PROFILE</Nav.Link>
+                                    </div>
                                 }
                             </Nav.Item>
                         </div>

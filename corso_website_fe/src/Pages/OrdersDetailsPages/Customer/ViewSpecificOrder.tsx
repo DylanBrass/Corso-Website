@@ -213,10 +213,19 @@ function ViewSpecificOrder() {
                                     }}>Leave a Review
                                     </button>
                                 </div>
-                                <div className={"col-12"}>
-                                    <button className={"m-4 float-end customer-interactions-btn p-2"}>Request Edit
-                                    </button>
-                                </div>
+                                {order.orderStatus.toLowerCase() === "pending" &&
+                                    <div className={"col-12"}>
+                                        <button id={"edit-request"} className={"m-4 float-end customer-interactions-btn p-2"}
+                                                onClick={() => {
+                                                    window.location.href = `/profile/manage/orders/${orderId}`;
+
+                                                }
+                                                }
+                                        >
+                                            Edit Request
+                                        </button>
+                                    </div>
+                                }
                                 {order.orderStatus.toLowerCase() === "pending" &&
 
                                     <Popup trigger={<div className={"col-12"}>

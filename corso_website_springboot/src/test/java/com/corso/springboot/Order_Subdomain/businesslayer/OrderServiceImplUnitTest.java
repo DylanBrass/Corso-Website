@@ -3,10 +3,7 @@ package com.corso.springboot.Order_Subdomain.businesslayer;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
-import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
-import com.corso.springboot.Order_Subdomain.presentationlayer.DeclineOrderRequest;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
+import com.corso.springboot.Order_Subdomain.presentationlayer.*;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
@@ -303,6 +300,7 @@ public class OrderServiceImplUnitTest {
         verify(orderRepository).save(mockOrder);
 
     }
+
     @Test
     public void testCancelByCustomerOrderFailsToSendEmail() throws MessagingException {
         // Arrange
@@ -323,8 +321,7 @@ public class OrderServiceImplUnitTest {
 
         CustomerCancelOrderRequest customerCancelOrderRequest = new CustomerCancelOrderRequest("test");
 
-        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class),any())).thenReturn(500);
-
+        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(500);
 
 
         assertThrows(MessagingException.class, () -> orderService.cancelByCustomerOrderByOrderId(mockOrder.getOrderId().getOrderId(), mockOrder.getUserId(), customerCancelOrderRequest));
@@ -363,5 +360,26 @@ public class OrderServiceImplUnitTest {
         assertNotNull(result);
         assertEquals(Status.CANCELLED, mockOrder.getOrderStatus(), "Order status should be updated to Cancelled");
         verify(orderRepository).save(mockOrder);
+    }
+
+
+    @Test
+    void updateNoneExistentOrder_ShouldThrowOrderNotFoundException() {
+        // Given
+        String orderId = "fake-af";
+
+        OrderCustomerRequest orderCustomerRequest = OrderCustomerRequest.builder()
+                .customerPhone("1234567890")
+                .customerAddress("123 Main St")
+                .customerCity("Montreal")
+                .customerPostalCode("J5R 5J4")
+                .customerApartmentNumber("")
+                .build();
+
+        when(orderRepository.findById(orderId)).thenReturn(null);
+
+        assertThrows(OrderNotFoundException.class, () -> orderService.updateOrderByOrderId(orderId, "userid", orderCustomerRequest));
+
+
     }
 }

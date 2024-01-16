@@ -2,6 +2,7 @@ package com.corso.springboot.Customer_Subdomain.presentationlayer;
 
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrderCustomerRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -116,6 +117,16 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+
+
+    @PreAuthorize("hasAuthority('Customer')")
+    @PatchMapping("/orders/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderByOrderId(@PathVariable String orderId, @RequestBody OrderCustomerRequest customerUpdateOrderRequest, @AuthenticationPrincipal OidcUser principal) throws MessagingException {
+        String userId = principal.getSubject();
+        log.info("Update customer order with userId: {}", userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderByOrderId(orderId, userId, customerUpdateOrderRequest));
+    }
 
 
 }
