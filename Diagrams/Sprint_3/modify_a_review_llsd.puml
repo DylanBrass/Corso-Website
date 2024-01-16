@@ -30,7 +30,8 @@ participant "ReviewRequestMapper" as RreqM
 User -> Pfp : UpdateReview()
 activate Pfp
 
-Pfp -> Urp : UpdateReview()
+
+Pfp -> Urp : Render()
 activate Urp
 
 Urp -> Rq : PUT api/v1/corso/reviews/{reviewId}
@@ -60,7 +61,7 @@ R -> Rs : review : Review
 Rs -> Rrep: save(review)
 destroy R
 
-Rrep -> Db: UPDATE review SET reviewDate = :reviewDate, message = :message, reviewRating = :reviewRating, WHERE userId = :userId AND reviewId = :reviewId;
+Rrep -> Db: UPDATE review SET review_date = :reviewDate, message = :message, review_rating = :reviewRating, WHERE user_id = :userId AND review_id = :reviewId;
 activate Db
 
 Db -> Rdb: reviewDb : Review

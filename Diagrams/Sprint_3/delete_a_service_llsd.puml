@@ -1,0 +1,36 @@
+@startuml
+actor Admin
+
+participant "Dashboard" as DashB
+
+participant "AllServicesPage" as AllServP
+
+participant "ServiceController" as Sc
+
+participant "ServiceService" as Ss
+
+participant "ServiceRepository" as Srep
+
+participant "Database" as Db
+
+Admin -> DashB : deleteAService(serviceId:String)
+
+DashB -> AllServP : render()
+
+AllServP -> Sc : DELETE api/v1/corso/services/{serviceId}
+
+Sc -> Ss : deleteService(serviceId:String)
+
+Ss -> Srep : deleteService(serviceId:String)
+
+Srep -> Db : DELETE FROM services WHERE service_id = serviceId
+
+Db --> Srep : void
+
+Srep --> Ss : void
+
+Ss --> Sc : void
+
+Sc --> AllServP : void
+
+@enduml
