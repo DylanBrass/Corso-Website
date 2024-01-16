@@ -66,7 +66,43 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
 
             Container(layout, "layout.tsx", "Component: React Component", "Layout director.", $sprite="typescript", $tags="typescript")
 
+
+             Container(editReview, "editReview.tsx", "Component: React Component", "Edit review page.", $sprite="typescript", $tags="typescript")
+
+            Container(editFAQ, "editFAQ.tsx", "Component: React Component", "Edit FAQ page.", $sprite="typescript", $tags="typescript")
+
+            Container(editGallery, "editGallery.tsx", "Component: React Component", "Edit gallery page.", $sprite="typescript", $tags="typescript")
+
+            Container(editOrderRequest, "editOrderRequest.tsx", "Component: React Component", "Edit order request page.", $sprite="typescript", $tags="typescript")
+
+            Container(editOrder, "editOrder.tsx", "Component: React Component", "Edit order page.", $sprite="typescript", $tags="typescript")
+
+
+
+            Container(addFaq, "addFaq.tsx", "Component: React Component", "Add FAQ page.", $sprite="typescript", $tags="typescript")
+
+
+            indexJs -[dashed]-> addFaq  : **Imports**
+
+
+
             indexHtml -[dashed]-> indexJs  : **Imports**
+            indexJs -[dashed]-> appJs  : **Imports**
+
+            indexJs -[dashed]-> editReview  : **Imports**
+
+            indexJs -[dashed]-> editFAQ  : **Imports**
+
+            indexJs -[dashed]-> editGallery  : **Imports**
+
+            indexJs -[dashed]-> editOrderRequest  : **Imports**
+
+            indexJs -[dashed]-> editOrder  : **Imports**
+
+
+
+
+
             indexJs -[dashed]-> layout  : **Imports**
             indexJs -[dashed]-> appJs  : **Imports**
             layout -[dashed]-> nav  : **Imports**
@@ -136,6 +172,12 @@ entity "<b>$name</b>" as $slug << (T, Orange) table >>
             Container(adminPastOrders, "adminPastOrders.tsx", "Component: React Component", "Admin past orders page.", $sprite="typescript", $tags="TypeScript")
             Container(adminOrderRequests, "adminOrderRequests.tsx", "Component: React Component", "Admin order requests page.", $sprite="typescript", $tags="TypeScript")
             Container(adminManageOrderRequest, "adminManageOrderRequest.tsx", "Component: React Component", "Admin manage order request page.", $sprite="typescript", $tags="TypeScript")
+
+
+            Container(editService, "editService.tsx", "Component: React Component", "Edit service page.", $sprite="typescript", $tags="TypeScript")
+
+            indexJs -[dashed]-> editService  : **Imports**
+
 
             indexJs -[dashed]-> adminService  : **Imports**
             indexJs -[dashed]-> adminGallery  : **Imports**

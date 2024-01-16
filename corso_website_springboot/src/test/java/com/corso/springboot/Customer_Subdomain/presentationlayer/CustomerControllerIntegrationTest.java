@@ -219,7 +219,8 @@ class CustomerControllerIntegrationTest {
     void customerRequestsToCancelOrderRequest_ShouldSucceed() throws Exception {
         mockMvc.perform(delete(BASE_URI_CUSTOMERS + "/orders/a0119367-4963-4019-b433-ba639fdf6b41")
                         .with(csrf())
-                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
+                                .authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

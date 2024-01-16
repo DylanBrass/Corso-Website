@@ -17,10 +17,7 @@
 
 !include DEVICONS2/npm_original_wordmark.puml
 
-!define RECTANGLE_BORDER_COLOR white
-skinparam rectangle {
-    BorderColor <<RECTANGLE_BORDER_COLOR>>
-}
+
 SetDefaultLegendEntries("")
 
     AddElementTag("java", $shape=EightSidedShape(), $bgColor="Green", $fontColor="white", $legendText="Java File \neight sided")
@@ -59,7 +56,7 @@ SetDefaultLegendEntries("")
 
 
 
-                package "Services"{
+                package "Security_Service"{
                     Container(serviceController, "Service Controller", "Component: Spring Boot Rest Controller", "Allows the customer to view and the admin to view, create, modify or delete a service.", $sprite="java", $tags="java")
                     Container(serviceService, "Service Service", "Component: Spring Boot Service", "Provides the functionalities to get, update, create and delete.", $sprite="java", $tags="java")
                     Container(serviceRepo, "Service Repository", "Component: JPA Repository", "Makes requests to the database to fetch or update data.", $sprite="java", $tags="java")
@@ -108,15 +105,49 @@ SetDefaultLegendEntries("")
                 }
 
                 package "Util"{
+                    Container(globalController, "Global Controller", "Component: Spring Boot Rest Controller", "Provides the functionalities to get the global data.", $sprite="java", $tags="java")
+                }
+
+                package "Email"{
                     Container(mailerService,"Mailer Service", "Component: Spring Boot Service", "Sends emails to the customer.", $sprite="java", $tags="java")
                 }
+
                 package "Configuration"{
                     package "Security"{
                         Container(securityConfig,"Spring Security Configuration", "Component: Spring Boot Configuration Bean", "Configures Amazon Cognito usage in the system.", $sprite="java", $tags="java")
+                        package "Services"{
+                            Container(auth0ManagementService,"Auth0 Management Service", "Component: Spring Boot Service", "Provides the functionalities to get the user data from Auth0.", $sprite="java", $tags="java")
+                            Container(auth0loginService,"Auth0 Login Service", "Component: Spring Boot Service", "Provides the functionalities to login the user using Auth0.", $sprite="java", $tags="java")
+                        }
+
+                        package "Controller"{
+                            Container(ServerController,"Server Controller", "Component: Spring Boot Rest Controller", "Provides the functionalities to get the server data.", $sprite="java", $tags="java")
+                            Container(authController,"Auth Controller", "Component: Spring Boot Rest Controller", "Provides the functionalities to login the user using Auth0.", $sprite="java", $tags="java")
+
+                        }
+
                     }
                 }
+
+securityFilter -[dashed,#RoyalBlue]-> authController  : **Direct Request**
+
+securityFilter -[dashed]-> ServerController  : **Direct Request**
+
+
+                authController -[dashed]-> auth0ManagementService  : **Uses**
+                authController -[dashed]-> auth0loginService  : **Uses**
+
+
+
                 orderService -[dashed]-> mailerService  : **Sends Email using**
                 reviewService -[dashed]-> mailerService  : **Sends Email using**
+
+                orderService -[dashed]-> email  : uses
+                orderService -[dashed]-> auth0ManagementService  : uses
+
+                reviewService -[dashed]-> email  : uses
+
+                customerService -[dashed]-> email  : uses
 
 
 
