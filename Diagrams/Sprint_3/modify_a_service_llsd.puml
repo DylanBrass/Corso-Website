@@ -1,0 +1,92 @@
+@startuml
+actor User
+
+participant "Dashboard" as DashB
+
+participant "ModifyAService" as ModServP
+
+participant "serviceRequest : ServiceRequest" as Sq
+
+participant "ServiceController" as Sc
+
+participant "serviceResponse : ServiceResponse" as Sr
+
+participant "ServiceService" as Ss
+
+
+participant "service : Service" as S
+
+
+participant "ServiceRepository" as Srep
+
+participant "serviceDb : Service" as Sdb
+
+participant "Database" as Db
+
+participant "ServiceResponseMapper" as SresM
+
+participant "ServiceRequestMapper" as SreqM
+
+User -> DashB : ModifyService()
+activate DashB
+
+DashB -> ModServP : Render()
+activate ModServP
+
+ModServP -> Sq : PUT api/v1/corso/services/{serviceId}
+activate Sq
+
+Sq -> Sc
+
+activate Sc
+
+Sc -> Ss : modifyService(serviceId, serviceRequest)
+activate Ss
+
+Ss -> SreqM : mapToService(serviceRequest)
+activate SreqM
+
+SreqM -> S: Service
+
+destroy Sq
+destroy SreqM
+
+activate S
+
+S -> Ss : service : Service
+
+
+
+Ss -> Srep: save(service)
+destroy S
+
+Srep -> Db: UPDATE service SET service_name = :serviceName, service_description = :serviceDescription, service_icon = :serviceIcon, service_image WHERE user_id = :userId AND review_id = :reviewId
+activate Db
+
+Db -> Sdb: serviceDb : Service
+deactivate Db
+
+activate Sdb
+Sdb -> Srep: serviceDb : Service
+
+Srep -> Ss: serviceDb : Service
+destroy Srep
+Ss -> SresM: mapToServiceResponse(service)
+destroy Sdb
+activate SresM
+
+
+SresM --> Sr: ServiceResponse
+destroy SresM
+activate Sr
+
+Sr --> Ss : serviceResponse : ServiceResponse
+
+Ss --> Sc: serviceResponse : ServiceResponse
+
+
+Sc --> ModServP: serviceResponse : ServiceResponse
+
+destroy Sr
+
+@enduml
