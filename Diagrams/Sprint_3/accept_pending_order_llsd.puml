@@ -1,0 +1,88 @@
+@startuml
+
+title Admin accepts request for a customer UC12
+
+actor Admin
+
+participant SpecificOrderPage as "<<Page>>\nSpecificOrderPage"
+
+participant AcceptOrderRequest as "acceptOrderRequest: AcceptOrderRequest"
+
+participant OrderController as "<<Controller>>\nOrderController"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant EmailService as "EmailService"
+
+participant Response as "response: OrderResponse"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant Order as "order: Order"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+
+Admin -> SpecificOrderPage: updateOrderStatusToAccepted()
+activate SpecificOrderPage
+
+SpecificOrderPage -> AcceptOrderRequest: PATCH /api/v1/corso/orders/manage/acceptOrder/{orderId}
+activate AcceptOrderRequest
+
+AcceptOrderRequest -> OrderController
+activate OrderController
+
+OrderController -> OrderService: updateOrderStatusToAccepted(String orderId, AcceptOrderRequest acceptOrderRequest)
+activate OrderService
+
+OrderService -> OrderRepository: findByOrderId_OrderId(orderId)
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE order_id = ?
+activate Database
+Database --> Order: order: Order
+deactivate Database
+activate Order
+OrderRepository <-- Order: order: Order
+
+OrderService <-- OrderRepository: order: Order
+deactivate OrderRepository
+
+OrderService -> EmailService: sendEmail(acceptOrderRequest.getRecipient(), String, String, Map<String, String>)
+activate EmailService
+destroy EmailService
+destroy AcceptOrderRequest
+
+OrderService -> OrderRepository: save(order: Order)
+destroy Order
+activate OrderRepository
+
+OrderRepository -> Database: UPDATE INTO orders (order_id, user_id, status, total_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)
+activate Database
+
+Database --> Order
+activate Order
+deactivate Database
+
+OrderRepository <-- Order: order: Order
+
+OrderService <-- OrderRepository: order: Order
+deactivate OrderRepository
+
+OrderService --> OrderResponseMapper: map(order: Order)
+activate OrderResponseMapper
+
+OrderResponseMapper --> Response: response: OrderResponse
+destroy Order
+destroy OrderResponseMapper
+activate Response
+
+OrderService <-- Response: response: OrderResponse
+OrderService --> OrderController: response: OrderResponse
+OrderController --> SpecificOrderPage: response: OrderResponse
+
+destroy Response
+
+
+@enduml
