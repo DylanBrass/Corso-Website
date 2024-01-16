@@ -1,0 +1,98 @@
+@startuml
+
+actor User
+
+participant "ProfilePage" as Pfp
+
+participant "AddGalleryPage" as Wrp
+
+participant "galleryRequest : GalleryRequest" as Gq
+
+participant "GalleryController" as Rc
+
+participant "galleryResponse : GalleryResponse" as Gr
+
+participant "GalleryService" as Gs
+
+
+participant "gallery : Gallery" as G
+
+
+participant "GalleryRepository" as Grep
+
+participant "galleryDb : Gallery" as Gdb
+
+participant "Database" as Db
+
+participant "GalleryResponseMapper" as GresM
+
+participant "GalleryRequestMapper" as GreqM
+
+
+User -> Pfp: AddGalleryPage()
+activate Pfp
+
+Pfp -> Wrp: Render()
+activate Wrp
+
+Wrp -> Gq: POST /api/v1/coGso/galleries
+
+activate Gq
+
+Gq -> Rc
+
+
+
+activate Rc
+
+Rc -> Gs: addGallery()
+activate Gs
+
+Gs -> GreqM: mapToGallery(galleryRequest)
+
+activate GreqM
+
+GreqM -> G: Gallery
+
+destroy Gq
+destroy GreqM
+
+activate G
+
+R -> Gs : gallery : Gallery
+
+
+
+Gs -> Grep: save(gallery)
+destroy G
+
+Grep -> Db: INSERT INTO galleries (...) VALUES (...)
+activate Db
+
+Db -> Gdb: galleryDb : Gallery
+deactivate Db
+
+activate Gdb
+Gdb -> Grep: galleryDb : Gallery
+
+Grep -> Gs: galleryDb : Gallery
+destroy Grep
+Gs -> GresM: mapToGalleryResponse(gallery)
+destroy Gdb
+activate GresM
+
+
+GresM --> Gr: GalleryResponse
+destroy GresM
+activate Gr
+
+Gr --> Gs : galleryResponse : GalleryResponse
+
+Gs --> Rc: galleryResponse : GalleryResponse
+
+
+Rc --> Wrp: galleryResponse : GalleryResponse
+
+destroy Gr
+
+@enduml

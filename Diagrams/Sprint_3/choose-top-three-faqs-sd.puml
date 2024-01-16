@@ -32,8 +32,6 @@ activate Dashboard
 Dashboard -> EditFaqPage : render()
 activate EditFaqPage
 
-Admin -> EditFaqPage : getTopThreeFaqs()
-
 EditFaqPage -> FaqRequest : PATCH /api/faqs/viewable
 activate FaqRequest
 FaqRequest -> FaqController : chooseTopThreeFaqs(List<ThreeFaqsRequest> threeFaqsRequests)

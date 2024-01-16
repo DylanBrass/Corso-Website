@@ -1,0 +1,186 @@
+@startuml
+
+title View Orders Use Case
+
+actor Admin
+
+participant View as "<<View>> Dashboard"
+
+participant viewAllActiveOrders as "<<View>> viewAllOrders"
+
+participant viewPendingOrders as "<<View>> viewPendingOrders"
+
+participant viewInProgressOrders as "<<View>> viewInProgressOrders"
+
+participant viewCompletedOrders as "<<View>> viewCompletedOrders"
+
+participant viewOverdueOrders as "<<View>> viewOverdueOrders"
+
+participant OrderController as "<<Controller>> OrderController"
+
+participant OrderService as "<<Service>> OrderService"
+
+participant allResponse as "all: List<OrderResponse>"
+
+participant OrderRepository as "<<Repository>> OrderRepository"
+
+participant allOrders as "all: List<Order>"
+
+participant Database as "<<Database>> Database"
+
+participant OrderResponseMapper as "<<Mapper>> OrderResponseMapper"
+
+
+alt Admin views all orders
+Admin -> View: viewActiveOrders()
+activate View
+View -> viewAllActiveOrders: render()
+activate viewAllActiveOrders
+viewAllActiveOrders -> OrderController: GET /api/v1/corso/orders?customer_id={id}&status={status} HTTP/1.1
+activate OrderController
+OrderController -> OrderService: getOrders(Map<String, String> params)
+
+activate OrderService
+
+OrderService -> OrderRepository: getOrdersByCustomer_Id_customer_idAndStatus(String customer_id, String status)
+
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE user_id = {id} AND status = {status}
+
+activate Database
+
+Database --> OrderRepository: List<Order>
+
+deactivate Database
+
+OrderRepository --> allOrders : List<Order>
+activate allOrders
+allOrders --> OrderService: all: List<Order>
+
+destroy OrderRepository
+
+OrderService -> OrderResponseMapper: mapToOrderResponseList(all)
+
+activate OrderResponseMapper
+
+OrderResponseMapper --> allResponse: List<OrderResponse>
+destroy allOrders
+
+activate allResponse
+
+destroy OrderResponseMapper
+
+allResponse --> OrderService : all: List<OrderResponse>
+
+OrderService --> OrderController : all: List<OrderResponse>
+
+destroy OrderService
+
+OrderController --> viewAllActiveOrders : all: List<OrderResponse>
+
+destroy allResponse
+destroy OrderController
+
+destroy viewAllActiveOrders
+deactivate View
+else Admin views all orders by status
+
+    alt Admin views all pending orders
+    Admin -> View: viewPendingOrders()
+    activate View
+    View -> viewPendingOrders: render()
+    activate viewPendingOrders
+
+    viewPendingOrders -> OrderController: GET /api/v1/corso/orders?status={status} HTTP/1.1
+    activate OrderController
+    else Admin views all in progress orders
+    Admin -> View: viewInProgressOrders()
+    View -> viewInProgressOrders: render()
+    activate viewInProgressOrders
+
+    viewInProgressOrders -> OrderController: GET /api/v1/corso/orders?status={status} HTTP/1.1
+
+    else Admin views all completed orders
+
+    Admin -> View: viewCompletedOrders()
+
+    View -> viewCompletedOrders: render()
+
+    activate viewCompletedOrders
+
+    viewCompletedOrders -> OrderController: GET /api/v1/corso/orders?status={status} HTTP/1.1
+
+    else Admin views all overdue orders
+
+    Admin -> View: viewOverdueOrders()
+
+    View -> viewOverdueOrders: render()
+
+    activate viewOverdueOrders
+
+    viewOverdueOrders -> OrderController: GET /api/v1/corso/orders?status={status} HTTP/1.1
+
+
+
+end
+OrderController -> OrderService: getOrders(Map<String, String> params)
+
+activate OrderService
+
+OrderService -> OrderRepository: getOrdersByStatus(status)
+
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE status = {status}
+
+activate Database
+
+Database --> OrderRepository: List<Order>
+
+deactivate Database
+
+OrderRepository --> allOrders : List<Order>
+activate allOrders
+allOrders --> OrderService: all: List<Order>
+
+destroy OrderRepository
+
+OrderService -> OrderResponseMapper: mapToOrderResponseList(all)
+
+activate OrderResponseMapper
+
+OrderResponseMapper --> allResponse: List<OrderResponse>
+destroy allOrders
+
+activate allResponse
+
+destroy OrderResponseMapper
+
+allResponse --> OrderService : all: List<OrderResponse>
+
+OrderService --> OrderController : all: List<OrderResponse>
+
+destroy OrderService
+
+OrderController --> viewAllActiveOrders : all: List<OrderResponse>
+
+destroy allResponse
+destroy OrderController
+
+Admin -> viewAllActiveOrders: Back()
+
+viewAllActiveOrders --> View: render()
+destroy viewAllActiveOrders
+
+deactivate View
+
+end
+
+
+
+
+
+
+
+@endpuml

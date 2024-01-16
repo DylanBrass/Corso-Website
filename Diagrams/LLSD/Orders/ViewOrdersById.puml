@@ -1,0 +1,169 @@
+@startuml
+
+actor User
+
+participant View as "<<View>>\n DisplayedOrdersPage"
+
+Note over View: This page is a representation of all the alts int the ref of ViewOrders
+
+participant viewOrdersDetailsAdmin as "<<View>>\nviewOrdersDetailsAdmin"
+
+participant viewOrdersDetailsCustomers as "<<View>>\nviewOrdersDetailsCustomers"
+
+participant viewAllActiveOrders as "<<View>>\nviewAllOrders"
+
+participant viewPendingOrders as "<<View>>\nviewPendingOrders"
+
+participant viewInProgressOrders as "<<View>>\nviewInProgressOrders"
+
+participant viewCompletedOrders as "<<View>>\nviewCompletedOrders"
+
+participant viewOverdueOrders as "<<View>>\nviewOverdueOrders"
+
+participant OrderController as "<<Controller>>\nOrderController"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant allResponse as "orderResponse: OrderResponse"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant allOrders as "order: Order"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+
+
+ref over View, viewAllActiveOrders, viewPendingOrders, viewInProgressOrders, viewCompletedOrders, viewOverdueOrders, OrderController, OrderService, OrderRepository, Database, OrderResponseMapper
+    ViewOrders
+
+
+end ref
+
+opt
+alt User is Admin
+User -> View: viewSpecificOrder(orderId: String)
+activate View
+
+View -> viewOrdersDetailsAdmin: render()
+activate viewOrdersDetailsAdmin
+viewOrdersDetailsAdmin -> OrderController: GET /api/v1/corso/orders/{orderId}
+
+activate OrderController
+
+OrderController -> OrderService: viewSpecificOrder(orderId: String)
+
+activate OrderService
+
+OrderService -> OrderRepository: viewSpecificOrder(orderId: String)
+
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE order_id = orderId
+
+activate Database
+
+Database --> allOrders: allOrders: List<Order>
+deactivate Database
+
+activate allOrders
+
+allOrders -> OrderRepository: allOrders: List<Order>
+
+OrderRepository --> OrderService: allOrders: List<Order>
+
+deactivate OrderRepository
+
+OrderService -> OrderResponseMapper: allOrders: List<Order>
+
+activate OrderResponseMapper
+
+OrderResponseMapper --> allResponse: allResponse: List<OrderResponse>
+activate allResponse
+deactivate OrderResponseMapper
+
+deactivate allOrders
+
+allResponse -> OrderService
+
+OrderService --> OrderController: allResponse: List<OrderResponse>
+
+deactivate OrderService
+
+OrderController --> viewOrdersDetailsAdmin: allResponse: List<OrderResponse>
+
+deactivate View
+
+deactivate allResponse
+deactivate OrderController
+else User is Customer
+
+deactivate viewOrdersDetailsAdmin
+
+User -> View: viewSpecificOrder(orderId: String)
+activate View
+
+View -> viewOrdersDetailsCustomers: render()
+
+activate viewOrdersDetailsCustomers
+
+viewOrdersDetailsCustomers -> OrderController: GET /api/v1/corso/customers/orders/{orderId}
+
+activate OrderController
+
+OrderController -> OrderService: viewSpecificOrder(orderId: String, userId: String)
+
+activate OrderService
+
+OrderService -> OrderRepository: viewSpecificOrder(orderId: String, userId: String)
+
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE order_id = orderId AND user_id = userId
+
+activate Database
+
+Database --> allOrders: allOrders: List<Order>
+
+deactivate Database
+
+activate allOrders
+
+allOrders -> OrderRepository: allOrders: List<Order>
+
+OrderRepository --> OrderService: allOrders: List<Order>
+
+deactivate OrderRepository
+
+OrderService -> OrderResponseMapper: allOrders: List<Order>
+
+activate OrderResponseMapper
+
+OrderResponseMapper --> allResponse: allResponse: List<OrderResponse>
+
+activate allResponse
+
+deactivate OrderResponseMapper
+
+deactivate allOrders
+
+allResponse -> OrderService
+
+OrderService --> OrderController: allResponse: List<OrderResponse>
+
+deactivate OrderService
+
+OrderController --> viewOrdersDetailsCustomers: allResponse: List<OrderResponse>
+
+deactivate viewOrdersDetailsCustomers
+
+deactivate allResponse
+
+end
+
+
+end opt
+
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml
+title View All Reviews
+
+actor User
+
+
+participant SpecificReviewPage as "<<View>>\n SpecificReviewPage"
+
+participant ShowALlAccountReviewsPage as "<<View>>\n ShowALlAccountReviewsPage"
+
+participant ManagePinnedReviewsPage as "<<View>>\n ManagePinnedReviewsPage"
+
+participant ReviewController as "<<Controller>>\n ReviewController"
+
+participant ReviewService as "<<Service>>\n ReviewService"
+
+participant ReviewResponse as "reviewResponse: ReviewResponse"
+
+participant ReviewRepository as "<<Repository>> ReviewRepository"
+
+participant Reviews as "review: Review"
+
+participant Database as "<<MySQL>>\n Database"
+
+participant ReviewResponseMapper as "<<Mapper>>\n ReviewResponseMapper"
+
+ref over ReviewController, ReviewService, ReviewRepository, ReviewResponseMapper
+ViewReviews
+end ref
+
+alt User is Admin
+
+
+
+
+else User is Customer
+
+end
+
+
+@enduml

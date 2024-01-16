@@ -1,0 +1,212 @@
+@startuml
+title View All Reviews
+
+actor User
+
+participant LandingPage as "<<View>>\n LandingPage"
+
+participant ProfilePage as "<<View>>\n ProfilePage"
+
+participant AdminDashboard as "<<View>>\nDashboard"
+
+participant ReviewsPage as "<<View>>\n ReviewsPage"
+
+participant ManagePinnedReviewsPage as "<<View>>\n ManagePinnedReviewsPage"
+
+participant ReviewController as "<<Controller>>\n ReviewController"
+
+participant ReviewService as "<<Service>>\n ReviewService"
+
+participant ReviewResponses as "all: List<ReviewResponse>"
+
+participant ReviewRepository as "<<Repository>> ReviewRepository"
+
+participant Reviews as "all: List<Review>"
+
+participant Database as "<<MySQL>>\n Database"
+
+participant ReviewResponseMapper as "<<Mapper>>\n ReviewResponseMapper"
+
+alt User is Customer
+
+User -> ProfilePage: viewAllReviewsOfCustomer()
+activate ProfilePage
+ProfilePage -> ReviewsPage: render()
+activate ReviewsPage
+ReviewsPage -> ReviewController: GET api/v1/corso/reviews/user HTTP/1.1
+activate ReviewController
+ReviewController -> ReviewService: getAllReviewsOfCustomer(OidcUser principal)
+
+activate ReviewService
+
+ReviewService -> ReviewRepository: findAllByUser(String userId)
+
+activate ReviewRepository
+
+ReviewRepository -> Database: SELECT * FROM reviews WHERE user_id = ?
+
+activate Database
+
+Database --> ReviewRepository: List<Review>
+
+deactivate Database
+
+ReviewRepository --> Reviews: List<Review>
+activate Reviews
+Reviews --> ReviewService: all: List<Review>
+
+deactivate ReviewRepository
+
+ReviewService -> ReviewResponseMapper: mapToReviewResponses(List<Review> reviews)
+
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponses: all: List<ReviewResponse>
+deactivate Reviews
+
+activate ReviewResponses
+
+deactivate ReviewResponseMapper
+
+ReviewResponses --> ReviewService: all: List<ReviewResponse>
+
+ReviewService --> ReviewController: all: List<ReviewResponse>
+
+deactivate ReviewService
+
+ReviewController --> ReviewsPage: all: List<ReviewResponse>
+
+deactivate ReviewResponses
+deactivate ReviewController
+
+deactivate ReviewsPage
+deactivate ProfilePage
+else User is Admin
+
+User -> AdminDashboard: editPinnedReviews()
+activate AdminDashboard
+ AdminDashboard-> ManagePinnedReviewsPage: render()
+
+activate ManagePinnedReviewsPage
+
+ManagePinnedReviewsPage -> ReviewController: GET api/v1/corso/reviews HTTP/1.1
+
+activate ReviewController
+
+ReviewController -> ReviewService: getAllReviews()
+
+activate ReviewService
+
+ReviewService -> ReviewRepository: findAllWithPagination()
+
+activate ReviewRepository
+
+ReviewRepository -> Database: SELECT * FROM reviews ORDER BY pinned LIMIT :#{#pageSize} OFFSET :#{#offset}
+
+activate Database
+
+Database --> ReviewRepository: List<Review>
+
+deactivate Database
+
+ReviewRepository --> Reviews: List<Review>
+
+activate Reviews
+
+Reviews --> ReviewService: all: List<Review>
+
+deactivate ReviewRepository
+
+ReviewService -> ReviewResponseMapper: mapToReviewResponses(List<Review> reviews)
+
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponses: all: List<ReviewResponse>
+
+deactivate Reviews
+
+activate ReviewResponses
+
+deactivate ReviewResponseMapper
+
+ReviewResponses --> ReviewService: all: List<ReviewResponse>
+
+ReviewService --> ReviewController: all: List<ReviewResponse>
+
+deactivate ReviewService
+
+ReviewController --> ManagePinnedReviewsPage: all: List<ReviewResponse>
+
+deactivate ReviewResponses
+
+deactivate ReviewController
+
+deactivate ManagePinnedReviewsPage
+
+deactivate AdminDashboard
+else User is not logged in
+    User -> LandingPage: viewAllPinnedReviews()
+    activate LandingPage
+    LandingPage -> ReviewController: GET api/v1/corso/reviews/pinned HTTP/1.1
+
+    activate ReviewController
+
+    ReviewController -> ReviewService: getAllPinnedReviews()
+
+    activate ReviewService
+
+    ReviewService -> ReviewRepository: findAllPinned()
+
+    activate ReviewRepository
+
+    ReviewRepository -> Database: SELECT * FROM reviews WHERE pinned = true
+
+    activate Database
+
+    Database --> Reviews: reviews: List<Review>
+
+    activate Reviews
+
+    Reviews --> ReviewRepository: reviews: List<Review>
+
+deactivate Database
+
+ReviewRepository --> ReviewService: reviews: List<Review>
+deactivate ReviewRepository
+ReviewService -> ReviewResponseMapper: mapToReviewResponses(List<Review> reviews)
+
+activate ReviewResponseMapper
+
+ReviewResponseMapper --> ReviewResponses: all: List<ReviewResponse>
+deactivate ReviewResponseMapper
+
+activate ReviewResponses
+deactivate Reviews
+
+ReviewResponses --> ReviewService: all: List<ReviewResponse>
+
+
+
+ReviewService --> ReviewController: all: List<ReviewResponse>
+
+
+ReviewController --> LandingPage: all: List<ReviewResponse>
+
+
+deactivate ReviewResponses
+
+deactivate ReviewService
+
+
+
+
+
+
+
+
+
+
+
+end
+
+@enduml

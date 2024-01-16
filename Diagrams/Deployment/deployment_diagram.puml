@@ -47,7 +47,7 @@ cloud GCP as "Google Cloud \n[Deployment Node: Google Clouds Standard Environnen
         Container(api, "API", "Container : Spring boot: Java", "Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
     }
     database "Google Cloud SQL \n[Deployment Node: Google Clouds Standard Environnent]" as database{
-        ContainerDb(database, "Database", "Container : MySQL", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
+        ContainerDb(db, "Database", "Container : MySQL", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
     }
 }
 
@@ -66,13 +66,13 @@ email <-[dashed]- api : Sends email to \n[SMTP/TCP/IP]
 
 
 frontend -[dashed]----> browser : Delivers to the users web browser
-frontend -[dashed]----> mobileBrowser : Delivers to the users web browser
+frontend -[dashed]> mobileBrowser : Delivers to the users web browser
 
-database -[hidden]--> auth
-database -[hidden]---> email
+db -[hidden]--> auth
+db -[hidden]---> email
 
 browser -[dashed]----> api : Makes API calls to \n[JSON/HTTPS]
-mobileBrowser -[dashed]----> api : Makes API calls to \n[JSON/HTTPS]  
+mobileBrowser -[dashed]> api : Makes API calls to \n[JSON/HTTPS]  
 
 
 api -[dashed]----> database : SQL/TCP\n[JDBC]
