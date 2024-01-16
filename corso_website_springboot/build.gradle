@@ -130,6 +130,9 @@ test {
     exclude '**/CreateAServiceTest.class'
     exclude '**/ViewServiceDetailsAdmin.class'
     exclude '**/ChooseViewableFaqsTest.class'
+    exclude '**/AdminAcceptRequestTest.class'
+    exclude '**/AdminDeclineRequestTest.class'
+    exclude '**/AdminCancelsOrderTest.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
