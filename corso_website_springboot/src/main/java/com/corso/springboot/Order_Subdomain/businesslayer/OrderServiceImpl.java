@@ -4,10 +4,7 @@ import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelO
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
-import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
-import com.corso.springboot.Order_Subdomain.presentationlayer.DeclineOrderRequest;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
+import com.corso.springboot.Order_Subdomain.presentationlayer.*;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.configuration.security.exceptions.Auth0Error;
@@ -367,7 +364,6 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
 
-
         if (order.getOrderStatus() != Status.PENDING) {
             throw new InvalidRequestException("Order cannot be cancelled, it is not in pending status, meaning it was accepted or cancelled already!");
         }
@@ -377,49 +373,72 @@ public class OrderServiceImpl implements OrderService {
 
         parameters.put("name", order.getCustomerFullName());
 
-        List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
-
-
-        ExecutorService executorService = Executors.newFixedThreadPool(admins.size());
-        AtomicInteger emailSent = new AtomicInteger();
-        try {
-            for (UserInfoResponse admin : admins) {
-                executorService.submit(() -> {
-                    try {
-                        int emailStatus = emailService.sendEmail(admin.getEmail(),
-                                "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled",
-                                "CustomerCancelOrder", parameters);
-
-                        if (emailStatus != 200) {
-                            log.error("Failed to send email to " + admin.getEmail());
-                            throw new MessagingException("Failed to send email to one of the admins");
-                        }
-
-                        emailSent.getAndIncrement();
-                    } catch (Exception e) {
-                        log.error("Exception while sending email to " + admin.getEmail(), e);
-                    }
-                });
-            }
-        } finally {
-            executorService.shutdown();
-            try {
-                if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-                    executorService.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                executorService.shutdownNow();
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        if (emailSent.get() != admins.size()) {
-            throw new MessagingException("Failed to notify our electricians, please try again later");
-        }
+        // add func
+        sendEmailToAdmins("Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled", "CustomerCancelOrder", parameters);
 
         order.setOrderStatus(Status.CANCELLED);
 
         orderRepository.save(order);
+    }
+
+    @Override
+    public OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException {
+        Order order = orderRepository.findByOrderId_OrderIdAndUserId(orderId, userId);
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        if (order.getOrderStatus() != Status.PENDING) {
+            throw new InvalidRequestException("Order cannot be updated, it is not in pending status, meaning it was accepted or cancelled already!");
+        }
+
+        Map<String, String> parameters = getStringStringMap(customerUpdateOrderRequest, order);
+
+        sendEmailToAdmins("Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been updated", "UpdateOrder", parameters);
+
+        order.setCustomerAddress(customerUpdateOrderRequest.getCustomerAddress());
+
+        order.setCustomerPhone(customerUpdateOrderRequest.getCustomerPhone());
+
+        order.setCustomerCity(customerUpdateOrderRequest.getCustomerCity());
+
+        order.setCustomerPostalCode(customerUpdateOrderRequest.getCustomerPostalCode());
+
+        order.setCustomerApartmentNumber(customerUpdateOrderRequest.getCustomerApartmentNumber());
+
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
+
+    private static Map<String, String> getStringStringMap(OrderCustomerRequest customerUpdateOrderRequest, Order order) {
+        Map<String, String> parameters = new HashMap<>();
+
+        parameters.put("name", order.getCustomerFullName());
+
+        parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
+
+        parameters.put("previousAddress", order.getCustomerAddress());
+
+        parameters.put("previousPhone", order.getCustomerPhone());
+
+
+        parameters.put("previousCity", order.getCustomerCity());
+
+        parameters.put("previousPostalCode", order.getCustomerPostalCode());
+
+        parameters.put("previousApartmentNumber", order.getCustomerApartmentNumber());
+
+        parameters.put("newAddress", customerUpdateOrderRequest.getCustomerAddress());
+
+        parameters.put("newPhone", customerUpdateOrderRequest.getCustomerPhone());
+
+        parameters.put("newCity", customerUpdateOrderRequest.getCustomerCity());
+
+        parameters.put("newPostalCode", customerUpdateOrderRequest.getCustomerPostalCode());
+
+        parameters.put("newApartmentNumber", customerUpdateOrderRequest.getCustomerApartmentNumber());
+        return parameters;
     }
 
 
@@ -449,4 +468,28 @@ public class OrderServiceImpl implements OrderService {
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
 
     }
+
+
+    private void sendEmailToAdmins(String subject, String template, Map<String, String> parameters) throws MessagingException {
+        List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
+
+        StringBuilder recipients = new StringBuilder();
+
+        for(UserInfoResponse admin : admins){
+            recipients.append(admin.getEmail()).append(",");
+
+        }
+
+        log.info("Sending email to {}", recipients.toString());
+
+        recipients.deleteCharAt(recipients.length() - 1);
+
+        int status = emailService.sendEmail(recipients.toString(), subject, template, parameters);
+
+        if (status != 200) {
+            throw new MessagingException("Failed to send email");
+        }
+
+    }
+
 }

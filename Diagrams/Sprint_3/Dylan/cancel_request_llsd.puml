@@ -63,11 +63,9 @@ activate Admins
 OrderService <-- Admins: admins: List<UserInfoReponse>
 destroy Auth0ManagementService
 
-loop for each admin
     OrderService -> EmailService: sendEmail(admin: UserInfoReponse.getEmail, String, String, Map<String, String>)
     activate EmailService
     EmailService --> OrderService: int
-end
 destroy Admins
 destroy EmailService
 destroy CancelOrderRequest

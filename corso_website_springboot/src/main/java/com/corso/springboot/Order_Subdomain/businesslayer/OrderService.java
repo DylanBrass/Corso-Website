@@ -2,10 +2,7 @@ package com.corso.springboot.Order_Subdomain.businesslayer;
 
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
-import com.corso.springboot.Order_Subdomain.presentationlayer.AcceptOrderRequest;
-import com.corso.springboot.Order_Subdomain.presentationlayer.DeclineOrderRequest;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestExternal;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
+import com.corso.springboot.Order_Subdomain.presentationlayer.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -40,4 +37,6 @@ public interface OrderService {
 
     OrderResponse updateOrderStatusToCancelled(String orderId, DeclineOrderRequest declineOrderRequest) throws MessagingException;
     void cancelByCustomerOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException;
+
+    OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException;
 }

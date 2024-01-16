@@ -6,6 +6,7 @@ import com.corso.springboot.Customer_Subdomain.datamapperlayer.CustomerRequestMa
 import com.corso.springboot.Customer_Subdomain.datamapperlayer.CustomerResponseMapper;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerRequest;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
+import com.corso.springboot.Order_Subdomain.datalayer.Order;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import org.junit.jupiter.api.Test;
@@ -393,6 +394,7 @@ class CustomerServiceUnitTest {
 
         assertEquals(mockCustomerResponse.getEmail(), result.get(0).getEmail());
     }
+
 
 
 }

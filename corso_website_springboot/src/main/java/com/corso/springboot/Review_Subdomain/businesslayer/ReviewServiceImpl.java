@@ -80,7 +80,6 @@ public class ReviewServiceImpl implements ReviewService {
                 review.setTotalReviewsMatchingRequest(totalReviews);
             }
 
-            return reviews;
         }
 
         else {
@@ -92,8 +91,8 @@ public class ReviewServiceImpl implements ReviewService {
             for (ReviewResponse review : reviews) {
                 review.setTotalReviewsMatchingRequest(totalReviews);
             }
-            return reviews;
         }
+        return reviews;
 
     }
 
