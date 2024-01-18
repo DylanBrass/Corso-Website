@@ -66,7 +66,7 @@ public class EmailServiceImpl implements EmailService {
 
             //error is handled by the global controller handler
             Transport.send(message);
-
+            log.info("Email sent");
             //if no error is thrown, return 200
             return HttpStatus.SC_OK;
         } catch (MessagingException e) {
