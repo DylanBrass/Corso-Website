@@ -151,6 +151,6 @@ backend:
   url: https://api.corsoelectricdev.tech/
 
 website:
-  domain: corso-dev.com 
+  domain: corso-dev.com
 
 spring.datasource.hikari.initializationFailTimeout: 60000

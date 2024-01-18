@@ -32,9 +32,13 @@ public class SecurityController {
     private final Auth0LoginService auth0LoginService;
     private final Auth0ManagementService auth0ManagementService;
 
+    @Value("${okta.oauth2.groupsClaim}")
+    private String roleTokenLocation;
+
     @GetMapping("/redirect")
     public ResponseEntity<Void> redirectAfterLogin(@AuthenticationPrincipal OidcUser principal) throws IOException, InterruptedException {
         String accessToken;
+
 
 
         if (principal == null) {
@@ -43,6 +47,9 @@ public class SecurityController {
                     .location(URI.create(backendDomain+"oauth2/authorization/okta")).build();
         }
 
+        log.info("Principal: " + principal);
+
+        log.info("Principal subject: " + principal.getSubject());
 
         //handle apple, google and facebook login
         if(principal.getSubject().contains("apple") || principal.getSubject().contains("google-oauth2")
@@ -63,8 +70,8 @@ public class SecurityController {
                 isVerified = false;
             }
 
-            if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
-                    || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
+            if (!principal.getClaims().containsKey(roleTokenLocation)
+                    || principal.getClaim(roleTokenLocation).toString().equals("[]")) {
                 log.info("No roles found, adding default role");
 
                 if (!isVerified) {

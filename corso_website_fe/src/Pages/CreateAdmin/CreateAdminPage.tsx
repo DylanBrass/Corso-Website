@@ -4,13 +4,17 @@ import axios from "axios";
 import {useEffect} from "react";
 import "./CreateAdmin.css"
 import swal from "sweetalert";
+
+
+
 function CreateAdminPage() {
     const auth = useAuth();
 
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes("Admin")) {
-            window.location.href = "http://localhost:3000/";
+            // @ts-ignore
+            window.location.href = process.env.REACT_APP_BE_HOST
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -32,7 +36,7 @@ function CreateAdminPage() {
 
                     swal("Admin created!", "Admin has been created successfully!", "success")
                         .then(() => {
-                            window.location.href = "http://localhost:3000/dashboard"
+                            window.location.href = process.env.REACT_APP_BE_HOST+"dashboard"
                         })
 
                 }
