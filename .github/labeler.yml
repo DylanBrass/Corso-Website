@@ -23,7 +23,7 @@ config:
 
 security:
   - changed-files:
-      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/**'
+      - any-glob-to-any-file: 'corso_website_springboot/src/main/java/com/corso/springboot/configuration/security/**'
 
 tests:
   - changed-files:
