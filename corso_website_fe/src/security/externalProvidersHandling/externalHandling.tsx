@@ -1,27 +1,31 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 
 function ExternalHandling() {
 
     useEffect(() => {
+
         // @ts-ignore
         console.log(document.cookie)
         // @ts-ignore
         if (document.cookie.includes("isAuthenticated=true")) {
             // @ts-ignore
-            document.getElementById('submit').click();
-        }else{
-            window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
+            document.getElementById('submit').click()
+        } else {
+            window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
         }
+
     }, [])
 
     return (
         <div className={"logoutRedirect"}>
 
-            <form method={"post"} action={process.env.REACT_APP_BE_HOST+"api/v1/corso/logout?isLogoutExternal=true"} id="logoutForm">
+            <form method={"post"} action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout?isLogoutExternal=true"}
+                  id="logoutForm">
                 <button id={'submit'} type={"submit"} style={{
                     display: "none",
                     visibility: "hidden"
-                }}>Logout</button>
+                }}>Logout
+                </button>
             </form>
 
         </div>

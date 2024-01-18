@@ -12,8 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -32,8 +30,9 @@ public class Auth0LoginService {
     @Value("${frontend.url}")
     private String frontendDomain;
 
-    @Value("${website.domain}")
-    private String websiteDomain;
+
+    @Value("${okta.oauth2.groupsClaim}")
+    private String roleTokenLocation;
 
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
@@ -57,10 +56,12 @@ public class Auth0LoginService {
 
 
     public ResponseEntity<Void> handleExternalLogin(OidcUser principal) {
-        log.info("Handling Apple Login");
+        log.info("Handling external Login");
 
-        if (!principal.getClaims().containsKey("https://corso-dev.com/roles")
-                || principal.getClaim("https://corso-dev.com/roles").toString().equals("[]")) {
+        log.info("Principal: " + principal.getIdToken());
+
+        if (!principal.getClaims().containsKey(roleTokenLocation)
+                || principal.getClaim(roleTokenLocation).toString().equals("[]")) {
             log.info("No roles found, adding default role");
 
             
@@ -123,7 +124,7 @@ public class Auth0LoginService {
         headers.add(HttpHeaders.SET_COOKIE, accessPermissionCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, pictureCookie.toString());
 
-        if (principal.getClaim("https://corso-dev.com/roles").toString().contains("Admin")) {
+        if (principal.getClaim(roleTokenLocation).toString().contains("Admin")) {
             return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
                     .location(URI.create(frontendDomain+"dashboard")).build();
         } else {

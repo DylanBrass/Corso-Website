@@ -25,6 +25,8 @@ public class Auth0Controller {
 
     private final Auth0ManagementService auth0ManagementService;
 
+    private static final String ADMIN_ROLE_ID = "rol_sDxhuMYKzxiG7Sw8";
+
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/add-admin")
     public ResponseEntity<UserResponse> addAdmin(@RequestBody UserRequest userRequest) throws IOException, InterruptedException {
@@ -34,7 +36,7 @@ public class Auth0Controller {
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/get-total-admins")
     public ResponseEntity<Integer> getTotalAdmins() throws IOException, InterruptedException {
-        return auth0ManagementService.getTotalOfRole("rol_5AZt4iZ6HOc5TMa5");
+        return auth0ManagementService.getTotalOfRole(ADMIN_ROLE_ID);
     }
 
 

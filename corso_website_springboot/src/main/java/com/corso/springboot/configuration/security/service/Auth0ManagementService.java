@@ -45,6 +45,7 @@ public class Auth0ManagementService {
     private String clientSecret;
 
     private final CustomerService customerService;
+    private final String ADMIN_ROLE_ID = "rol_sDxhuMYKzxiG7Sw8";
 
     public ResponseEntity<UserResponse> addAdmin(UserRequest userRequest) throws IOException, InterruptedException {
 
@@ -148,7 +149,7 @@ public class Auth0ManagementService {
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + accessToken)
                 .POST(HttpRequest.BodyPublishers.ofString(
-                        "{\"roles\":[\"rol_5AZt4iZ6HOc5TMa5\"]}"))
+                        "{\"roles\":[\""+ADMIN_ROLE_ID+"\"]}"))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -328,8 +329,6 @@ public class Auth0ManagementService {
                 throw new Auth0Error("Error getting users", HttpStatus.valueOf(response.statusCode()));
             }
 
-
-
             new ObjectMapper().readTree(response.body()).forEach(node -> {
                 log.info("Node: " + node.toString());
                 users.add(Auth0GetUsersResponse.builder()
@@ -386,7 +385,7 @@ public class Auth0ManagementService {
     public List<UserInfoResponse> getAllAdmins() {
         try {
             String accessToken = getAccessToken();
-            String url = issuer + "api/v2/roles/rol_5AZt4iZ6HOc5TMa5/users";
+            String url = issuer + "api/v2/roles/"+ADMIN_ROLE_ID+"/users";
 
             HttpResponse<String> response = sendHttpRequest(accessToken, url);
 
