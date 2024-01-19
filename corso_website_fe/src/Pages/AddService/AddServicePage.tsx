@@ -32,15 +32,59 @@ function AddServicePage() {
         reader.readAsDataURL(file);
     };
 
-    const handleImageChange = (
+    const handleServiceImageChange = (
         event: React.ChangeEvent<HTMLInputElement>,
         setImagePreview: (value: string) => void
     ) => {
         const file = event.target.files ? event.target.files[0] : null;
+
         if (file) {
-            convertToBase64(file, (base64Result) => {
-                setImagePreview(base64Result);
-            });
+            // Check image dimensions
+            const image = new Image();
+            image.src = URL.createObjectURL(file);
+
+            image.onload = () => {
+                const maxWidth = 1920;
+                const maxHeight = 1080;
+
+                if (image.width > maxWidth || image.height > maxHeight) {
+                    swal('Error', 'Service image dimensions should be 1920x1080 or smaller.', 'error');
+                    return;
+                }
+
+                convertToBase64(file, (base64Result) => {
+                    setImagePreview(base64Result);
+                });
+            };
+        } else {
+            setImagePreview('');
+        }
+    };
+
+    const handleServiceIconChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+        setImagePreview: (value: string) => void
+    ) => {
+        const file = event.target.files ? event.target.files[0] : null;
+
+        if (file) {
+            // Check icon dimensions
+            const image = new Image();
+            image.src = URL.createObjectURL(file);
+
+            image.onload = () => {
+                const iconWidth = 106;
+                const iconHeight = 106;
+
+                if (image.width !== iconWidth || image.height !== iconHeight) {
+                    swal('Error', 'Service icon dimensions should be 106x106.', 'error');
+                    return;
+                }
+
+                convertToBase64(file, (base64Result) => {
+                    setImagePreview(base64Result);
+                });
+            };
         } else {
             setImagePreview('');
         }
@@ -84,7 +128,8 @@ function AddServicePage() {
     return (
         <>
             <NavigationBar />
-            <h1>Add A Service</h1>
+            <div className="add-service-page">
+            <h1 className="add-service">Add A Service</h1>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="container add-service-container">
                     <div className="grid-container">
@@ -133,12 +178,12 @@ function AddServicePage() {
                                 )}
                                 <input
                                     type="file"
-                                    accept=".jpg, .jpeg, .png"
+                                    accept=".jpg, .jpeg, .png, .svg"
                                     id="serviceImage"
                                     name="serviceImage"
                                     style={{ display: 'none' }}
                                     ref={imageFileInputRef}
-                                    onChange={(e) => handleImageChange(e, setServiceImagePreview)}
+                                    onChange={(e) => handleServiceImageChange(e, setServiceImagePreview)}
                                 />
                             </div>
                         </div>
@@ -161,12 +206,12 @@ function AddServicePage() {
                                 )}
                                 <input
                                     type="file"
-                                    accept=".jpg, .jpeg, .png"
+                                    accept=".jpg, .jpeg, .png, .svg"
                                     id="serviceIcon"
                                     name="serviceIcon"
                                     style={{ display: 'none' }}
                                     ref={iconFileInputRef}
-                                    onChange={(e) => handleImageChange(e, setServiceIconPreview)}
+                                    onChange={(e) => handleServiceIconChange(e, setServiceIconPreview)}
                                 />
                             </div>
                         </div>
@@ -176,6 +221,7 @@ function AddServicePage() {
                     <input type="submit" value="Submit" className="submit-button"/>
                 </div>
             </form>
+            </div>
         </>
     );
 }

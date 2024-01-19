@@ -32,6 +32,8 @@ import ViewOnGoingOrderDetailsPage from "./Pages/OrdersPages/ViewOnGoingOrderDet
 import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
 import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
+// @ts-ignore
+import ModifyServicePage from "./Pages/UpdateService/ModifyServicePage";
 
 
 export default function App() {
@@ -71,6 +73,7 @@ export default function App() {
                         <Route path="/external" element={<ExternalHandling/>}/>
                         <Route path={"/services"} element={<ServicesThroughDashboard/>}/>
                         <Route path={"/add-service"} element={<AddServicePage/>}/>
+                        <Route path="/modify-service/:serviceId" element={<ModifyServicePage/>}/>
                         <Route path="/viewServiceDetails/:serviceId" element={<ServiceDetailsPage/>}/>
                     </Routes>
                 </BrowserRouter>

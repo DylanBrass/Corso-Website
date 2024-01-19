@@ -42,5 +42,11 @@ public class ServiceController {
     public ResponseEntity<Integer> countAllServices(){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.countAllServices());
     }
+
+    @PutMapping("/{serviceId}")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    public ResponseEntity<ServiceResponse> modifyService(@PathVariable String serviceId, @Valid @RequestBody ServiceRequest serviceRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(serviceService.modifyService(serviceId, serviceRequest));
+    }
 }
 

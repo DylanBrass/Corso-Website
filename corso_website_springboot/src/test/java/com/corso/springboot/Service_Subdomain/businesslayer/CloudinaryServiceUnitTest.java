@@ -2,6 +2,7 @@ package com.corso.springboot.Service_Subdomain.businesslayer;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -107,4 +108,92 @@ public class CloudinaryServiceUnitTest {
         // Act & Assert
         assertThrows(IllegalStateException.class, () -> cloudinaryService.uploadBase64Image(base64Image));
     }
+
+    @Test
+    void extractPublicIdFromCloudinaryUrl_ShouldExtractPublicId() {
+        // Arrange
+        String cloudinaryUrl = "https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png";
+
+        // Act
+        String publicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(cloudinaryUrl);
+
+        // Assert
+        assertEquals("ThunderBolt_yguofq", publicId);
+    }
+
+    @Test
+    void extractPublicIdFromCloudinaryUrl_ShouldHandleDifferentFormats() {
+        // Arrange
+        String cloudinaryUrl = "https://res.cloudinary.com/dszhbawv7/image/upload/publicId/ThunderBolt_yguofq.png";
+
+        // Act
+        String publicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(cloudinaryUrl);
+
+        // Assert
+        assertEquals("ThunderBolt_yguofq", publicId);
+    }
+
+    @Test
+    void updateCloudinaryImage_ShouldSucceed() throws IOException {
+        // Arrange
+        String publicId = "existing-public-id";
+        String base64Image = "data:image/png;base64," + getBase64ImageFromFile("src/test/resources/testService.jpg");
+
+        // Mock Cloudinary response
+        when(cloudinary.uploader()).thenReturn(uploaderMock);
+        Map<String, Object> uploadResult = new HashMap<>();
+        uploadResult.put("url", "https://example.com/updatedImage.jpg");
+        when(uploaderMock.upload(Mockito.any(byte[].class), Mockito.anyMap())).thenReturn(uploadResult);
+
+        // Act
+        String result = cloudinaryService.updateCloudinaryImage(publicId, base64Image);
+
+        // Assert
+        assertEquals("https://example.com/updatedImage.jpg", result);
+    }
+
+    @Test
+    void updateCloudinaryImage_ShouldThrowException_WhenBase64ImageIsNull() {
+        // Act & Assert
+        assertThrows(NullPointerException.class, () -> cloudinaryService.updateCloudinaryImage("public-id", null));
+    }
+
+    @Test
+    void updateCloudinaryImage_ShouldThrowException_WhenBase64ImageIsEmpty() {
+        // Act & Assert
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> cloudinaryService.updateCloudinaryImage("public-id", ""));
+    }
+
+    @Test
+    void updateCloudinaryImage_ShouldThrowException_WhenCloudinaryUploaderThrowsException() throws IOException {
+        // Arrange
+        String publicId = "existing-public-id";
+        String base64Image = "data:image/png;base64," + getBase64ImageFromFile("src/test/resources/testService.jpg");
+
+        // Mock Cloudinary response
+        when(cloudinary.uploader()).thenReturn(uploaderMock);
+        when(uploaderMock.upload(Mockito.any(byte[].class), Mockito.anyMap())).thenThrow(new IOException("Failed to upload"));
+
+        // Act & Assert
+        assertThrows(IOException.class, () -> cloudinaryService.updateCloudinaryImage(publicId, base64Image));
+    }
+
+    @Test
+    void updateCloudinaryImage_ShouldThrowException_WhenCloudinaryUploaderReturnsNull() throws IOException {
+        // Arrange
+        String publicId = "existing-public-id";
+        String base64Image = "data:image/png;base64," + getBase64ImageFromFile("src/test/resources/testService.jpg");
+
+        // Mock Cloudinary response
+        when(cloudinary.uploader()).thenReturn(uploaderMock);
+
+        // Mock uploadResult to return a Map with a null value for "url"
+        Map<String, Object> uploadResult = new HashMap<>();
+        uploadResult.put("url", null);
+        when(uploaderMock.upload(Mockito.any(byte[].class), Mockito.anyMap())).thenReturn(uploadResult);
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> cloudinaryService.updateCloudinaryImage(publicId, base64Image));
+    }
+
 }

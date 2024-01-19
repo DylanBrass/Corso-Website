@@ -12,5 +12,7 @@ public interface ServiceService {
 
     ServiceResponse createService(ServiceRequest serviceRequest);
 
+    ServiceResponse modifyService(String serviceId, ServiceRequest serviceRequest);
+
     int countAllServices();
 }

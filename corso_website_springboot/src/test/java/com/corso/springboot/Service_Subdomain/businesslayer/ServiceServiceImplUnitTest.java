@@ -1,11 +1,12 @@
 package com.corso.springboot.Service_Subdomain.businesslayer;
 
-import com.corso.springboot.Service_Subdomain.datalayer.Service;
+import com.corso.springboot.Service_Subdomain.datalayer.ServiceEntity;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapper;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
+import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -49,7 +50,7 @@ public class ServiceServiceImplUnitTest {
         // Arrange
         ServiceResponse mockServiceResponse = new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image");
 
-        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(new Service("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"));
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"));
         when(serviceResponseMapper.toServiceResponse(Mockito.any())).thenReturn(mockServiceResponse);
 
         // Act
@@ -85,8 +86,8 @@ public class ServiceServiceImplUnitTest {
         );
 
         when(serviceRepository.findAll()).thenReturn(Arrays.asList(
-                new Service("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
-                new Service("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")));
+                new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
+                new ServiceEntity("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")));
 
         when(serviceResponseMapper.toServicesResponse(Mockito.anyList())).thenReturn(mockServiceResponses);
 
@@ -109,7 +110,7 @@ public class ServiceServiceImplUnitTest {
                 .serviceImage("test-image-carousel-5_jhydhp.jpg")
                 .build();
 
-        Service mockService = Service.builder()
+        ServiceEntity mockService = ServiceEntity.builder()
                 .serviceName("Test Service 1")
                 .serviceDescription("Test Service 1 Description")
                 .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
@@ -155,7 +156,7 @@ public class ServiceServiceImplUnitTest {
                 .serviceImage("test-image-carousel-5_jhydhp.jpg")
                 .build();
 
-        Service mockService = Service.builder()
+        ServiceEntity mockService = ServiceEntity.builder()
                 .serviceName("Test Service 1")
                 .serviceDescription("Test Service 1 Description")
                 .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
@@ -189,5 +190,101 @@ public class ServiceServiceImplUnitTest {
         assertEquals(2, result);
         Mockito.verify(serviceRepository, Mockito.times(1)).countAllBy();
     }
+
+    @Test
+    void modifyService_ShouldSucceed() throws IOException {
+        // Arrange
+        ServiceRequest mockServiceRequest = ServiceRequest.builder()
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("thunderBolt_yguofq.png")
+                .serviceImage("test-image-carousel-5_jhydhp.jpg")
+                .build();
+
+        ServiceEntity mockService = ServiceEntity.builder()
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
+                .serviceImage("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .build();
+
+        ServiceResponse mockServiceResponse = ServiceResponse.builder()
+                .serviceId("1")
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
+                .serviceImage("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .build();
+
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(mockService);
+        when(serviceRequestMapper.toService(mockServiceRequest)).thenReturn(mockService);
+        when(cloudinaryService.uploadBase64Image(Mockito.anyString())).thenReturn("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png");
+        when(cloudinaryService.uploadBase64Image(Mockito.anyString())).thenReturn("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg");
+        when(serviceRepository.save(mockService)).thenReturn(mockService);
+        when(serviceResponseMapper.toServiceResponse(mockService)).thenReturn(mockServiceResponse);
+
+        // Act
+        ServiceResponse result = serviceService.modifyService("1", mockServiceRequest);
+
+        // Assert
+        assertEquals(mockServiceResponse, result);
+        assertEquals(mockServiceResponse.getServiceId(), result.getServiceId());
+        assertEquals(mockServiceResponse.getServiceName(), result.getServiceName());
+        assertEquals(mockServiceResponse.getServiceDescription(), result.getServiceDescription());
+        assertEquals(mockServiceResponse.getServiceIcon(), result.getServiceIcon());
+        assertEquals(mockServiceResponse.getServiceImage(), result.getServiceImage());
+    }
+
+    @Test
+    void modifyService_ShouldThrowRuntimeExceptionOnIOException() throws IOException {
+        // Arrange
+        ServiceRequest mockServiceRequest = ServiceRequest.builder()
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("thunderBolt_yguofq.png")
+                .serviceImage("test-image-carousel-5_jhydhp.jpg")
+                .build();
+
+        ServiceEntity mockService = ServiceEntity.builder()
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
+                .serviceImage("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .build();
+
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(mockService);
+        when(serviceRequestMapper.toService(mockServiceRequest)).thenReturn(mockService);
+        when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public_id");
+        when(cloudinaryService.updateCloudinaryImage(Mockito.anyString(), Mockito.anyString())).thenThrow(new IOException("Simulated IOException"));
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            serviceService.modifyService("1", mockServiceRequest);
+        });
+
+        assertEquals("Failed to update images.", exception.getMessage());
+        assertEquals("Simulated IOException", exception.getCause().getMessage());
+    }
+
+
+    @Test
+    void whenModifyServiceNotFound_thenReturnException() throws IOException {
+        // Arrange
+        ServiceRequest mockServiceRequest = ServiceRequest.builder()
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("thunderBolt_yguofq.png")
+                .serviceImage("test-image-carousel-5_jhydhp.jpg")
+                .build();
+
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(null);
+
+        ServiceNotFoundException exception = assertThrows(ServiceNotFoundException.class, () -> {
+            serviceService.modifyService("1", mockServiceRequest);
+        });
+
+        assertEquals("No service found.", exception.getMessage());
+    }
+
 
 }
