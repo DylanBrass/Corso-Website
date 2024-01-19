@@ -19,7 +19,7 @@ class ServiceRepositoryTest {
     @Test
     void findByServiceIdentifier_ServiceId() {
         String serviceId = "982577e6-1909-46b8-8583-e08c9daa4e9b";
-        Service service = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
+        ServiceEntity service = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
         assertEquals(serviceId, service.getServiceIdentifier().getServiceId());
     }
 

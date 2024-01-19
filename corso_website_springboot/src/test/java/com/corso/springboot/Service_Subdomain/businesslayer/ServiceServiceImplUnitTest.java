@@ -1,6 +1,6 @@
 package com.corso.springboot.Service_Subdomain.businesslayer;
 
-import com.corso.springboot.Service_Subdomain.datalayer.Service;
+import com.corso.springboot.Service_Subdomain.datalayer.ServiceEntity;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapper;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
@@ -49,7 +49,7 @@ public class ServiceServiceImplUnitTest {
         // Arrange
         ServiceResponse mockServiceResponse = new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image");
 
-        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(new Service("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"));
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"));
         when(serviceResponseMapper.toServiceResponse(Mockito.any())).thenReturn(mockServiceResponse);
 
         // Act
@@ -85,8 +85,8 @@ public class ServiceServiceImplUnitTest {
         );
 
         when(serviceRepository.findAll()).thenReturn(Arrays.asList(
-                new Service("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
-                new Service("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")));
+                new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
+                new ServiceEntity("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")));
 
         when(serviceResponseMapper.toServicesResponse(Mockito.anyList())).thenReturn(mockServiceResponses);
 
@@ -109,7 +109,7 @@ public class ServiceServiceImplUnitTest {
                 .serviceImage("test-image-carousel-5_jhydhp.jpg")
                 .build();
 
-        Service mockService = Service.builder()
+        ServiceEntity mockService = ServiceEntity.builder()
                 .serviceName("Test Service 1")
                 .serviceDescription("Test Service 1 Description")
                 .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
@@ -155,7 +155,7 @@ public class ServiceServiceImplUnitTest {
                 .serviceImage("test-image-carousel-5_jhydhp.jpg")
                 .build();
 
-        Service mockService = Service.builder()
+        ServiceEntity mockService = ServiceEntity.builder()
                 .serviceName("Test Service 1")
                 .serviceDescription("Test Service 1 Description")
                 .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")

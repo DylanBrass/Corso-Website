@@ -1,7 +1,7 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
 import com.corso.springboot.Service_Subdomain.businesslayer.CloudinaryService;
-import com.corso.springboot.Service_Subdomain.datalayer.Service;
+import com.corso.springboot.Service_Subdomain.datalayer.ServiceEntity;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ public class ServiceControllerIntegrationTest {
     @MockBean
     private CloudinaryService cloudinaryService;
 
-    Service service = new Service("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image");
+    ServiceEntity service = new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image");
 
     @BeforeEach
     public void setUp() {

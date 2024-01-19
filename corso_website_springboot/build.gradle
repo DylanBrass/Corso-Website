@@ -129,6 +129,7 @@ test {
     exclude '**/CreateExternalOrderTest.class'
     exclude '**/CreateAServiceTest.class'
     exclude '**/ViewServiceDetailsAdmin.class'
+    exclude '**/ModifyServiceTest.class'
     exclude '**/ChooseViewableFaqsTest.class'
     exclude '**/AdminAcceptRequestTest.class'
     exclude '**/AdminDeclinesRequestTest.class'

@@ -1,0 +1,92 @@
+@startuml
+actor Admin
+participant "<<View>>\nDashboard" as DashB
+
+participant "ModifyAGalleryPhoto" as ModifyAGalleryPhoto
+
+participant "galleryRequest : GalleryRequest" as GalleryRequest
+
+participant "GalleryController" as GalleryController
+
+participant "galleryResponse : GalleryResponse" as GalleryResponse
+
+participant "GalleryService" as GalleryService
+
+
+participant "gallery : Gallery" as Gallery
+
+
+participant "GalleryRepository" as GalleryRepository
+
+participant "galleryDb : Gallery" as GalleryDb
+
+participant "Database" as Db
+
+participant "GalleryResponseMapper" as GalleryResponseMapper
+
+participant "GalleryRequestMapper" as GalleryRequestMapper
+
+ref over Admin, DashB, MoodifyAGalleryPhoto, GalleryRequest, GalleryController, GalleryResponse, GalleryService, Gallery, GalleryRepository, GalleryDb, Db, GalleryResponseMapper, GalleryRequestMapper
+    ViewGalleryById
+end ref
+
+opt
+Admin -> DashB : ModifyAGalleryPhoto()
+activate DashB
+
+DashB -> ModifyAGalleryPhoto : Render()
+activate ModifyAGalleryPhoto
+
+ModifyAGalleryPhoto -> GalleryRequest : PUT api/v1/corso/galleries/{galleryId}
+activate GalleryRequest
+
+GalleryRequest -> GalleryController
+activate GalleryController
+
+GalleryController -> GalleryService : modifyGallery(galleryId, galleryRequest)
+activate GalleryService
+
+GalleryService -> GalleryRequestMapper : mapToGallery(galleryRequest)
+activate GalleryRequestMapper
+
+GalleryRequestMapper -> Gallery : Gallery
+
+deactivate GalleryRequest
+deactivate GalleryRequestMapper
+
+activate Gallery
+
+Gallery -> GalleryService : gallery : Gallery
+
+GalleryService -> GalleryRepository : save(gallery)
+deactivate Gallery
+
+GalleryRepository -> Db : UPDATE gallery SET description = :description, photo = :photo WHERE gallery_id = :galleryId
+activate Db
+
+Db -> GalleryDb : galleryDb : Gallery
+deactivate Db
+
+activate GalleryDb
+GalleryDb -> GalleryRepository : galleryDb : Gallery
+
+GalleryRepository -> GalleryService : galleryDb : Gallery
+deactivate GalleryRepository
+GalleryService -> GalleryResponseMapper : mapToGalleryResponse(gallery)
+deactivate GalleryDb
+activate GalleryResponseMapper
+
+GalleryResponseMapper --> GalleryResponse : GalleryResponse
+deactivate GalleryResponseMapper
+activate GalleryResponse
+
+GalleryResponse --> GalleryService : galleryResponse : GalleryResponse
+
+GalleryService --> GalleryController : galleryResponse : GalleryResponse
+
+GalleryController --> ModifyAGalleryPhoto : GalleryResponse
+
+deactivate GalleryResponse
+
+end opt
+@enduml

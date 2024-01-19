@@ -5,6 +5,7 @@ import { useAuth } from '../../security/Components/AuthProvider';
 import NavigationBar from '../../Components/NavBar/NavigationBar';
 import {useParams} from "react-router-dom";
 import Service from "../../Models/Service";
+import engine from '../../images/engine.png';
 
 function ViewSpecificServiceAdmin() {
 
@@ -52,11 +53,18 @@ function ViewSpecificServiceAdmin() {
     }, []);
     const [service, setService] = useState(new Service("", "", "", "", ""));
 
+    const handlePageSizeToModifyService = (serviceId: string) => {
+        window.location.href = `/modify-service/${serviceId}`;
+    }
+
     return (
         <>
             <NavigationBar />
             <div className="container">
                 <div className="row justify-content-center">
+                    <div className="engine-container">
+                        <img src={engine} alt="engine" className="engine"  onClick={() => handlePageSizeToModifyService(service.serviceId)}/>
+                    </div>
                     <div className="col-md-8">
                         <div className="view-service-admin-container">
                             <div className="view-service-admin-container-content">

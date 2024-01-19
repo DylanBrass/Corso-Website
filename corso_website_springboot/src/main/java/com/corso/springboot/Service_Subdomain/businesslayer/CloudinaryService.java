@@ -48,5 +48,31 @@ public class CloudinaryService {
             throw new IOException("Error while uploading the image to Cloudinary.", e);
         }
     }
+
+    public String extractPublicIdFromCloudinaryUrl(String cloudinaryUrl) {
+        // Extract the public ID from the Cloudinary URL
+        int lastSlashIndex = cloudinaryUrl.lastIndexOf('/');
+        int fileExtensionIndex = cloudinaryUrl.lastIndexOf('.');
+        return cloudinaryUrl.substring(lastSlashIndex + 1, fileExtensionIndex);
+    }
+
+    public String updateCloudinaryImage(String publicId, String base64Image) throws IOException {
+        try {
+            // Decode the base64 string
+            byte[] decodedBytes = Base64.getDecoder().decode(base64Image.split(",")[1]);
+
+            // Update the existing image in Cloudinary
+            Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.asMap("public_id", publicId));
+            String updatedUrl = (String) uploadResult.get("url");
+
+            if (updatedUrl == null || updatedUrl.isEmpty()) {
+                throw new IllegalStateException("Failed to update the picture in Cloudinary.");
+            }
+
+            return updatedUrl;
+        } catch (IOException e) {
+            throw new IOException("Error while updating the image in Cloudinary.", e);
+        }
+    }
 }
 

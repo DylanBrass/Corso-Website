@@ -9,7 +9,7 @@ import lombok.*;
 @Table(name = "services")
 @AllArgsConstructor
 @Entity
-public class Service {
+public class ServiceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class Service {
     private String serviceIcon;
     private String serviceImage;
 
-    public Service(){
+    public ServiceEntity(){
         this.serviceIdentifier = new ServiceIdentifier();
     }
 
-    public Service(String serviceName, String serviceDescription, String serviceIcon, String serviceImage) {
+    public ServiceEntity(String serviceName, String serviceDescription, String serviceIcon, String serviceImage) {
         this.serviceIdentifier = new ServiceIdentifier();
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
