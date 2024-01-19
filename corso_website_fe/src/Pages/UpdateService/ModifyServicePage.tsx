@@ -250,7 +250,7 @@ function ModifyServicePage() {
               </div>
             </div>
             <div className="submit-button-container">
-              <input type="submit" value="Submit" className="submit-button"/>
+              <input type="submit" value="Save Changes" className="submit-button"/>
             </div>
           </form>
         </div>
