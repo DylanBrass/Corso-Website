@@ -19,6 +19,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
@@ -46,17 +48,10 @@ public class ServiceControllerIntegrationTest {
     @MockBean
     private CloudinaryService cloudinaryService;
 
-    ServiceEntity service = new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image");
-
-    @BeforeEach
-    public void setUp() {
-        serviceRepository.deleteAll();
-        serviceRepository.save(service);
-    }
     @Test
     public void whenServiceByIdExists_thenReturnService() {
         //arrange
-        String serviceId = service.getServiceIdentifier().getServiceId();
+        String serviceId = "982577e6-1909-46b8-8583-e08c9daa4e9b";
 
         //act
         webTestClient.get()
@@ -69,7 +64,7 @@ public class ServiceControllerIntegrationTest {
 
     @Test
     public void whenGetAllServices_thenReturnAllServices() {
-        Integer expectedNumServices = 1;
+        Integer expectedNumServices = 5;
         //act
         webTestClient.get()
                 .uri(BASE_URI_SERVICES)
@@ -103,6 +98,41 @@ public class ServiceControllerIntegrationTest {
 
     @Test
     @WithMockUser(authorities = "Admin")
+    public void whenModifyingServiceWithValidValues_thenReturnModifiedService() throws Exception {
+        // Arrange
+        String serviceId = "982577e6-1909-46b8-8583-e08c9daa4e9b";
+
+        // Mock the CloudinaryService behavior
+        Mockito.when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public-id");
+        Mockito.when(cloudinaryService.updateCloudinaryImage(Mockito.anyString(), Mockito.anyString())).thenReturn("updatedImageUrl");
+
+        // Prepare a valid ServiceRequest for modification
+        String serviceRequestJson = "{ \"serviceName\": \"Modified Service\", \"serviceDescription\": \"Modified Description\", \"serviceIcon\": \"base64ModifiedIcon\", \"serviceImage\": \"base64ModifiedImage\" }";
+
+        // Perform the PUT request to modify the service
+        mockMvc.perform(put(BASE_URI_SERVICES + "/" + serviceId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(serviceRequestJson)
+                        .with(csrf())
+                        .with(oidcLogin().authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.serviceId").value(serviceId))
+                .andExpect(jsonPath("$.serviceName").value("Modified Service"))
+                .andExpect(jsonPath("$.serviceDescription").value("Modified Description"))
+                .andExpect(jsonPath("$.serviceIcon").value("updatedImageUrl"))
+                .andExpect(jsonPath("$.serviceImage").value("updatedImageUrl"));
+
+        // Verify that the service in the repository has been updated
+        ServiceEntity modifiedService = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
+        assertNotNull(modifiedService);
+        assertEquals("Modified Service", modifiedService.getServiceName());
+        assertEquals("Modified Description", modifiedService.getServiceDescription());
+        assertEquals("updatedImageUrl", modifiedService.getServiceIcon());
+        assertEquals("updatedImageUrl", modifiedService.getServiceImage());
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
     public void whenGettingCountOfAllServices_thenReturnCount() throws Exception {
         //act
         mockMvc.perform(get(BASE_URI_SERVICES + "/count")
@@ -110,6 +140,6 @@ public class ServiceControllerIntegrationTest {
                         .with(csrf())
                         .with(oidcLogin().authorities(new SimpleGrantedAuthority("Admin"))))
                 .andExpect(status().isOk())
-                .andExpect(content().string("1"));
+                .andExpect(content().string("5"));
     }
 }
