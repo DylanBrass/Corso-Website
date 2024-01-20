@@ -53,6 +53,7 @@ public class ServiceServiceImpl implements ServiceService{
             service.setServiceIcon(iconUrl);
             service.setServiceImage(imageUrl);
 
+
             // Saving the service
             ServiceEntity savedService = serviceRepository.save(service);
 
