@@ -121,9 +121,9 @@ spring:
     resources:
       add-mappings: false
   datasource:
-    url: jdbc:mysql://doadmin:AVNS_MZJowF3PD_DqEgNGXzM@db-mysql-nyc3-65453-do-user-15647640-0.c.db.ondigitalocean.com:25060/corso-dev-db?ssl-mode=REQUIRED
-    username: corso-dev-website-user
-    password: f#CoFJh*p\gaL+t)
+    url: jdbc:mysql://CorsoWebsiteUser:AVNS_MopAriW0UWWVFdjOBlB@db-mysql-nyc3-65453-do-user-15647640-0.c.db.ondigitalocean.com:25060/corso-dev-db?ssl-mode=REQUIRED&sslCa=ca-certificate.crt
+    username: CorsoWebsiteUser
+    password: AVNS_MopAriW0UWWVFdjOBlB
 
 
   jpa:
