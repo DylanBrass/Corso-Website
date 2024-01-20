@@ -32,6 +32,7 @@ import ViewOnGoingOrderDetailsPage from "./Pages/OrdersPages/ViewOnGoingOrderDet
 import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
 import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
+<<<<<<< Updated upstream
 import ViewSpecificFaq from "./Pages/AllFAQs/ViewSpecificFaq";
 // @ts-ignore
 import ModifyServicePage from "./Pages/UpdateService/ModifyServicePage";
@@ -67,6 +68,7 @@ export default function App() {
                         <Route path="/adminServices/:serviceId" element={<ViewSpecificServiceAdmin/>}/>
                         <Route path="/manage/currentOrder/:orderId" element={<ViewOnGoingOrderDetailsPage/>}/>
                         <Route path="/profile/reviews" element={<CustomerReviews/>}/>
+                        <Route path="/profile/reviews/:reivewId" element={<CustomerViewsSpecificReview/>}/>
                         <Route path="/profile/reviews/create" element={<CreateReview/>}/>
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
