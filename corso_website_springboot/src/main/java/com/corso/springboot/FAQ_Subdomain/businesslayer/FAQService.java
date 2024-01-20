@@ -15,4 +15,6 @@ public interface FAQService {
 
     FAQResponse getFaqByFaqId(String faqId);
 
+    FAQResponse deleteFaqByFaqId(String faqId);
+
 }

@@ -37,10 +37,16 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.chooseThreeFAQs(threeFAQsRequests));
     }
 
-  //  @PreAuthorize("hasAnyAuthority('Admin')")
+   @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/{faqId}")
     public ResponseEntity<FAQResponse> getFaqByFaqId(@PathVariable String faqId){
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFaqByFaqId(faqId));
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @DeleteMapping("/{faqId}")
+    public ResponseEntity<FAQResponse> deleteFaqByFaqId(@PathVariable String faqId){
+        return ResponseEntity.status(HttpStatus.OK).body(faqService.deleteFaqByFaqId(faqId));
     }
 
 }

@@ -76,5 +76,15 @@ public class FAQServiceImpl implements FAQService{
         return faqResponseMapper.toFAQResponse(faqRepository.getFAQByFAQId_FAQId(faqId));
     }
 
+    @Override
+    public FAQResponse deleteFaqByFaqId(String faqId) {
+        FAQ faqToDelete = faqRepository.getFAQByFAQId_FAQId(faqId);
+        if (faqToDelete == null) {
+            throw new FAQNotFoundException("FAQ not found.");
+        }
+        faqRepository.delete(faqToDelete);
+        return faqResponseMapper.toFAQResponse(faqToDelete);
+    }
+
 
 }

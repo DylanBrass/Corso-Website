@@ -20,6 +20,8 @@
     overflow: hidden;
     width: 100%;
     max-width: 800px;
+    border: 1px solid black;
+
 }
 
 .specific-faq-content {
@@ -82,3 +84,26 @@
     transform: scale(0.95);
 }
 
+/*Styling for the Trash image*/
+
+.specific-trash-faq-img {
+    margin-left: 90%;
+    margin-top: 1em;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.specific-trash-faq-img:hover {
+    background-color: red;
+    color: #FFFFFF;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.specific-trash-faq-img:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+}

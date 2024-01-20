@@ -127,4 +127,32 @@ class FAQControllerTest {
                 .jsonPath("$.answer").isEqualTo("We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.");
     }
 
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void deleteFaqById_ThenReturnDeletedFAQById() {
+        //arrange
+        String expectedFaqId = "87e59aeb-3aa3-4c22-be1d-a35acde209b9";
+        //act
+        webTestClient.delete()
+                .uri(BASE_URI_FAQS + "/" + expectedFaqId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.faqid").isEqualTo(expectedFaqId)
+                .jsonPath("$.question").isEqualTo("What services do you offer?")
+                .jsonPath("$.answer").isEqualTo("We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.");
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void deleteFaqById_ThenReturn404() {
+        //arrange
+        String expectedFaqId = "87e59aeb-3aa3-4c22-be1d-a35acde209b8";
+        //act
+        webTestClient.delete()
+                .uri(BASE_URI_FAQS + "/" + expectedFaqId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isNotFound();
+    }
+
 }
