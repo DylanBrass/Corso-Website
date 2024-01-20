@@ -47,15 +47,14 @@ class FAQControllerTest {
 
     @Test
     void GetAllFAQs_ThenReturnAllFAQS() {
-            //act
+        //act
         webTestClient.get()
                 .uri(BASE_URI_FAQS)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(5);
-        }
-
+    }
 
 
     @Test
@@ -75,9 +74,10 @@ class FAQControllerTest {
     @WithMockUser(authorities = "Admin")
     void chooseThreeFAQs_ThenReturnFAQs() throws Exception {
         mockMvc.perform(patch(BASE_URI_FAQS + "/viewable")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        [
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+
+                                [
                             {
                                 "faqId": "87e59aeb-3aa3-4c22-be1d-a35acde209b9",
                                 "preference": true
@@ -109,4 +109,22 @@ class FAQControllerTest {
 
         assert faqRepository.findAll().size() == 5;
     }
+
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void viewFaqById_ThenReturnFAQById() {
+        //arrange
+        String expectedFaqId = "87e59aeb-3aa3-4c22-be1d-a35acde209b9";
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_FAQS + "/" + expectedFaqId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.faqid").isEqualTo(expectedFaqId)
+                .jsonPath("$.question").isEqualTo("What services do you offer?")
+                .jsonPath("$.answer").isEqualTo("We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.");
+    }
+
 }

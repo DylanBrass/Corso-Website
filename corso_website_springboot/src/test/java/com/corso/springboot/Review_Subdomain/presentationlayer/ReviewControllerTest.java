@@ -76,30 +76,6 @@ class ReviewControllerTest {
                 .expectBody().jsonPath("$.length()").isEqualTo(5);
     }
 
-//    @Test
-//    @WithMockUser(authorities = "Admin")
-//    void getAllReviews_ReturnAllReviewsByCustomerFullName() {
-//        //act
-//        webTestClient.get()
-//                .uri(BASE_URI_REVIEWS + "/search?customerFullName=John Doe")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .exchange().expectStatus().isOk()
-//                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-//                .expectBody().jsonPath("$.length()").isEqualTo(1);
-//    }
-
-
-//    @Test
-//    @WithMockUser(authorities = "Admin")
-//    void getReviewsByCustomerFullName_NullParameter_ReturnsBadRequest() throws Exception {
-//        webTestClient.get()
-//                .uri(BASE_URI_REVIEWS + "/search?customerFullName=")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .exchange()
-//                .expectStatus().isBadRequest()
-//                .expectBody().isEmpty();
-//    }
-
     @Test
     @WithMockUser(authorities = "Admin")
     void getPinnedReviews_ThenReturnPinnedReviews() {

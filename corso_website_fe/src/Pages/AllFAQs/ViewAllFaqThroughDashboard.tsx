@@ -6,6 +6,7 @@ import View_light from "../../images/View_light.png";
 import CrossedOutEye from "../../images/Crossed-out_Eye.png";
 import {useAuth} from "../../security/Components/AuthProvider";
 import swal from "sweetalert";
+import Edit_light from "../../images/Edit_light.svg";
 
 interface FAQ {
     faqid: string;
@@ -89,9 +90,14 @@ function ViewAllFaqThroughDashboard() {
     };
 
 
+
     const selectedFaqsCount = faqs.filter((faq) => faq.preference).length;
     const showMoreThanThreeMessage = selectedFaqsCount > 3;
     const showLessThanThreeMessage = selectedFaqsCount < 3;
+
+    const viewSpecificFaq = (faqId: string) => {
+        window.location.href = 'http://localhost:3000/faqs/' + faqId;
+    }
 
     return (
         <div className="faqs-dashboard-container">
@@ -120,7 +126,7 @@ function ViewAllFaqThroughDashboard() {
                                 viewable FAQs have been selected! Please ensure there are only 3 viewable FAQs selected.
                             </p>
                         ) : (
-                          <p className="success"></p>
+                            <p className="success"></p>
                         )}
                     </div>
                 </div>
@@ -128,40 +134,53 @@ function ViewAllFaqThroughDashboard() {
                 <div className="row">
                     {faqs.map((faq, index) => (
                         <div className="col-md-6 col-sm-12 mb-4">
-                            <div className="faq-card w-100">
+                            <div className="faq-card w-100" >
                                 <div className="faq-info">
                                     <div className="faq-box-question row w-100 h-100">
                                         <div className="col-6">
                                             <p className="faq-question">{faq.question}</p>
                                         </div>
-                                        <div className={"col-2"} />
+                                        <div className={"col-2"}/>
                                         <div className={"col-4 text-end"}>
+                                            <button className={"edit-specific-classBtn"} onClick={() => viewSpecificFaq(faq.faqid)}>
+                                                <img src={Edit_light} alt={"edit_light"}/>
+                                            </button>
+
                                             {faq.preference ? (
-                                                <span
+                                                <button
+
                                                     className="faq-pinned"
                                                     onClick={() => toggleFaqPreference(faq.faqid)}
+
                                                 >
                                                 <img
                                                     src={View_light}
                                                     className={`faq-pinned-img faq-img-${index}`}
                                                     alt={"faq-pinned"}
+
                                                 />
-                                            </span>
+                                            </button>
+
                                             ) : (
-                                                <span
+
+
+                                                <button
                                                     className="faq-not-pinned"
                                                     onClick={() => toggleFaqPreference(faq.faqid)}
                                                 >
                                                 <img
                                                     src={CrossedOutEye}
+
                                                     className={`faq-not-pinned-img faq-img-${index}`}
                                                     alt={"faq-not-pinned"}
                                                 />
-                                            </span>
+
+                                            </button>
                                             )}
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="faq-content">
                                     <p className="faq-message">{faq.answer}</p>
                                 </div>

@@ -22,4 +22,10 @@ class FAQRepositoryPersistanceTest {
 
 
     }
+
+    @Test
+    public void testGetFAQByFAQId_FAQId() {
+        FAQ faq = faqRepository.getFAQByFAQId_FAQId(preSavedfaq.getFAQId().getFAQId());
+        assert(faq.getFAQId().getFAQId().equals(preSavedfaq.getFAQId().getFAQId()));
+    }
 }
