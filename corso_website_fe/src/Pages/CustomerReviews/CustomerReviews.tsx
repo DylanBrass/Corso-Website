@@ -13,7 +13,6 @@ interface Review {
 }
 
 function CustomerReviews() {
-    const [error, setError] = useState<string | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
@@ -27,8 +26,7 @@ function CustomerReviews() {
 
                 setReviews(sortedReviews);
             } catch (error) {
-                console.error('Error fetching reviews:', error);
-                setError('Error fetching reviews.');
+                
             }
         };
         fetchReviews()
@@ -37,9 +35,6 @@ function CustomerReviews() {
     return (
         <>
             <NavigationBar/>
-            {error && <div className="row">
-                <div className="col-12"><p className="error">Error: {error}</p></div>
-            </div>}
             <div className="customer-review-container">
                 <h1>My Reviews</h1>
                 <div className="customer-review-tiles-container w-75">
@@ -54,7 +49,7 @@ function CustomerReviews() {
                                 reviewRating: review.reviewRating,
                                 pinned: review.pinned,
                                 action: () => {
-                                    console.log("Service clicked");
+                                    
                                 }
                             }}
                         />

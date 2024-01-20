@@ -5,7 +5,7 @@ function VerifyRedirect() {
 
     useEffect(() => {
         // @ts-ignore
-        console.log(document.cookie)
+        
         // @ts-ignore
         if (document.cookie.includes("isAuthenticating=true")) {
             // @ts-ignore

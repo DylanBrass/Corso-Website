@@ -75,9 +75,10 @@ function ManageReviews() {
                     }
                 })
                 .then((response) => {
-                    console.log('API Response:', response.data)
+
                     const updatedReviews = reviews.map((review) => {
                         if (review.reviewId === response.data.reviewId) {
+                            console.log(response.data)
                             return response.data;
                         }
                         return review;
@@ -87,7 +88,7 @@ function ManageReviews() {
 
                 })
                 .catch((error) => {
-                    console.error('API Error:', error);
+                    
                     if (error.response.status === 401 || error.response.status === 403) {
                         // @ts-ignore
                         auth.authError(error.response.status);
@@ -98,7 +99,7 @@ function ManageReviews() {
                         swal("Warning!", error.response.data.message, "warning")
                     }
                 }).finally(() => {
-                    console.log("Done")
+                    
                     document.getElementById(reviewId + "-spinner")?.classList.add("d-none");
                     document.getElementById(reviewId + "-button")?.classList.remove("d-none");
                     setIsLoading(false)
@@ -141,7 +142,7 @@ function ManageReviews() {
             setReviews(reviewResponse.data);
             setTotalPages(Math.ceil(totalCount / size))
         } catch (error) {
-            console.error(error);
+            
             setError('Error fetching reviews.');
             // @ts-ignore
             auth.authError(error.response.status);
@@ -246,7 +247,7 @@ function ManageReviews() {
                                                             return;
                                                         }
                                                         toggleReviewPinned(review.reviewId).then(r => {
-                                                            console.log(r)
+                                                            
                                                         })
                                                     }}>
                                                 <img

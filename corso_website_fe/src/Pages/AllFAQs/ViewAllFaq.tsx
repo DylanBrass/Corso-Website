@@ -21,7 +21,7 @@ function ViewAllFaq() {
                 setFaqs(r.data)
             })
             .catch(e => {
-                console.log(e)
+                
             })
     }
 

@@ -32,7 +32,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    console.log(r.data)
+                    
                     setTotalReviews(r.data)
                 }
             })
@@ -51,7 +51,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    console.log(r.data)
+                    
                     setTotalPinnedReviews(r.data)
                 }
             })
@@ -70,7 +70,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    console.log(r.data)
+                    
                     setTotalAdmins(r.data)
                 }
             })
@@ -89,7 +89,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    console.log(r.data)
+                    
                     setTotalOrders(r.data)
                 }
             })
@@ -108,7 +108,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    console.log(r.data)
+                    
                     setVisitors(r.data)
                 }
             })
@@ -134,7 +134,7 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                console.error("Error fetching in progress count", error);
+                
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
@@ -156,7 +156,7 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                console.error("Error fetching pending count", error);
+                
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
@@ -177,7 +177,7 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                console.error("Error fetching completed count", error);
+                
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
@@ -196,7 +196,7 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                console.error("Error fetching completed count", error);
+                
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
@@ -213,11 +213,11 @@ function Dashboard() {
         }
 
         getTotalAdmins().then(r => {
-            console.log(r)
+            
         })
 
         getVisitors().then(r => {
-            console.log(r)
+            
         })
         getInProgressCount().then(() => {
         });
@@ -228,15 +228,15 @@ function Dashboard() {
         getServicesCount()
 
         getTotalOrders().then(r => {
-            console.log(r)
+            
         })
 
         getTotalReviews().then(r => {
-            console.log(r)
+            
         })
 
         getTotalPinnedReviews().then(r => {
-            console.log(r)
+            
         })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -259,7 +259,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon1_arlmbi.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/orders/completed"
                             }}
                         />
@@ -273,7 +273,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon2_upzhcv.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/orders/current"
                             }}
                         />
@@ -287,7 +287,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon3_fv4ddv.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/orders/pending"
                             }}
                         />
@@ -302,7 +302,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267713/icon4_v5phq3.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/orders/all"
                             }}
                         />
@@ -316,7 +316,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon5_tgqojw.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/orders/overdue"
                             }}
                         />
@@ -345,7 +345,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon7_vftm9q.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/carousel/order"
                             }}
                         />
@@ -354,7 +354,7 @@ function Dashboard() {
 
                         <AdminDashboardTile title1={"Reports"} text1={""} title2={""} text2={""} icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon13_pxn61t.png"}
                                             action={() => {
-                                                console.log("test")
+                                                
                                             }}/>
                     </div>
                     <div className={"col-4"}>
@@ -393,7 +393,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon11_pprfnf.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href="/services"
                             }}
                         />
@@ -423,7 +423,7 @@ function Dashboard() {
                             text2={"Pinned Testimonies"}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon8_jbbxv9.png"}
                             action={() => {
-                                console.log("test")
+                                
                                 window.location.href = "/manage/testimonies"
                             }}
                         />

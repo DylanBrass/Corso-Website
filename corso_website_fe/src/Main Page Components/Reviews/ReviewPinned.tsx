@@ -23,7 +23,7 @@ function ReviewPinned() {
                 setPinnedReviews(r.data)
             })
             .catch(e => {
-                console.log(e)
+                
             })
     }
 

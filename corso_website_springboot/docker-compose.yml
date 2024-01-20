@@ -2,13 +2,10 @@ services:
 #  corso-frontend:
 #    build:
 #      context: ../corso_website_fe
-#      args:
-#        - REACT_APP_BACKEND_URL=http://localhost:8080/
 #    hostname: corso-fe
 #    container_name: docker-react-i
 #    ports:
 #      - "3000:80"
-
   corso-backend:
     build: .
     hostname: corso-be

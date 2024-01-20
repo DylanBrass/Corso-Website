@@ -17,9 +17,9 @@ function AllServices() {
             try {
                 const response = await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/services');
                 setServices(response.data);
-                console.log(response.data)
+                
             } catch (error) {
-                console.error('Error fetching services:', error);
+                
                 // @ts-ignore
                 setError(error.message);
             }

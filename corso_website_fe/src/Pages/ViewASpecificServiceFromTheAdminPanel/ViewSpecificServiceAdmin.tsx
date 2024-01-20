@@ -36,7 +36,7 @@ function ViewSpecificServiceAdmin() {
                 setService(service);
             })
             .catch(err => {
-                console.log(err);
+                
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -48,7 +48,7 @@ function ViewSpecificServiceAdmin() {
     }
 
     useEffect(() => {
-        getService().then(r => console.log("Service fetched"));
+        getService()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [service, setService] = useState(new Service("", "", "", "", ""));

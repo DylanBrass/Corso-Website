@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useEffect} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import Cookies from "js-cookie";
 import axios from "axios";
 import {Bounce, toast, ToastContainer} from "react-toastify";
@@ -6,7 +6,12 @@ import {Bounce, toast, ToastContainer} from "react-toastify";
 // @ts-ignore
 const AuthContext = createContext();
 
-
+const userRoles = () => {
+    if (Cookies.get("accessPermission") === undefined) {
+        return ""
+    }
+    return Cookies.get("accessPermission")
+}
 // @ts-ignore
 const AuthProvider = ({children}) => {
     const [isAuthenticated, setIsAuthenticated] =
@@ -36,13 +41,14 @@ const AuthProvider = ({children}) => {
     }, [isAuthenticated])
 
     const login = () => {
-        window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
+        window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
     }
 
 
     const getUserInfo = async () => {
-        if (isAuthenticated) {
-            axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
+        // @ts-ignore
+        if (isAuthenticated && !userRoles().toString().includes("Admin")) {
+            axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': csrfToken
@@ -52,7 +58,7 @@ const AuthProvider = ({children}) => {
                     if (r.status === 200) {
                         Cookies.set("username", r.data.name)
                         Cookies.set("email", r.data.email)
-                    }else{
+                    } else {
                         getInfo()
                     }
                 })
@@ -61,9 +67,12 @@ const AuthProvider = ({children}) => {
                 })
 
         }
+    }
 
-        const getInfo = async () => {
-            axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/security/user-info", {
+    const getInfo = async () => {
+        // @ts-ignore
+        if (isAuthenticated && !userRoles().toString().includes("Admin")) {
+            axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/security/user-info", {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': csrfToken
@@ -82,15 +91,14 @@ const AuthProvider = ({children}) => {
         }
     }
 
+
     useEffect(() => {
-        if (isAuthenticated) {
+        // @ts-ignore
+        if (isAuthenticated && !userRoles().toString().includes("Admin")) {
             getUserInfo()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated]);
-
-
-
 
 
     const authError = (status: number) => {
@@ -106,18 +114,13 @@ const AuthProvider = ({children}) => {
                 theme: "colored",
                 transition: Bounce
             });
-            window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
+            window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
         } else if (status === 403) {
             window.location.href = "/403"
         }
     }
 
-    const userRoles = () => {
-        if (Cookies.get("accessPermission") === undefined) {
-            return []
-        }
-        return Cookies.get("accessPermission")
-    }
+
 
     const getXsrfToken = () => {
         return csrfToken
@@ -125,7 +128,7 @@ const AuthProvider = ({children}) => {
 
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles,getUserInfo}}>
+        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo}}>
             {children}
             <ToastContainer
                 position="top-center"

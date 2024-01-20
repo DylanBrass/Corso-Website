@@ -85,7 +85,7 @@ function EditGallery() {
                 const sortedImages = response.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
                 setImages(sortedImages);
             } catch (error) {
-                console.error('Error fetching images:', error);
+                
             }
         };
         fetchImages();
@@ -139,7 +139,7 @@ function EditGallery() {
             setImages(sortedImages);
             setIsSubmitClicked(true);
         } catch (error) {
-            console.error('Error updating image order:', error);
+            
         }
     };
 
@@ -153,7 +153,7 @@ function EditGallery() {
 
     useEffect(() => {
         if (isSubmitClicked) {
-            console.log('IMAGES UPDATED', images);
+            
             setIsSubmitClicked(false);
         }
     }, [isSubmitClicked, images]);

@@ -21,7 +21,7 @@ function ServicesThroughDashboard(){
                 const response = await axios.get(process.env.REACT_APP_BE_HOST+ 'api/v1/corso/services');
                 setServices(response.data);
             } catch (error) {
-                console.error('Error fetching services:', error);
+                
                 // @ts-ignore
                 setError(error.message);
             }
@@ -30,7 +30,7 @@ function ServicesThroughDashboard(){
     }, []);
 
     const addService = () => {
-        console.log("Add service clicked");
+        
         window.location.href = "/add-service";
     }
 

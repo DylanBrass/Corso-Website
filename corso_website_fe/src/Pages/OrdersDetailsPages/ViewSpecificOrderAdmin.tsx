@@ -36,7 +36,7 @@ function ViewSpecificOrderAdmin() {
                 setOrder(order);
             })
             .catch(err => {
-                console.log(err);
+                
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -97,7 +97,7 @@ function ViewSpecificOrderAdmin() {
     }
 
     useEffect(() => {
-        console.log(loading);
+        
     }, [loading]);
 
     const acceptStatus = async () => {
@@ -120,7 +120,7 @@ function ViewSpecificOrderAdmin() {
             }
         } catch (error) {
 
-            console.error("Error updating order status: ", error);
+            
             swal("Failed!", `Failed to accept the order with tracking number ${order.orderTrackingNumber}.`, "error");
         }
     }
@@ -152,14 +152,14 @@ function ViewSpecificOrderAdmin() {
 
             setLoading(false)
         } catch (error) {
-            console.error("Error updating order status: ", error);
+            
             swal("Failed!", `Failed to decline the order with tracking number ${order.orderTrackingNumber}.`, "error");
         }
     }
 
 
     useEffect(() => {
-        getOrder().then(r => console.log("Order fetched"));
+        getOrder()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [order, setOrder] = useState(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));

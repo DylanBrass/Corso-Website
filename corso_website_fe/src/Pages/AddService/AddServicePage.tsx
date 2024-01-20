@@ -114,7 +114,7 @@ function AddServicePage() {
             .then((r) => {
                 if (r.status === 201) {
                     swal('Service created!', 'Service has been created successfully!', 'success');
-                    console.log(r.data);
+                    
                 }
             })
             .catch((e) => {

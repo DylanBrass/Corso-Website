@@ -21,9 +21,9 @@ function AddCustomerInformation(){
             try {
                 document.getElementById("city")!.setAttribute("value", place.address_components[2].long_name)
                 document.getElementById("postalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
-                console.log(place)
+                
             }catch (e) {
-                console.log(e)
+                
             }
         },
         options: {
@@ -41,7 +41,7 @@ function AddCustomerInformation(){
 
 
         checkIfProfileExists().then(r => {
-            console.log(r)
+            
         })
 
 
@@ -56,10 +56,10 @@ function AddCustomerInformation(){
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
             }
         }).then(r => {
-            console.log(r.status);
+            
             if (r.status === 200) {
                 setHasProfile(true);
-                console.log(hasProfile);
+                
                 axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
                     headers: {
                         // @ts-ignore
@@ -67,7 +67,7 @@ function AddCustomerInformation(){
                     },
                 }).then(r => {
                     if (r.status === 200) {
-                        console.log(r.data);
+                        
                         document.getElementById("name")!.setAttribute("value", r.data.name);
                         document.getElementById("email")!.setAttribute("value", r.data.email);
                         document.getElementById("address")!.setAttribute("value", r.data.address);
@@ -78,7 +78,7 @@ function AddCustomerInformation(){
                             document.getElementById("apartmentNumber")!.setAttribute("value", r.data.apartmentNumber);
                     }
                 }).catch(e => {
-                        console.log(e);
+                        
                     }
                 )
             } else {
@@ -87,7 +87,7 @@ function AddCustomerInformation(){
                 document.getElementById("email")!.setAttribute("value", Cookies.get("email")!);
             }
         }).catch(e => {
-                console.log(e);
+                
                 setHasProfile(false);
                 document.getElementById("name")!.setAttribute("value", Cookies.get("username")!);
                 document.getElementById("email")!.setAttribute("value", Cookies.get("email")!);
@@ -144,7 +144,7 @@ function AddCustomerInformation(){
                 },
             }).then(r => {
                 if (r.status === 200) {
-                    console.log(r.data);
+                    
                     Cookies.set("username", r.data.name);
                     Cookies.set("email", r.data.email);
                     swal("Profile Updated Successfully", "", "success")
@@ -176,7 +176,7 @@ function AddCustomerInformation(){
                 })
                 .then((r: any) => {
                     if (r.status === 201) {
-                        console.log(r.data);
+                        
                         Cookies.set("username", r.data.name);
                         Cookies.set("email", r.data.email);
                         swal("Profile Created Successfully", "", "success")
@@ -214,9 +214,9 @@ function AddCustomerInformation(){
                 }
             });
 
-            console.log(response);
+            
             if (response.status === 204) {
-                console.log(response.data);
+                
                 Cookies.remove("username");
                 Cookies.remove("email");
 
@@ -241,7 +241,7 @@ function AddCustomerInformation(){
                     document.getElementById("city")!.setAttribute("value", "");
                     document.getElementById("apartmentNumber")!.setAttribute("value", "");
                 }).catch(e => {
-                        console.log(e);
+                        
                         if (e.response.status === 401 || e.response.status === 403) {
                             // @ts-ignore
                             auth.authError(e.response.status);

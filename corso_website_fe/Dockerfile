@@ -14,12 +14,10 @@ RUN npm run build
 # Stage 2 - Serve the React application using NGINX
 FROM nginx:alpine
 
-# copy the .conf template
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
-## Remove default nginx index page and replace it with the static files we created in the first step
 RUN rm -rf /usr/share/nginx/html/*
-COPY --from=react-build /corso_website_fe/build /usr/share/nginx/html
+COPY --from=react-build /corso_website_fe/  /usr/share/nginx/html
 EXPOSE 80
 
 CMD nginx -g 'daemon off;'

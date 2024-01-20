@@ -21,7 +21,7 @@ function FaqPinnedMainPage() {
                 setPreferredFaq(r.data)
             })
             .catch(e => {
-                console.log(e)
+                
             })
     }
 

@@ -10,7 +10,7 @@ function BannerMainPage({image}) {
 
     useEffect(() => {
 
-        getUsername().then(r => console.log("Username set"))
+        getUsername()
     }, [])
 
     const getUsername = async () => {
@@ -22,7 +22,7 @@ function BannerMainPage({image}) {
             while (Cookies.get("username") === undefined) {
 
                 await new Promise(r => setTimeout(r, 50));
-                console.log("Waiting for username")
+                
 
                 if (Cookies.get("username") !== undefined) {
                     // @ts-ignore
@@ -59,7 +59,7 @@ function BannerMainPage({image}) {
 
                         <button className={"banner-btn mt-5 mb-5"}
                                 onClick={() => {
-                                    console.log("Hello")
+                                    
                                     window.location.href = "/profile/orders"
                                 }}>Past Orders
                         </button>
@@ -68,7 +68,7 @@ function BannerMainPage({image}) {
 
                         <button className={"banner-btn mt-5 mb-5"}
                                 onClick={() => {
-                                    console.log("Hello")
+                                    
                                 }}>Request Now!
                         </button>
                     </div>

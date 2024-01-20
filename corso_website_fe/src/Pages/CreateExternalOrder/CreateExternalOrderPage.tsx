@@ -31,9 +31,9 @@ function CreateExternalOrderPage() {
                 document.getElementById("customerAddress")!.setAttribute("value", place.formatted_address)
                 document.getElementById("customerCity")!.setAttribute("value", place.address_components[2].long_name)
                 document.getElementById("customerPostalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
-                console.log(place)
+                
             }catch (e) {
-                console.log(e)
+                
             }
         },
         options: {
@@ -94,7 +94,7 @@ function CreateExternalOrderPage() {
         event.preventDefault()
 
 
-        console.log((document.getElementById("serviceId") as HTMLInputElement).value)
+        
 
         let data = {
             "serviceId": (document.getElementById("serviceId") as HTMLInputElement).value,
@@ -245,7 +245,7 @@ function CreateExternalOrderPage() {
                     document.getElementById("customerPostalCode")!.setAttribute("value", "");
                     document.getElementById("customerCity")!.setAttribute("value", "");
                     document.getElementById("customerApartment")!.setAttribute("value", "");
-                    console.log(ref)
+                    
                 }
             }
                     className={"mt-1 mb-5 btn-style"}
