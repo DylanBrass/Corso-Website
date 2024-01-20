@@ -88,5 +88,13 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.customerCreateReview(userId, reviewRequest));
     }
 
+    @GetMapping("/{reviewId}")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<ReviewResponse> getReviewByReviewIdAndUserId(@AuthenticationPrincipal OidcUser principal, @PathVariable String reviewId){
+        String userId = principal.getSubject();
+        log.info("Get review with userId: {}", userId);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByReviewIdAndUserId(reviewId, userId));
+    }
+
 
 }

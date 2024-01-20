@@ -13,6 +13,7 @@ interface Review {
 }
 
 function CustomerReviews() {
+    const [error, setError] = useState<string | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
