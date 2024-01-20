@@ -367,4 +367,45 @@ class FAQServiceImplUnitTest {
         assertEquals(mockFAQResponse.getAnswer(), faqResult.getAnswer());
         assertEquals(mockFAQResponse.isPreference(), faqResult.isPreference());
     }
+
+    @Test
+    void deleteSpecificFAQ_shouldReturnFAQId(){
+        FAQ mockFAQ = FAQ.builder()
+                .FAQId(new FAQIdentifier())
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(true)
+                .build();
+
+        FAQResponse mockFAQResponse = FAQResponse.builder()
+                .FAQId("1")
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(true)
+                .build();
+
+        Mockito.when(faqRepository.getFAQByFAQId_FAQId(Mockito.anyString())).thenReturn(new FAQ("How do I create an account", "Top right corner", true));
+        Mockito.when(faqResponseMapper.toFAQResponse(Mockito.any(FAQ.class))).thenReturn(mockFAQResponse);
+
+        // Act
+        FAQResponse faqResult = faqServiceImpl.deleteFaqByFaqId(FAQ_ID);
+
+        // Assert
+        assertEquals(mockFAQResponse, faqResult);
+        assertEquals(mockFAQResponse.getFAQId(), faqResult.getFAQId());
+        assertEquals(mockFAQResponse.getQuestion(), faqResult.getQuestion());
+        assertEquals(mockFAQResponse.getAnswer(), faqResult.getAnswer());
+        assertEquals(mockFAQResponse.isPreference(), faqResult.isPreference());
+    }
+
+    @Test
+    void deleteSpecificFAQ_shouldThrowFAQNotFoundException(){
+        Mockito.when(faqRepository.getFAQByFAQId_FAQId(Mockito.anyString())).thenReturn(null);
+
+        // Act and Assert
+        FAQNotFoundException exception = assertThrows(FAQNotFoundException.class, () -> faqServiceImpl.deleteFaqByFaqId(FAQ_ID));
+
+        // Assert
+        assertEquals("FAQ not found.", exception.getMessage());
+    }
 }
