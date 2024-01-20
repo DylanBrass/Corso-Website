@@ -33,7 +33,6 @@ import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
 import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
 import ViewSpecificFaq from "./Pages/AllFAQs/ViewSpecificFaq";
-import ViewFaq from "./Pages/AllFAQs/ViewSpecificFaq";
 // @ts-ignore
 import ModifyServicePage from "./Pages/UpdateService/ModifyServicePage";
 
