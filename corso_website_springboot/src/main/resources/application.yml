@@ -145,10 +145,10 @@ server:
   port: 8080
 
 frontend:
-  url: https://corsoelectriqueinc.tech/
+  url: https://corsoelectricdev.tech/
 
 backend:
-  url: https://api.corsoelectriqueinc.tech/
+  url: https://api.corsoelectricdev.tech/
 
 website:
   domain: corso-dev.com
