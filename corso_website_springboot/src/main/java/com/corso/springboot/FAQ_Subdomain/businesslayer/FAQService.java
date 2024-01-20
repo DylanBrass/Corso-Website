@@ -13,4 +13,6 @@ public interface FAQService {
 
     List<FAQResponse> chooseThreeFAQs(List<ThreeFAQsRequest> threeFAQsRequest);
 
+    FAQResponse getFaqByFaqId(String faqId);
+
 }

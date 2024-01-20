@@ -45,7 +45,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-
             .faq-box-question {
                 background-color: #E8E8E8;
 
@@ -54,9 +53,6 @@
                     font-size: 1.2em;
                 }
 
-                .faq-pinned .faq-not-pinned {
-                    padding: 10px;
-                }
             }
         }
 
@@ -109,6 +105,25 @@
                 background-color: #0336A9;
             }
         }
+    }
+
+
+    .faq-pinned {
+        border: none;
+        background-color: #E8E8E8;
+        outline: none;
+    }
+
+        .faq-not-pinned{
+            border:none;
+            background-color: #E8E8E8;
+            outline: none;
+
+        }
+    .edit-specific-classBtn {
+        border: none;
+        background-color: #E8E8E8;
+        margin-left: 10px;
     }
 
 }

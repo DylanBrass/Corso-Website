@@ -32,6 +32,7 @@ import ViewOnGoingOrderDetailsPage from "./Pages/OrdersPages/ViewOnGoingOrderDet
 import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
 import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
+import ViewSpecificFaq from "./Pages/AllFAQs/ViewSpecificFaq";
 // @ts-ignore
 import ModifyServicePage from "./Pages/UpdateService/ModifyServicePage";
 
@@ -46,6 +47,7 @@ export default function App() {
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/faq" element={<ViewAllFaq/>}/>
                         <Route path="/manage/faqs" element={<ViewAllFaqThroughDashboard/>}/>
+                        <Route path="/faqs/:faqId" element={<ViewSpecificFaq/>}/>
                         <Route path="/dashboard" element={<Dashboard/>}/>
                         <Route path="/create/orders/external" element={<CreateExternalOrderPage/>}/>
                         <Route path="/orders/all" element={<AllOrdersPage/>}/>
@@ -53,9 +55,7 @@ export default function App() {
                         <Route path="/orders/completed" element={<CompletedOrdersPage/>}/>
                         <Route path="/orders/pending" element={<PendingOrdersPage/>}/>
                         <Route path="/orders/overdue" element={<OverdueOrdersPage/>}/>
-
                         <Route path="/profile/manage/orders/:orderId" element={<UpdateOrder/>}/>
-
                         <Route path="/manage/testimonies" element={<ManageReviews/>}/>
                         <Route path="/carousel/order" element={<EditGallery/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>

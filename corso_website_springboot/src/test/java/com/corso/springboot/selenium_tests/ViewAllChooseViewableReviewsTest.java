@@ -28,18 +28,6 @@ public class ViewAllChooseViewableReviewsTest {
     public void ViewAllPinnedReviewsTest() {
         logger.info("Test initialized");
 
-//        $(By.linkText("LOGIN")).click();
-//        $("#username").setValue("Admin");
-//        $("[name='action']").click();
-//        $("#password").setValue("Password!!").pressEnter();
-//        $(By.linkText("DASHBOARD")).click();
-//        open("http://localhost:3000/manage/testimonies");
-//
-//        $(By.cssSelector(".row:nth-child(5) .col-12:nth-child(1)")).click();
-//        $("#e2d2cb36-5a3e-4180-afdd-b416b66a4546-button > img").click();
-//        $(By.linkText("HOME")).click();
-//        $(".testimonies-main-box > .row").click();
-
         $(By.linkText("LOGIN")).click();
         $("#username").setValue("Admin");
         $("[name='action']").click();

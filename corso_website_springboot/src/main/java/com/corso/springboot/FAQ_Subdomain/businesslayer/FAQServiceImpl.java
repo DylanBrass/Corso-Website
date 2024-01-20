@@ -71,5 +71,10 @@ public class FAQServiceImpl implements FAQService{
         return faqResponseMapper.toFAQsResponse(faqRepository.saveAll(updatedFAQs));
     }
 
+    @Override
+    public FAQResponse getFaqByFaqId(String faqId) {
+        return faqResponseMapper.toFAQResponse(faqRepository.getFAQByFAQId_FAQId(faqId));
+    }
+
 
 }
