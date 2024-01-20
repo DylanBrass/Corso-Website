@@ -121,7 +121,7 @@ spring:
     resources:
       add-mappings: false
   datasource:
-    url: jdbc:mysql:///corso-dev-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
+    url: jdbc:mysql://doadmin:AVNS_MZJowF3PD_DqEgNGXzM@db-mysql-nyc3-65453-do-user-15647640-0.c.db.ondigitalocean.com:25060/corso-dev-db?ssl-mode=REQUIRED
     username: corso-dev-website-user
     password: f#CoFJh*p\gaL+t)
 
@@ -145,10 +145,10 @@ server:
   port: 8080
 
 frontend:
-  url: https://corsoelectricdev.tech/
+  url: https://corsoelectriqueinc.tech/
 
 backend:
-  url: https://api.corsoelectricdev.tech/
+  url: https://api.corsoelectriqueinc.tech/
 
 website:
   domain: corso-dev.com
