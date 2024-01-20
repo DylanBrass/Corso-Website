@@ -1,9 +1,8 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
-import com.corso.springboot.Service_Subdomain.businesslayer.CloudinaryService;
+import com.corso.springboot.cloudinary.CloudinaryService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceEntity;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
