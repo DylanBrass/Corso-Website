@@ -7,7 +7,7 @@ COPY package.json /frontend/
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig.json .
-ENV REACT_APP_BE_HOST https://corso-website-backend-xtejdm3liq-nn.a.run.app/
+ENV REACT_APP_BE_HOST https://api.corsoelectriqueinc.tech/
 RUN npm install
 RUN npm run build
 
