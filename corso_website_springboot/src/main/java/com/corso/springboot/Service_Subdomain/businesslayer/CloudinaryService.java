@@ -1,4 +1,4 @@
-package com.corso.springboot.cloudinary;
+package com.corso.springboot.Service_Subdomain.businesslayer;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

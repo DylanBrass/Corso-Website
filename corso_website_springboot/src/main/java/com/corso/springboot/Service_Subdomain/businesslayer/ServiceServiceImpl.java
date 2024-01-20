@@ -7,7 +7,6 @@ import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapp
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
-import com.corso.springboot.cloudinary.CloudinaryService;
 import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,6 @@ public class ServiceServiceImpl implements ServiceService{
             service.setServiceIdentifier(new ServiceIdentifier());
             service.setServiceIcon(iconUrl);
             service.setServiceImage(imageUrl);
-
 
             // Saving the service
             ServiceEntity savedService = serviceRepository.save(service);

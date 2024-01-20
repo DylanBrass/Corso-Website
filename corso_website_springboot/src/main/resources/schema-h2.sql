@@ -58,10 +58,8 @@ CREATE TABLE IF NOT EXISTS `services`
     service_image VARCHAR
 (
     255
-) NOT NULL,
-    is_active BOOL
-
-);
+) NOT NULL
+    );
 
 CREATE TABLE IF NOT EXISTS `orders`
 (
