@@ -4,7 +4,6 @@ import axios from "axios";
 import "./ViewSpecificFaq.css";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import FAQ from "../../Models/FAQ";
-import ViewAllFaqThroughDashboard from "./ViewAllFaqThroughDashboard";
 
 function ViewFaq() {
     const [specificFaq, setSpecificFaq] = useState<FAQ | null>(null);
