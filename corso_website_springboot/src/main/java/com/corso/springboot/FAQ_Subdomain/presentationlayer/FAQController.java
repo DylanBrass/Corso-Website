@@ -3,6 +3,7 @@ package com.corso.springboot.FAQ_Subdomain.presentationlayer;
 
 import com.corso.springboot.FAQ_Subdomain.businesslayer.FAQService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class FAQController {
         this.faqService = faqService;
     }
 
+    @Cacheable(value = "faqs", key = "#root.methodName")
     @GetMapping()
     public ResponseEntity<List<FAQResponse>> getFAQs() {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFAQs());
@@ -34,11 +36,13 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getPreferedFAQs());
     }
 
+    @CacheEvict(value = "faqsPreferred", allEntries = true)
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PatchMapping("/viewable")
     public ResponseEntity<List<FAQResponse>> chooseThreeFAQs(@RequestBody List<ThreeFAQsRequest> threeFAQsRequests) {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.chooseThreeFAQs(threeFAQsRequests));
     }
+
 
    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/{faqId}")
@@ -46,6 +50,7 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFaqByFaqId(faqId));
     }
 
+    @CacheEvict(value = "faqsPreferred", allEntries = true)
     @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/{faqId}")
     public ResponseEntity<FAQResponse> deleteFaqByFaqId(@PathVariable String faqId){

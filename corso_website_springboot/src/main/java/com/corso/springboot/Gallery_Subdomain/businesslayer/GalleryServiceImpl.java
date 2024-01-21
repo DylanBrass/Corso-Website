@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class GalleryServiceImpl implements GalleryService{
 
@@ -26,6 +27,7 @@ public class GalleryServiceImpl implements GalleryService{
 
     @Override
     public List<GalleryResponse> getGallery() {
+        log.info("GalleryServiceImpl.getGallery() called");
         return galleryResponseMapper.toGalleriesResponse(galleryRepository.findAll());
     }
 

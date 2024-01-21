@@ -81,8 +81,6 @@ spring:
     url: jdbc:mysql:///corso-dev-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
     username: corso-dev-website-user
     password: f#CoFJh*p\gaL+t)
-
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -92,6 +90,7 @@ spring:
       mode: always
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
 
 server:
   error:
