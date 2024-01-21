@@ -29,7 +29,7 @@ function ViewFaq() {
     }, [faqId]);
 
     const goBack = () => {
-        window.location.href = "http://localhost:3000/manage/faqs";
+        window.location.href = "/manage/faqs";
     }
 
 
