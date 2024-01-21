@@ -15,7 +15,7 @@ function CreateAdminPage() {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes("Admin")) {
             // @ts-ignore
-            window.location.href = process.env.REACT_APP_BE_HOST
+            window.location.href = "/"
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -37,7 +37,7 @@ function CreateAdminPage() {
 
                     swal("Admin created!", "Admin has been created successfully!", "success")
                         .then(() => {
-                            window.location.href = process.env.REACT_APP_BE_HOST+"dashboard"
+                            window.location.href = "/dashboard"
                         })
 
                 }
