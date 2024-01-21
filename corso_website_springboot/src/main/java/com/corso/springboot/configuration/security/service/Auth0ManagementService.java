@@ -334,6 +334,13 @@ public class Auth0ManagementService {
 
             new ObjectMapper().readTree(response.body()).forEach(node -> {
                 log.info("Node: " + node.toString());
+                 if(node.path("user_id").asText().isEmpty())
+                    return;
+
+                if (node.path("user_metadata").path("isCreatedAdmin").asText().equals("true"))
+                    return;
+
+                
                 users.add(Auth0GetUsersResponse.builder()
                         .user_id(node.path("user_id").asText())
                         .name(node.path("name").asText())
