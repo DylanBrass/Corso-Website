@@ -46,7 +46,7 @@ function UpdateOrder() {
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes('Customer')) {
-            window.location.href = 'http://localhost:3000/';
+            window.location.href = '/';
             return
         }
 
