@@ -2,6 +2,7 @@ import "./FaqTileFaqPage.css"
 import {useState} from "react";
 import expand from "../../images/expand-plus.svg"
 import expanded from "../../images/expanded-minus.svg"
+import React from "react";
 
 
 class FAQ {

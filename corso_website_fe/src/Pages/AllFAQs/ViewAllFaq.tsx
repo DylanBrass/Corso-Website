@@ -4,6 +4,7 @@ import axios from "axios";
 import {FAQ, FaqTileFaqPage} from "./FaqTileFaqPage";
 import {useAuth} from "../../security/Components/AuthProvider";
 import "./ViewAllFaq.css"
+import React from "react";
 function ViewAllFaq() {
     const auth = useAuth()
 

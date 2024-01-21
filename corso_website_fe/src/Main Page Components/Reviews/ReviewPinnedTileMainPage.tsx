@@ -27,7 +27,7 @@ function ReviewsPinnedTileMainPage(reviews: Reviews) {
     let filledStars = [];
     let emptyStars = [];
 
-    if (reviews.reviewRating !== undefined && typeof reviews.reviewRating === 'number') {
+    if (reviews.reviewRating !== undefined) {
         for (let i = 0; i < reviews.reviewRating; i++) {
             filledStars.push(<img key={`filled-${i}`} src={star_fill} alt="Filled Star" />);
         }

@@ -20,7 +20,7 @@ const AuthProvider = ({children}) => {
         })
 
     const [csrfToken, setCsrfToken] = useState(() => {
-        return document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1')
+        return document.cookie.replace(/(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$|^.*$/, '$1')
             || "invalid"
     })
 
