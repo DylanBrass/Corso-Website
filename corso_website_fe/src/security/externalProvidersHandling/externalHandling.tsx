@@ -5,7 +5,7 @@ function ExternalHandling() {
     useEffect(() => {
 
         // @ts-ignore
-        console.log(document.cookie)
+        
         // @ts-ignore
         if (document.cookie.includes("isAuthenticated=true")) {
             // @ts-ignore

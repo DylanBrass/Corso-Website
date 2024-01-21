@@ -60,7 +60,7 @@ function AllOrdersPage() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    console.log(r.data)
+                    
                     setUsers(r.data)
                 }
             })
@@ -97,7 +97,7 @@ function AllOrdersPage() {
                 }
             ).catch(
                 (error) => {
-                    console.log(error)
+                    
                     // @ts-ignore
                     auth.authError(error.response.status)
                 }
@@ -124,10 +124,10 @@ function AllOrdersPage() {
                     setPage(newTotalPages);
                 }
             } else {
-                console.error('Invalid response format:', ordersData);
+                
             }
         } catch (error) {
-            console.error('Error fetching data:', error);
+            
 
             // @ts-ignore
             if (error.response === undefined) {
@@ -144,7 +144,7 @@ function AllOrdersPage() {
             }
 
         }
-        console.log("Fetch orders Status: " + status + " Page: " + pageNumber + " PageSize: " + size);
+        
     }
 
     const handleSubmit = (event: any) => {
@@ -163,7 +163,7 @@ function AllOrdersPage() {
     const handlePageChange = (pageNumber: number, size: number) => {
 
         if (previousStatus !== selectedStatus || previousUser !== selectedUser) {
-            console.log("Status changed")
+            
             setPage(1);
 
             setPreviousStatus(selectedStatus)
@@ -180,7 +180,7 @@ function AllOrdersPage() {
         fetchOrders(pageNumber, size, selectedStatus, selectedUser)
 
 
-        console.log("Page change: " + pageNumber + " PageSize: " + size)
+        
     }
 
     return (
@@ -257,7 +257,7 @@ function AllOrdersPage() {
                         {users.map((user: any) => (
                             <tr key={user.user_id} onClick={
                                 () => {
-                                    console.log(user)
+                                    
                                     setPreviousUser(selectedUser)
 
                                     setSelectedUser(user.user_id)

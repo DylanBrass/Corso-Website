@@ -2,6 +2,9 @@ package com.corso.springboot.Gallery_Subdomain.presentationlayer;
 
 import com.corso.springboot.Gallery_Subdomain.businesslayer.GalleryService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,11 +29,14 @@ public class GalleryController {
     public GalleryController(GalleryService galleryService) {
         this.galleryService = galleryService;
     }
+
+    @Cacheable(value = "gallery", key = "#root.methodName",sync = true)
     @GetMapping("/carousel")
     public ResponseEntity<List<GalleryResponse>> GetGallery(){
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGallery());
     }
 
+    @CacheEvict(value = "gallery", allEntries = true)
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PatchMapping("/carousel/order")
     public ResponseEntity<List<GalleryResponse>> updateGalleryOrder(@RequestBody List<GalleryOrderUpdateRequest> galleryOrderUpdateRequest){

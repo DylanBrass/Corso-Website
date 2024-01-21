@@ -40,7 +40,7 @@ function ViewSpecificOrder() {
                 setOrder(order);
             })
             .catch(err => {
-                console.log(err);
+                
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -52,7 +52,7 @@ function ViewSpecificOrder() {
     }
 
     useEffect(() => {
-        getOrder().then(r => console.log("Order fetched"));
+        getOrder()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -84,13 +84,13 @@ function ViewSpecificOrder() {
 
             setLoading(false)
         } catch (error) {
-            console.error("Error updating order status: ", error);
+            
             swal("Failed!", `Failed to cancel the order with tracking number ${order.orderTrackingNumber}.`, "error");
         }
     }
 
     useEffect(() => {
-        console.log(loading);
+        
     }, [loading]);
 
 

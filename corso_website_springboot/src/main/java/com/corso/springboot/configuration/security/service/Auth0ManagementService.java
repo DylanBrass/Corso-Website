@@ -1,7 +1,6 @@
 package com.corso.springboot.configuration.security.service;
 
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
-import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
 import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.configuration.security.exceptions.Auth0Error;
 import com.corso.springboot.configuration.security.models.Auth0GetUsersResponse;
@@ -200,6 +199,10 @@ public class Auth0ManagementService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.body());
+
+            if (jsonNode.path("user_id").asText().isEmpty()) {
+                throw new Auth0Error("User not found", HttpStatus.NOT_FOUND);
+            }
 
             return UserInfoResponse.builder()
                     .username(jsonNode.path("username").asText())

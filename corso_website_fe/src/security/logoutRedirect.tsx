@@ -6,7 +6,7 @@ function LogoutRedirect() {
 
     useEffect(() => {
 
-        console.log(document.cookie)
+        
         // @ts-ignore
         document.getElementById('submit').click();
 

@@ -47,7 +47,7 @@ function ModifyServicePage() {
       setServiceIconPreview(serviceData.serviceIcon);
       setServiceImagePreview(serviceData.serviceImage);
     } catch (error) {
-      console.error('Error fetching service data:', error);
+      
     }
   };
 
@@ -131,7 +131,7 @@ function ModifyServicePage() {
       serviceImage: serviceImagePreview,
     };
 
-    console.log(data.serviceImage);
+    
 
     try {
       const response = await axios.put(

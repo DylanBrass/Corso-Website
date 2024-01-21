@@ -11,7 +11,9 @@ interface ServiceDetails {
     serviceImage: string;
 }
 
+
 function ViewServiceDetails() {
+
     const { serviceId } = useParams<{ serviceId: string }>();
     const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -22,7 +24,7 @@ function ViewServiceDetails() {
                 const response = await axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/services/${serviceId}`);
                 setServiceDetails(response.data);
             } catch (error) {
-                console.error('Error fetching service details:', error);
+                
                 // @ts-ignore
                 setError(error.message);
             }

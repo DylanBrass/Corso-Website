@@ -23,7 +23,7 @@ function ViewAllFaqThroughDashboard() {
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes('Admin')) {
-            window.location.href = 'http://localhost:3000/';
+            window.location.href = '/';
         }
     }, [auth]);
 
@@ -35,7 +35,7 @@ function ViewAllFaqThroughDashboard() {
                 );
                 setFaqs(response.data);
             } catch (error) {
-                console.error("Error fetching faqs:", error);
+                
                 // @ts-ignore
                 setError(error.message);
             }
@@ -61,7 +61,7 @@ function ViewAllFaqThroughDashboard() {
                 preference: faq.preference,
             }));
 
-            console.log("Data to send:", dataToSend);
+            
 
             await axios.patch(
                 process.env.REACT_APP_BE_HOST + "api/v1/corso/faqs/viewable",
@@ -83,7 +83,7 @@ function ViewAllFaqThroughDashboard() {
                 });
             });
         } catch (error) {
-            console.error("Error updating viewable FAQs:", error);
+            
             // @ts-ignore
             setError(error.message);
         }

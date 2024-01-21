@@ -27,7 +27,7 @@ function CurrentOrdersPage() {
                 })
 
         } catch (error) {
-            console.error('Error fetching data:', error);
+            
         }
     };
 
@@ -38,7 +38,7 @@ function CurrentOrdersPage() {
 
     useEffect(() => {
         fetchOrders(page, pageSize);
-        console.log("Page: " + page + " PageSize: " + pageSize);
+        
     }, [page, pageSize]);
 
     return (

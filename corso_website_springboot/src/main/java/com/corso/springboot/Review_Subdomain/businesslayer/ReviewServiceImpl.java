@@ -141,34 +141,30 @@ public class ReviewServiceImpl implements ReviewService {
         review.setPinned(reviewRequest.isPinned());
 
 
-        ReviewResponse reviewSaved = reviewResponseMapper.toReviewResponse(reviewRepository.save(review));
-
-        if (reviewSaved == null) {
-            throw new InvalidRequestException("Review not found");
-        }
 
         //send email to user
         String email;
 
         try {
-            email = customerService.getCustomerByUserId(reviewSaved.getUserId()).getEmail();
+            email = customerService.getCustomerByUserId(review.getUserId()).getEmail();
         }catch (CustomerNotFoundException e) {
             log.error("Customer not found");
-            email = auth0ManagementService.getUserInfo(reviewSaved.getUserId()).getEmail();
+
+            email = auth0ManagementService.getUserInfo(review.getUserId()).getEmail();
         }
 
         if (email != null && !email.isEmpty()) {
             HashMap<String, String> emailParams = new HashMap<>();
 
-            emailParams.put("customerFullName", reviewSaved.getCustomerFullName());
+            emailParams.put("customerFullName", review.getCustomerFullName());
 
             int emailStatus;
-            if (reviewSaved.isPinned()) {
-                emailParams.put("message", reviewSaved.getReviewId());
+            if (reviewRequest.isPinned()) {
+                emailParams.put("message", review.getReviewId().getReviewId());
                emailStatus = emailService.sendEmail(email, "Review pinned", "ReviewPinnedChangeEmail", emailParams);
 
             } else {
-                emailParams.put("message", reviewSaved.getReviewId());
+                emailParams.put("message", review.getReviewId().getReviewId());
                 emailStatus = emailService.sendEmail(email, "Review unpinned", "ReviewPinnedChangeEmail", emailParams);
             }
 
@@ -179,7 +175,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
 
-        return reviewSaved;
+        return reviewResponseMapper.toReviewResponse(reviewRepository.save(review));
 
     }
 

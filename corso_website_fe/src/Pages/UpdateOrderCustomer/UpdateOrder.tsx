@@ -28,9 +28,9 @@ function UpdateOrder() {
                 document.getElementById("customerAddress")!.setAttribute("value", place.formatted_address)
                 document.getElementById("customerCity")!.setAttribute("value", place.address_components[2].long_name)
                 document.getElementById("customerPostalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
-                console.log(place)
+                
             } catch (e) {
-                console.log(e)
+                
             }
         },
         options: {
@@ -72,7 +72,7 @@ function UpdateOrder() {
 
             })
             .catch(err => {
-                console.log(err);
+                
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -131,7 +131,7 @@ function UpdateOrder() {
 
             })
             .catch(err => {
-                console.log(err);
+                
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore

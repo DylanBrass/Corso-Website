@@ -32,7 +32,7 @@ function AllCustomerOrders() {
                         setPage(newTotalPages);
                     }
                 }).catch(err => {
-                console.log(err);
+                
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -42,7 +42,7 @@ function AllCustomerOrders() {
 
 
         } catch (error) {
-            console.error('Error fetching data:', error);
+            
 
         }
 
@@ -66,7 +66,7 @@ function AllCustomerOrders() {
                      className={"w-100"}>
 
                     {orders.length <= 0 &&
-                        <div className="row">
+                        <div className="row text-center">
                             <div className="col-12">
                                 <h1 className="error">No orders found, you can request one <a
                                     href={"/create/orders"}>here</a></h1>

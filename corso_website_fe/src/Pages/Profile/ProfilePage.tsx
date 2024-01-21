@@ -26,9 +26,9 @@ function ProfilePage() {
     const [orders, setOrders] = useState<Order[]>([]);
 
     useEffect(() => {
-        fetchOrders().then(r => console.log("Orders fetched"))
+        fetchOrders()
 
-        getUsername().then(r => console.log("Username set"))
+        getUsername()
     }, [])
 
 
@@ -42,7 +42,7 @@ function ProfilePage() {
                 })
 
         } catch (error) {
-            console.error('Error fetching data:', error);
+            
         }
     }
 
@@ -56,7 +56,7 @@ function ProfilePage() {
             while (Cookies.get("username") === undefined) {
 
                 await new Promise(r => setTimeout(r, 50));
-                console.log("Waiting for username")
+                
 
                 if (Cookies.get("username") !== undefined) {
                     // @ts-ignore
@@ -79,7 +79,7 @@ function ProfilePage() {
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
             }
         }).then(r => {
-            console.log(r.status);
+            
             if (r.status === 200) {
 
                 axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
@@ -89,7 +89,7 @@ function ProfilePage() {
                     },
                 }).then(r => {
                     if (r.status === 200) {
-                        console.log(r.data);
+                        
                         if (r.data.phone.length > 0) {
                             setPhone(r.data.phone)
                         }
@@ -99,18 +99,18 @@ function ProfilePage() {
                         }
                     }
                 }).catch(e => {
-                        console.log(e);
+                        
                         // @ts-ignore
                         auth.authError(e.response.status)
 
                     }
                 )
             } else {
-                console.log("Profile doesn't exist")
+                
 
             }
         }).catch(e => {
-                console.log(e);
+                
 // @ts-ignore
                 auth.authError(e.response.status)
             }
@@ -121,7 +121,7 @@ function ProfilePage() {
 
 
     useEffect(() => {
-        checkIfProfileExists().then(r => console.log("Profile exists"))
+        checkIfProfileExists()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

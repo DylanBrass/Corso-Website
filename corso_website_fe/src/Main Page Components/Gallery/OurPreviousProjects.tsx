@@ -22,13 +22,13 @@ function OurPreviousProjects() {
         const fetchImages = async () => {
             try {
                 const response = await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel');
-                console.log('Response:', response.data)
+                
                 setImages(response.data);
             } catch (error) {
-                console.error('Error fetching images:', error);
+                
             }
         };
-        fetchImages().then(r => console.log('Images fetched'));
+        fetchImages()
     }, []);
 
     return (

@@ -41,6 +41,7 @@ dependencies {
     implementation('com.okta.spring:okta-spring-boot-starter:3.0.5')
     implementation('com.cloudinary:cloudinary-http44:1.27.0')
 
+    implementation "org.springframework.boot:spring-boot-starter-cache:2.5.0"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '3.2.1'
 
     runtimeOnly('com.h2database:h2')

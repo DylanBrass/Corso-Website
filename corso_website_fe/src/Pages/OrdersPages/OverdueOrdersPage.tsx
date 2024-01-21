@@ -18,7 +18,7 @@ function OverdueOrdersPage() {
 
             await axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/overdue?pageSize=${size}&offset=${(pageNumber - 1) * size}`)
                 .then(res => {
-                    console.log(res.data);
+                    
                     const newOrders = res.data.map((order: any) => {
                         const dueDate = parseISO(order.dueDate);
 
@@ -39,7 +39,7 @@ function OverdueOrdersPage() {
                         )
                     })
 
-                    console.log("New orders :" + newOrders);
+                    
                     setOrders(newOrders);
 
                     const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
@@ -51,7 +51,7 @@ function OverdueOrdersPage() {
 
 
         } catch (error) {
-            console.error('Error fetching data:', error);
+            
         }
     };
 
