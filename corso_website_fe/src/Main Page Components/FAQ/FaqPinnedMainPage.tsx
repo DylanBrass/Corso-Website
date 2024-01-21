@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {FAQ, FaqTileMainPage} from "./FaqTileMainPage";
 import {useAuth} from "../../security/Components/AuthProvider";
+import React from "react";
 
 function FaqPinnedMainPage() {
 

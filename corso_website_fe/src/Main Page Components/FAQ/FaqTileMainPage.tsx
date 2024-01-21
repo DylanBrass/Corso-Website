@@ -1,3 +1,4 @@
+import React from "react";
 import FAQ from "../../Models/FAQ";
 function FaqTileMainPage(faq: FAQ) {
 

@@ -1,6 +1,7 @@
 import "./BannerMain.css";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
+import React from "react";
 
 
 // @ts-ignore

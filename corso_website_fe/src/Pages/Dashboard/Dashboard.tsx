@@ -5,6 +5,7 @@ import "./Dashboard.css"
 import Cookies from "js-cookie";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import React from "react";
 
 function Dashboard() {
 

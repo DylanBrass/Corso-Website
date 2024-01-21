@@ -35,6 +35,7 @@ import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
 import ViewSpecificFaq from "./Pages/AllFAQs/ViewSpecificFaq";
 // @ts-ignore
 import ModifyServicePage from "./Pages/UpdateService/ModifyServicePage";
+import React from 'react';
 
 
 export default function App() {
