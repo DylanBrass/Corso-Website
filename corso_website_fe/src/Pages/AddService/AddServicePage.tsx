@@ -19,7 +19,7 @@ function AddServicePage() {
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes('Admin')) {
-            window.location.href = 'http://localhost:3000/';
+            window.location.href = '/';
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
