@@ -186,7 +186,7 @@ function ManageReviews() {
                 </div>
 
                 <form className="manage-review-form" onSubmit={handleSearch}>
-                    <div className={"form-container"}>
+                    <div className={"form-container w-100"}>
 
                         <input className="manage-review-input" type="text" name="search"
                                placeholder="Search Client Name" value={searchTerm} onChange={handleChange}/>
