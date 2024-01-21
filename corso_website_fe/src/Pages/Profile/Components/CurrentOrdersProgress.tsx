@@ -15,7 +15,7 @@ function CurrentOrdersProgress({order}: { order: Order}) {
 
                 <ProgressBar
                 hasStepZero={true}
-                percent={order.daysLeft / order.estimatedDuration * 100}
+                percent={(order.estimatedDuration - order.daysLeft) / order.daysLeft * 100}
                 filledBackground="#47B2FF"
                 height={3}
             >
