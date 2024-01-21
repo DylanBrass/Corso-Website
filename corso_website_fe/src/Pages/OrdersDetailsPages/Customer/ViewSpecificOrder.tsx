@@ -154,7 +154,7 @@ function ViewSpecificOrder() {
                                 {order.estimatedDuration > 0 &&
                                     <ProgressBar
                                         hasStepZero={true}
-                                        percent={order.estimatedDuration / order.daysLeft* 100}
+                                        percent={(order.estimatedDuration - order.daysLeft) / order.daysLeft * 100}
                                         filledBackground="#47B2FF"
                                         height={3}
                                     >
