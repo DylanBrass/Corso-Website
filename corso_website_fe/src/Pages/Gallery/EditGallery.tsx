@@ -62,7 +62,7 @@ function EditGallery() {
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes('Admin')) {
-            window.location.href = 'http://localhost:3000/';
+            window.location.href = '/';
         }
     }, [auth]);
 
