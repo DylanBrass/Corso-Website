@@ -36,7 +36,7 @@ function AddCustomerInformation(){
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated) {
-            window.location.href = "http://localhost:3000/";
+            window.location.href = "/";
         }
 
 
