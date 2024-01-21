@@ -96,7 +96,7 @@ function ViewAllFaqThroughDashboard() {
     const showLessThanThreeMessage = selectedFaqsCount < 3;
 
     const viewSpecificFaq = (faqId: string) => {
-        window.location.href = 'http://localhost:3000/faqs/' + faqId;
+        window.location.href = '/faqs/' + faqId;
     }
 
     return (
