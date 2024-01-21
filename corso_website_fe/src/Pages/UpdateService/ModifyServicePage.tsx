@@ -21,7 +21,7 @@ function ModifyServicePage() {
   useEffect(() => {
     // @ts-ignore
     if (!auth.isAuthenticated || !auth.userRoles().includes('Admin')) {
-      window.location.href = 'http://localhost:3000/';
+      window.location.href = '/';
     } else {
       // Fetch existing service data for modification
       fetchServiceData();
