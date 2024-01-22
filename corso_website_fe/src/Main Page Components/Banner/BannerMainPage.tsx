@@ -22,7 +22,7 @@ function BannerMainPage({image}) {
             let counter = 0;
             while (Cookies.get("username") === undefined) {
 
-                await new Promise(r => setTimeout(r, 50));
+                await new Promise(r => setTimeout(r, 1000));
                 
 
                 if (Cookies.get("username") !== undefined) {
