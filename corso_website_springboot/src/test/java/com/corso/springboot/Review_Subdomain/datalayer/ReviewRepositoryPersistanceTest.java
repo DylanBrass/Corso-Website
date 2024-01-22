@@ -60,6 +60,15 @@ class ReviewRepositoryPersistanceTest {
         assertTrue(hasReviewed);
     }
 
+    @Test
+    void getReviewByReviewIdAndUserId() {
+        String userId = "auth0|65702e81e9661e14ab3aac89";
+        String reviewId = "e2d2cb36-5a3e-4180-afdd-b416b66a4546";
+
+        Review review1 = reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId);
+        assertEquals(reviewId, review1.getReviewId().getReviewId());
+    }
+
 
 
 }

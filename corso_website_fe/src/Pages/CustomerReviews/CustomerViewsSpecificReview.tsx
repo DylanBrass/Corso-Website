@@ -5,23 +5,28 @@ import { useAuth } from '../../security/Components/AuthProvider';
 import NavigationBar from '../../Components/NavBar/NavigationBar';
 import {useParams} from "react-router-dom";
 import Review from "../../Models/Review";
+import star_fill from "../../images/Star_fill.svg";
+import star_empty from "../../images/Star.svg";
 
 function CustomerViewsSpecificReview() {
 
-    let {reviewId} = useParams();
 
+    const [review, setReview] = useState<Review>(new Review("", "", 0, false));
+    let {reviewId} = useParams();
 
     const auth = useAuth();
 
     useEffect(() => {
         // @ts-ignore
-        if (!auth.isAuthenticated || !auth.userRoles().includes('Admin')) {
+        if (!auth.isAuthenticated || !auth.userRoles().includes('Customer')) {
             window.location.href = 'http://localhost:3000/';
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+
     const getReview = async () => {
+        console.log("review id" + reviewId);
         axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/reviews/${reviewId}`,
             {
                 headers: {
@@ -33,9 +38,10 @@ function CustomerViewsSpecificReview() {
             .then(res => {
                 const review = res.data;
                 setReview(review);
+                console.log(review);
             })
             .catch(err => {
-                console.log(err);
+
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -47,26 +53,40 @@ function CustomerViewsSpecificReview() {
     }
 
     useEffect(() => {
-        getReview().then(r => console.log("review fetched"));
+        console.log(review);
+    }, [review]);
+
+    useEffect(() => {
+        getReview()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [review, setReview] = useState(new Review("", "", 0, false));
+
+
+    const filledStars = [];
+    const emptyStars = [];
+
+    for (let i = 0; i < review.reviewRating; i++) {
+        filledStars.push(<img key={`filled-${i}`} src={star_fill} alt="Filled Star" />);
+    }
+
+    for (let i = review.reviewRating; i < 5; i++) {
+        emptyStars.push(<img key={`empty-${i}`} src={star_empty} alt="Empty Star" />);
+    }
 
     return (
         <>
             <NavigationBar />
-            <div className="container">
-                <div className="row justify-content-center">
-                    <div className="col-md-8">
-                        <h1>Rating: {review.reviewRating}</h1>
-                        <p>Message: {review.message}</p>
-                        <p>Pinned: {review.pinned}</p>
-                    </div>
-
-                </div>
+            <div className="container review-tile-view-specific-container">
+                <p className="review-rating"><b>{filledStars}{emptyStars}</b></p>
+                <h2>{review.customerFullName}</h2>
+                {review.pinned && <p>Your review is pinned to the landing page</p>}
+                <p className="review-date"><b>Date:</b> {review.reviewRating}</p>
+                <p className="review-message">{review.message}</p>
             </div>
         </>
     );
+
+
 }
 
 export default CustomerViewsSpecificReview;

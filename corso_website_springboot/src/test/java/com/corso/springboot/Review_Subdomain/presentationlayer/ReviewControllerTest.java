@@ -256,5 +256,23 @@ class ReviewControllerTest {
                 .andExpect(jsonPath("$.pinned").value(true));
     }
 
+    @Test
+    void viewReviewByReviewIdAndUserId_ShouldSucceed() throws Exception {
+        //arrange
+        String reviewId = "7dcca21e-4d7b-4e8c-8c58-1a044acba519";
+
+        //act
+        mockMvc.perform(get(BASE_URI_REVIEWS + "/" + reviewId)
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
+                                .authorities(new SimpleGrantedAuthority("Customer")))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.reviewId").value(reviewId))
+                .andExpect(jsonPath("$.pinned").value(false))
+                .andExpect(jsonPath("$.reviewRating").value(5));
+
+    }
+
 
 }

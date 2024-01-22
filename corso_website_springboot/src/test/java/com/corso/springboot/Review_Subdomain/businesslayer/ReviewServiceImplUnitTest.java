@@ -358,6 +358,31 @@ class ReviewServiceImplUnitTest {
         assertEquals(expectedCount, result);
     }
 
+    @Test
+    void getReviewByReviewIdAndUserId_ShouldReturnReview() {
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+        ReviewResponse mockReviewResponse = new ReviewResponse("1", "2", "John Doe", date, "This is a review", 3, false,
+                2);
+        Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", date, "This is a review", 3, false);
+
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(mockReview);
+        when(reviewResponseMapper.toReviewResponse(mockReview)).thenReturn(mockReviewResponse);
+
+        // Act
+        ReviewResponse result = reviewServiceImpl.getReviewByReviewIdAndUserId(reviewId, userId);
+
+        // Assert
+        assertEquals(mockReviewResponse, result);
+        assertEquals(mockReviewResponse.getReviewId(), result.getReviewId());
+        assertEquals(mockReviewResponse.getCustomerFullName(), result.getCustomerFullName());
+        assertEquals(mockReviewResponse.getReviewDate(), result.getReviewDate());
+        assertEquals(mockReviewResponse.getMessage(), result.getMessage());
+        assertEquals(mockReviewResponse.getReviewRating(), result.getReviewRating());
+        assertEquals(mockReviewResponse.isPinned(), result.isPinned());
+    }
+
 }
 
 

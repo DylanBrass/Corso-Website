@@ -34,5 +34,4 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     Review findReviewByReviewId_ReviewIdAndUserId(String reviewId, String userId);
 
-
 }

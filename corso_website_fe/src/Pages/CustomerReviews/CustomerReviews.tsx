@@ -43,15 +43,16 @@ function CustomerReviews() {
                         <ReviewTile
                             index={index}
                             key={review.reviewId}
+                            action={() => {
+                                console.log(review.reviewId);
+                                window.location.href = `/profile/reviews/${review.reviewId}`
+                            }}
                             review={{
                                 reviewId: review.reviewId,
                                 reviewDate: review.reviewDate,
                                 message: review.message,
                                 reviewRating: review.reviewRating,
-                                pinned: review.pinned,
-                                action: () => {
-                                    
-                                }
+                                pinned: review.pinned
                             }}
                         />
                     )) : <h1 className="error">No reviews found, create one <a
