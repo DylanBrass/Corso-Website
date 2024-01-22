@@ -131,9 +131,17 @@ const AuthProvider = ({children}) => {
     }
 
 
+    const logout = () => {
+
+        Cookies.remove("username")
+        Cookies.remove("email")
+
+
+    }
+
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo}}>
+        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo, logout}}>
             {children}
             <ToastContainer
                 position="top-center"
