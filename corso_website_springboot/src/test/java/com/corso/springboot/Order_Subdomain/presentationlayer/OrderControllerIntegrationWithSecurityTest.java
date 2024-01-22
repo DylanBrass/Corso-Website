@@ -77,7 +77,7 @@ public class OrderControllerIntegrationWithSecurityTest {
                                     "customerPostalCode": "A1A 1A1",
                                     "customerApartmentNumber": "1",
                                     "estimatedDuration": 12,
-                                    "daysLeft": 10
+                                    "hoursWorked": 10
                                     }
                                 """))
                 .andExpect(status().isCreated())
@@ -108,7 +108,7 @@ public class OrderControllerIntegrationWithSecurityTest {
                                     "customerPostalCode": "A1A 1A1",
                                     "customerApartmentNumber": "1",
                                     "estimatedDuration": 12,
-                                    "daysLeft": 10
+                                    "hoursWorked": 10
                                     }
                                 """))
                 .andExpect(status().isCreated())
@@ -285,6 +285,21 @@ public class OrderControllerIntegrationWithSecurityTest {
                         .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
                                 .authorities(new SimpleGrantedAuthority("Admin"))))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void getCountOfOverdueOrders_ShouldReturnOne() throws Exception {
+        // Arrange
+        // return one because only one is pending
+        Integer expectedCount = 1;
+
+        // Act and Assert
+        mockMvc.perform(get(BASE_URI_ORDERS + "/manage/overdue/count")
+                        .with(csrf())
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
+                                .authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(expectedCount));
     }
 
 }

@@ -9,7 +9,7 @@ import CustomPagination from "../../Components/Pagination";
 function PendingOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
-    const [pageSize,] = useState(1);
+    const [pageSize,] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchOrders = async (pageNumber: number, size: number) => {
@@ -20,6 +20,11 @@ function PendingOrdersPage() {
                 .then(res => {
                     const orders = res.data;
                     setOrders(orders);
+
+                    if (res.data.length <= 0) {
+                        setPage(1);
+                        return
+                    }
 
                     const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
                     setTotalPages(newTotalPages);

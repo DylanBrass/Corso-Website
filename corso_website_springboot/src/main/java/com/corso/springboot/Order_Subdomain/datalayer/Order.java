@@ -1,9 +1,7 @@
 package com.corso.springboot.Order_Subdomain.datalayer;
 
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
-import com.corso.springboot.utils.annotations.ValidCanadianPostalCode;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 
@@ -57,9 +55,9 @@ public class Order {
 
     private int estimatedDuration;
 
-    private int daysLeft;
+    private int hoursWorked;
 
-    public Order(ServiceIdentifier serviceId, String userId,String progressInformation, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerPostalCode, String customerApartmentNumber, int estimatedDuration, int daysLeft) {
+    public Order(ServiceIdentifier serviceId, String userId,String progressInformation, String orderDate, String dueDate, Status orderStatus, String orderDescription, String customerFullName, String customerEmail, String customerPhone, String customerAddress, String customerCity, String customerPostalCode, String customerApartmentNumber, int estimatedDuration, int hoursWorked) {
         this.orderId = new OrderIdentifier();
         this.orderTrackingNumber = new OrderTrackingNumber();
         this.serviceId = serviceId;
@@ -77,6 +75,6 @@ public class Order {
         this.customerPostalCode = customerPostalCode;
         this.customerApartmentNumber = customerApartmentNumber;
         this.estimatedDuration = estimatedDuration;
-        this.daysLeft = daysLeft;
+        this.hoursWorked = hoursWorked;
     }
 }

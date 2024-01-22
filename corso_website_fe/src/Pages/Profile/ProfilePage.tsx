@@ -134,7 +134,7 @@ function ProfilePage() {
         }}>
             <NavigationBar/>
             <div className="profile-page h-100">
-                <div className="row p-5 box-row">
+                <div className="row p-0 p-md-5 box-row">
                     <div className={"user-box col-12 col-lg-6 p-5"}>
                         {
                             Cookies.get("picture") !== null && Cookies.get("picture") !== undefined &&
@@ -150,9 +150,9 @@ function ProfilePage() {
                             <button id={"logout-profile"} type={"submit"}>LOGOUT</button>
                         </form>
                     </div>
-                    <div className={"col-12 col-md-6 d-none d-lg-block "}>
-                        <div className={"row w-100 px-0 px-md-5"}>
-                            <div className={"col-12 col-lg-6 contact-box overflow-scroll"}>
+                    <div className={"col-12 col-lg-6 d-block mt-4 mt-lg-0"}>
+                        <div className={"w-100 d-block px-lg-5"}>
+                            <div className={"col-12 col-lg-6 contact-box overflow-scroll w-100 p-2"}>
                                 <h1 className={"contact-title"}>Contact Information</h1>
                                 <p className={"profile-text"}>Phone Number: {phone}</p>
                                 <p className={"profile-text"}>Email: {email}</p>
@@ -160,7 +160,7 @@ function ProfilePage() {
                         </div>
                         {
                             orders.length > 0 &&
-                            <div className={"row w-100 px-0 px-md-5 d-none d-lg-block"}>
+                            <div className={"w-100 d-block px-lg-5"}>
                                 <div className={"current-orders-box pt-3 pb-3 overflow-scroll"}>
                                     <CCarousel controls>
                                         {orders.map((order: Order) => (
@@ -183,7 +183,7 @@ function ProfilePage() {
                     </div>
                 </div>
 
-                <div className={"row p-5 box-row"}>
+                <div className={"row box-row p-0 p-md-5 pt-5 p-md-0"}>
                     <div className={"options-box col-12 col-md-6 mb-5 mb-md-0"}>
                         <div className={"row w-100 option-box"}>
                             <div className={"col-2 d-none d-xl-block"}>

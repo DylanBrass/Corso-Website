@@ -284,5 +284,21 @@
 
 
 
+.progress-current-wrapper{
+    .RSPBprogressBarText{
+        font-family: Nunito !important;
+        font-size: 20px !important;
+        font-style: normal !important;
+        font-weight: 200 !important;
+        line-height: normal !important;
+        text-align: center !important;
+        color: #000000 !important;
+    }
+
+
+    img{
+        width: 50px;
+    }
+}
 
 

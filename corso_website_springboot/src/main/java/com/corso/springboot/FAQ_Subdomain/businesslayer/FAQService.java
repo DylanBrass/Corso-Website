@@ -17,4 +17,5 @@ public interface FAQService {
 
     FAQResponse deleteFaqByFaqId(String faqId);
 
+    Integer getFAQCount();
 }

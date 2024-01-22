@@ -24,10 +24,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -203,8 +199,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderTrackingNumber(new OrderTrackingNumber());
 
-        if (orderRequestExternal.getDaysLeft() == 0) order.setDaysLeft(orderRequestExternal.getEstimatedDuration());
-        else order.setDaysLeft(orderRequestExternal.getDaysLeft());
+        order.setHoursWorked(orderRequestExternal.getHoursWorked());
 
         order.setOrderStatus(Status.IN_PROGRESS);
 
@@ -309,7 +304,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderStatus(Status.valueOf(newStatus.toString()));
         order.setOrderDate(String.valueOf(LocalDate.now()));
-        order.setDueDate(String.valueOf(LocalDate.now().plusDays(order.getDaysLeft())));
+        order.setDueDate(String.valueOf(LocalDate.now().plusDays(order.getHoursWorked())));
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
     }
@@ -409,6 +404,11 @@ public class OrderServiceImpl implements OrderService {
 
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
+
+    @Override
+    public Integer countAllOverdueOrders() {
+        return orderRepository.countOverdueOrders();
     }
 
     private static Map<String, String> getStringStringMap(OrderCustomerRequest customerUpdateOrderRequest, Order order) {

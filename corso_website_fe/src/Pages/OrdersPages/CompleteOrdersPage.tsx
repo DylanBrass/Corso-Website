@@ -8,7 +8,7 @@ import NavigationBar from "../../Components/NavBar/NavigationBar";
 function CompletedOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
-    const [pageSize, ] = useState(1);
+    const [pageSize, ] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchOrders = async (pageNumber: number, size: number) => {

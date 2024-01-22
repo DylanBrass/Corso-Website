@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `orders`
 (
     25
 ),
-    days_left int,
+    hours_worked int,
     estimated_duration int
     );
 

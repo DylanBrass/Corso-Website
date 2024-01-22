@@ -18,7 +18,7 @@ function AllOrdersPage() {
 
     const [page, setPage] = useState(1);
 
-    const [pageSize, setPageSize] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const [totalPages, setTotalPages] = useState(1);
 
@@ -30,7 +30,7 @@ function AllOrdersPage() {
 
     const [previousUser, setPreviousUser] = useState("");
 
-    const [selectedSearchFieldUser, setSelectedSearchFieldUser] = useState("name");
+    const [selectedSearchFieldUser, setSelectedSearchFieldUser] = useState("email");
 
     const [resetKey, setResetKey] = useState<string | null>(null);
 
@@ -197,7 +197,7 @@ function AllOrdersPage() {
                             <div className={"col-12 col-xl-8 dropdown-status-box"}>
                                 <Dropdown
                                     label={selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)}
-                                    options={["All", "Completed", "Pending", "Cancelled", "In progress"]}
+                                    options={["All", "Completed", "Pending", "Cancelled", "In progress", "Declined"]}
                                     onSelect={(option: any) => {
                                         setPreviousStatus(selectedStatus)
                                         setSelectedStatus(option)
@@ -214,7 +214,7 @@ function AllOrdersPage() {
                                 <form onSubmit={getUsers} className={"w-100 "}>
                                     <Dropdown
                                         label={selectedSearchFieldUser.charAt(0).toUpperCase() + selectedSearchFieldUser.slice(1)}
-                                        options={["name", "email", "username"]}
+                                        options={["email", "name", "username"]}
                                         onSelect={(option: any) => {
                                             setSelectedSearchFieldUser(option)
                                         }}

@@ -9,7 +9,9 @@ public interface FAQRepository extends JpaRepository<FAQ, String> {
 
     List<FAQ> getFAQSByPreferenceTrue();
 
-    //int countFAQByPreferenceTrue();
+    Integer countFAQBy();
+
+
 
 }
 

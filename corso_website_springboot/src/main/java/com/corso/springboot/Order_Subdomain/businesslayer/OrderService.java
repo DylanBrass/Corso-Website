@@ -39,4 +39,6 @@ public interface OrderService {
     void cancelByCustomerOrderByOrderId(String orderId, String userId, CustomerCancelOrderRequest cancelOrderRequest) throws MessagingException;
 
     OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException;
+
+    Integer countAllOverdueOrders();
 }

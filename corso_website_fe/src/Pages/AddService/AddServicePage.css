@@ -8,6 +8,10 @@
         padding-top: 20px;
         width: 60%;
 
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+
         .input-container {
             display: flex;
             align-items: center;

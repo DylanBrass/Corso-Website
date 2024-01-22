@@ -41,24 +41,24 @@ rectangle "Users Phone \n[Deployment Node: Android, IOS]" as phone{
     }
 }
 
-cloud render as "Render \n[Deployment Node: Render.com]"{
-        node "Web Service\n[Deployment Node: ]Docker" as backend{
+cloud render as "Digital Ocean \n[Deployment Node: digitalocean.com]"{
+        node "Web Service\n[Deployment Node: Oracle Linux Server 8.5 (Fedora Linux)]" as backend{
+                node "Docker Container\n[Deployment Node: Docker]" as docker{
+
                 node "Apache Tomcat\n[Deployment Node : Apache Tomcat/10.1.13]" as tom {
 
                     Container(api, "API", "Container : Spring boot: Java", "Provides online tracking features and information about the electrical company Corso.", $sprite="java", $tags="service")
 
+                }
                 }
         }
 
         node "Static Site\n[Deployment Node:  webpack-server/^4.6.0]" as frontendNode{
             Container(frontend, "Single-Page Application", "Container: REACT TS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
         }
-    }
 
-cloud GCP as "Google Cloud \n[Deployment Node: Google Clouds Standard Environnent]"{
-
-    database "Google Cloud SQL \n[Deployment Node: Google Clouds Standard Environnent]" as database{
-        ContainerDb(db, "Database", "Container : MySQL", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
+    database "Digital Ocean Database \n[Deployment Node:  MySQL Databse Cluster]" as database{
+        ContainerDb(db, "Database", "Container : MySQL 8.0", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
     }
 }
 

@@ -83,15 +83,6 @@ public class Auth0LoginService {
 
                 log.info("Formatted domain: " + formattedDomain);
 
-
-        ResponseCookie cookie = ResponseCookie.from("id_token", principal.getIdToken().getTokenValue())
-                .httpOnly(true)
-                .secure(true)
-                .domain(formattedDomain)
-                .path("/")
-                .sameSite("None")
-                .build();
-
         ResponseCookie authCookie = ResponseCookie.from("isAuthenticated", "true")
                 .httpOnly(false)
                 .secure(true)
@@ -119,7 +110,6 @@ public class Auth0LoginService {
                 .sameSite("None")
                 .build();
 
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, accessPermissionCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, pictureCookie.toString());

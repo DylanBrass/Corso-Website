@@ -86,5 +86,10 @@ public class FAQServiceImpl implements FAQService{
         return faqResponseMapper.toFAQResponse(faqToDelete);
     }
 
+    @Override
+    public Integer getFAQCount() {
+        return faqRepository.countFAQBy();
+    }
+
 
 }
