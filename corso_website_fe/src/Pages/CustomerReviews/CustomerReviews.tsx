@@ -13,7 +13,6 @@ interface Review {
 }
 
 function CustomerReviews() {
-    const [error, setError] = useState<string | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
@@ -27,7 +26,7 @@ function CustomerReviews() {
 
                 setReviews(sortedReviews);
             } catch (error) {
-                
+
             }
         };
         fetchReviews()
@@ -43,16 +42,15 @@ function CustomerReviews() {
                         <ReviewTile
                             index={index}
                             key={review.reviewId}
-                            action={() => {
-                                console.log(review.reviewId);
-                                window.location.href = `/profile/reviews/${review.reviewId}`
-                            }}
                             review={{
                                 reviewId: review.reviewId,
                                 reviewDate: review.reviewDate,
                                 message: review.message,
                                 reviewRating: review.reviewRating,
-                                pinned: review.pinned
+                                pinned: review.pinned,
+                            }}
+                            action={() => {
+                                window.location.href = `/profile/reviews/${review.reviewId}`
                             }}
                         />
                     )) : <h1 className="error">No reviews found, create one <a

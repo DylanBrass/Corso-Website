@@ -7,6 +7,8 @@ import {useParams} from "react-router-dom";
 import Review from "../../Models/Review";
 import star_fill from "../../images/Star_fill.svg";
 import star_empty from "../../images/Star.svg";
+import pen from "../../images/pen.svg";
+import Trash from "../../images/Trash_light.svg";
 
 function CustomerViewsSpecificReview() {
 
@@ -76,12 +78,33 @@ function CustomerViewsSpecificReview() {
     return (
         <>
             <NavigationBar />
+            <h1 className="review-title-view-specific-customer">Your Review</h1>
             <div className="container review-tile-view-specific-container">
-                <p className="review-rating"><b>{filledStars}{emptyStars}</b></p>
-                <h2>{review.customerFullName}</h2>
-                {review.pinned && <p>Your review is pinned to the landing page</p>}
-                <p className="review-date"><b>Date:</b> {review.reviewRating}</p>
-                <p className="review-message">{review.message}</p>
+                <div className="row">
+                    <div className="col-2 review-box-stars">
+                        {/* Empty column for spacing */}
+                    </div>
+                    <div className="col-8 review-box-stars justify-content-center">
+                        <div className="review-rating">
+                            {filledStars}
+                            {emptyStars}
+                        </div>
+                    </div>
+                    <div className="col-2 review-box-icons">
+                        <div className="review-icons">
+                            <img src={Trash} alt="trash" onClick={() => {
+                                //to implement
+                            }}/>
+                            <img src={pen} alt="pen" onClick={() => {
+                                //to implement
+                            }}/>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    {review.pinned && <p className="review-message">Your review is pinned to the landing page</p>}
+                    <p className="review-message">{review.message}</p>
+                </div>
             </div>
         </>
     );

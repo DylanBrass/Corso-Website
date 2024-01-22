@@ -1,12 +1,23 @@
+.review-title-view-specific-customer{
+    color: #000;
+    text-align: center;
+    font-family: Nunito;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
 .review-tile-view-specific-container {
-    width: 60%;
-    box-shadow: 12px 12px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    display: flex;
-    transition: all 0.3s ease-in-out;
-    background-color: #F7F7F7;
-    flex-direction: column;
-    margin: 10px;
+    position: relative;
+    border: 1px solid #ccc;
+    transition: box-shadow 0.3s ease-in-out;
+    overflow: clip;
+    margin-top: 50px;
+    border-radius: 27px;
+    box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.72);
 
     & p {
         font-size: 16px;
@@ -34,5 +45,33 @@
         text-align: center;
     }
 
+    .review-box-stars {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #E8E8E8;
+    }
+
+    .review-box-icons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background-color: #E8E8E8;
+    }
+
+    .review-icons img {
+        margin-left: 10px;
+    }
+
+    .review-title-view-specific-customer{
+        color: #000;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+    }
 
 }
