@@ -32,5 +32,6 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     int countAllBy();
 
+    Review findReviewByReviewId_ReviewIdAndUserId(String reviewId, String userId);
 
 }

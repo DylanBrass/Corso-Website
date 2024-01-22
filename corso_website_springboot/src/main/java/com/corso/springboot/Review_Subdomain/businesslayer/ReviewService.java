@@ -25,4 +25,6 @@ public interface ReviewService {
     Integer getCountAllByState(boolean state);
 
     Integer getCountAllReviews();
+
+    ReviewResponse getReviewByReviewIdAndUserId(String reviewId, String userId);
 }

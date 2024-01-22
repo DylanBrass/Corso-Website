@@ -26,7 +26,7 @@ function CustomerReviews() {
 
                 setReviews(sortedReviews);
             } catch (error) {
-                
+
             }
         };
         fetchReviews()
@@ -48,9 +48,9 @@ function CustomerReviews() {
                                 message: review.message,
                                 reviewRating: review.reviewRating,
                                 pinned: review.pinned,
-                                action: () => {
-                                    
-                                }
+                            }}
+                            action={() => {
+                                window.location.href = `/profile/reviews/${review.reviewId}`
                             }}
                         />
                     )) : <h1 className="error">No reviews found, create one <a

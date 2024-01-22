@@ -1,6 +1,8 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
+import com.corso.springboot.Customer_Subdomain.datalayer.Customer;
+import com.corso.springboot.Customer_Subdomain.datalayer.CustomerRepository;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
@@ -59,6 +61,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final EmailService emailService;
     private final ReviewRequestMapper reviewRequestMapper;
+
+    private final CustomerRepository customerRepository;
 
 
 
@@ -188,6 +192,16 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Integer getCountAllReviews() {
         return reviewRepository.countAllBy();
+    }
+
+    @Override
+    public ReviewResponse getReviewByReviewIdAndUserId(String reviewId, String userId) {
+
+        if (reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId) == null) {
+            throw new ReviewNotFoundException("Review not found");
+        }
+
+        return reviewResponseMapper.toReviewResponse(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId));
     }
 
     @Override
