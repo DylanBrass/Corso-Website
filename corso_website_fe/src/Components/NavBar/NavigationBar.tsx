@@ -63,13 +63,15 @@ function NavigationBar() {
                                 //@ts-ignore
                                 auth.isAuthenticated &&
                                 <Nav.Item className={"item"}>
-
-                                    <form onSubmit={
-                                        // @ts-ignore
-                                        auth.logout
-                                    }
+                                    <form method={"post"}
+                                          action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"}
                                           className={"m-auto"}>
-                                        <button id={"logout-btn"} type={"submit"}>
+                                        <button id={"logout-btn"} type={"submit"} onClick={
+                                            () => {
+                                                Cookies.remove("username")
+                                                Cookies.remove("email")
+                                            }
+                                        }>
                                             <span className={"logout-btn-text"}>
                                                 LOGOUT
                                             </span>
