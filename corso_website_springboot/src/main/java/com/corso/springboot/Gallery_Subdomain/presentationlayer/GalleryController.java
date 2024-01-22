@@ -43,4 +43,10 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.updateGalleryOrder(galleryOrderUpdateRequest));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/carousel/count")
+    public ResponseEntity<Integer> getGalleryCount(){
+        return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGalleryCount());
+    }
+
 }

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import './ViewOnGoingOrderDetailsPageAdmin.css';
@@ -8,11 +8,11 @@ import {useAuth} from "../../security/Components/AuthProvider";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import ServiceOrder from "../../Models/ServiceOrder";
 import {ProgressBar, Step} from "react-step-progress-bar";
-import check from "../../images/check.svg";
+import check from "../../images/check_done.png";
 import swal from "sweetalert";
 import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
-import React from "react";
+import checkToDo from "../../images/check_notDone.png";
 
 function ViewSpecificOrder() {
 
@@ -41,7 +41,7 @@ function ViewSpecificOrder() {
                 setOrder(order);
             })
             .catch(err => {
-                
+
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -64,7 +64,7 @@ function ViewSpecificOrder() {
         setLoading(true);
 
         try {
-            const response = await axios.patch(process.env.REACT_APP_BE_HOST+`api/v1/corso/orders/manage/cancelOrder/${orderId}`, {
+            const response = await axios.patch(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/manage/cancelOrder/${orderId}`, {
                 reasonForDecline: event.target[0].value,
                 //recipient: order.customerEmail
                 recipient: "karinaevang@hotmail.com"
@@ -85,13 +85,13 @@ function ViewSpecificOrder() {
 
             setLoading(false)
         } catch (error) {
-            
+
             swal("Failed!", `Failed to cancel the order with tracking number ${order.orderTrackingNumber}.`, "error");
         }
     }
 
     useEffect(() => {
-        
+
     }, [loading]);
 
 
@@ -110,7 +110,7 @@ function ViewSpecificOrder() {
                         </div>
                         <div className="row text-start overflow-scroll">
                             <h1>Address</h1>
-                            <p >
+                            <p>
                                 Address
                                 : {order.customerAddress} {order.customerApartmentNumber !== null ? "Apartment " + order.customerApartmentNumber : ""}, {order.customerCity}  </p>
                             <p>Postal code : {order.customerPostalCode}</p>
@@ -142,32 +142,37 @@ function ViewSpecificOrder() {
                         <div className={"row"}>
                             <h4>Progression</h4>
 
-                            <div className="col-lg-12 col-md-12 p-4">
-                                {order.estimatedDuration > 0 && order.daysLeft >= 0 ? (
-                                    <ProgressBar
-                                        hasStepZero={true}
-                                        percent={(order.estimatedDuration - order.daysLeft) / order.daysLeft * 100}
-                                        filledBackground="#47B2FF"
-                                        height={3}
-                                    >
-                                        {Array.from({ length: order.estimatedDuration + 1 }, (_, index) => (
-                                            <Step transition="scale" key={index}>
-                                                {({ accomplished, position }) => (
-                                                    position !== 0 ? (
-                                                        <div className={`w-100 progress-bar-order-step indexedStep ${accomplished ? "accomplished" : null}`}>
+                            <div className="col-lg-12 col-md-12 p-4 progress-current-wrapper">
+                                {order.estimatedDuration > 0 && order.hoursWorked >= 0 ? (
+                                    <div>
+                                        <ProgressBar
+                                            hasStepZero={true}
+                                            percent={order.hoursWorked / order.estimatedDuration * 100}
+                                            filledBackground="#47B2FF"
+                                        >
+
+                                            {Array.from({length: 4}, (_, index) => (
+                                                <Step transition="scale" key={index}>
+                                                    {({accomplished, position}) => (
+                                                        <div
+                                                            className={`${accomplished ? "accomplished" : null}`}>
                                                             {accomplished ? (
-                                                                <img src={check} alt={"accomplished"} />
+                                                                <img src={check} alt={"accomplished"}/>
                                                             ) : (
-                                                                <span className={`step-num rounded-circle p-1`}>{index}</span>
+                                                                <img src={checkToDo} alt={"to be done"}/>
                                                             )}
                                                         </div>
-                                                    ) : (
-                                                        <div className={`start-step`}></div>
-                                                    )
-                                                )}
-                                            </Step>
-                                        ))}
-                                    </ProgressBar>
+
+                                                    )}
+                                                </Step>
+                                            ))
+                                            }
+
+                                        </ProgressBar>
+                                        <h4 className={"text-center mt-3"}>
+                                            {order.hoursWorked} / {order.estimatedDuration} hours
+                                        </h4>
+                                    </div>
                                 ) : (
                                     <p className="error-message">
                                         {order.estimatedDuration <= 0 ?
@@ -184,7 +189,7 @@ function ViewSpecificOrder() {
                                         <p>{order.progressInformation}</p>
                                     }
                                     {
-                                        (order.progressInformation === null || order.progressInformation.length <0)  &&
+                                        (order.progressInformation === null || order.progressInformation.length < 0) &&
                                         <p>No notes are currently recorded</p>
 
                                     }
@@ -197,28 +202,31 @@ function ViewSpecificOrder() {
                                 <button className={"m-4 float-end edit-order-btn p-2"}>Edit This Order</button>
                             </div>
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end cancel-order-btn p-2"} onClick={() => setOpenPopup(true)}>Cancel This Order</button>
-                                    <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
-                                        <div className="popup-box">
-                                            {loading &&
-                                                <div className={"spinner-box text-center"}>
-                                                    <h3 className={""}>
-                                                        Sending email...
-                                                    </h3>
-                                                    <SyncLoader className={"spinner"} color="#054AEB"/>
-                                                </div>
-                                            }
-                                            <form onSubmit={cancelStatus} className={" decline-popup" + (loading ? " hidden " : " ")}>
-                                                <h4>Reason for Canceling</h4>
-                                                <textarea className="view-specific-order-admin-textarea"
-                                                          value={reasonForCancellation}
-                                                          onChange={(e) => setReasonForCancellation(e.target.value)}
-                                                          placeholder="Enter the reason for cancelling this order"
-                                                />
-                                                <button type={"submit"} className={"decline-popup-button"}>Submit</button>
-                                            </form>
-                                        </div>
-                                    </Popup>
+                                <button className={"m-4 float-end cancel-order-btn p-2"}
+                                        onClick={() => setOpenPopup(true)}>Cancel This Order
+                                </button>
+                                <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
+                                    <div className="popup-box">
+                                        {loading &&
+                                            <div className={"spinner-box text-center"}>
+                                                <h3 className={""}>
+                                                    Sending email...
+                                                </h3>
+                                                <SyncLoader className={"spinner"} color="#054AEB"/>
+                                            </div>
+                                        }
+                                        <form onSubmit={cancelStatus}
+                                              className={" decline-popup" + (loading ? " hidden " : " ")}>
+                                            <h4>Reason for Canceling</h4>
+                                            <textarea className="view-specific-order-admin-textarea"
+                                                      value={reasonForCancellation}
+                                                      onChange={(e) => setReasonForCancellation(e.target.value)}
+                                                      placeholder="Enter the reason for cancelling this order"
+                                            />
+                                            <button type={"submit"} className={"decline-popup-button"}>Submit</button>
+                                        </form>
+                                    </div>
+                                </Popup>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,9 @@
 package com.corso.springboot.Order_Subdomain.datalayer;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class OrderIdentifier {
 
@@ -11,7 +13,4 @@ public class OrderIdentifier {
         this.orderId = java.util.UUID.randomUUID().toString();
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
 }

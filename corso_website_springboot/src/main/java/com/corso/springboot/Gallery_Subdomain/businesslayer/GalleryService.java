@@ -10,4 +10,6 @@ public interface GalleryService {
     List<GalleryResponse> getGallery();
 
     List<GalleryResponse> updateGalleryOrder(List<GalleryOrderUpdateRequest> galleryOrderUpdateRequest);
+
+    Integer getGalleryCount();
 }

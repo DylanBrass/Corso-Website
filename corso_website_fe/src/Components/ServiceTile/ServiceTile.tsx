@@ -24,9 +24,9 @@ export class Service {
 
 function ServiceTile({ service }: { service: Service }) {
     return (
-        <div className="service-tile" onClick={service.action}>
+        <div className="service-tile w-100 text-center" onClick={service.action}>
             <p className={"service-name"}>{service.serviceName.toUpperCase()}</p>
-            <p className={"service-description"}>{service.serviceDescription}</p>
+            <p className={"service-description text-center"}>{service.serviceDescription}</p>
         </div>
     );
 }

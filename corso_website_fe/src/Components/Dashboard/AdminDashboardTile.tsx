@@ -27,7 +27,7 @@ function AdminDashboardTile(body: Body) {
             <div className={"admin-dashboard-tile d-flex container h-100"}>
                 <div className={"row h-100 text-center"} style={{
                 }}>
-                    <div className={"col-12 col-lg-7 box-body"}>
+                    <div className={"col-7 box-body"}>
                         {body.title1 !== ""  &&
                             <h3>{body.title1}</h3>
                         }
@@ -41,10 +41,10 @@ function AdminDashboardTile(body: Body) {
                             <p>{body.text2}</p>
                         }
                     </div>
-                    <div className={"col-12 col-lg-5 img-box"}>
+                    <div className={"col-5 img-box"}>
                         <img src={body.icon} style={{
                             width: "100%",
-                        }} className={"d-none d-lg-block"} alt={"Icon"}/>
+                        }} className={"d-block"} alt={"Icon"}/>
                     </div>
                 </div>
             </div>

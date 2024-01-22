@@ -47,7 +47,7 @@ public class OrderResponse {
 
     public int totalOrdersMatchingRequest;
 
-    public int daysLeft;
+    public int hoursWorked;
 
     public int estimatedDuration;
 }

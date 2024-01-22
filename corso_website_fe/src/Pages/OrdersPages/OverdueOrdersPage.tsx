@@ -9,7 +9,7 @@ import {format, parseISO} from 'date-fns';
 function OverdueOrdersPage() {
     const [orders, setOrders] = useState<OverdueOrder[]>([]);
     const [page, setPage] = useState(1);
-    const [pageSize,] = useState(1);
+    const [pageSize,] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchOrders = async (pageNumber: number, size: number) => {

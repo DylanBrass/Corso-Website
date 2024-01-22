@@ -65,6 +65,7 @@
             }
 
         }
+
         @media (max-width: 768px) {
             padding: 1em;
         }
@@ -141,46 +142,18 @@
 }
 
 
-.accomplished{
+.accomplished {
 
 }
 
-.progress-bar-order-step{
-    width: 120px;
-    border-radius: 50%;
-    border: 1px solid #47B2FF;
-    background: #FFF;
-    display: inline-block;
-}
 
-.step-num{
-
-    vertical-align: middle;
-    color: #47B2FF;
-    text-align: center;
-    font-family: Inter;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-}
-
-.smaller-font{
+.smaller-font {
     font-size: 14px;
 
 }
 
-.start-step{
-    border-radius: 50px;
-    border: 1px solid #47B2FF;
-    background: #47B2FF;
-    display: inline-flex;
-    padding: 13px;
-    align-items: flex-start;
-    gap: 10px;
-}
 
-.notes-title{
+.notes-title {
 
     margin-top: 2em;
     color: #000;
@@ -192,12 +165,12 @@
     text-transform: uppercase;
 }
 
-.notes-box{
+.notes-box {
     border: black 1px solid;
     height: 20vh;
 }
 
-#title{
+#title {
     color: #000;
     text-align: center;
     font-family: Nunito;
@@ -208,7 +181,7 @@
     text-transform: uppercase;
 }
 
-.customer-interactions-btn{
+.customer-interactions-btn {
     border-radius: 50px;
     background: #064BEC;
     color: #FFF !important;
@@ -217,4 +190,22 @@
     font-style: normal;
     font-weight: 200;
     line-height: normal;
+}
+
+
+.progress-bar-wrapper{
+    .RSPBprogressBarText{
+        font-family: Nunito !important;
+        font-size: 20px !important;
+        font-style: normal !important;
+        font-weight: 200 !important;
+        line-height: normal !important;
+        text-align: center !important;
+        color: #000000 !important;
+    }
+
+
+    img{
+        width: 50px;
+    }
 }

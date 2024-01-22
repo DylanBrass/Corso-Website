@@ -74,4 +74,19 @@ class GalleryControllerIntegrationTest {
       assert galleryRepository.findAll().size() == 5;
     }
 
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getCountOfGalleries_ShouldReturnFive() {
+        //arrange
+        Integer expectedNumGalleries = 5;
+
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_GALLERIES + "/carousel/count")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$").isEqualTo(expectedNumGalleries);
+    }
+
 }

@@ -8,7 +8,8 @@ import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import './ViewSpecificOrder.css';
 import {ProgressBar, Step} from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
-import check from "../../../images/check.svg";
+import check from "../../../images/check_done.png";
+import checkToDo from "../../../images/check_notDone.png";
 import {useNavigate} from "react-router";
 import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
@@ -46,7 +47,7 @@ function ViewSpecificOrder() {
 
             })
             .catch(err => {
-                
+
 
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
@@ -82,7 +83,7 @@ function ViewSpecificOrder() {
                 }
             }).catch(
             err => {
-                
+
                 if (err.response.status === 401 || err.response.status === 403) {
                     // @ts-ignore
                     auth.authError(err.response.status);
@@ -152,41 +153,36 @@ function ViewSpecificOrder() {
                             <h4>Progression</h4>
                             <div className="col-lg-12 col-md-12 p-4">
                                 {order.estimatedDuration > 0 &&
-                                    <ProgressBar
-                                        hasStepZero={true}
-                                        percent={(order.estimatedDuration - order.daysLeft) / order.daysLeft * 100}
-                                        filledBackground="#47B2FF"
-                                        height={3}
-                                    >
-                                        {
-                                            Array.from({length: order.estimatedDuration + 1}, (_, index) => (
+                                    <div className={"progress-bar-wrapper"}>
+                                        <ProgressBar
+                                            hasStepZero={true}
+                                            percent={order.hoursWorked / order.estimatedDuration * 100}
+                                            filledBackground="#47B2FF"
+                                        >
+
+                                            {Array.from({length: 4}, (_, index) => (
                                                 <Step transition="scale" key={index}>
                                                     {({accomplished, position}) => (
-                                                        position !== 0 ?
-                                                            <div
-                                                                className={`w-100 progress-bar-order-step indexedStep ${accomplished ? "accomplished" : null}`}
-                                                            >
-                                                                {
-                                                                    accomplished ?
-                                                                        <img src={check} alt={"accomplished"}/>
-                                                                        :
-                                                                        <span
-                                                                            className={`step-num rounded-circle p-1`}>{index}</span>
-                                                                }
-                                                            </div> :
-                                                            <div
-                                                                className={`start-step`}
-                                                            >
-                                                            </div>
+                                                        <div
+                                                            className={`${accomplished ? "accomplished" : null}`}>
+                                                            {accomplished ? (
+                                                                <img src={check} alt={"accomplished"}/>
+                                                            ) : (
+                                                                <img src={checkToDo} alt={"to be done"}/>
+                                                            )}
+                                                        </div>
 
                                                     )}
-
-
                                                 </Step>
                                             ))
-                                        }
+                                            }
 
-                                    </ProgressBar>
+                                        </ProgressBar>
+
+                                        <div>
+                                            <h5 className={"text-center mt-2"}>{order.hoursWorked} / {order.estimatedDuration} hours</h5>
+                                        </div>
+                                    </div>
                                 }
                                 {order.estimatedDuration <= 0 &&
                                     <p>We haven't started to work on your order, but we will soon !</p>
@@ -215,7 +211,8 @@ function ViewSpecificOrder() {
                                 </div>
                                 {order.orderStatus.toLowerCase() === "pending" &&
                                     <div className={"col-12"}>
-                                        <button id={"edit-request"} className={"m-4 float-end customer-interactions-btn p-2"}
+                                        <button id={"edit-request"}
+                                                className={"m-4 float-end customer-interactions-btn p-2"}
                                                 onClick={() => {
                                                     window.location.href = `/profile/manage/orders/${orderId}`;
 

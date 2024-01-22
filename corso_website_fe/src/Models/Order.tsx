@@ -20,10 +20,10 @@ class Order {
     public customerPostalCode: string;
     public customerApartmentNumber: string;
     public estimatedDuration: number;
-    public daysLeft: number;
+    public hoursWorked: number;
 
 
-    constructor(orderId: string, orderTrackingNumber: string, serviceId: string, service: ServiceOrder, userId: string, progressInformation: string, orderDate: string, dueDate: string, orderStatus: string, orderDescription: string, customerFullName: string, customerEmail: string, customerPhone: string, customerAddress: string, customerCity: string, customerPostalCode: string, customerApartmentNumber: string, estimatedDuration: number, daysLeft: number) {
+    constructor(orderId: string, orderTrackingNumber: string, serviceId: string, service: ServiceOrder, userId: string, progressInformation: string, orderDate: string, dueDate: string, orderStatus: string, orderDescription: string, customerFullName: string, customerEmail: string, customerPhone: string, customerAddress: string, customerCity: string, customerPostalCode: string, customerApartmentNumber: string, estimatedDuration: number, hoursWorked: number) {
         this.orderId = orderId;
         this.orderTrackingNumber = orderTrackingNumber;
         this.serviceId = serviceId;
@@ -42,7 +42,7 @@ class Order {
         this.customerPostalCode = customerPostalCode;
         this.customerApartmentNumber = customerApartmentNumber;
         this.estimatedDuration = estimatedDuration;
-        this.daysLeft = daysLeft;
+        this.hoursWorked = hoursWorked;
     }
 }
 

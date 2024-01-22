@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `orders`
 (
     25
 ) NULL,
-    `days_left` INT NULL,
+    `hours_worked` INT NULL,
     `estimated_duration` INT NULL,
     FOREIGN KEY
 (

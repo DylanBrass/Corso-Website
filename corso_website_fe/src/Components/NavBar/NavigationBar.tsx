@@ -5,6 +5,7 @@ import './NavigationBar.css';
 import Cookies from "js-cookie";
 import {useAuth} from "../../security/Components/AuthProvider";
 import {Link} from "react-router-dom";
+import logo from "../../images/customcolor_logo_transparent_background_revised.png";
 
 function NavigationBar() {
     const auth = useAuth()
@@ -15,8 +16,10 @@ function NavigationBar() {
                     <Navbar.Brand href="/">
                         <img
                             id={"logo"}
-                            src="https://res.cloudinary.com/dszhbawv7/image/upload/v1701844105/customcolor_logo_transparent_background_x5ensc.png"
-                            alt="Logo"/>
+                            src={logo}
+                            alt="Logo"
+
+                        />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarNav"/>
                     <Navbar.Collapse id="navbarNav">

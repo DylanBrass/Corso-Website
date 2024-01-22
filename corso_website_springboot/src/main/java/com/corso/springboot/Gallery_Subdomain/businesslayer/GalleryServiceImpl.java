@@ -54,4 +54,9 @@ public class GalleryServiceImpl implements GalleryService{
 
             return galleryResponseMapper.toGalleriesResponse(galleryRepository.saveAll(updatedGalleries));
     }
+
+    @Override
+    public Integer getGalleryCount() {
+        return galleryRepository.countGalleryBy();
+    }
 }

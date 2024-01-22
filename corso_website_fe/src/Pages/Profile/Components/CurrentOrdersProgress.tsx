@@ -1,8 +1,9 @@
 import React from 'react';
 import "./CurrentOrdersProgress.css"
 import {ProgressBar, Step} from "react-step-progress-bar";
-import check from "../../../images/check.svg";
+import check from "../../../images/check_done.png";
 import Order from "../../../Models/Order";
+import checkToDo from "../../../images/check_notDone.png";
 
 function CurrentOrdersProgress({order}: { order: Order}) {
     return(
@@ -14,41 +15,29 @@ function CurrentOrdersProgress({order}: { order: Order}) {
             {order.estimatedDuration > 0 &&
 
                 <ProgressBar
-                hasStepZero={true}
-                percent={(order.estimatedDuration - order.daysLeft) / order.daysLeft * 100}
-                filledBackground="#47B2FF"
-                height={3}
-            >
+                    hasStepZero={true}
+                    percent={order.hoursWorked / order.estimatedDuration * 100}
+                    filledBackground="#47B2FF"
+                >
 
-
-                {
-                    Array.from({length: order.estimatedDuration + 1}, (_, index) => (
+                    {Array.from({length: 4}, (_, index) => (
                         <Step transition="scale" key={index}>
                             {({accomplished, position}) => (
-                                position !== 0 ?
-                                    <div
-                                        className={`w-100 progress-bar-order-step indexedStep ${accomplished ? "accomplished" : null}`}
-                                    >
-                                        {
-                                            accomplished ?
-                                                <img src={check} alt={"accomplished"}/>
-                                                :
-                                                <span className={`step-num rounded-circle p-1`}>{index}</span>
-                                        }
-                                    </div> :
-                                    <div
-                                        className={`start-step`}
-                                    >
-                                    </div>
+                                <div
+                                    className={`${accomplished ? "accomplished" : null}`}>
+                                    {accomplished ? (
+                                        <img src={check} alt={"accomplished"}/>
+                                    ) : (
+                                        <img src={checkToDo} alt={"to be done"}/>
+                                    )}
+                                </div>
 
                             )}
-
-
                         </Step>
                     ))
-                }
+                    }
 
-            </ProgressBar>
+                </ProgressBar>
             }
 
             {order.estimatedDuration <= 0 &&

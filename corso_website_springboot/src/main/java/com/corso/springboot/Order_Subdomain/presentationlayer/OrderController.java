@@ -107,4 +107,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToCancelled(orderId, declineOrderRequest));
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/manage/overdue/count")
+    public ResponseEntity<Integer> CountAllOverdueOrders(){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.countAllOverdueOrders());
+    }
 }

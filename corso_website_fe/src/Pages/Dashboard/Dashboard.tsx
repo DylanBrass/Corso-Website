@@ -24,6 +24,11 @@ function Dashboard() {
     const [totalReviews, setTotalReviews] = useState("loading...")
 
     const [totalPinnedReviews, setTotalPinnedReviews] = useState("loading...")
+
+    const [totalOverdueOrders, setTotalOverdueOrders] = useState("loading...")
+
+    const [totalGalleryImages, setTotalGalleryImages] = useState("loading...")
+
     const getTotalReviews = async () => {
         axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/count", {
             headers: {
@@ -224,6 +229,46 @@ function Dashboard() {
     }
 
 
+
+    const getTotalOverdueOrders = async () => {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/overdue/count", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setTotalOverdueOrders(response.data);
+                }
+            })
+            .catch(error => {
+
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    }
+
+    const getTotalGalleryImages = async () => {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/galleries/carousel/count", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setTotalGalleryImages(response.data);
+                }
+            })
+            .catch(error => {
+
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    }
+
+
     const auth = useAuth()
 
     useEffect(() => {
@@ -267,6 +312,14 @@ function Dashboard() {
 
         })
 
+        getTotalOverdueOrders().then(r => {
+
+        })
+
+        getTotalGalleryImages().then(r => {
+
+        })
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -278,8 +331,8 @@ function Dashboard() {
             <h1 className={"w-100"}>Welcome Back {Cookies.get("username")}</h1>
 
             <div className={"admin-dashboard container"} style={{}}>
-                <div className={"row d-flex align-items-stretch mt-4"}>
-                    <div className={"col-4"}>
+                <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
                         <AdminDashboardTile
                             title1={completedCount.toString()}
                             title2={""}
@@ -292,7 +345,7 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile
                             title1={inProgressCount.toString()}
@@ -306,7 +359,7 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile
                             title1={pendingCount.toString()}
@@ -321,8 +374,8 @@ function Dashboard() {
                         />
                     </div>
                 </div>
-                <div className={"row d-flex align-items-stretch mt-4"}>
-                    <div className={"col-4"}>
+                <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
                         <AdminDashboardTile
                             title1={totalOrders.toString()}
                             title2={""}
@@ -335,10 +388,10 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile
-                            title1={"3"}
+                            title1={totalOverdueOrders.toString()}
                             title2={""}
                             text1={"Late Orders"}
                             text2={""}
@@ -349,7 +402,7 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
 
                         <AdminDashboardTile
@@ -364,10 +417,10 @@ function Dashboard() {
                         />
                     </div>
                 </div>
-                <div className={"row d-flex align-items-stretch mt-4"}>
-                    <div className={"col-4"}>
+                <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
                         <AdminDashboardTile
-                            title1={"4"}
+                            title1={totalGalleryImages.toString()}
                             title2={""}
                             text1={"Gallery Images"}
                             text2={""}
@@ -378,14 +431,14 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile title1={"Reports"} text1={""} title2={""} text2={""} icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon13_pxn61t.png"}
                                             action={() => {
                                                 
                                             }}/>
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile
                             title1={faqCount.toString()}
@@ -399,8 +452,8 @@ function Dashboard() {
                         />
                     </div>
                 </div>
-                <div className={"row d-flex align-items-stretch mt-4"}>
-                    <div className={"col-4"}>
+                <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
                         <AdminDashboardTile
                             title1={""}
                             title2={""}
@@ -412,7 +465,7 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile
                             title1={serviceCount.toString()}
@@ -426,7 +479,7 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
                         <AdminDashboardTile
                             title1={totalAdmins.toString()}
                             title2={""}
@@ -439,10 +492,10 @@ function Dashboard() {
                         />
                     </div>
                 </div>
-                <div className={"row d-flex align-items-stretch mt-4 mb-5"}>
-                    <div className={"col-4"}>
+                <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>
+                    <div className={"col-12 col-lg-4 mt-lg-0"}>
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
                         <AdminDashboardTile
                             title1={totalReviews.toString()}
@@ -456,7 +509,7 @@ function Dashboard() {
                             }}
                         />
                     </div>
-                    <div className={"col-4"}>
+                    <div className={"col-12 col-lg-4 mt-lg-0"}>
                     </div>
                 </div>
             </div>

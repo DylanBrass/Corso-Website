@@ -51,7 +51,7 @@ public class OrderRequestExternal {
 
     int estimatedDuration;
 
-    int daysLeft;
+    int hoursWorked;
 
 
 }

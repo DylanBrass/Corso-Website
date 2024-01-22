@@ -19,7 +19,7 @@ function CreateExternalOrderPage() {
 
     const [allServices, setAllServices] = React.useState([])
 
-    const [selectedSearchField, setSelectedSearchField] = React.useState("name")
+    const [selectedSearchField, setSelectedSearchField] = React.useState("email")
 
     const auth = useAuth()
 
@@ -109,7 +109,7 @@ function CreateExternalOrderPage() {
             "customerCity": (document.getElementById("customerCity") as HTMLInputElement).value,
             "customerApartment": (document.getElementById("customerApartment") as HTMLInputElement).value,
             "estimatedDuration": (document.getElementById("estimatedDuration") as HTMLInputElement).value,
-            "daysLeft": (document.getElementById("daysLeft") as HTMLInputElement).value,
+            "hoursWorked": (document.getElementById("hoursWorked") as HTMLInputElement).value,
             "progressInformation": (document.getElementById("progressText") as HTMLInputElement).value,
         }
 
@@ -440,27 +440,27 @@ function CreateExternalOrderPage() {
 
                         <div className="row mb-3 text-start">
                         <span className="col-sm-9 offset-sm-3 fs-6">
-                            If the job was started before this form was filled, enter how many days are left, otherwise leave blank.
+                            If the job was started before this form was filled, enter how many hours of work was done, otherwise leave blank.
                         </span>
                         </div>
 
                         <div className="row mb-3">
-                            <label htmlFor={"daysLeft"} className="col-sm-3 col-form-label">
-                                Days Left
+                            <label htmlFor={"hoursWorked"} className="col-sm-3 col-form-label">
+                                Hours Worked
                             </label>
                             <div className="col-sm-9">
                                 <input
-                                    name={"daysLeft"}
-                                    id={"daysLeft"}
+                                    name={"hoursWorked"}
+                                    id={"hoursWorked"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Days Left"
+                                    placeholder="Hours Worked"
                                 />
                             </div>
                         </div>
 
-                            <div className="row mb-3 text-start">
-                                <label htmlFor={"daysLeft"} className="col-sm-3 col-form-label">
+                            <div className="row mb-3">
+                                <label htmlFor={"progressText"} className="col-sm-3 col-form-label">
                                     Progress Description
                                 </label>
                                 <div className="col-sm-9">

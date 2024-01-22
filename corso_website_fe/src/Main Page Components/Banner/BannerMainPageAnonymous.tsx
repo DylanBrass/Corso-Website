@@ -22,16 +22,27 @@ function BannerMainPageAnonymous({image}) {
                         <h1 className={"mt-5"}>Register Now!</h1>
                     </div>
                 <div className={"row"}>
-                    <div className={"col-12 text-center"}>
+                    <div className={"col-12 col-lg-6 text-center"}>
 
                         <button className={"banner-btn  mt-5 mb-5"}
                                 onClick={() => {
-                                    window.location.href = process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"
+                                    window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
                                 }}>
                             Register Now!
                         </button>
                     </div>
+
+                    <div className={"col-12 col-lg-6 text-center"}>
+
+                        <button className={"banner-btn mt-5 mb-5"}
+                                onClick={() => {
+
+                                }}>Request Now!
+                        </button>
+                    </div>
+
                 </div>
+
             </div>
         </div>
     )
