@@ -79,7 +79,6 @@ public class SpringSecurityConfigBean {
                             .logoutSuccessHandler((request, response, authentication) -> {
 
                                 Arrays.stream(request.getCookies()).toList().forEach(cookie -> {
-                                    if (!cookie.getName().equals("JSESSIONID")) {
                                         log.info(cookie.getName());
                                         Cookie newCookie = new Cookie(cookie.getName(), "");
                                         newCookie.setMaxAge(0);
@@ -87,7 +86,7 @@ public class SpringSecurityConfigBean {
                                         newCookie.setDomain(frontendDomain.replace("https://", "").replace("http://", "")
                                                 .split(":")[0].replace("/", ""));
                                         response.addCookie(newCookie);
-                                    }
+                                    
                                 });
 
                                 response.setStatus(HttpStatus.OK.value());
