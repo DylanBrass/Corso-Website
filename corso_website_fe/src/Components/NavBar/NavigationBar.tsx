@@ -68,8 +68,8 @@ function NavigationBar() {
                                           className={"m-auto"}>
                                         <button id={"logout-btn"} type={"submit"} onClick={
                                             () => {
-                                                Cookies.remove("username")
-                                                Cookies.remove("email")
+                                               // @ts-ignore
+                                                auth.logout()
                                             }
                                         }>
                                             <span className={"logout-btn-text"}>
