@@ -61,12 +61,11 @@ public class ServiceServiceImpl implements ServiceService{
 
 
             // Saving the service
-            //ServiceEntity savedService = serviceRepository.save(service);
+            ServiceEntity savedService = serviceRepository.save(service);
 
             // Preparing the response
-            //return serviceResponseMapper.toServiceResponse(savedService);
-
-            return null;
+            return serviceResponseMapper.toServiceResponse(savedService);
+            
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload images", e);
