@@ -124,14 +124,32 @@ const AuthProvider = ({children}) => {
     }
 
 
-
     const getXsrfToken = () => {
         return csrfToken
     }
 
 
+    const logout = () => {
+
+        axios.post(process.env.REACT_APP_BE_HOST + "api/v1/corso/logout", {}, {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': csrfToken
+            }
+        })
+            .then(r => {
+                Cookies.remove("username")
+                Cookies.remove("email")
+            }).catch(e => {
+            authError(e.response.status)
+        })
+
+
+    }
+
+
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo}}>
+        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo, logout}}>
             {children}
             <ToastContainer
                 position="top-center"
