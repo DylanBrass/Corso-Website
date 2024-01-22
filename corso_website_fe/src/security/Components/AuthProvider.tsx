@@ -6,6 +6,8 @@ import {Bounce, toast, ToastContainer} from "react-toastify";
 // @ts-ignore
 const AuthContext = createContext();
 
+axios.defaults.withCredentials = true;
+
 const userRoles = () => {
     if (Cookies.get("accessPermission") === undefined) {
         return ""
@@ -129,27 +131,9 @@ const AuthProvider = ({children}) => {
     }
 
 
-    const logout = () => {
-
-        axios.post(process.env.REACT_APP_BE_HOST + "api/v1/corso/logout", {}, {
-            headers: {
-                // @ts-ignore
-                'X-XSRF-TOKEN': csrfToken
-            }
-        })
-            .then(r => {
-                Cookies.remove("username")
-                Cookies.remove("email")
-            }).catch(e => {
-            authError(e.response.status)
-        })
-
-
-    }
-
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo, logout}}>
+        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo}}>
             {children}
             <ToastContainer
                 position="top-center"
