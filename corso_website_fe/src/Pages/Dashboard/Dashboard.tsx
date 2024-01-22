@@ -9,21 +9,21 @@ import React from "react";
 
 function Dashboard() {
 
-    const [totalAdmins, setTotalAdmins] = useState(0)
+    const [totalAdmins, setTotalAdmins] = useState("loading...")
 
-    const [visitors, setVisitors] = useState(0)
+    const [visitors, setVisitors] = useState("loading...")
 
-    const [inProgressCount, setInProgressCount] = useState(0);
-    const [pendingCount, setPendingCount] = useState(0);
-    const [completedCount, setCompletedCount] = useState(0);
-    const [serviceCount, setServiceCount] = useState(0);
+    const [inProgressCount, setInProgressCount] = useState("loading...");
+    const [pendingCount, setPendingCount] = useState("loading...");
+    const [completedCount, setCompletedCount] = useState("loading...");
+    const [serviceCount, setServiceCount] = useState("loading...");
+    const [faqCount, setFaqCount] = useState("loading...");
 
+    const [totalOrders, setTotalOrders] = useState("loading...")
 
-    const [totalOrders, setTotalOrders] = useState(0)
+    const [totalReviews, setTotalReviews] = useState("loading...")
 
-    const [totalReviews, setTotalReviews] = useState(0)
-
-    const [totalPinnedReviews, setTotalPinnedReviews] = useState(0)
+    const [totalPinnedReviews, setTotalPinnedReviews] = useState("loading...")
     const getTotalReviews = async () => {
         axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/count", {
             headers: {
@@ -204,6 +204,25 @@ function Dashboard() {
     }
 
 
+    const getFaqCount = async () => {
+        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/faqs/count", {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    setFaqCount(response.data);
+                }
+            })
+            .catch(error => {
+
+                // @ts-ignore
+                auth.authError(error.response.status);
+            });
+    }
+
 
     const auth = useAuth()
 
@@ -220,12 +239,16 @@ function Dashboard() {
         getVisitors().then(r => {
             
         })
+
         getInProgressCount().then(() => {
         });
+
         getPendingCount().then(() => {
         });
+
         getCompletedCount().then(() => {
         });
+
         getServicesCount()
 
         getTotalOrders().then(r => {
@@ -238,6 +261,10 @@ function Dashboard() {
 
         getTotalPinnedReviews().then(r => {
             
+        })
+
+        getFaqCount().then(r => {
+
         })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -361,7 +388,7 @@ function Dashboard() {
                     <div className={"col-4"}>
 
                         <AdminDashboardTile
-                            title1={"6"}
+                            title1={faqCount.toString()}
                             title2={""}
                             text1={"Current FAQs"}
                             text2={""}

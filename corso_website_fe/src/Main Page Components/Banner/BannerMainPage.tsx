@@ -60,7 +60,6 @@ function BannerMainPage({image}) {
 
                         <button className={"banner-btn mt-5 mb-5"}
                                 onClick={() => {
-                                    
                                     window.location.href = "/profile/orders"
                                 }}>Past Orders
                         </button>

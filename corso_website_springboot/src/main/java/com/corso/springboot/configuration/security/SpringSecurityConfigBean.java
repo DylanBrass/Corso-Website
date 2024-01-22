@@ -84,6 +84,8 @@ public class SpringSecurityConfigBean {
                                         Cookie newCookie = new Cookie(cookie.getName(), "");
                                         newCookie.setMaxAge(0);
                                         newCookie.setPath("/");
+                                        newCookie.setDomain(frontendDomain.replace("https://", "").replace("http://", "")
+                                                .split(":")[0].replace("/", ""));
                                         response.addCookie(newCookie);
                                     }
                                 });

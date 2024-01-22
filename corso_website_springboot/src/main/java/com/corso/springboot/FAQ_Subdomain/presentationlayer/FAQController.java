@@ -57,4 +57,11 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.deleteFaqByFaqId(faqId));
     }
 
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getFAQCount() {
+        return ResponseEntity.status(HttpStatus.OK).body(faqService.getFAQCount());
+    }
+
 }
