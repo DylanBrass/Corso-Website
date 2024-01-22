@@ -56,13 +56,15 @@ const AuthProvider = ({children}) => {
             })
                 .then(r => {
                     if (r.status === 200) {
-                        Cookies.set("username", r.data.name)
-                        Cookies.set("email", r.data.email)
+                        Cookies.set("username", r.data.name, {domain: getFormattedDomain()})
+                        Cookies.set("email", r.data.email, {domain: getFormattedDomain()})
                     } else {
                         getInfo()
                     }
                 })
                 .catch(e => {
+                    authError(e.response.status)
+
                     getInfo()
                 })
 
@@ -80,12 +82,13 @@ const AuthProvider = ({children}) => {
             })
                 .then(r => {
                     if (r.status === 200) {
-                        Cookies.set("username", r.data.username)
-                        Cookies.set("email", r.data.email)
+                        Cookies.set("username", r.data.username, {domain: getFormattedDomain()})
+                        Cookies.set("email", r.data.email,{domain: getFormattedDomain()})
                     }
                 })
                 .catch(e => {
 
+                    authError(e.response.status)
 
                 })
         }
@@ -99,6 +102,14 @@ const AuthProvider = ({children}) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated]);
+
+
+    const getFormattedDomain = (): string => {
+        // @ts-ignore
+        return process.env.REACT_APP_BE_HOST.replace("https://", "").replace("http://", "")
+            .split(":")[0].replace("/", "")
+
+    }
 
 
     const authError = (status: number) => {
