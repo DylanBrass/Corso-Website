@@ -35,7 +35,7 @@ public class CloudinaryService {
             byte[] decodedBytes = Base64.getDecoder().decode(base64ImageNoPrefix);
 
             // Upload the decoded bytes and retrieve the URL
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("rawtypes")
             Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.emptyMap());
             String url = (String) uploadResult.get("url");
 
@@ -62,6 +62,7 @@ public class CloudinaryService {
             byte[] decodedBytes = Base64.getDecoder().decode(base64Image.split(",")[1]);
 
             // Update the existing image in Cloudinary
+            @SuppressWarnings("rawtypes")
             Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.asMap("public_id", publicId));
             String updatedUrl = (String) uploadResult.get("url");
 
