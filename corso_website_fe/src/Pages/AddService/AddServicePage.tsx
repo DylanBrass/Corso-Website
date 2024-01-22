@@ -5,6 +5,8 @@ import swal from 'sweetalert';
 import { useAuth } from '../../security/Components/AuthProvider';
 import NavigationBar from '../../Components/NavBar/NavigationBar';
 import pen from '../../images/pen.svg';
+import {SyncLoader} from "react-spinners";
+import {useNavigate} from "react-router";
 
 function AddServicePage() {
     const [serviceName, setServiceName] = useState('');
@@ -15,6 +17,9 @@ function AddServicePage() {
     const imageFileInputRef = useRef<HTMLInputElement>(null);
 
     const auth = useAuth();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const navigate = useNavigate()
 
     useEffect(() => {
         // @ts-ignore
@@ -104,6 +109,7 @@ function AddServicePage() {
             serviceImage: serviceImagePreview,
         };
 
+        setIsLoading(true)
         await axios
             .post(process.env.REACT_APP_BE_HOST + 'api/v1/corso/services', data, {
                 headers: {
@@ -114,7 +120,7 @@ function AddServicePage() {
             .then((r) => {
                 if (r.status === 201) {
                     swal('Service created!', 'Service has been created successfully!', 'success');
-                    
+                    navigate(-1)
                 }
             })
             .catch((e) => {
@@ -123,6 +129,7 @@ function AddServicePage() {
                     auth.authError(e.response.status);
                 });
             });
+        setIsLoading(false)
     };
 
     return (
@@ -217,6 +224,11 @@ function AddServicePage() {
                         </div>
                     </div>
                 </div>
+
+                <div className={isLoading ? "d-block spinner-visible" : "d-none"}>
+                    <SyncLoader className={"spinner"} color="#054AEB"/>
+                </div>
+
                 <div className="submit-button-container">
                     <input type="submit" value="Submit" className="submit-button"/>
                 </div>

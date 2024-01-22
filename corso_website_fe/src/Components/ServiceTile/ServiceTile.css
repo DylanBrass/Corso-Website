@@ -9,6 +9,31 @@
     flex-direction: column;
     margin: 10px;
 
+    & .service-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #ececec;
+        border-radius: 20px 20px 0px 0px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    & .service-name {
+        font-size: 23px;
+        color: black;
+        text-align: left;
+        margin: 0;
+        grid-area: 1 / 1 / 2 / 2;
+        border-radius: 20px 20px 0px 0px;
+        background: #ececec;
+        flex: 1;
+    }
+
+    & .eye-icon {
+        cursor: pointer;
+    }
+
     &:hover {
         transform: scale(1.05);
     }
@@ -17,22 +42,25 @@
         font-size: 16px;
         color: #666;
         text-align: left;
-        margin: 0;
-    }
-
-    & .service-name {
-        font-size: 23px;
-        grid-area: 1 / 1 / 2 / 2;
-        padding: 20px;
-        color: black;
-        text-align: center;
-        background: #ececec;
-        border-radius: 20px 20px 0px 0px;
     }
 
     & .service-description {
         grid-area: 2 / 1 / 3 / 2;
         padding: 30px;
         color: black;
+    }
+
+    @media (max-width: 768px) {
+        & .service-header {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        & .service-name {
+            transform: scale(0.8);
+        }
+        & .eye-icon {
+            margin-top: 5px;
+        }
     }
 }

@@ -6,6 +6,8 @@ import { useAuth } from '../../security/Components/AuthProvider';
 import NavigationBar from '../../Components/NavBar/NavigationBar';
 import pen from '../../images/pen.svg';
 import { useParams } from 'react-router-dom';
+import {useNavigate} from "react-router";
+import {SyncLoader} from "react-spinners";
 
 function ModifyServicePage() {
   const { serviceId } = useParams();
@@ -17,6 +19,8 @@ function ModifyServicePage() {
   const imageFileInputRef = useRef<HTMLInputElement>(null);
 
   const auth = useAuth();
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // @ts-ignore
@@ -131,7 +135,7 @@ function ModifyServicePage() {
       serviceImage: serviceImagePreview,
     };
 
-    
+    setIsLoading(true)
 
     try {
       const response = await axios.put(
@@ -145,8 +149,11 @@ function ModifyServicePage() {
           }
       );
 
+      setIsLoading(false)
+
       if (response.status === 200) {
         await swal('Service modified!', 'Service has been modified successfully!', 'success');
+        navigate(-2);
       }
     } catch (error) {
       // @ts-ignore
@@ -249,6 +256,11 @@ function ModifyServicePage() {
                 </div>
               </div>
             </div>
+
+            <div className={isLoading ? "d-block spinner-visible" : "d-none"}>
+              <SyncLoader className={"spinner"} color="#054AEB"/>
+            </div>
+
             <div className="submit-button-container">
               <input type="submit" value="Save Changes" className="submit-button"/>
             </div>

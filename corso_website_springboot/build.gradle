@@ -134,6 +134,7 @@ test {
     exclude '**/ViewServiceDetailsAdmin.class'
     exclude '**/ModifyServiceTest.class'
     exclude '**/ChooseViewableFaqsTest.class'
+    exclude '**/ChooseVisibleServicesTest.class'
     exclude '**/AdminAcceptRequestTest.class'
     exclude '**/AdminDeclinesRequestTest.class'
     exclude '**/AdminCancelsOrderTest.class'

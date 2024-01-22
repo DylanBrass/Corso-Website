@@ -1,10 +1,8 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.web.multipart.MultipartFile;
 
 @Value
 @Builder
@@ -14,4 +12,5 @@ public class ServiceRequest {
     public String serviceDescription;
     public String serviceIcon;
     public String serviceImage;
+    public boolean isActive;
 }
