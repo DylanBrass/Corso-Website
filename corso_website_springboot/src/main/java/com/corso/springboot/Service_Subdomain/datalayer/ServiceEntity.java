@@ -22,16 +22,18 @@ public class ServiceEntity {
     private String serviceDescription;
     private String serviceIcon;
     private String serviceImage;
+    private boolean isActive;
 
     public ServiceEntity(){
         this.serviceIdentifier = new ServiceIdentifier();
     }
 
-    public ServiceEntity(String serviceName, String serviceDescription, String serviceIcon, String serviceImage) {
+    public ServiceEntity(String serviceName, String serviceDescription, String serviceIcon, String serviceImage, boolean isActive){
         this.serviceIdentifier = new ServiceIdentifier();
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
         this.serviceIcon = serviceIcon;
         this.serviceImage = serviceImage;
+        this.isActive = isActive;
     }
 }

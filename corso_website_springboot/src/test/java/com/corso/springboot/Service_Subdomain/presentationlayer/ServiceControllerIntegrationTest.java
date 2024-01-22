@@ -141,4 +141,39 @@ public class ServiceControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("5"));
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenGettingAllVisibleServices_thenReturnAllVisibleServices() throws Exception {
+
+        //act
+        mockMvc.perform(get(BASE_URI_SERVICES + "/visible")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(oidcLogin().authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5));
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void whenChangingServiceVisibility_thenReturnModifiedService() throws Exception {
+        // Arrange
+        String serviceId = "982577e6-1909-46b8-8583-e08c9daa4e9b";
+
+        //act
+        mockMvc.perform(patch(BASE_URI_SERVICES + "/" + serviceId + "/visibility")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .with(oidcLogin().authorities(new SimpleGrantedAuthority("Admin"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.serviceId").value(serviceId))
+                .andExpect(jsonPath("$.active").value(false));
+
+        // Verify that the service in the repository has been updated
+        ServiceEntity modifiedService = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
+        assertNotNull(modifiedService);
+        assertEquals(false, modifiedService.isActive());
+    }
+
 }

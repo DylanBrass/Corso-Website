@@ -13,4 +13,5 @@ public class ServiceResponse {
     String serviceDescription;
     String serviceIcon;
     String serviceImage;
+    boolean isActive;
 }

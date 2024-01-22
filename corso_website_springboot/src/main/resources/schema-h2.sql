@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `services`
 (
     255
 ) NOT NULL,
-    is_active BOOL
+    is_active BOOL NOT NULL
 
 );
 

@@ -32,7 +32,7 @@
             padding: 8px;
             margin-bottom: 16px;
             box-sizing: border-box;
-            resize: none;
+            resize: vertical;
         }
 
         & input[type="submit"]:hover {
@@ -109,7 +109,7 @@
                 padding: 8px;
                 margin-bottom: 12px;
                 box-sizing: border-box;
-                resize: none;
+                resize: vertical;
             }
         }
 
@@ -120,7 +120,7 @@
                 padding: 8px;
                 margin-bottom: 12px;
                 box-sizing: border-box;
-                resize: none;
+                resize: vertical;
             }
 
             & .pen-icon {
@@ -224,9 +224,17 @@
 
             & textarea {
                 font-size: 15px;
+                resize: vertical;
             }
         }
     }
+
+    .spinner-visible{
+        .spinner {
+            margin-top: 25px;
+        }
+    }
+
 }
 
 .submit-button-container {

@@ -164,7 +164,7 @@ public class OrderServiceImplUnitTest {
 
         String orderId = order.getOrderId().getOrderId();
 
-        Mockito.when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(new ServiceResponse("982577e6-1909-46b8-8583-e08c9daa4e9b", "Custom web development", "Custom web development project", "https://www.google.com", "https"));
+        Mockito.when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(new ServiceResponse("982577e6-1909-46b8-8583-e08c9daa4e9b", "Custom web development", "Custom web development project", "https://www.google.com", "https", true));
 
         Mockito.when(orderResponseMapper.toOrderResponse(order)).thenReturn(new OrderResponse(orderId, order.getOrderTrackingNumber().getOrderTrackingNumber(), order.getServiceId().getServiceId(), null, order.getUserId(), order.getProgressInformation(), order.getOrderDate(), order.getDueDate(), order.getOrderStatus(), order.getOrderDescription(), order.getCustomerFullName(), order.getCustomerEmail(), order.getCustomerPhone(), order.getCustomerAddress(), order.getCustomerCity(), order.getCustomerPostalCode(), order.getCustomerApartmentNumber(), 2, 1, 1));
         Mockito.when(orderRepository.findByOrderId_OrderId(orderId)).thenReturn(order);
@@ -191,7 +191,7 @@ public class OrderServiceImplUnitTest {
 
         Mockito.when(orderResponseMapper.toOrdersResponse(Mockito.anyList())).thenReturn(mockOrderResponses);
 
-        Mockito.when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(new ServiceResponse("982577e6-1909-46b8-8583-e08c9daa4e9b", "Custom web development", "Custom web development project", "https://www.google.com", "https"));
+        Mockito.when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(new ServiceResponse("982577e6-1909-46b8-8583-e08c9daa4e9b", "Custom web development", "Custom web development project", "https://www.google.com", "https", true));
 
         // Act
 

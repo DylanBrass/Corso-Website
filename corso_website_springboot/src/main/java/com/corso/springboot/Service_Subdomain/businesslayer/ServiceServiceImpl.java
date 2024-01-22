@@ -42,6 +42,11 @@ public class ServiceServiceImpl implements ServiceService{
     }
 
     @Override
+    public List<ServiceResponse> getAllVisibleServices() {
+        return serviceResponseMapper.toServicesResponse(serviceRepository.findAllByIsActive(true));
+    }
+
+    @Override
     public ServiceResponse createService(ServiceRequest serviceRequest) {
         try {
             String iconUrl = cloudinaryService.uploadBase64Image(serviceRequest.getServiceIcon());
@@ -56,10 +61,12 @@ public class ServiceServiceImpl implements ServiceService{
 
 
             // Saving the service
-            ServiceEntity savedService = serviceRepository.save(service);
+            //ServiceEntity savedService = serviceRepository.save(service);
 
             // Preparing the response
-            return serviceResponseMapper.toServiceResponse(savedService);
+            //return serviceResponseMapper.toServiceResponse(savedService);
+
+            return null;
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload images", e);
@@ -114,6 +121,20 @@ public class ServiceServiceImpl implements ServiceService{
         } catch (IOException e) {
             throw new RuntimeException("Failed to update images.", e);
         }
+    }
+
+    @Override
+    public ServiceResponse changeServiceVisibility(String serviceId) {
+        ServiceEntity existingServiceEntity = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
+
+        if (existingServiceEntity == null) {
+            throw new ServiceNotFoundException("No service found.");
+        }
+
+        existingServiceEntity.setActive(!existingServiceEntity.isActive());
+        serviceRepository.save(existingServiceEntity);
+
+        return serviceResponseMapper.toServiceResponse(existingServiceEntity);
     }
 
 

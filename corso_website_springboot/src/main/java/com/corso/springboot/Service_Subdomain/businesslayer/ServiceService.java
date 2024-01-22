@@ -10,9 +10,13 @@ public interface ServiceService {
 
     List<ServiceResponse> getAllServices();
 
+    List<ServiceResponse> getAllVisibleServices();
+
     ServiceResponse createService(ServiceRequest serviceRequest);
 
     ServiceResponse modifyService(String serviceId, ServiceRequest serviceRequest);
+
+    ServiceResponse changeServiceVisibility(String serviceId);
 
     int countAllServices();
 }

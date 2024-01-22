@@ -34,7 +34,7 @@
 
     @media (max-width: 768px) {
         & .add-service-icon {
-            margin: 20px 0 0 20px;
+            margin: 20px 0 0 0;
         }
     }
 }

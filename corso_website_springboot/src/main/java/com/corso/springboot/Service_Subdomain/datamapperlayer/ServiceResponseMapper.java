@@ -12,6 +12,7 @@ import java.util.List;
 public interface ServiceResponseMapper {
 
     @Mapping(expression = "java(service.getServiceIdentifier().getServiceId())", target = "serviceId")
+    @Mapping(expression = "java(service.isActive())", target = "isActive")
     ServiceResponse toServiceResponse(ServiceEntity service);
     List<ServiceResponse> toServicesResponse(List<ServiceEntity> services);
 }

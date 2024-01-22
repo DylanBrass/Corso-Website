@@ -49,9 +49,9 @@ public class ServiceServiceImplUnitTest {
     @Test
     void getServiceByServiceId_ShouldSucceed() {
         // Arrange
-        ServiceResponse mockServiceResponse = new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image");
+        ServiceResponse mockServiceResponse = new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true);
 
-        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"));
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true));
         when(serviceResponseMapper.toServiceResponse(Mockito.any())).thenReturn(mockServiceResponse);
 
         // Act
@@ -82,13 +82,13 @@ public class ServiceServiceImplUnitTest {
     void getAllServices_ShouldSucceed() {
         // Arrange
         List<ServiceResponse> mockServiceResponses = Arrays.asList(
-                new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
-                new ServiceResponse("2", "Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")
+                new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true),
+                new ServiceResponse("2", "Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image", true)
         );
 
         when(serviceRepository.findAll()).thenReturn(Arrays.asList(
-                new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image"),
-                new ServiceEntity("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image")));
+                new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true),
+                new ServiceEntity("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image", true)));
 
         when(serviceResponseMapper.toServicesResponse(Mockito.anyList())).thenReturn(mockServiceResponses);
 
@@ -99,6 +99,34 @@ public class ServiceServiceImplUnitTest {
         assertEquals(mockServiceResponses, result);
         Mockito.verify(serviceRepository, Mockito.times(1)).findAll();
         Mockito.verify(serviceResponseMapper, Mockito.times(1)).toServicesResponse(Mockito.anyList());
+    }
+
+    @Test
+    void getAllVisibleServices_ShouldSucceed() {
+        // Arrange
+        List<ServiceResponse> mockServiceResponses = Arrays.asList(
+                new ServiceResponse("1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true),
+                new ServiceResponse("2", "Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image", true)
+        );
+
+        when(serviceRepository.findAllByIsActive(true)).thenReturn(Arrays.asList(
+                new ServiceEntity("Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true),
+                new ServiceEntity("Test Service 2", "Test Service 2 Description", "Test Service 2 Icon", "Test Service 2 Image", true)));
+
+        when(serviceResponseMapper.toServicesResponse(Mockito.anyList())).thenReturn(mockServiceResponses);
+
+        // Act
+        List<ServiceResponse> result = serviceService.getAllVisibleServices();
+
+        // Assert
+        assertEquals(mockServiceResponses, result);
+        Mockito.verify(serviceRepository, Mockito.times(1)).findAllByIsActive(true);
+        Mockito.verify(serviceResponseMapper, Mockito.times(1)).toServicesResponse(Mockito.anyList());
+        assertEquals(2, result.size());
+        assertEquals("Test Service 1", result.get(0).getServiceName());
+        assertEquals("Test Service 2", result.get(1).getServiceName());
+        assertEquals(true, result.get(0).isActive());
+        assertEquals(true, result.get(1).isActive());
     }
 
     @Test
@@ -282,6 +310,55 @@ public class ServiceServiceImplUnitTest {
 
         ServiceNotFoundException exception = assertThrows(ServiceNotFoundException.class, () -> {
             serviceService.modifyService("1", mockServiceRequest);
+        });
+
+        assertEquals("No service found.", exception.getMessage());
+    }
+
+    @Test
+    void changeServiceVisibility_ShouldSucceed() {
+        // Arrange
+        ServiceEntity mockService = ServiceEntity.builder()
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
+                .serviceImage("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .isActive(true)
+                .build();
+
+        ServiceResponse mockServiceResponse = ServiceResponse.builder()
+                .serviceId("1")
+                .serviceName("Test Service 1")
+                .serviceDescription("Test Service 1 Description")
+                .serviceIcon("https://res.cloudinary.com/dszhbawv7/image/upload/v1701973966/ThunderBolt_yguofq.png")
+                .serviceImage("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .isActive(false)
+                .build();
+
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(mockService);
+        when(serviceRepository.save(mockService)).thenReturn(mockService);
+        when(serviceResponseMapper.toServiceResponse(mockService)).thenReturn(mockServiceResponse);
+
+        // Act
+        ServiceResponse result = serviceService.changeServiceVisibility("1");
+
+        // Assert
+        assertEquals(mockServiceResponse, result);
+        assertEquals(mockServiceResponse.getServiceId(), result.getServiceId());
+        assertEquals(mockServiceResponse.getServiceName(), result.getServiceName());
+        assertEquals(mockServiceResponse.getServiceDescription(), result.getServiceDescription());
+        assertEquals(mockServiceResponse.getServiceIcon(), result.getServiceIcon());
+        assertEquals(mockServiceResponse.getServiceImage(), result.getServiceImage());
+        assertEquals(mockServiceResponse.isActive(), result.isActive());
+    }
+
+    @Test
+    void whenChangeServiceVisibilityNotFound_thenReturnException() {
+        // Arrange
+        when(serviceRepository.findByServiceIdentifier_ServiceId(Mockito.anyString())).thenReturn(null);
+
+        ServiceNotFoundException exception = assertThrows(ServiceNotFoundException.class, () -> {
+            serviceService.changeServiceVisibility("1");
         });
 
         assertEquals("No service found.", exception.getMessage());
