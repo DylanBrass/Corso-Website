@@ -1,9 +1,9 @@
 import React from 'react';
 import "./CurrentOrdersProgress.css"
 import {ProgressBar, Step} from "react-step-progress-bar";
-import check from "../../../images/check_done.png";
-import Order from "../../../Models/Order";
-import checkToDo from "../../../images/check_notDone.png";
+import check from "../../../ressources/images/check_done.png";
+import Order from "../../../ressources/Models/Order";
+import checkToDo from "../../../ressources/images/check_notDone.png";
 
 function CurrentOrdersProgress({order}: { order: Order}) {
     return(

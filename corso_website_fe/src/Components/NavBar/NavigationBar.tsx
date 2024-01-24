@@ -5,7 +5,7 @@ import './NavigationBar.css';
 import Cookies from "js-cookie";
 import {useAuth} from "../../security/Components/AuthProvider";
 import {Link} from "react-router-dom";
-import logo from "../../images/customcolor_logo_transparent_background_revised.png";
+import logo from "../../ressources/images/customcolor_logo_transparent_background_revised.png";
 
 function NavigationBar() {
     const auth = useAuth()

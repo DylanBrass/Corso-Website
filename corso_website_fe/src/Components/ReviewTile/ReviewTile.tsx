@@ -1,9 +1,7 @@
 import React from "react";
 import './ReviewTile.css';
-import star_fill from "../../images/Star_fill.svg";
-import star_empty from "../../images/Star.svg";
-
-export {};
+import star_fill from "../../ressources/images/Star_fill.svg";
+import star_empty from "../../ressources/images/Star.svg";
 
 export class Review {
     reviewId: string;

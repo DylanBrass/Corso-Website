@@ -1,9 +1,8 @@
 import React from 'react';
 import './ServiceTile.css';
-import View_light from "../../images/View_light.png";
-import CrossedOutEye from "../../images/Crossed-out_Eye.png";
+import View_light from "../../ressources/images/View_light.png";
+import CrossedOutEye from "../../ressources/images/Crossed-out_Eye.png";
 
-export {};
 
 export class Service {
     serviceId: string;

@@ -1,43 +1,43 @@
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import MainPage from "./Pages/MainPage";
+import MainPage from "./Pages/MainPage/MainPage";
 import LogoutRedirect from "./security/logoutRedirect";
 import VerifyRedirect from "./security/verifyRedirect";
 import {AuthProvider} from "./security/Components/AuthProvider";
 import ExternalHandling from "./security/externalProvidersHandling/externalHandling";
 import Dashboard from "./Pages/Dashboard/Dashboard";
-import CreateAdminPage from "./Pages/CreateAdmin/CreateAdminPage";
-import CurrentOrdersPage from "./Pages/OrdersPages/CurrentOrdersPage";
+import CreateAdminPage from "./Pages/Dashboard/CreateAdmin/CreateAdminPage";
+import CurrentOrdersPage from "./Pages/Dashboard/OrdersPages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
-import ViewAllFaq from "./Pages/AllFAQs/ViewAllFaq";
+import ViewAllFaq from "./Pages/MainPage/AllFAQs/ViewAllFaq";
 
-import CompletedOrdersPage from "./Pages/OrdersPages/CompleteOrdersPage";
-import ServiceDetailsPage from "./Pages/ViewServices/ServiceDetailsPage";
-import PendingOrdersPage from "./Pages/OrdersPages/PendingOrdersPage";
-import CreateExternalOrderPage from "./Pages/CreateExternalOrder/CreateExternalOrderPage";
-import ServicesThroughDashboard from "./Pages/ViewServices/ServicesThroughDashboard";
-import AddServicePage from "./Pages/AddService/AddServicePage";
-import ViewSpecificOrderAdmin from "./Pages/OrdersDetailsPages/ViewSpecificOrderAdmin";
-import OverdueOrdersPage from "./Pages/OrdersPages/OverdueOrdersPage";
-import AllOrdersPage from "./Pages/OrdersPages/AllOrdersPage";
-import ViewSpecificOrder from "./Pages/OrdersDetailsPages/Customer/ViewSpecificOrder";
+import CompletedOrdersPage from "./Pages/Dashboard/OrdersPages/CompleteOrdersPage";
+import ServiceDetailsPage from "./Pages/Dashboard/ManageServices/ServiceDetailsPage";
+import PendingOrdersPage from "./Pages/Dashboard/OrdersPages/PendingOrdersPage";
+import CreateExternalOrderPage from "./Pages/Dashboard/CreateExternalOrder/CreateExternalOrderPage";
+import ServicesThroughDashboard from "./Pages/Dashboard/ManageServices/ServicesThroughDashboard";
+import AddServicePage from "./Pages/Dashboard/AddService/AddServicePage";
+import ViewSpecificOrderAdmin from "./Pages/Dashboard/OrdersDetailsPages/ViewSpecificOrderAdmin";
+import OverdueOrdersPage from "./Pages/Dashboard/OrdersPages/OverdueOrdersPage";
+import AllOrdersPage from "./Pages/Dashboard/OrdersPages/AllOrdersPage";
+import ViewSpecificOrder from "./Pages/Profile/ViewOrder/ViewSpecificOrder";
 import AddCustomerInformation from "./Pages/Profile/ProfileLinkedPages/AddCustomerInformation";
 import AllCustomerOrders from "./Pages/Profile/ProfileLinkedPages/AllCustomerOrders";
 
-import ManageReviews from "./Pages/AllReviews/ManageReviews";
-import EditGallery from "./Pages/Gallery/EditGallery";
-import ViewSpecificServiceAdmin from "./Pages/ViewASpecificServiceFromTheAdminPanel/ViewSpecificServiceAdmin";
-import CustomerReviews from "./Pages/CustomerReviews/CustomerReviews";
-import ViewOnGoingOrderDetailsPage from "./Pages/OrdersPages/ViewOnGoingOrderDetailsPage";
-import CreateReview from "./Pages/CreateReviewCustomer/CreateReview";
-import ViewAllFaqThroughDashboard from "./Pages/AllFAQs/ViewAllFaqThroughDashboard";
-import UpdateOrder from "./Pages/UpdateOrderCustomer/UpdateOrder";
-import ViewSpecificFaq from "./Pages/AllFAQs/ViewSpecificFaq";
+import ManageReviews from "./Pages/Dashboard/ManageReviews/ManageReviews";
+import EditGallery from "./Pages/Dashboard/Gallery/EditGallery";
+import ViewSpecificServiceAdmin from "./Pages/Dashboard/ViewASpecificService/ViewSpecificServiceAdmin";
+import CustomerReviews from "./Pages/Profile/ManageReviews/CustomerReviews";
+import ViewOnGoingOrderDetailsPage from "./Pages/Dashboard/OrdersPages/ViewOnGoingOrderDetailsPage";
+import CreateReview from "./Pages/Profile/CreateCustomer/CreateReview";
+import ViewAllFaqThroughDashboard from "./Pages/Dashboard/ManageFaq/ViewAllFaqThroughDashboard";
+import UpdateOrder from "./Pages/Profile/UpdateOrderCustomer/UpdateOrder";
+import ViewSpecificFaq from "./Pages/Dashboard/ManageFaq/ViewSpecificFaq";
 // @ts-ignore
-import ModifyServicePage from "./Pages/UpdateService/ModifyServicePage";
+import ModifyServicePage from "./Pages/Dashboard/UpdateService/ModifyServicePage";
 import React from 'react';
-import CustomerViewsSpecificReview from "./Pages/CustomerReviews/CustomerViewsSpecificReview";
-import AddGallery from "./Pages/Gallery/Components/AddGallery";
+import CustomerViewsSpecificReview from "./Pages/Profile/ManageReviews/CustomerViewsSpecificReview";
+import AddGallery from "./Pages/Dashboard/Gallery/Components/AddGallery";
 
 
 export default function App() {
