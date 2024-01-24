@@ -24,51 +24,57 @@ public class ServiceController {
         this.serviceService = serviceService;
     }
 
-    //@Cacheable(value = "service", key = "#serviceId")
+    @Cacheable(value = "service", key = "#serviceId")
     @GetMapping("/{serviceId}")
     public ResponseEntity<ServiceResponse> getServiceById(@PathVariable String serviceId) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getServiceByServiceId(serviceId));
     }
 
-    //@Cacheable(value = "services", key = "#root.methodName",sync = true)
+
     @GetMapping("")
     public ResponseEntity<List<ServiceResponse>> getAllServices(){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getAllServices());
     }
 
+    @Cacheable(value = "services", key = "#root.methodName",sync = true)
     @GetMapping("/visible")
     public ResponseEntity<List<ServiceResponse>> getAllVisibleServices(){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getAllVisibleServices());
     }
 
-    /*@Caching(evict = {
+    @Caching(evict = {
             @CacheEvict(value = "services", allEntries = true),
-            @CacheEvict(value = "servicesCount", allEntries = true)
-    })*/
+            @CacheEvict(value = "servicesCount", allEntries = true),
+    })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<ServiceResponse> createService(@RequestBody ServiceRequest serviceRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceService.createService(serviceRequest));
     }
 
-    // @Cacheable(value = "servicesCount", key = "#root.methodName")
+    @Cacheable(value = "servicesCount", key = "#root.methodName")
     @GetMapping("/count")
     @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<Integer> countAllServices(){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.countAllServices());
     }
 
-     /*@Caching(evict = {
+     @Caching(evict = {
         @CacheEvict(value = "services", allEntries = true),
         @CacheEvict(value = "servicesCount", allEntries = true),
         @CacheEvict(value = "service", key = "#serviceId")
-    })*/
+    })
     @PutMapping("/{serviceId}")
     @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<ServiceResponse> modifyService(@PathVariable String serviceId, @Valid @RequestBody ServiceRequest serviceRequest){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.modifyService(serviceId, serviceRequest));
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "services", allEntries = true),
+            @CacheEvict(value = "servicesCount", allEntries = true),
+            @CacheEvict(value = "service", key = "#serviceId")
+    })
     @PatchMapping("/{serviceId}/visibility")
     @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<ServiceResponse> changeServiceVisibility(@PathVariable String serviceId){

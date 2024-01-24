@@ -66,7 +66,12 @@ function NavigationBar() {
                                     <form method={"post"}
                                           action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"}
                                           className={"m-auto"}>
-                                        <button id={"logout-btn"} type={"submit"}>
+                                        <button id={"logout-btn"} type={"submit"} onClick={
+                                            () => {
+                                               // @ts-ignore
+                                                auth.logout()
+                                            }
+                                        }>
                                             <span className={"logout-btn-text"}>
                                                 LOGOUT
                                             </span>

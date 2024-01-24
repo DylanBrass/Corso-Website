@@ -6,6 +6,8 @@ import {Bounce, toast, ToastContainer} from "react-toastify";
 // @ts-ignore
 const AuthContext = createContext();
 
+axios.defaults.withCredentials = true;
+
 const userRoles = () => {
     if (Cookies.get("accessPermission") === undefined) {
         return ""
@@ -56,8 +58,8 @@ const AuthProvider = ({children}) => {
             })
                 .then(r => {
                     if (r.status === 200) {
-                        Cookies.set("username", r.data.name, {domain: getFormattedDomain()})
-                        Cookies.set("email", r.data.email, {domain: getFormattedDomain()})
+                        Cookies.set("username", r.data.name)
+                        Cookies.set("email", r.data.email)
                     } else {
                         getInfo()
                     }
@@ -82,8 +84,8 @@ const AuthProvider = ({children}) => {
             })
                 .then(r => {
                     if (r.status === 200) {
-                        Cookies.set("username", r.data.username, {domain: getFormattedDomain()})
-                        Cookies.set("email", r.data.email,{domain: getFormattedDomain()})
+                        Cookies.set("username", r.data.username)
+                        Cookies.set("email", r.data.email)
                     }
                 })
                 .catch(e => {
@@ -104,33 +106,27 @@ const AuthProvider = ({children}) => {
     }, [isAuthenticated]);
 
 
-    const getFormattedDomain = (): string => {
-        // @ts-ignore
-        return process.env.REACT_APP_BE_HOST.replace("https://", "").replace("http://", "")
-            .split(":")[0].replace("/", "")
-
-    }
-
-
     const authError = (status: number) => {
         if (status === 401) {
-            toast.info('Your session expired, we are login you back in!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce
-            });
-            window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
+            if (document.getElementById("auth-error") === null) {
+                toast.info('Your session expired, we are login you back in!', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                    toastId: "auth-error"
+                })
+                window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
+            }
         } else if (status === 403) {
             window.location.href = "/403"
         }
     }
-
 
 
     const getXsrfToken = () => {
@@ -138,8 +134,17 @@ const AuthProvider = ({children}) => {
     }
 
 
+    const logout = () => {
+
+        Cookies.remove("username")
+        Cookies.remove("email")
+
+
+    }
+
+
     return (
-        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo}}>
+        <AuthContext.Provider value={{isAuthenticated, login, authError, getXsrfToken, userRoles, getUserInfo, logout}}>
             {children}
             <ToastContainer
                 position="top-center"

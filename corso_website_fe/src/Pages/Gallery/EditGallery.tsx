@@ -5,6 +5,7 @@ import { useAuth } from "../../security/Components/AuthProvider";
 import NavigationBar from "../../Components/NavBar/NavigationBar";
 import './EditGallery.css';
 import swal from "sweetalert";
+import AddGallery from "./Components/AddGallery";
 
 interface ImageData {
     galleryId: string;
@@ -189,6 +190,8 @@ function EditGallery() {
                     Save Order
                 </button>
             </div>
+
+            <AddGallery/>
         </div>
     );
 }

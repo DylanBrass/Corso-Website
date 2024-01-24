@@ -8,6 +8,7 @@ import pen from '../../images/pen.svg';
 import { useParams } from 'react-router-dom';
 import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
+import Cloudinary from "../../Services/Cloudinary";
 
 function ModifyServicePage() {
   const { serviceId } = useParams();
@@ -55,71 +56,7 @@ function ModifyServicePage() {
     }
   };
 
-  const convertToBase64 = (file: File, callback: (result: string) => void) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      callback(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
 
-  const handleServiceImageChange = (
-      event: React.ChangeEvent<HTMLInputElement>,
-      setImagePreview: (value: string) => void
-  ) => {
-    const file = event.target.files ? event.target.files[0] : null;
-
-    if (file) {
-      // Check image dimensions
-      const image = new Image();
-      image.src = URL.createObjectURL(file);
-
-      image.onload = () => {
-        const maxWidth = 1920;
-        const maxHeight = 1080;
-
-        if (image.width > maxWidth || image.height > maxHeight) {
-          swal('Error', 'Service image dimensions should be 1920x1080 or smaller.', 'error');
-          return;
-        }
-
-        convertToBase64(file, (base64Result) => {
-          setImagePreview(base64Result);
-        });
-      };
-    } else {
-      setImagePreview('');
-    }
-  };
-
-  const handleServiceIconChange = (
-      event: React.ChangeEvent<HTMLInputElement>,
-      setImagePreview: (value: string) => void
-  ) => {
-    const file = event.target.files ? event.target.files[0] : null;
-
-    if (file) {
-      // Check icon dimensions
-      const image = new Image();
-      image.src = URL.createObjectURL(file);
-
-      image.onload = () => {
-        const iconWidth = 106;
-        const iconHeight = 106;
-
-        if (image.width !== iconWidth || image.height !== iconHeight) {
-          swal('Error', 'Service icon dimensions should be 106x106.', 'error');
-          return;
-        }
-
-        convertToBase64(file, (base64Result) => {
-          setImagePreview(base64Result);
-        });
-      };
-    } else {
-      setImagePreview('');
-    }
-  };
 
   const handlePenClick = (fileInputRef: React.RefObject<HTMLInputElement>) => {
     fileInputRef.current?.click();
@@ -222,7 +159,7 @@ function ModifyServicePage() {
                         name="serviceImage"
                         style={{ display: 'none' }}
                         ref={imageFileInputRef}
-                        onChange={(e) => handleServiceImageChange(e, setServiceImagePreview)}
+                        onChange={(e) => Cloudinary.handleImageChange(e, setServiceImagePreview, 1920, 1080)}
                     />
                   </div>
                 </div>
@@ -250,7 +187,7 @@ function ModifyServicePage() {
                         name="serviceIcon"
                         style={{ display: 'none' }}
                         ref={iconFileInputRef}
-                        onChange={(e) => handleServiceIconChange(e, setServiceIconPreview)}
+                        onChange={(e) => Cloudinary.handleImageChange(e, setServiceIconPreview,106,106)}
                     />
                   </div>
                 </div>
