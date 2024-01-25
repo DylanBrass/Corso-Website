@@ -7,6 +7,7 @@ import com.corso.springboot.Gallery_Subdomain.datamapperlayer.GalleryRequestMapp
 import com.corso.springboot.Gallery_Subdomain.datamapperlayer.GalleryResponseMapper;
 import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryOrderUpdateRequest;
 import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryResponse;
+import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class GalleryServiceImplUnitTest {
@@ -145,5 +147,16 @@ class GalleryServiceImplUnitTest {
         } catch (Exception e) {
             assertEquals("Gallery not found", e.getMessage());
         }
+    }
+
+
+    @Test
+    public void getGalleryByInvalidId_ThrowsNotFoundException(){
+        //arrange
+        String invalidId = "invalidId";
+        Mockito.when(galleryRepository.getGalleryByGalleryId_GalleryId(invalidId)).thenReturn(null);
+
+        //act & assert
+        assertThrows(GalleryNotFoundException.class, () -> galleryService.getGalleryById(invalidId));
     }
 }

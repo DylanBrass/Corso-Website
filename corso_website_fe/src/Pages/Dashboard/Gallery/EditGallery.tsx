@@ -112,6 +112,7 @@ function DraggableImage({image, index, moveImage}: DraggableImageProps) {
                     <button
                         className={"mt-2"}
                         onClick={() => {
+                            window.location.href = `/manage/gallery/${image.galleryId}`;
                         }}>Edit
                     </button>
                 </div>

@@ -119,12 +119,22 @@ public class SpringSecurityConfigBean {
 
     private AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
-            final ErrorMessage errorMessage = ErrorMessage.from(authException.getMessage());
-            final String json = mapper.writeValueAsString(errorMessage);
+            final String json;
+            final ErrorMessage errorMessage;
+            if (Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals("isAuthenticated"))) {
+
+                errorMessage = ErrorMessage.from("Your session has expired.");
+
+            } else {
+                errorMessage = ErrorMessage.from(authException.getMessage());
+            }
+
+            json = mapper.writeValueAsString(errorMessage);
 
             log.error("Error: {}", json);
             log.error("Error: {}", authException.getMessage());
             log.error("Error: {}", authException.getLocalizedMessage());
+
 
 
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

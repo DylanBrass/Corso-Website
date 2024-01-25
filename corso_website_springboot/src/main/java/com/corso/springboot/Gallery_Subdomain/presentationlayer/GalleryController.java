@@ -58,4 +58,10 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.createGallery(galleryRequest));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/carousel/{galleryId}")
+    public ResponseEntity<GalleryResponse> getGalleryById(@PathVariable String galleryId){
+        return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGalleryById(galleryId));
+    }
+
 }

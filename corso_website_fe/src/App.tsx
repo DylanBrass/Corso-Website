@@ -37,6 +37,7 @@ import ViewSpecificFaq from "./Pages/Dashboard/ManageFaq/ViewSpecificFaq";
 import ModifyServicePage from "./Pages/Dashboard/UpdateService/ModifyServicePage";
 import React from 'react';
 import CustomerViewsSpecificReview from "./Pages/Profile/ManageReviews/CustomerViewsSpecificReview";
+import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpecificGallery";
 
 
 export default function App() {
@@ -71,6 +72,9 @@ export default function App() {
                         <Route path="/profile/reviews/:reviewId" element={<CustomerViewsSpecificReview/>}/>
                         <Route path="/profile/reviews/create" element={<CreateReview/>}/>
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
+
+                        <Route path="/manage/gallery/:galleryId" element={<ViewSpecificGallery/>}/>
+
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
                         <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>
                         <Route path="/logout" element={<LogoutRedirect/>}/>

@@ -85,4 +85,15 @@ public class GalleryServiceImpl implements GalleryService{
 
         return galleryResponseMapper.toGalleryResponse(galleryRepository.save(gallery));
     }
+
+    @Override
+    public GalleryResponse getGalleryById(String galleryId) {
+        Gallery gallery = galleryRepository.getGalleryByGalleryId_GalleryId(galleryId);
+        
+        if (gallery == null){
+            throw new GalleryNotFoundException("Gallery not found");
+        }
+
+        return galleryResponseMapper.toGalleryResponse(gallery);
+    }
 }
