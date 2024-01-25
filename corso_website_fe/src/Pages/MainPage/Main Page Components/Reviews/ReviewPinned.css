@@ -1,0 +1,104 @@
+.testimonies-box {
+    .testimonies-main-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        margin-bottom: 2em;
+        background: #F4F4F4 url(../../../../ressources/images/electrician2_Testimonies.png) center no-repeat;
+        background-size: cover;
+        height: 100%;
+        img {
+            border-radius: 10px;
+        }
+        div {
+            margin: auto;
+        }
+    }
+
+    .testimonies-container {
+        margin-top: 5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+
+    }
+
+    .link-all-testimonies {
+        margin-top: 5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .testimonies-title-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+    }
+
+
+    .testimonies-title {
+        color: #0A1B44;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 70px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+
+    }
+
+    .testimonials-title {
+        color: #FFF;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 70px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    .testimonies-info {
+        width: 100%;
+    }
+
+    @media (min-width: 768px) {
+        .review-tile-box {
+            width: 48%;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .review-tile-box {
+            width: 30%;
+        }
+    }
+
+    @media (max-width: 1092px) {
+        .testimonies-message {
+            height: 15vh;
+        }
+        .review-tile-box {
+            transform: scale(0.8);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .testimonies-message {
+            height: 10vh;
+            margin: 5px;
+        }
+    }
+
+
+}

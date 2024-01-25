@@ -4,14 +4,14 @@ import Cookies from "js-cookie";
 import {useAuth} from "../../security/Components/AuthProvider";
 import "./Profile.css"
 
-import arrow from "../../images/Expand_right_light.png"
-import edit from "../../images/pen.svg"
-import review from "../../images/Group 36519.svg"
-import ordersCart from "../../images/Basket_alt_3_light.png"
+import arrow from "../../ressources/images/Expand_right_light.png"
+import edit from "../../ressources/images/pen.svg"
+import review from "../../ressources/images/Group 36519.svg"
+import ordersCart from "../../ressources/images/Basket_alt_3_light.png"
 import {Link} from "react-router-dom";
 import axios from "axios";
 import CurrentOrdersProgress from "./Components/CurrentOrdersProgress";
-import Order from "../../Models/Order";
+import Order from "../../ressources/Models/Order";
 import {CCarousel, CCarouselItem} from "@coreui/react";
 
 function ProfilePage() {

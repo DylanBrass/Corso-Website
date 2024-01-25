@@ -4,6 +4,7 @@ package com.corso.springboot.configuration.security;
 import com.corso.springboot.configuration.csrf.SpaCsrfToken;
 import com.corso.springboot.configuration.filters.CsrfCustomFilter;
 import com.corso.springboot.configuration.security.models.ErrorMessage;
+import com.corso.springboot.utils.SecurityTools.DomainHandling;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import lombok.Generated;
@@ -49,6 +50,7 @@ public class SpringSecurityConfigBean {
     @Value("${backend.url}")
     private String backendDomain;
 
+    private final DomainHandling domainHandling;
 
     private final ObjectMapper mapper;
 
@@ -78,7 +80,9 @@ public class SpringSecurityConfigBean {
                             .addLogoutHandler(logoutHandler())
                             .logoutSuccessHandler((request, response, authentication) -> {
 
-                                Arrays.stream(request.getCookies()).toList().forEach(cookie -> {
+                                if (request.getCookies() != null) {
+
+                                    Arrays.stream(request.getCookies()).toList().forEach(cookie -> {
                                         log.info(cookie.getName());
                                         Cookie newCookie = new Cookie(cookie.getName(), "");
                                         newCookie.setMaxAge(0);
@@ -86,9 +90,9 @@ public class SpringSecurityConfigBean {
                                         newCookie.setDomain(frontendDomain.replace("https://", "").replace("http://", "")
                                                 .split(":")[0].replace("/", ""));
                                         response.addCookie(newCookie);
-                                    
-                                });
 
+                                    });
+                                }
                                 response.setStatus(HttpStatus.OK.value());
                             });
                 })
@@ -134,18 +138,19 @@ public class SpringSecurityConfigBean {
     private LogoutHandler logoutHandler() {
         return (request, response, authentication) -> {
 
-            List<Cookie> cookies = List.of(request.getCookies());
+            if (request.getCookies() != null) {
 
-            cookies.forEach(cookie -> {
-                Cookie newCookie = new Cookie(cookie.getName(), "");
-                newCookie.setMaxAge(0);
-                newCookie.setPath("/");
-                String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
-                        .split(":")[0].replace("/", "");
+                List<Cookie> cookies = List.of(request.getCookies());
 
-                newCookie.setDomain(formattedDomain);
-                response.addCookie(newCookie);
-            });
+
+                cookies.forEach(cookie -> {
+                    Cookie newCookie = new Cookie(cookie.getName(), "");
+                    newCookie.setMaxAge(0);
+                    newCookie.setPath("/");
+                    newCookie.setDomain(domainHandling.getFormattedDomain());
+                    response.addCookie(newCookie);
+                });
+            }
 
             boolean isSignup = Boolean.parseBoolean(request.getParameter("isLogoutSignUp"));
             boolean isVerify = Boolean.parseBoolean(request.getParameter("isLogoutVerify"));
@@ -172,20 +177,17 @@ public class SpringSecurityConfigBean {
     public CookieCsrfTokenRepository csrfTokenRepository() {
         CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
         cookieCsrfTokenRepository.setCookieCustomizer(cookie -> {
-            cookie.domain(frontendDomain.replace("https://", "").replace("http://", "")
-                    .split(":")[0].replace("/", ""));
+            cookie.domain(domainHandling.getFormattedDomain());
             cookie.httpOnly(false);
             cookie.path("/");
             cookie.secure(false);
-            
+
         });
-
-
-
 
 
         return cookieCsrfTokenRepository;
     }
+
 
 }
 

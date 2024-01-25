@@ -1,8 +1,8 @@
 import React from 'react';
 import './Footer.css';
-import instagramIcon from "../../images/Insta-Logo.png";
-import emailIcon from "../../images/Email-Logo.png";
-import phoneIcon from "../../images/Phone-Logo.png";
+import instagramIcon from "../../ressources/images/Insta-Logo.png";
+import emailIcon from "../../ressources/images/Email-Logo.png";
+import phoneIcon from "../../ressources/images/Phone-Logo.png";
 
 function Footer() {
     return (

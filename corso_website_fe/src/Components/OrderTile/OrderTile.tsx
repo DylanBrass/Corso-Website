@@ -1,7 +1,7 @@
 
 import React from 'react';
 import './OrderTile.css';
-import ServiceOrder from "../../Models/ServiceOrder";
+import ServiceOrder from "../../ressources/Models/ServiceOrder";
 
 export {};
 

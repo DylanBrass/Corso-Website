@@ -58,6 +58,8 @@ public class ServiceServiceImpl implements ServiceService{
             service.setServiceIcon(iconUrl);
             service.setServiceImage(imageUrl);
 
+            service.setActive(true);
+
 
 
             // Saving the service

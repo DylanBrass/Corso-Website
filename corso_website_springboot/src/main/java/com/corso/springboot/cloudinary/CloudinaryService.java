@@ -3,6 +3,7 @@ package com.corso.springboot.cloudinary;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Base64;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CloudinaryService {
 
     private final Cloudinary cloudinary;
@@ -35,9 +37,9 @@ public class CloudinaryService {
             byte[] decodedBytes = Base64.getDecoder().decode(base64ImageNoPrefix);
 
             // Upload the decoded bytes and retrieve the URL
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("rawtypes")
             Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.emptyMap());
-            String url = (String) uploadResult.get("url");
+            String url = (String) uploadResult.get("secure_url");
 
             if (url == null || url.isEmpty()) {
                 throw new IllegalStateException("Something went wrong while trying to upload the picture on the internet. The system expected to get a special web link for the picture, but it didn't get one. The upload cannot be completed.");
@@ -62,6 +64,7 @@ public class CloudinaryService {
             byte[] decodedBytes = Base64.getDecoder().decode(base64Image.split(",")[1]);
 
             // Update the existing image in Cloudinary
+            @SuppressWarnings("rawtypes")
             Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.asMap("public_id", publicId));
             String updatedUrl = (String) uploadResult.get("url");
 

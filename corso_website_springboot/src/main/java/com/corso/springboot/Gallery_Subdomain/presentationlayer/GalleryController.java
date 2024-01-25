@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -47,6 +48,14 @@ public class GalleryController {
     @GetMapping("/carousel/count")
     public ResponseEntity<Integer> getGalleryCount(){
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGalleryCount());
+    }
+
+
+    @CacheEvict(value = "gallery", allEntries = true)
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PostMapping("/carousel")
+    public ResponseEntity<GalleryResponse> createGallery(@RequestBody GalleryRequest galleryRequest) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.createGallery(galleryRequest));
     }
 
 }

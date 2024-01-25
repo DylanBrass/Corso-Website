@@ -1,5 +1,6 @@
 package com.corso.springboot.configuration.security.service;
 
+import com.corso.springboot.utils.SecurityTools.DomainHandling;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class Auth0LoginService {
 
     @Value("${okta.oauth2.groupsClaim}")
     private String roleTokenLocation;
+
+    private final DomainHandling domainHandling;
 
     public void sendVerificationEmail(String userId, String accessToken) {
         log.info("Sending verification email");
@@ -78,8 +81,7 @@ public class Auth0LoginService {
     public ResponseEntity<Void> getVoidResponseEntity(@AuthenticationPrincipal OidcUser principal) {
         HttpHeaders headers = new HttpHeaders();
 
-        String formattedDomain = frontendDomain.replace("https://", "").replace("http://", "")
-                .split(":")[0].replace("/","");
+        String formattedDomain = domainHandling.getFormattedDomain();
 
                 log.info("Formatted domain: " + formattedDomain);
 

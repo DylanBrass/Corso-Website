@@ -6,6 +6,7 @@ services:
 #    container_name: docker-react-i
 #    ports:
 #      - "3000:80"
+#    depends_on: [corso-backend]
   corso-backend:
     build: .
     hostname: corso-be
@@ -17,6 +18,8 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/gcp-credentials
     secrets:
       - gcp-credentials
+
+
 
 secrets:
   gcp-credentials:

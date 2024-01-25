@@ -108,18 +108,21 @@ const AuthProvider = ({children}) => {
 
     const authError = (status: number) => {
         if (status === 401) {
-            toast.info('Your session expired, we are login you back in!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce
-            });
-            window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
+            if (document.getElementById("auth-error") === null) {
+                toast.info('Your session expired, we are login you back in!', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                    toastId: "auth-error"
+                })
+                window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
+            }
         } else if (status === 403) {
             window.location.href = "/403"
         }

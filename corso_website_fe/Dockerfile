@@ -7,18 +7,16 @@ COPY package.json /frontend/
 COPY package.json .
 COPY package-lock.json .
 COPY tsconfig.json .
-ENV REACT_APP_BE_HOST https://api.corsoelectriqueinc.tech/
+ENV REACT_APP_BE_HOST http://localhost:8080/
 RUN npm install
 RUN npm run build
 
 # Stage 2 - Serve the React application using NGINX
 FROM nginx:alpine
-
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
-RUN rm -rf /usr/share/nginx/html/*
-COPY --from=react-build /corso_website_fe/  /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+#COPY ./nginx.conf /etc/nginx/nginx.conf
+#RUN rm -rf /usr/share/nginx/html/*
+COPY --from=react-build corso_website_fe/build/ /usr/share/nginx/html
 EXPOSE 80
-
-CMD nginx -g 'daemon off;'
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
 

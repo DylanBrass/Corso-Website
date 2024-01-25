@@ -23,10 +23,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.mail.MessagingException;
 
+import java.io.IOException;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalControllerHandler {
+
+
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(IOException.class)
+    public HttpErrorInfo handleErrorWhileCreatingAdmin(IOException ex) {
+        return createHttpErrorInfo(UNPROCESSABLE_ENTITY, ex);
+    }
+
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(ReviewUserHasNoOrdersException.class)
