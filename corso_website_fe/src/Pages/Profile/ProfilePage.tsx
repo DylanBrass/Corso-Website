@@ -157,7 +157,7 @@ function ProfilePage() {
                     </div>
                     <div className={"col-12 col-lg-6 d-block mt-4 mt-lg-0"}>
                         <div className={"w-100 d-block px-lg-5"}>
-                            <div className={"col-12 col-lg-6 contact-box overflow-scroll w-100 p-2"}>
+                            <div className={"col-12 col-lg-6 contact-box w-100 p-2"}>
                                 <h1 className={"contact-title"}>Contact Information</h1>
                                 <p className={"profile-text"}>Phone Number: {phone}</p>
                                 <p className={"profile-text"}>Email: {email}</p>

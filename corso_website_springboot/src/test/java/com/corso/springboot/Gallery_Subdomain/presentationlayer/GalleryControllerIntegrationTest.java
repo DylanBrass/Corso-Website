@@ -2,6 +2,7 @@ package com.corso.springboot.Gallery_Subdomain.presentationlayer;
 
 import com.corso.springboot.Gallery_Subdomain.datalayer.GalleryRepository;
 import com.corso.springboot.cloudinary.CloudinaryService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -120,6 +122,23 @@ class GalleryControllerIntegrationTest {
                 .jsonPath("$.image_position").isEqualTo(6);
     }
 
-    
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void getGalleryById_ShouldSucceed(){
+
+        webTestClient.get()
+                .uri(BASE_URI_GALLERIES + "/carousel/{galleryId}","62b068a9-ef01-4bfd-8ee4-437deb43c3f6")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(GalleryResponse.class)
+                .value(galleryResponse -> {
+                    assert galleryResponse.getGalleryId().equals("62b068a9-ef01-4bfd-8ee4-437deb43c3f6");
+                    assert galleryResponse.getDescription().equals("A example of work for a test");
+                    assert galleryResponse.getPhoto().equals("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg");
+                    Assertions.assertEquals(5, galleryResponse.getImage_position());
+                });
+
+    }
 
 }
