@@ -81,6 +81,8 @@ public class GalleryServiceImpl implements GalleryService{
 
         gallery.setPhoto(imageUrl);
 
+        gallery.setImage_position(getGalleryCount() + 1);
+
         return galleryResponseMapper.toGalleryResponse(galleryRepository.save(gallery));
     }
 }

@@ -51,6 +51,7 @@ public class GalleryController {
     }
 
 
+    @CacheEvict(value = "gallery", allEntries = true)
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/carousel")
     public ResponseEntity<GalleryResponse> createGallery(@RequestBody GalleryRequest galleryRequest) throws IOException {

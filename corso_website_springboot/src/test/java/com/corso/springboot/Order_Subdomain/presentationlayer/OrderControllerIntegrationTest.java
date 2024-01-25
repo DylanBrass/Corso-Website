@@ -2,12 +2,14 @@ package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 
 import com.corso.springboot.Order_Subdomain.datalayer.OrderRepository;
+import com.corso.springboot.cloudinary.CloudinaryService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -38,6 +40,7 @@ public class OrderControllerIntegrationTest {
 
     @Autowired
     OrderRepository orderRepository;
+
 
     @Test
     @WithMockUser(authorities = "Admin")
@@ -266,6 +269,7 @@ public class OrderControllerIntegrationTest {
                 .exchange().expectStatus().isOk()
                 .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
     }
+
 
 
 

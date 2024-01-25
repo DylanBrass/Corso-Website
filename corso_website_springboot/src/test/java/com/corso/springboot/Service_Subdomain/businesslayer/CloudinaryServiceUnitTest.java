@@ -53,7 +53,7 @@ public class CloudinaryServiceUnitTest {
         // Mock Cloudinary response
         when(cloudinary.uploader()).thenReturn(uploaderMock);
         Map<String, Object> uploadResult = new HashMap<>();
-        uploadResult.put("url", "https://example.com/image.jpg");
+        uploadResult.put("secure_url", "https://example.com/image.jpg");
         when(uploaderMock.upload(Mockito.any(byte[].class), Mockito.anyMap())).thenReturn(uploadResult);
 
         // Act

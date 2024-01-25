@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { useAuth } from "../../../security/Components/AuthProvider";
+import {DragDropContext, Draggable, Droppable, DropResult} from 'react-beautiful-dnd';
+import {useAuth} from "../../../security/Components/AuthProvider";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import './EditGallery.css';
 import swal from "sweetalert";
@@ -29,25 +29,91 @@ interface DraggableImageProps {
     moveImage: (fromIndex: number, toIndex: number) => void;
 }
 
-function DraggableImage({ image, index, moveImage }: DraggableImageProps) {
-    const fixedWidth = 250; // Specify your desired fixed width
+function DraggableImage({image, index, moveImage}: DraggableImageProps) {
 
     return (
         <Draggable key={image.galleryId} draggableId={image.galleryId} index={index}>
             {(provided, snapshot) => (
                 <div
+                    className={"gallery-item col-12 col-lg-2 m-1 mx-3"}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     style={getItemStyle(
                         snapshot.isDragging,
                         provided.draggableProps.style
-                    )}
-                    className="gallery-item"
+                    )
+                    }
                 >
-                    <p><b>Position: {image.image_position}</b></p>
-                    <img src={image.photo} alt={image.description} style={{ width: `${fixedWidth}px` }} />
-                    <p>{image.description}</p>
+                    <div className={"row mb-auto"}
+                         style={{
+                             position: 'relative',
+                             zIndex: 100,
+                             width: '100%',
+                             top: 0,
+                         }}
+                    >
+                        {index !== 0 ?
+                            <button
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: 'none',
+                                    outline: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '20px',
+                                }}
+                                className={"col-2"}
+                                onClick={() => {
+                                    moveImage(index, index - 1);
+                                }
+                                }>
+                                &#11014;
+
+                            </button>
+                            :
+                            <div className={"col-2"}/>
+                        }
+
+                        <span className={"col-8 text-center"}><b>Position: {image.image_position}</b></span>
+
+
+                        <button
+                            className={"col-2"}
+                            style={{
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                cursor: 'pointer',
+                                fontSize: '20px',
+                            }}
+                            onClick={() => {
+                                moveImage(index, index + 1);
+                            }
+                            }>
+                            &#11015;
+                        </button>
+
+
+                    </div>
+                    <img
+                        className={"mt-4"
+                        }
+                        src={image.photo} alt={image.description} style={{
+                        width: '200px',
+                        backgroundColor: 'black',
+                        opacity: snapshot.isDragging ? 0.4 : 1,
+                    }}/>
+                    <p className={"mt-4"}>{image.description}</p>
+                    <button onClick={() => {
+                        moveImage(index, 0);
+                    }}>Move to top
+                    </button>
+
+                    <button
+                        className={"mt-2"}
+                        onClick={() => {
+                        }}>Edit
+                    </button>
                 </div>
             )}
         </Draggable>
@@ -57,7 +123,7 @@ function DraggableImage({ image, index, moveImage }: DraggableImageProps) {
 function EditGallery() {
     const [images, setImages] = useState<ImageData[]>([]);
     const [isSubmitClicked, setIsSubmitClicked] = useState(false);
-    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 800);
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 992);
     const auth = useAuth();
 
     useEffect(() => {
@@ -69,7 +135,7 @@ function EditGallery() {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsSmallScreen(window.innerWidth <= 800);
+            setIsSmallScreen(window.innerWidth <= 992);
         };
 
         window.addEventListener('resize', handleResize);
@@ -79,16 +145,18 @@ function EditGallery() {
         };
     }, []);
 
+    const fetchImages = async () => {
+        try {
+            const response = await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel');
+            const sortedImages = response.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
+            setImages(sortedImages);
+        } catch (error) {
+
+        }
+    };
+
     useEffect(() => {
-        const fetchImages = async () => {
-            try {
-                const response = await axios.get(process.env.REACT_APP_BE_HOST+'api/v1/corso/galleries/carousel');
-                const sortedImages = response.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
-                setImages(sortedImages);
-            } catch (error) {
-                
-            }
-        };
+
         fetchImages();
     }, []);
 
@@ -109,7 +177,7 @@ function EditGallery() {
     const handleSubmit = async () => {
         try {
             await axios.patch(
-                process.env.REACT_APP_BE_HOST+'api/v1/corso/galleries/carousel/order',
+                process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel/order',
                 images.map((image) => ({
                     galleryId: image.galleryId,
                     image_position: image.image_position,
@@ -135,12 +203,12 @@ function EditGallery() {
                         })
                 })
 
-            const getResponse = await axios.get(process.env.REACT_APP_BE_HOST+'api/v1/corso/galleries/carousel ');
+            const getResponse = await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel ');
             const sortedImages = getResponse.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
             setImages(sortedImages);
             setIsSubmitClicked(true);
         } catch (error) {
-            
+
         }
     };
 
@@ -154,20 +222,21 @@ function EditGallery() {
 
     useEffect(() => {
         if (isSubmitClicked) {
-            
+
             setIsSubmitClicked(false);
         }
     }, [isSubmitClicked, images]);
 
     return (
         <div>
-            <NavigationBar />
+            <NavigationBar/>
             <div className="gallery-container">
                 <h1>Edit Gallery</h1>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="gallery" direction={isSmallScreen ? 'vertical' : 'horizontal'}>
                         {(provided, snapshot) => (
                             <div
+                                className={"gallery-wrapper"}
                                 ref={provided.innerRef}
                                 style={isSmallScreen ? getListStyleVertical(snapshot.isDraggingOver) : getListStyleHorizontal(snapshot.isDraggingOver)}
                                 {...provided.droppableProps}
@@ -180,45 +249,57 @@ function EditGallery() {
                                         moveImage={moveImage}
                                     />
                                 ))}
-
                                 {provided.placeholder}
+
                             </div>
                         )}
+
                     </Droppable>
                 </DragDropContext>
                 <button onClick={handleSubmit} className="save-order-button">
                     Save Order
                 </button>
             </div>
+            <hr/>
 
-            <AddGallery/>
+            <AddGallery
+                fetchGalleries={fetchImages}
+            />
         </div>
     );
 }
 
 const getListStyleVertical = (isDraggingOver: boolean) => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
+    background: 'white',
     padding: 20,
-    height: "100%", // Adjusted to take up the full height
+    height: "100%",
+    maxHeight: "100vh",
     overflow: 'auto',
+    width: "100%",
+
 });
 
 const getListStyleHorizontal = (isDraggingOver: boolean) => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
+    background: 'white',
     display: 'flex',
-    padding: 20,
     overflow: 'auto',
+    padding: 20,
+    height: "100%",
+    width: "100% !important",
+
+
 });
 
 const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-    userSelect: 'none',
-    padding: 20,
-    background: isDragging ? 'black' : 'grey',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'white',
-    ...draggableStyle,
-});
+        userSelect: 'none',
+        padding: 20,
+        background: isDragging ? 'rgba(115,115,115,0.4)' : 'white',
+        borderRadius: '10px',
+        border: isDragging ? '2px dashed white' : '',
+        boxShadow: isDragging ? 'none' : '0 0 5px rgba(0,0,0,0.4)',
+
+        ...draggableStyle,
+    })
+;
 
 export default EditGallery;

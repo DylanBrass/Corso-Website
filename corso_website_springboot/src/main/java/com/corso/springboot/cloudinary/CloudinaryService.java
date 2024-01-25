@@ -3,6 +3,7 @@ package com.corso.springboot.cloudinary;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Base64;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CloudinaryService {
 
     private final Cloudinary cloudinary;
@@ -37,7 +39,7 @@ public class CloudinaryService {
             // Upload the decoded bytes and retrieve the URL
             @SuppressWarnings("rawtypes")
             Map uploadResult = cloudinary.uploader().upload(decodedBytes, ObjectUtils.emptyMap());
-            String url = (String) uploadResult.get("url");
+            String url = (String) uploadResult.get("secure_url");
 
             if (url == null || url.isEmpty()) {
                 throw new IllegalStateException("Something went wrong while trying to upload the picture on the internet. The system expected to get a special web link for the picture, but it didn't get one. The upload cannot be completed.");

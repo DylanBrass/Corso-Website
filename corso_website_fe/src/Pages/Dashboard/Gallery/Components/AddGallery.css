@@ -1,0 +1,48 @@
+#button-for-file {
+    display: inline-block;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 10px;
+    background: #B2EABB;
+    width: 221px;
+    height: 38px;
+    flex-shrink: 0;
+    line-height: 38px; /* Center the text vertically */
+
+    &:hover {
+        background: #A3E4C5;
+    }
+
+    &:active {
+        background: #A3E4C5;
+        box-shadow: 0 1px #666;
+        transform: translateY(2px);
+    }
+
+}
+
+.add-image-box-right{
+    border-left: 1px solid black;
+
+    @media (max-width: 800px) {
+        border-left: none;
+    }
+
+    img {
+        max-height: 30vh;
+    }
+
+}
+
+.add-image-box-left{
+    border-right: 1px solid black;
+
+    @media (max-width: 800px) {
+        border-right: none;
+    }
+}

@@ -6,6 +6,8 @@
     margin-top: 20px;
     transition: transform 0.3s ease;
 
+
+
     & .gallery {
         display: flex;
         flex-wrap: wrap;
@@ -25,7 +27,13 @@
             max-width: 100%;
             height: auto;
         }
+
+
+
     }
+
+
+
 }
 
 @media (max-width: 1440px) {

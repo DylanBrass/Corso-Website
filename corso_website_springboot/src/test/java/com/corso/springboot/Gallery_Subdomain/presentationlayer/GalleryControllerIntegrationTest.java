@@ -1,17 +1,22 @@
 package com.corso.springboot.Gallery_Subdomain.presentationlayer;
 
 import com.corso.springboot.Gallery_Subdomain.datalayer.GalleryRepository;
+import com.corso.springboot.cloudinary.CloudinaryService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -37,6 +42,8 @@ class GalleryControllerIntegrationTest {
     GalleryRepository galleryRepository;
 
 
+    @MockBean
+    CloudinaryService cloudinaryService;
     @Test
     public void whenGalleryExists_thenReturnAllGalleries()  {
         //arrange
@@ -88,5 +95,31 @@ class GalleryControllerIntegrationTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$").isEqualTo(expectedNumGalleries);
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void createNewEntryInGallery_ShouldSucceed() throws IOException {
+        //arrange
+        GalleryRequest galleryRequest = GalleryRequest.builder()
+                .description("Test Description")
+                .photo("Test Photo")
+                .build();
+
+        Mockito.when(cloudinaryService.uploadBase64Image(Mockito.anyString())).thenReturn("mockedImageUrl");
+
+
+        //act
+        webTestClient.post()
+                .uri(BASE_URI_GALLERIES + "/carousel")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(galleryRequest)
+                .exchange().expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.description").isEqualTo("Test Description")
+                .jsonPath("$.photo").isEqualTo("mockedImageUrl")
+                .jsonPath("$.image_position").isEqualTo(6);
+    }
+
+    
 
 }
