@@ -234,11 +234,11 @@ function EditGallery() {
                 <h1>Edit Gallery</h1>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="gallery" direction={isSmallScreen ? 'vertical' : 'horizontal'}>
-                        {(provided, snapshot) => (
+                        {(provided) => (
                             <div
                                 className={"gallery-wrapper"}
                                 ref={provided.innerRef}
-                                style={isSmallScreen ? getListStyleVertical(snapshot.isDraggingOver) : getListStyleHorizontal(snapshot.isDraggingOver)}
+                                style={isSmallScreen ? getListStyleVertical() : getListStyleHorizontal()}
                                 {...provided.droppableProps}
                             >
                                 {images.map((image, index) => (
@@ -269,7 +269,7 @@ function EditGallery() {
     );
 }
 
-const getListStyleVertical = (isDraggingOver: boolean) => ({
+const getListStyleVertical = () => ({
     background: 'white',
     padding: 20,
     height: "100%",
@@ -279,7 +279,7 @@ const getListStyleVertical = (isDraggingOver: boolean) => ({
 
 });
 
-const getListStyleHorizontal = (isDraggingOver: boolean) => ({
+const getListStyleHorizontal = () => ({
     background: 'white',
     display: 'flex',
     overflow: 'auto',
