@@ -147,7 +147,12 @@ function ProfilePage() {
 
                         <h1 className={"mt-5"}>{name}</h1>
                         <form method={"post"} action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"}>
-                            <button id={"logout-profile"} type={"submit"}>LOGOUT</button>
+                            <button id={"logout-profile"} type={"submit"} onClick={
+                                            () => {
+                                               // @ts-ignore
+                                                auth.logout()
+                                            }
+                                        }>LOGOUT</button>
                         </form>
                     </div>
                     <div className={"col-12 col-lg-6 d-block mt-4 mt-lg-0"}>
