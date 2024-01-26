@@ -1,0 +1,111 @@
+@startuml
+
+package "FAQ_Subdomain"{
+    package "presentationlayer" {
+        class "<<controller>>\nFAQController" as FAQController {
+            - faqService: FAQService
+            + getFAQs(): ResponseEntity<List<FAQResponse>>
+            + getPreferredFAQs(): ResponseEntity<List<FAQResponse>>
+            + chooseThreeFAQs(threeFAQsRequests: List<ThreeFAQsRequest>): ResponseEntity<List<FAQResponse>>
+            + getFaqByFaqId(faqId: String): ResponseEntity<FAQResponse>
+            + deleteFaqByFaqId(faqId: String): ResponseEntity<FAQResponse>
+            + getFAQCount(): ResponseEntity<Integer>
+        }
+        class "FAQRequest" as FAQRequest {
+            + question: String
+            + answer: String
+            + preference: boolean
+        }
+        class "ThreeFAQsRequest" as ThreeFAQsRequest {
+            + faqId: String
+            + preference: boolean
+        }
+        class "FAQResponse" as FAQResponse {
+            + FAQId: String
+            + question: String
+            + answer: String
+            + preference: boolean
+        }
+    }
+
+    package "businesslayer" {
+         interface "FAQService" as FAQService {
+            + getFAQs(): List<FAQResponse>
+            + getPreferredFAQs(): List<FAQResponse>
+            + chooseThreeFAQs(threeFAQsRequests: List<ThreeFAQsRequest>): List<FAQResponse>
+            + getFaqByFaqId(faqId: String): FAQResponse
+            + deleteFaqByFaqId(faqId: String): FAQResponse
+            + getFAQCount(): Integer
+         }
+
+         class "<<service>>\nFAQServiceImpl" as FAQServiceImpl {
+            - faqRepository: FAQRepository
+            - faqResponseMapper: FAQResponseMapper
+            - faqRequestMapper: FAQRequestMapper
+            --
+            + getFAQs(): List<FAQResponse>
+            + getPreferredFAQs(): List<FAQResponse>
+            + chooseThreeFAQs(threeFAQsRequests: List<ThreeFAQsRequest>): List<FAQResponse>
+            + getFaqByFaqId(faqId: String): FAQResponse
+            + deleteFaqByFaqId(faqId: String): FAQResponse
+            + getFAQCount(): Integer
+         }
+         class FAQServiceImpl implements FAQService
+    }
+
+    package "datalayer" {
+        interface "<<repository>>\nFAQRepository" as FAQRepository {
+            + getFAQByFAQId_FAQId(faqId: String): FAQ
+            + getFAQSByPreferenceTrue(): List<FAQ>
+            + countFAQBy(): Integer
+        }
+
+        class "FAQIdentifier" as FAQIdentifier {
+            + FAQId: String
+            + FAQIdentifier()
+            + getFAQId(): String
+        }
+
+        class "FAQ" as FAQ {
+            + id: int
+            + FAQId: FAQIdentifier
+            + question: String
+            + answer: String
+            + preference: boolean
+            + FAQ(question: String, answer: String, preference: boolean)
+        }
+        interface FAQRepository extends JpaRepository
+    }
+
+    package "datamapperlayer" {
+        interface "<<Mapper>>\nFAQResponseMapper" as FAQResponseMapper {
+            + toFAQResponse(faq: FAQ): FAQResponse
+            + toFAQsResponse(faqs: List<FAQ>): List<FAQResponse>
+        }
+        interface "<<Mapper>>\nFAQRequestMapper" as FAQRequestMapper {
+            + toThreeFAQsRequests(threeFaqsRequest ThreeFAQsRequest): FAQ
+        }
+    }
+
+}
+
+FAQController ..> FAQService
+
+FAQController ..> FAQRequest
+FAQController ..> ThreeFAQsRequest
+FAQController ..> FAQResponse
+
+FAQServiceImpl..> FAQRepository
+FAQServiceImpl..> FAQResponseMapper
+FAQServiceImpl..> FAQRequestMapper
+
+FAQRepository ..> FAQ
+
+FAQRequestMapper ..> FAQRequest
+
+FAQRequestMapper ..> ThreeFAQsRequest
+FAQResponseMapper ..> FAQResponse
+
+FAQ *-> FAQIdentifier
+
+@enduml
