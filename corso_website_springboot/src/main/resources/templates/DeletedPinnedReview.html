@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <p style="font-family: 'Lucida Sans Typewriter'; font-style:italic; font-size: small">English below</p>
+    <h1>Une critique épinglée a été supprimée.</h1>
+
+    <p><span th:text="${customerFullName}"></span> a supprimé leur critique qui était épinglée sur la page principale.</p>
+    <p>Pour gérer les avis épinglées, veuillez accéder à la section des témoignages sur le tableau de bord administratif.</p>
+</div>
+<hr>
+<div class="container">
+    <h1>A pinned review has been deleted</h1>
+
+    <p><span th:text="${customerFullName}"></span> deleted their review which was pinned on the main page.</p>
+    <p>To manage pinned reviews, please navigate to the testimonies' section on the admin dashboard.</p>
+</div>
+</body>
+</html>

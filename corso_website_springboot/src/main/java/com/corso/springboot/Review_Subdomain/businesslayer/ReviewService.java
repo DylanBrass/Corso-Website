@@ -27,4 +27,6 @@ public interface ReviewService {
     Integer getCountAllReviews();
 
     ReviewResponse getReviewByReviewIdAndUserId(String reviewId, String userId);
+
+    void deleteCustomerReview(String reviewId, String userId) throws MessagingException;
 }
