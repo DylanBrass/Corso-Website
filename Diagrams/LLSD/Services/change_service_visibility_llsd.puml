@@ -1,0 +1,73 @@
+@startuml
+actor Admin
+
+participant "Dashboard" as DashB
+
+participant "ModifyAService" as ModServP
+
+participant "ServiceController" as Sc
+
+participant "ServiceService" as Ss
+
+participant "service : Service" as S
+
+participant "ServiceRepository" as Srep
+
+participant "serviceDb : Service" as Sdb
+
+participant "serviceResponse : ServiceResponse" as Sr
+
+participant "Database" as Db
+
+participant "ServiceResponseMapper" as SresM
+
+ref over Admin, DashB, ModServP, Sc, Sr, Ss, S, Srep, Sdb, Db, SresM
+    ViewServiceById
+end ref
+
+opt
+Admin -> DashB : ChangeServiceVisibility()
+activate DashB
+DashB -> ModServP : render()
+activate ModServP
+
+ModServP -> Sc: PATCH /api/v1/corso/services/{serviceId}/visibility
+activate Sc
+
+Sc -> Ss: updateServiceVisibilityById)serviceId)
+activate Ss
+
+Ss -> Srep: findByServiceIdentifier_serviceId(serviceId)
+activate Srep
+
+
+Srep -> Db: UPDATE services SET active = :active WHERE service_identifier = :serviceId
+activate Db
+
+Db --> Srep: service
+deactivate Db
+
+Srep --> S: service
+deactivate Srep
+
+activate S
+S --> Ss : service:Service
+
+Ss -> SresM: mapToServiceResponse(service)
+deactivate S
+activate SresM
+
+SresM --> Sr: ServiceResponse
+
+activate Sr
+deactivate SresM
+
+Sr --> Ss: serviceResponse:ServiceResponse
+
+Ss --> Sc: serviceResponse:ServiceResponse
+
+Sc --> ModServP: serviceResponse:ServiceResponse
+
+deactivate Ss
+
+@enduml
