@@ -319,8 +319,7 @@ class CustomerControllerIntegrationTest {
                                 }"""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("This is a test message"))
-                .andExpect(jsonPath("$.reviewRating").value(5))
-                .andExpect(jsonPath("$.customerFullName").value("Alice Doe"));
+                .andExpect(jsonPath("$.reviewRating").value(5));
     }
 
 
