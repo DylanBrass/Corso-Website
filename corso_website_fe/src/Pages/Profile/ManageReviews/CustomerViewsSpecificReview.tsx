@@ -9,6 +9,9 @@ import star_fill from "../../../ressources/images/Star_fill.svg";
 import star_empty from "../../../ressources/images/Star.svg";
 import pen from "../../../ressources/images/pen.svg";
 import Trash from "../../../ressources/images/Trash_light.svg";
+import {useNavigate} from "react-router";
+import {SyncLoader} from "react-spinners";
+import Popup from 'reactjs-popup';
 
 function CustomerViewsSpecificReview() {
 
@@ -17,6 +20,8 @@ function CustomerViewsSpecificReview() {
     let {reviewId} = useParams();
 
     const auth = useAuth();
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         // @ts-ignore
@@ -64,6 +69,38 @@ function CustomerViewsSpecificReview() {
     }, []);
 
 
+    const handleDelete = (event: any) => {
+        event.preventDefault();
+
+        setIsLoading(true);
+        axios.delete(process.env.REACT_APP_BE_HOST + `api/v1/corso/reviews/${reviewId}`, {
+            headers: {
+                // @ts-ignore
+                'X-XSRF-TOKEN': auth.getXsrfToken()
+            }
+        })
+            .then(res => {
+                // @ts-ignore
+                swal("Review deleted successfully!", "Your review has been successfully deleted!", "success").then(
+                    () => navigate(-1)
+                )
+            })
+            .catch(err => {
+                if (err.response.status === 401 || err.response.status === 403) {
+                    // @ts-ignore
+                    auth.authError(err.response.status);
+                }
+
+                if (err.response.status >= 400 && err.response.status < 500) {
+                    // @ts-ignore
+                    swal(err.response.data.message, "", "error");
+                }
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
     const filledStars = [];
     const emptyStars = [];
 
@@ -92,13 +129,31 @@ function CustomerViewsSpecificReview() {
                     </div>
                     <div className="col-2 review-box-icons">
                         <div className="review-icons">
-                            <img src={Trash} alt="trash" onClick={() => {
-                                //to implement
-                            }}/>
+                            <img src={Trash} alt="trash" onClick={handleDelete}/>
                             <img src={pen} alt="pen" onClick={() => {
                                 //to implement
                             }}/>
                         </div>
+                        {isLoading && (
+                            <Popup
+                                open={isLoading}
+                                modal
+                                closeOnDocumentClick={false}
+                                contentStyle={{
+                                    borderRadius: '20px',
+                                    padding: '30px',
+                                    background: 'rgba(255, 255, 255, 1)',
+                                    boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.5)',
+                                    maxWidth: '100%',
+                                    marginTop: '300px'
+                                }}
+                            >
+                                <div className="text-center">
+                                    <div style={{ marginBottom: '15px' }}>Deleting Review ...</div>
+                                    <SyncLoader className="spinner" color="#054AEB" />
+                                </div>
+                            </Popup>
+                        )}
                     </div>
                 </div>
                 <div className="row">

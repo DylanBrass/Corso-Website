@@ -96,5 +96,14 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByReviewIdAndUserId(reviewId, userId));
     }
 
+    @DeleteMapping("/{reviewId}")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<Void> deleteCustomerReview(@AuthenticationPrincipal OidcUser principal, @PathVariable String reviewId) throws MessagingException {
+        String userId = principal.getSubject();
+        log.info("Delete review with userId: {}", userId);
+        reviewService.deleteCustomerReview(reviewId, userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 
 }

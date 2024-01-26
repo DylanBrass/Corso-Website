@@ -11,6 +11,7 @@ import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewRequestMapper
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
@@ -205,6 +206,27 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public void deleteCustomerReview(String reviewId, String userId) throws MessagingException {
+            Review review = reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId);
+
+            if (review == null) {
+                throw new ReviewNotFoundException("Review not found");
+            }
+
+            // if review is pinned, send email to all admins
+            if (review.isPinned()) {
+                HashMap<String, String> parameters = new HashMap<>();
+                parameters.put("customerFullName", review.getCustomerFullName());
+
+                String subject = "Pinned Review Deleted";
+
+                sendEmailToAdmins(subject, "DeletedPinnedReview", parameters);
+            }
+
+            reviewRepository.delete(review);
+    }
+
+    @Override
     public ReviewResponse customerCreateReview(String userId, ReviewRequest reviewRequest) {
 
         if (!orderService.findAnyUserOrders(userId)) {
@@ -235,14 +257,26 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    private void sendEmailToAdmins(String subject, String template, Map<String, String> parameters) throws MessagingException {
+        List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
 
+        StringBuilder recipients = new StringBuilder();
 
+        for(UserInfoResponse admin : admins){
+            recipients.append(admin.getEmail()).append(",");
 
+        }
 
+        log.info("Sending email to {}", recipients.toString());
 
+        recipients.deleteCharAt(recipients.length() - 1);
 
+        int status = emailService.sendEmail(recipients.toString(), subject, template, parameters);
 
+        if (status != 200) {
+            throw new MessagingException("Failed to send email");
+        }
 
-
+    }
 
 }

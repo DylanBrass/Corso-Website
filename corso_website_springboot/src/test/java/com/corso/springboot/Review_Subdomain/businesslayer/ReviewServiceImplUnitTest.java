@@ -11,6 +11,7 @@ import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMappe
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.exceptions.Review.ReviewNotFoundException;
@@ -37,8 +38,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class ReviewServiceImplUnitTest {
@@ -119,8 +119,8 @@ class ReviewServiceImplUnitTest {
 
         // Assert
         assertEquals(mockReviewsResponse, reviewResult);
-        Mockito.verify(reviewRepository, Mockito.times(1)).findAllReviews(1, 1);
-        Mockito.verify(reviewResponseMapper, Mockito.times(1)).toReviewsResponse(Mockito.anyList());
+        verify(reviewRepository, Mockito.times(1)).findAllReviews(1, 1);
+        verify(reviewResponseMapper, Mockito.times(1)).toReviewsResponse(Mockito.anyList());
     }
 
     @Test
@@ -287,6 +287,73 @@ class ReviewServiceImplUnitTest {
     }
 
     @Test
+    void testDeleteCustomerReview() throws MessagingException {
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+        Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", LocalDate.now(), "This is a review", 3, false);
+
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(mockReview);
+
+        // Act
+        reviewServiceImpl.deleteCustomerReview(reviewId, userId);
+
+        // Assert
+        verify(reviewRepository, times(1)).findReviewByReviewId_ReviewIdAndUserId(reviewId, userId);
+        verify(reviewRepository, times(1)).delete(mockReview);
+    }
+
+    @Test
+    void deletePinnedCustomerReview() throws MessagingException {
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+        Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", LocalDate.now(), "This is a review", 3, true);
+
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(mockReview);
+
+        List<UserInfoResponse> admins = new ArrayList<>();
+        admins.add(new UserInfoResponse("auth0|65702e81e9661e14ab3aac89", "test@email.com",
+                "Doe", new HashMap<>()));
+        when(auth0ManagementService.getAllAdmins()).thenReturn(admins);
+        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(500);
+
+        assertThrows(MessagingException.class, () -> reviewServiceImpl.deleteCustomerReview(reviewId, userId));
+
+    }
+
+    @Test
+    void deleteCustomerReview_ShouldSendEmailToAdmins_WhenReviewIsPinned() throws MessagingException {
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+        Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", LocalDate.now(), "This is a review", 3, true);
+
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(mockReview);
+        when(auth0ManagementService.getAllAdmins()).thenReturn(Collections.singletonList(
+                new UserInfoResponse("auth0|adminId", "admin@example.com", "Admin", new HashMap<>())
+        ));
+        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(200);
+
+        // Act
+        reviewServiceImpl.deleteCustomerReview(reviewId, userId);
+
+        // Assert
+        verify(emailService, times(1)).sendEmail(any(String.class), any(String.class), any(String.class), any());
+    }
+    @Test
+    void whenCustomerDeletesReview_ButReviewDoesNotExist_ThenThrowReviewNotFoundException() {
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(null);
+
+        // Act and Assert
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.deleteCustomerReview(reviewId, userId));
+    }
+
+    @Test
     void getReviewByReviewId_ShouldReturnReview() {
         // Arrange
         String reviewId = "1";
@@ -325,9 +392,6 @@ class ReviewServiceImplUnitTest {
             System.out.println("Exception message: " + e.getMessage());
         }
     }
-
-
-
 
     @Test
     void getCountOfAllReviews() {
@@ -381,6 +445,18 @@ class ReviewServiceImplUnitTest {
         assertEquals(mockReviewResponse.getMessage(), result.getMessage());
         assertEquals(mockReviewResponse.getReviewRating(), result.getReviewRating());
         assertEquals(mockReviewResponse.isPinned(), result.isPinned());
+    }
+
+    @Test
+    void getReviewByIdAndUserId_ShouldThrowException() {
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+
+        // Mock behavior
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(null);
+
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.getReviewByReviewIdAndUserId(reviewId, userId));
     }
 
 }
