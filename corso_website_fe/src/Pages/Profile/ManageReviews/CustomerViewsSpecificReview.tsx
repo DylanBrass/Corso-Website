@@ -12,6 +12,7 @@ import Trash from "../../../ressources/images/Trash_light.svg";
 import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
 import Popup from 'reactjs-popup';
+import {Rating} from "@mui/material";
 
 function CustomerViewsSpecificReview() {
 
@@ -22,6 +23,9 @@ function CustomerViewsSpecificReview() {
     const auth = useAuth();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+
+    const [isEdit, setIsEdit] = useState<boolean>(true);
 
     useEffect(() => {
         // @ts-ignore
@@ -45,6 +49,10 @@ function CustomerViewsSpecificReview() {
             .then(res => {
                 const review = res.data;
                 setReview(review);
+
+                setMessage(review.message);
+
+                setRating(review.reviewRating);
                 console.log(review);
             })
             .catch(err => {
@@ -101,6 +109,11 @@ function CustomerViewsSpecificReview() {
             });
     }
 
+    const [rating, setRating] = useState(0);
+
+    const [message, setMessage] = useState("");
+
+
     const filledStars = [];
     const emptyStars = [];
 
@@ -112,6 +125,41 @@ function CustomerViewsSpecificReview() {
         emptyStars.push(<img key={`empty-${i}`} src={star_empty} alt="Empty Star" />);
     }
 
+
+    const saveReview = (event: any) => {
+
+        axios.patch(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/reviews/${reviewId}`, {
+                message: document.getElementById("message-edit")?.getAttribute("value"),
+                reviewRating: rating
+
+            },
+            {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
+                }
+            }
+        )
+            .then(res => {
+                // @ts-ignore
+                swal("Review saved successfully!", "Your review has been successfully saved!", "success")
+                    .then(() => {
+                        getReview()
+                        setIsEdit(!isEdit)
+                    })
+
+            })
+            .catch(err => {
+                // @ts-ignore
+                auth.authError(err.response.status);
+
+                // @ts-ignore
+                swal(err.response.data.message, "", "error")
+            })
+
+    }
+
+
     return (
         <>
             <NavigationBar />
@@ -119,20 +167,35 @@ function CustomerViewsSpecificReview() {
             <div className="container review-tile-view-specific-container">
                 <div className="row">
                     <div className="col-2 review-box-stars">
-                        {/* Empty column for spacing */}
+                        {!isEdit &&
+                            <button className="btn btn-primary" onClick={saveReview}>
+                                Save
+                            </button>
+                        }
                     </div>
                     <div className="col-8 review-box-stars justify-content-center">
                         <div className="review-rating">
-                            {filledStars}
-                            {emptyStars}
+                            <Rating
+                                size="large"
+                                name="rating-value"
+                                value={rating}
+                                disabled={isEdit}
+                                onChange={(event, newValue) => {
+                                    if (newValue) {
+                                        setRating(newValue);
+                                    }
+                                }}
+                            />
                         </div>
                     </div>
                     <div className="col-2 review-box-icons">
                         <div className="review-icons">
                             <img src={Trash} alt="trash" onClick={handleDelete}/>
+                            {!review.pinned &&
                             <img src={pen} alt="pen" onClick={() => {
-                                //to implement
+                                setIsEdit(!isEdit)
                             }}/>
+                            }
                         </div>
                         {isLoading && (
                             <Popup
@@ -158,7 +221,9 @@ function CustomerViewsSpecificReview() {
                 </div>
                 <div className="row">
                     {review.pinned && <p className="review-message">Your review is pinned to the landing page</p>}
-                    <p className="review-message">{review.message}</p>
+                    <input className="review-message" id={"message-edit"} onChange={(event) => {
+                        setMessage(event.target.value)
+                    }} defaultValue={message} disabled={isEdit}/>
                 </div>
             </div>
         </>

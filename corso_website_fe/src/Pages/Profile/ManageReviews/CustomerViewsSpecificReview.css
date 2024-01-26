@@ -39,6 +39,9 @@
     & .review-message,
     & .review-date,
     & .review-rating {
+        label{
+            color: #000;
+        }
         grid-area: 2 / 1 / 3 / 2;
         padding: 25px;
         color: black;

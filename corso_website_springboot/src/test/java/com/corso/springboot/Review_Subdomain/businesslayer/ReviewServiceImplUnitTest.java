@@ -14,12 +14,10 @@ import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateReque
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
-import com.corso.springboot.utils.exceptions.Review.ReviewNotFoundException;
+import com.corso.springboot.utils.exceptions.Review.*;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
-import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
-import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersException;
 import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import net.minidev.json.JSONObject;
@@ -457,6 +455,46 @@ class ReviewServiceImplUnitTest {
         when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(null);
 
         assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.getReviewByReviewIdAndUserId(reviewId, userId));
+    }
+
+    @Test
+    void updateReviewWithInvalidId_ShouldThrowNotFOundException(){
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+        ReviewRequest reviewUpdateRequest = ReviewRequest.builder()
+                .message("This is a test message")
+                .customerFullName("John Doe")
+                .reviewRating(5)
+                .build();
+
+        // Mock behavior
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(null);
+
+        // Act and Assert
+        assertThrows(ReviewNotFoundException.class, () -> reviewServiceImpl.updateCustomerReview(reviewId, userId, reviewUpdateRequest));
+    }
+
+
+    @Test
+    void updatePinnedReview_ShouldThrowBadRequestException(){
+
+        // Arrange
+        String reviewId = "1";
+        String userId = "google|123456789";
+        ReviewRequest reviewUpdateRequest = ReviewRequest.builder()
+                .message("This is a test message")
+                .customerFullName("John Doe")
+                .reviewRating(5)
+                .build();
+        Review mockReview = new Review(1, new ReviewIdentifier(), "2123eas", "John Doe", LocalDate.now(), "This is a review", 3, true);
+
+        // Mock behavior
+        when(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)).thenReturn(mockReview);
+
+        // Act and Assert
+        assertThrows(ReviewBadRequestException.class, () -> reviewServiceImpl.updateCustomerReview(reviewId, userId, reviewUpdateRequest));
+
     }
 
 }

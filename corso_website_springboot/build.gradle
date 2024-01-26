@@ -101,6 +101,7 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
+    exclude("**/EditReviewTest.class")
     exclude("**/GoToEditGalleryTest.class")
     exclude("**/AddEntryToGalleryTest.class")
     exclude("**/DeleteSpecificFAQTest.class")

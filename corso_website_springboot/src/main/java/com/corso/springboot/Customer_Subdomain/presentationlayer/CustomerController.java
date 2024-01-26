@@ -4,6 +4,9 @@ import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderCustomerRequest;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
+import com.corso.springboot.Review_Subdomain.businesslayer.ReviewService;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +32,8 @@ public class CustomerController {
     private final CustomerService customerService;
 
     private final OrderService orderService;
+
+    private final ReviewService reviewService;
 
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('Customer')")
@@ -129,4 +135,11 @@ public class CustomerController {
     }
 
 
+    @PatchMapping("/reviews/{reviewId}")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<ReviewResponse> updateCustomerReview(@AuthenticationPrincipal OidcUser principal, @PathVariable String reviewId, @RequestBody ReviewRequest reviewUpdateRequest) throws MessagingException, IOException, InterruptedException {
+        String userId = principal.getSubject();
+        log.info("Update review with userId: {}", userId);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateCustomerReview(reviewId, userId, reviewUpdateRequest));
+    }
 }

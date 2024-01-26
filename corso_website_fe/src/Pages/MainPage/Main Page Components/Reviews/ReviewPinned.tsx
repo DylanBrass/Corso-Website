@@ -4,11 +4,14 @@ import {Reviews} from "./ReviewPinnedTileMainPage";
 import axios from "axios";
 import {ReviewsPinnedTileMainPage} from "./ReviewPinnedTileMainPage";
 import './ReviewPinned.css'
+import {useTranslation} from "react-i18next";
 
 
 function ReviewPinned() {
 
     const auth = useAuth()
+
+    const {t} = useTranslation();
 
     const [pinnedReviews, setPinnedReviews] = useState([Reviews])
     const getPinnedReviews = () => {
@@ -39,7 +42,7 @@ function ReviewPinned() {
             <div className={"testimonies-main-box w-100"}>
 
                 <div className={"testimonies-title-box d-none d-md-flex"}>
-                    <h1 className={"testimonials-title"}>Testimonials</h1>
+                    <h1 className={"testimonials-title"}>{t("testimonials")}</h1>
                 </div>
 
                 <div className={"row"}>

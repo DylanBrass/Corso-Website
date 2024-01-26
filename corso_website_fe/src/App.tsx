@@ -29,7 +29,7 @@ import EditGallery from "./Pages/Dashboard/Gallery/EditGallery";
 import ViewSpecificServiceAdmin from "./Pages/Dashboard/ViewASpecificService/ViewSpecificServiceAdmin";
 import CustomerReviews from "./Pages/Profile/ManageReviews/CustomerReviews";
 import ViewOnGoingOrderDetailsPage from "./Pages/Dashboard/OrdersPages/ViewOnGoingOrderDetailsPage";
-import CreateReview from "./Pages/Profile/CreateCustomer/CreateReview";
+import CreateReview from "./Pages/Profile/CreateReview/CreateReview";
 import ViewAllFaqThroughDashboard from "./Pages/Dashboard/ManageFaq/ViewAllFaqThroughDashboard";
 import UpdateOrder from "./Pages/Profile/UpdateOrderCustomer/UpdateOrder";
 import ViewSpecificFaq from "./Pages/Dashboard/ManageFaq/ViewSpecificFaq";

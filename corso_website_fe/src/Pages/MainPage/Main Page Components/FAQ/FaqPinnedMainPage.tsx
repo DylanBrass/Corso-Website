@@ -4,10 +4,13 @@ import axios from "axios";
 import {FAQ, FaqTileMainPage} from "./FaqTileMainPage";
 import {useAuth} from "../../../../security/Components/AuthProvider";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 function FaqPinnedMainPage() {
 
     const auth = useAuth()
+
+    const {t} = useTranslation();
 
     const [preferredFaq, setPreferredFaq] = useState([FAQ])
     const getPreferredFaqs = () => {
@@ -60,7 +63,7 @@ function FaqPinnedMainPage() {
                     />
                 ))}
                 <div className={"link-all-faqs"}>
-                    <a href={"/faq"}>View More FAQs</a>
+                    <a href={"/faq"}>{t("viewfaqs")}</a>
                 </div>
             </div>
 

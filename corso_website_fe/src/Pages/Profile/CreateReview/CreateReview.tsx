@@ -17,6 +17,12 @@ function CreateReview() {
 
         event.preventDefault();
 
+        if (event.target.review.value.length < 10) {
+            // @ts-ignore
+            swal("Warning!", "Review must be at least 10 characters long!", "warning");
+            return;
+        }
+
         if (rating === 0) {
             // @ts-ignore
             swal("Warning!", "Please select a rating!", "warning");

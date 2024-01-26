@@ -21,7 +21,7 @@ import static reactor.core.publisher.Mono.when;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("test")
-@AutoConfigureMockMvc//(addFilters = false)
+@AutoConfigureMockMvc
 class CustomerControllerIntegrationTest {
 
     private final String BASE_URI_CUSTOMERS = "/api/v1/corso/customers";
@@ -299,6 +299,78 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Order cannot be updated, it is not in pending status, meaning it was accepted or cancelled already!"));
 
     }
+
+    @Test
+    void updateReviewNotPinned_ShouldSucceed() throws Exception {
+        //arrange
+        String reviewId = "8987c71a-861b-496c-a927-0683816cd490";
+
+
+        //act
+        mockMvc.perform(patch(BASE_URI_CUSTOMERS + "/reviews/" + reviewId)
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "message": "This is a test message",
+                                    "reviewRating": 5,
+                                    "customerFullName": "Alice Doe"
+                                }"""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("This is a test message"))
+                .andExpect(jsonPath("$.reviewRating").value(5))
+                .andExpect(jsonPath("$.customerFullName").value("Alice Doe"));
+    }
+
+
+    @Test
+    void updateReviewWithRatingGreaterThan5_ShouldReturn400() throws Exception {
+        //arrange
+        String reviewId = "8987c71a-861b-496c-a927-0683816cd490";
+
+        //act
+
+        mockMvc.perform(patch(BASE_URI_CUSTOMERS + "/reviews/" + reviewId)
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
+                                .authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "message": "This is a test message",
+                                    "reviewRating": 6,
+                                    "customerFullName": "Alice Doe"
+                                }"""))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Review rating must be between 1 and 5"));
+
+    }
+
+    @Test
+    void updateReviewWithRatingLessThen1_ShouldGive400() throws Exception {
+        //arrange
+        String reviewId = "8987c71a-861b-496c-a927-0683816cd490";
+
+        //act
+
+        mockMvc.perform(patch(BASE_URI_CUSTOMERS + "/reviews/" + reviewId)
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
+                                .authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "message": "This is a test message",
+                                    "reviewRating": 0
+                                                                    }"""))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Review rating must be between 1 and 5"));
+
+
+
+    }
+
 
 
 }
