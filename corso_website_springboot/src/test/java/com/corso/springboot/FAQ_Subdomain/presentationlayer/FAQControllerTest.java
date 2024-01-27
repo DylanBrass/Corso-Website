@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -153,6 +154,64 @@ class FAQControllerTest {
                 .uri(BASE_URI_FAQS + "/" + expectedFaqId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isNotFound();
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void updateFAQ_ThenReturnUpdatedFAQ() throws Exception {
+        //arrange
+        String expectedFaqId = "87e59aeb-3aa3-4c22-be1d-a35acde209b9";
+        //act
+        mockMvc.perform(put(BASE_URI_FAQS + "/" + expectedFaqId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "faqid": "87e59aeb-3aa3-4c22-be1d-a35acde209b9",
+                                    "question": "What services do you offer?",
+                                    "answer": "We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.",
+                                    "preference": true
+                                }
+                        """)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.faqid").value(expectedFaqId))
+                .andExpect(jsonPath("$.question").value("What services do you offer?"))
+                .andExpect(jsonPath("$.answer").value("We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization."))
+                .andExpect(jsonPath("$.preference").value(true));
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void updateFAQ_ThenReturn404() throws Exception {
+        //arrange
+        String expectedFaqId = "87e59aeb-3aa3-4c22-be1d-a35acde209b8";
+        //act
+        mockMvc.perform(put(BASE_URI_FAQS + "/" + expectedFaqId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "faqid": "87e59aeb-3aa3-4c22-be1d-a35acde209b9",
+                                    "question": "What services do you offer?",
+                                    "answer": "We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.",
+                                    "preference": true
+                                }
+                        """)
+                .with(csrf()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getFAQCount_ThenReturnCount() {
+        //arrange
+        Integer expectedCount = 5;
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_FAQS + "/count")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(Integer.class).isEqualTo(expectedCount);
     }
 
 }

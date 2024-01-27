@@ -5,6 +5,7 @@ import com.corso.springboot.FAQ_Subdomain.datalayer.FAQIdentifier;
 import com.corso.springboot.FAQ_Subdomain.datalayer.FAQRepository;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQRequestMapper;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQResponseMapper;
+import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQResponse;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.ThreeFAQsRequest;
 import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
@@ -407,5 +408,79 @@ class FAQServiceImplUnitTest {
 
         // Assert
         assertEquals("FAQ not found.", exception.getMessage());
+    }
+
+    @Test
+    void modifyFaq_shouldReturnUpdatedFaq(){
+
+        FAQResponse mockFAQResponse = FAQResponse.builder()
+                .FAQId("1")
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(true)
+                .build();
+
+        FAQRequest mockFAQRequest = FAQRequest.builder()
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(false)
+                .build();
+
+        FAQ mockUpdatedFAQ = FAQ.builder()
+                .FAQId(new FAQIdentifier())
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(false)
+                .build();
+
+        FAQResponse mockUpdatedFAQResponse = FAQResponse.builder()
+                .FAQId("1")
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(false)
+                .build();
+
+        Mockito.when(faqRepository.getFAQByFAQId_FAQId(Mockito.anyString())).thenReturn(new FAQ("How do I create an account", "Top right corner", true));
+        Mockito.when(faqRequestMapper.toFAQ(Mockito.any())).thenReturn(mockUpdatedFAQ);
+        Mockito.when(faqRepository.save(Mockito.any(FAQ.class))).thenReturn(mockUpdatedFAQ);
+        Mockito.when(faqResponseMapper.toFAQResponse(Mockito.any(FAQ.class))).thenReturn(mockUpdatedFAQResponse);
+
+        // Act
+        FAQResponse faqResult = faqServiceImpl.modifyFAQ(FAQ_ID, mockFAQRequest);
+
+        // Assert
+        assertEquals(mockUpdatedFAQResponse, faqResult);
+        assertEquals(mockUpdatedFAQResponse.getFAQId(), faqResult.getFAQId());
+        assertEquals(mockUpdatedFAQResponse.getQuestion(), faqResult.getQuestion());
+        assertEquals(mockUpdatedFAQResponse.getAnswer(), faqResult.getAnswer());
+        assertEquals(mockUpdatedFAQResponse.isPreference(), faqResult.isPreference());
+    }
+
+    @Test
+    void modifyFaq_shouldThrowFAQNotFoundException(){
+        FAQRequest mockFAQRequest = FAQRequest.builder()
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(false)
+                .build();
+
+        Mockito.when(faqRepository.getFAQByFAQId_FAQId(Mockito.anyString())).thenReturn(null);
+
+        // Act and Assert
+        FAQNotFoundException exception = assertThrows(FAQNotFoundException.class, () -> faqServiceImpl.modifyFAQ(FAQ_ID, mockFAQRequest));
+
+        // Assert
+        assertEquals("FAQ not found.", exception.getMessage());
+    }
+
+    @Test
+    void getFAQCount_shouldReturnCount(){
+        Mockito.when(faqRepository.countFAQBy()).thenReturn(5);
+
+        // Act
+        Integer faqResult = faqServiceImpl.getFAQCount();
+
+        // Assert
+        assertEquals(5, faqResult);
     }
 }

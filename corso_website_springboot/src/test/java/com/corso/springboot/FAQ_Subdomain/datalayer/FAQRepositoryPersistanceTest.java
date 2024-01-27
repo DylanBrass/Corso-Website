@@ -28,4 +28,9 @@ class FAQRepositoryPersistanceTest {
         FAQ faq = faqRepository.getFAQByFAQId_FAQId(preSavedfaq.getFAQId().getFAQId());
         assert(faq.getFAQId().getFAQId().equals(preSavedfaq.getFAQId().getFAQId()));
     }
+
+    @Test
+    public void testGetFAQCount() {
+        assert(faqRepository.count() == 1);
+    }
 }

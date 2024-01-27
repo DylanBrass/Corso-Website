@@ -64,4 +64,10 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFAQCount());
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PutMapping("/{faqId}")
+    public ResponseEntity<FAQResponse> updateFaqByFaqId(@PathVariable String faqId, @RequestBody FAQRequest faqRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(faqService.modifyFAQ(faqId, faqRequest));
+    }
+
 }
