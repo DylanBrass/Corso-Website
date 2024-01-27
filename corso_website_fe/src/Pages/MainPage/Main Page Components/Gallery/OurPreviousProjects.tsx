@@ -4,6 +4,7 @@ import { CCarousel, CCarouselItem, CCarouselCaption, CImage } from "@coreui/reac
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import axios from "axios";
+import {useTranslation} from "react-i18next";
 
 interface ImageData {
     galleryId: string;
@@ -16,6 +17,8 @@ interface ImageData {
 
 function OurPreviousProjects() {
     const [images, setImages] = useState<ImageData[]>([]);
+
+    const {t} = useTranslation();
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -32,7 +35,7 @@ function OurPreviousProjects() {
 
     return (
         <div className={"carousel-box"}>
-            <h1>Our Previous Projects</h1>
+            <h1>{t("previousProjects")}</h1>
             {images.length > 0 && (
                 <CCarousel controls indicators>
                     {images

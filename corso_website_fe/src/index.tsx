@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
 
+import './i18n'
 
 
 axios.defaults.withCredentials = true;

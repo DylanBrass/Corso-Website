@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './AllServices.css'; // Importing CSS file
+import './AllServices.css';
+import {useTranslation} from "react-i18next"; // Importing CSS file
 
 interface Service {
     serviceId: string;
@@ -11,6 +12,8 @@ interface Service {
 function AllServices() {
     const [services, setServices] = useState<Service[]>([]);
     const [error, setError] = useState<string | null>(null);
+
+    const {t} = useTranslation();
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -30,7 +33,7 @@ function AllServices() {
     return (
         <div className="container services-container">
             <div className="row service-header">
-                <h1 className="service-title">All Services</h1>
+                <h1 className="service-title">{t("services")}</h1>
             </div>
             {error && (
                 <div className="row">

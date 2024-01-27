@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NavigationBar.css';
@@ -7,8 +7,33 @@ import {useAuth} from "../../security/Components/AuthProvider";
 import {Link} from "react-router-dom";
 import logo from "../../ressources/images/customcolor_logo_transparent_background_revised.png";
 
+
+import {useTranslation} from "react-i18next";
+
 function NavigationBar() {
+
+    const [currentIndex, setCurrentIndex] = React.useState(1)
+
+
+    const languages = ["fr", "en"]
+
+    const [language, setLanguage] = React.useState("fr")
+
+    const {t, i18n} = useTranslation();
+
     const auth = useAuth()
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+    }
+
+
+    useEffect(() => {
+        changeLanguage(language)
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [language]);
+
     return (
         <div id={"nav-bar-box"}>
             <Navbar expand="lg" className="navbar-custom">
@@ -42,11 +67,22 @@ function NavigationBar() {
                             <Nav.Item className={"item"}>
 
                                 <Nav.Link href="/" active className={"m-auto item-nav-text"}>
-                                    HOME
+                                    {t("home")}
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item className={"item"}>
-                                <Nav.Link href="#" className={"m-auto item-nav-text"}>FRANÇAIS</Nav.Link>
+                                <Nav.Link href="#" className={"m-auto item-nav-text"}
+                                onClick={() => {
+                                    setCurrentIndex((currentIndex + 1) % languages.length)
+
+                                    setLanguage(languages[currentIndex])
+
+                                    console.log(language)
+                                }}
+                                >
+                                    {t("language")}
+
+                                </Nav.Link>
                             </Nav.Item>
 
 
@@ -56,7 +92,9 @@ function NavigationBar() {
                                 <Nav.Item className={"item"}>
                                     <Nav.Link
                                         href={process.env.REACT_APP_BE_HOST + `oauth2/authorization/okta`}
-                                        className={"m-auto item-nav-text"}>LOGIN</Nav.Link>
+                                        className={"m-auto item-nav-text"}>
+                                        {t("login")}
+                                    </Nav.Link>
                                 </Nav.Item>
                             }
                             {
@@ -73,7 +111,7 @@ function NavigationBar() {
                                             }
                                         }>
                                             <span className={"logout-btn-text"}>
-                                                LOGOUT
+                                                {t("logout")}
                                             </span>
                                         </button>
                                     </form>

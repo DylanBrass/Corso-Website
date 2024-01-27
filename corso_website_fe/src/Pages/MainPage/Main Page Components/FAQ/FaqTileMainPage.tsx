@@ -1,6 +1,9 @@
 import React from "react";
 import FAQ from "../../../../ressources/Models/FAQ";
+import {useTranslation} from "react-i18next";
 function FaqTileMainPage(faq: FAQ) {
+
+    const {t} = useTranslation();
 
     return (
         <div className={"faq-tile-box"}>
@@ -18,7 +21,7 @@ function FaqTileMainPage(faq: FAQ) {
                         </div>
                         <div className={"col-11 answer-box"}>
                             <p className={""}>
-                                <strong>Answer: </strong>{faq.answer}
+                                <strong>{t("answer")}: </strong>{faq.answer}
                             </p>
                         </div>
 

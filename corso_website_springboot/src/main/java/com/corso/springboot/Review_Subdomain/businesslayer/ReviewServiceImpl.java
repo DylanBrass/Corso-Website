@@ -9,15 +9,13 @@ import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewRequestMapper;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
-import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
-import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.Review_Subdomain.presentationlayer.*;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
-import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import com.corso.springboot.utils.exceptions.Review.ReviewNotFoundException;
 import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
 import com.corso.springboot.utils.exceptions.Review.ReviewStateConflictException;
@@ -224,6 +222,33 @@ public class ReviewServiceImpl implements ReviewService {
             }
 
             reviewRepository.delete(review);
+    }
+
+    @Override
+    public ReviewResponse updateCustomerReview(String reviewId, String userId, ReviewRequest reviewUpdateRequest) {
+
+        Review review = reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId);
+
+        if (review == null) {
+            throw new ReviewNotFoundException("Review not found");
+        }
+
+        if(review.pinned) {
+            throw new ReviewBadRequestException("Cannot update a pinned review. If you have a concern, please contact us.");
+        }
+
+
+
+
+        if (reviewUpdateRequest.getReviewRating() < 1 || reviewUpdateRequest.getReviewRating() > 5) {
+            throw new ReviewBadRequestException("Review rating must be between 1 and 5");
+        }
+
+        review.setReviewRating(reviewUpdateRequest.getReviewRating());
+
+        review.setMessage(reviewUpdateRequest.getMessage());
+
+        return reviewResponseMapper.toReviewResponse(reviewRepository.save(review));
     }
 
     @Override

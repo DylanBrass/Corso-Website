@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebClient
-@AutoConfigureMockMvc(addFilters = true)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 class ReviewControllerTest {
 
@@ -290,6 +290,8 @@ class ReviewControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+
 
 
 }

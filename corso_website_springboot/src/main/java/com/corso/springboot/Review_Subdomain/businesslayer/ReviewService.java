@@ -1,7 +1,6 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
-import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 
@@ -29,4 +28,6 @@ public interface ReviewService {
     ReviewResponse getReviewByReviewIdAndUserId(String reviewId, String userId);
 
     void deleteCustomerReview(String reviewId, String userId) throws MessagingException;
+
+    ReviewResponse updateCustomerReview(String reviewId, String userId, ReviewRequest reviewUpdateRequest);
 }
