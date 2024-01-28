@@ -7,7 +7,7 @@ import CrossedOutEye from "../../../ressources/images/Crossed-out_Eye.png";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import swal from "sweetalert";
 import Edit_light from "../../../ressources/images/Edit_light.svg";
-
+import plus from "../../../ressources/images/plus-services.svg";
 interface FAQ {
     faqid: string;
     question: string;
@@ -88,7 +88,7 @@ function ViewAllFaqThroughDashboard() {
             setError(error.message);
         }
     };
-
+    
 
 
     const selectedFaqsCount = faqs.filter((faq) => faq.preference).length;
@@ -97,6 +97,10 @@ function ViewAllFaqThroughDashboard() {
 
     const viewSpecificFaq = (faqId: string) => {
         window.location.href = '/faqs/' + faqId;
+    }
+
+    const goToaddFaq = () => {
+        window.location.href = '/manage/faqs/create';
     }
 
     return (
@@ -114,9 +118,11 @@ function ViewAllFaqThroughDashboard() {
                     </div>
                 )}
 
+                    <img src={plus} alt={"Add FAQ"} className={"goToFAQBtn"} onClick={goToaddFaq}/>
+
                 <div className="row">
                     <div className="col-12">
-                        {showMoreThanThreeMessage || showLessThanThreeMessage ? (
+                    {showMoreThanThreeMessage || showLessThanThreeMessage ? (
                             <p className="error">
                                 {showMoreThanThreeMessage
                                     ? "More than 3"

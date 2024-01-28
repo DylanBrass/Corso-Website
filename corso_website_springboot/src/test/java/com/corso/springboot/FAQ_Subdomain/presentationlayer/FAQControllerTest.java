@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,7 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -211,11 +214,46 @@ class FAQControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$").isEqualTo(5);
-
-
+                .expectBody(Integer.class).isEqualTo(expectedCount);
     }
 
 
 
-}
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void deleteFaqById_ThenReturnNotFound() {
+        //arrange
+        String expectedFaqId = "87e59aeb-3aa3-4c22-be1d-a35acde209b8";
+        //act
+        webTestClient.delete()
+                .uri(BASE_URI_FAQS + "/" + expectedFaqId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isNotFound();
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void createFaq_ThenReturnCreatedFAQ() {
+        //arrange
+        FAQIdentifier faqIdentifier= new FAQIdentifier();
+        //act
+        webTestClient.post()
+                .uri(BASE_URI_FAQS)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+
+                        {
+                    "question": "What services do you offer?",
+                    "answer": "We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization."
+                        }
+                """)
+                .exchange().expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.faqid").isNotEmpty()
+                .jsonPath("$.question").isEqualTo("What services do you offer?")
+                .jsonPath("$.answer").isEqualTo("We offer a range of services including web development, graphic design, digital marketing, mobile app development, and SEO optimization.");
+    }
+
+    }

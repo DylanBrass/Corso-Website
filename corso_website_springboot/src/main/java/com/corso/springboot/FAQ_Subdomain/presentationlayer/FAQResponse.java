@@ -14,6 +14,7 @@ public class FAQResponse {
 
 
     private String FAQId;
+
     private String question;
 
     private String answer;

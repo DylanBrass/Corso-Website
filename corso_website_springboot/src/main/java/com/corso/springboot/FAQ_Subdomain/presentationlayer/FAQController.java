@@ -83,4 +83,16 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.modifyFAQ(faqId, faqRequest));
     }
 
+
+    @Caching(evict = {
+            @CacheEvict(value = "faqs", allEntries = true),
+            @CacheEvict(value = "faqsCount", allEntries = true),
+    })
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PostMapping()
+    public ResponseEntity<FAQResponse> createFAQ(@RequestBody FAQRequest faqRequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(faqService.createFaq(faqRequest));
+    }
+
 }

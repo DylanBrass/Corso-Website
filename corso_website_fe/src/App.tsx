@@ -38,6 +38,7 @@ import ModifyServicePage from "./Pages/Dashboard/UpdateService/ModifyServicePage
 import React from 'react';
 import CustomerViewsSpecificReview from "./Pages/Profile/ManageReviews/CustomerViewsSpecificReview";
 import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpecificGallery";
+import AddAFaq from "./Pages/Dashboard/ManageFaq/AddAFaq";
 import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
 
 

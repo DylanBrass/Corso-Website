@@ -473,6 +473,7 @@ class FAQServiceImplUnitTest {
         assertEquals("FAQ not found.", exception.getMessage());
     }
 
+
     @Test
     void getFAQCount_shouldReturnCount(){
         Mockito.when(faqRepository.countFAQBy()).thenReturn(5);
@@ -483,4 +484,42 @@ class FAQServiceImplUnitTest {
         // Assert
         assertEquals(5, faqResult);
     }
+
+    @Test
+    void createFAQ_shouldReturnFAQId(){
+        FAQ mockFAQ = FAQ.builder()
+                .FAQId(new FAQIdentifier())
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(true)
+                .build();
+
+        FAQResponse mockFAQResponse = FAQResponse.builder()
+                .FAQId("1")
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(true)
+                .build();
+
+        FAQRequest mockFAQRequest = FAQRequest.builder()
+                .question("How do I create an account")
+                .answer("Top right corner")
+                .preference(true)
+                .build();
+
+        Mockito.when(faqRequestMapper.toFAQ(Mockito.any(com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest.class))).thenReturn(new FAQ("How do I create an account", "Top right corner", true));
+        Mockito.when(faqRepository.save(Mockito.any(FAQ.class))).thenReturn(mockFAQ);
+        Mockito.when(faqResponseMapper.toFAQResponse(Mockito.any(FAQ.class))).thenReturn(mockFAQResponse);
+
+        // Act
+        FAQResponse faqResult = faqServiceImpl.createFaq(mockFAQRequest);
+
+        // Assert
+        assertEquals(mockFAQResponse, faqResult);
+        assertEquals(mockFAQResponse.getFAQId(), faqResult.getFAQId());
+        assertEquals(mockFAQResponse.getQuestion(), faqResult.getQuestion());
+        assertEquals(mockFAQResponse.getAnswer(), faqResult.getAnswer());
+        assertEquals(mockFAQResponse.isPreference(), faqResult.isPreference());
+    }
+
 }

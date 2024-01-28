@@ -1,6 +1,8 @@
 package com.corso.springboot.FAQ_Subdomain.businesslayer;
 
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest;
+import com.corso.springboot.FAQ_Subdomain.datalayer.FAQ;
+import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQResponse;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.ThreeFAQsRequest;
 
@@ -21,4 +23,10 @@ public interface FAQService {
     Integer getFAQCount();
 
     FAQResponse modifyFAQ(String faqId, FAQRequest faqRequest);
+
+
+//    FAQResponse createFAQ(FAQRequest faqRequest);
+
+    FAQResponse createFaq(FAQRequest faqRequest);
+
 }
