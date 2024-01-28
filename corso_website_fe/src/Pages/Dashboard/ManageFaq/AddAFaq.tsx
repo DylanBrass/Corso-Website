@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './AddAFaq.css';  // Make sure to include your original CSS file
+import './AddAFaq.css';
 import axios from 'axios';
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';

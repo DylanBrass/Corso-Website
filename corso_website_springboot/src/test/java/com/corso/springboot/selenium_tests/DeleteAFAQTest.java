@@ -22,7 +22,7 @@ public class DeleteAFAQTest {
 
 
     @Test
-    public void DeleteAFAQTest() {
+    public void DeleteAFAQ() {
         $(By.linkText("CONNEXION")).click();
         $("#username").setValue("Admin");
         $("[name='action']").click();

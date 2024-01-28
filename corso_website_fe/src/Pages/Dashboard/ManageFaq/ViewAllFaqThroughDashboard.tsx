@@ -8,6 +8,8 @@ import {useAuth} from "../../../security/Components/AuthProvider";
 import swal from "sweetalert";
 import Edit_light from "../../../ressources/images/Edit_light.svg";
 import plus from "../../../ressources/images/plus-services.svg";
+
+
 interface FAQ {
     faqid: string;
     question: string;
