@@ -13,14 +13,17 @@ import axios from "axios";
 import CurrentOrdersProgress from "./Components/CurrentOrdersProgress";
 import Order from "../../ressources/Models/Order";
 import {CCarousel, CCarouselItem} from "@coreui/react";
+import swal from "sweetalert";
 
 function ProfilePage() {
 
     const auth = useAuth()
 
     const [phone, setPhone] = useState("None Given")
-    const [email, setEmail] = useState("None Given")
+    const [email, setEmail] = useState(Cookies.get("email"))
     const [name, setName] = useState("")
+
+    const [verified, setVerified] = useState(true)
 
 
     const [orders, setOrders] = useState<Order[]>([]);
@@ -32,6 +35,30 @@ function ProfilePage() {
     }, [])
 
 
+    const sendVerificationEmail = async () => {
+        axios.post(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers/request/verification", {}, {
+            headers: {
+                // @ts-ignore
+                "X-XSRF-TOKEN": auth.getXsrfToken(),
+            }
+        }).then(r => {
+            if (r.status === 200) {
+                swal("Email Sent Successfully", "Please check your email for a verification link", "success")
+                    .then(r => {
+                        document.getElementById("send-verification-btn")!.setAttribute("disabled", "true")
+                    })
+            }
+        }).catch(e => {
+            if (e.response.status === 401 || e.response.status === 403) {
+                // @ts-ignore
+                auth.authError(e.response.status);
+            } else {
+                swal("Error!", e.response.data.message, "error")
+            }
+        })
+
+    }
+
     const fetchOrders = async () => {
         try {
 
@@ -42,7 +69,7 @@ function ProfilePage() {
                 })
 
         } catch (error) {
-            
+
         }
     }
 
@@ -56,7 +83,7 @@ function ProfilePage() {
             while (Cookies.get("username") === undefined) {
 
                 await new Promise(r => setTimeout(r, 50));
-                
+
 
                 if (Cookies.get("username") !== undefined) {
                     // @ts-ignore
@@ -79,7 +106,7 @@ function ProfilePage() {
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
             }
         }).then(r => {
-            
+
             if (r.status === 200) {
 
                 axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
@@ -89,7 +116,7 @@ function ProfilePage() {
                     },
                 }).then(r => {
                     if (r.status === 200) {
-                        
+
                         if (r.data.phone.length > 0) {
                             setPhone(r.data.phone)
                         }
@@ -97,20 +124,22 @@ function ProfilePage() {
                         if (r.data.email.length > 0) {
                             setEmail(r.data.email)
                         }
+
+                        setVerified(r.data.verified)
                     }
                 }).catch(e => {
-                        
+
                         // @ts-ignore
                         auth.authError(e.response.status)
 
                     }
                 )
             } else {
-                
+
 
             }
         }).catch(e => {
-                
+
 // @ts-ignore
                 auth.authError(e.response.status)
             }
@@ -148,11 +177,12 @@ function ProfilePage() {
                         <h1 className={"mt-5"}>{name}</h1>
                         <form method={"post"} action={process.env.REACT_APP_BE_HOST + "api/v1/corso/logout"}>
                             <button id={"logout-profile"} type={"submit"} onClick={
-                                            () => {
-                                               // @ts-ignore
-                                                auth.logout()
-                                            }
-                                        }>LOGOUT</button>
+                                () => {
+                                    // @ts-ignore
+                                    auth.logout()
+                                }
+                            }>LOGOUT
+                            </button>
                         </form>
                     </div>
                     <div className={"col-12 col-lg-6 d-block mt-4 mt-lg-0"}>
@@ -160,27 +190,74 @@ function ProfilePage() {
                             <div className={"col-12 col-lg-6 contact-box w-100 p-2"}>
                                 <h1 className={"contact-title"}>Contact Information</h1>
                                 <p className={"profile-text"}>Phone Number: {phone}</p>
-                                <p className={"profile-text"}>Email: {email}</p>
+                                <p className={"profile-text"}>Email: {email}
+                                    <span>
+                                        {verified ?
+                                            <div className={"row col-2"}>
+                                                <h1 className={"col-1"} style={{color: "green"}}>✓</h1>
+                                                <span className={"col-1 m-auto"}
+                                                      style={{color: "green"}}>Verified</span>
+                                            </div>
+                                            :
+                                            <div>
+                                                <div className={"row col-2"}>
+                                                    <h1 className={"col-1"} style={{color: "red"}}>
+                                                        ✗
+                                                    </h1>
+                                                    <span className={"col-1 m-auto"}
+                                                          style={{color: "red"}}>Not Verified
+                                                </span>
+
+                                                </div>
+                                                <button className={""} id={"send-verification-btn"}
+                                                        onClick={sendVerificationEmail}>
+                                                    Resend Email
+                                                </button>
+                                            </div>
+                                        }
+                                    </span>
+
+                                </p>
                             </div>
                         </div>
                         {
                             orders.length > 0 &&
                             <div className={"w-100 d-block px-lg-5"}>
                                 <div className={"current-orders-box pt-3 pb-3 overflow-scroll"}>
-                                    <CCarousel controls>
-                                        {orders.map((order: Order) => (
+                                    {orders.length > 1 ?
+                                        <CCarousel controls interval={5000}>
+                                            {orders.map((order: Order) => (
 
-                                            <CCarouselItem key={order.orderTrackingNumber} style={{height: "100%"}}>
-                                                <CurrentOrdersProgress
-                                                    // @ts-ignore
-                                                    order={order}
-                                                    key={order.orderTrackingNumber}/>
+                                                <CCarouselItem key={order.orderTrackingNumber}
+                                                               style={{height: "100%"}}>
+                                                    <CurrentOrdersProgress
+                                                        // @ts-ignore
+                                                        order={order}
+                                                        key={order.orderTrackingNumber}/>
 
-                                            </CCarouselItem>
-                                        ))
-                                        }
+                                                </CCarouselItem>
+                                            ))
+                                            }
 
-                                    </CCarousel>
+                                        </CCarousel>
+                                        :
+                                        <CCarousel>
+                                            {orders.map((order: Order) => (
+
+                                                <CCarouselItem key={order.orderTrackingNumber}
+                                                               style={{height: "100%"}}>
+                                                    <CurrentOrdersProgress
+                                                        // @ts-ignore
+                                                        order={order}
+                                                        key={order.orderTrackingNumber}/>
+
+                                                </CCarouselItem>
+                                            ))
+                                            }
+
+                                        </CCarousel>
+                                    }
+
                                 </div>
                             </div>
                         }
@@ -196,7 +273,8 @@ function ProfilePage() {
                             </div>
                             <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/edit"}>
-                                    <h3 className={"option edit-profile-option m-auto text-center text-xl-start"}>Edit Profile</h3>
+                                    <h3 className={"option edit-profile-option m-auto text-center text-xl-start"}>Edit
+                                        Profile</h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>
@@ -209,7 +287,8 @@ function ProfilePage() {
                             </div>
                             <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/orders"}>
-                                    <h3 className={"option past-orders-option m-auto text-center text-xl-start"}>View Your Orders</h3>
+                                    <h3 className={"option past-orders-option m-auto text-center text-xl-start"}>View
+                                        Your Orders</h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>

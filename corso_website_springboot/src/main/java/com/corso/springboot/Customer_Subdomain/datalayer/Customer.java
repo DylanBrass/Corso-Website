@@ -33,4 +33,6 @@ public class Customer {
 
         private String apartmentNumber;
 
+        private boolean verified;
+
 }

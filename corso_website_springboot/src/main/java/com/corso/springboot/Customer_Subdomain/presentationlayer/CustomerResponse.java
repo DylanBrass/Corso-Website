@@ -26,4 +26,6 @@ public class CustomerResponse {
     String city;
 
     String apartmentNumber;
+
+    boolean verified;
 }

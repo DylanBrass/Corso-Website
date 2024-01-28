@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -89,7 +90,7 @@ class CustomerServiceUnitTest {
     }
 
     @Test
-    void createCustomer() {
+    void createCustomer() throws MessagingException {
 
         String userId = "google|123456789";
 
@@ -152,7 +153,7 @@ class CustomerServiceUnitTest {
     }
 
     @Test
-    void updateCustomer() {
+    void updateCustomer() throws MessagingException {
 
         String userId = "google|123456789";
 
@@ -220,7 +221,7 @@ class CustomerServiceUnitTest {
     }
 
     @Test
-    void updateManyFieldsForCustomer() {
+    void updateManyFieldsForCustomer() throws MessagingException {
 
         String userId = "google|123456789";
 
@@ -335,7 +336,7 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
-        when(customerRepository.findAllByNameStartingWith("Alice")).thenReturn(List.of(mockCustomer));
+        when(customerRepository.findAllByNameStartingWithAndVerified("Alice",true)).thenReturn(List.of(mockCustomer));
 
         CustomerResponse mockCustomerResponse = CustomerResponse.builder()
                 .name("Alice Doe")
@@ -374,7 +375,7 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
-        when(customerRepository.findAllByEmailStartingWith(requestParams.get("email"))).thenReturn(List.of(mockCustomer));
+        when(customerRepository.findAllByEmailStartingWithAndVerified(requestParams.get("email"),true)).thenReturn(List.of(mockCustomer));
 
         CustomerResponse mockCustomerResponse = CustomerResponse.builder()
                 .name(mockCustomer.getName())

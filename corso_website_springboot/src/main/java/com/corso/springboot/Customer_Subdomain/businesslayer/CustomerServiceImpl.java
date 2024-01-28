@@ -6,27 +6,40 @@ import com.corso.springboot.Customer_Subdomain.datamapperlayer.CustomerRequestMa
 import com.corso.springboot.Customer_Subdomain.datamapperlayer.CustomerResponseMapper;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerRequest;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
+import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.email.datalayer.VerificationToken;
+import com.corso.springboot.email.datalayer.VerificationTokenRepository;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Publisher;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import javax.mail.MessagingException;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
     private final CustomerResponseMapper customerResponseMapper;
 
     private final CustomerRequestMapper customerRequestMapper;
+
+    private final EmailService emailService;
+
+    private final VerificationTokenRepository verificationTokenRepository;
+
+    @Value("${backend.url}")
+    private String backendDomain;
+
+    @Value("${frontend.url}")
+    private String frontendDomain;
 
 
     @Override
@@ -41,13 +54,10 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public CustomerResponse createCustomer(CustomerRequest customerRequest, String userId) {
+    public CustomerResponse createCustomer(CustomerRequest customerRequest, String userId) throws MessagingException {
 
         if (customerRepository.existsByUserId(userId))
             throw new InvalidRequestException("Customer already exists");
-
-        log.info("Creating customer for user {}", userId);
-        log.info("Customer request {}", customerRequest);
 
         Customer customer = customerRequestMapper.toCustomer(customerRequest);
 
@@ -55,11 +65,14 @@ public class CustomerServiceImpl implements CustomerService{
         customerRepository.save(customer);
 
 
+        // Send verification email
+        sendVerificationEmail(userId, customer.getEmail());
+
         return customerResponseMapper.toCustomerResponse(customer);
     }
 
     @Override
-    public CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId) {
+    public CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId) throws MessagingException {
         Customer customer = customerRepository.getCustomerByUserId(userId);
 
         if (customer == null)
@@ -67,6 +80,11 @@ public class CustomerServiceImpl implements CustomerService{
 
         log.info("Updating customer for user {}", userId);
         log.info("Customer request {}", customerRequest);
+
+        if (customerRequest.getEmail() != null && !customerRequest.getEmail().equals(customer.getEmail())) {
+            customer.setVerified(false);
+            sendVerificationEmail(userId, customerRequest.getEmail());
+        }
 
         customer.setName(customerRequest.getName() != null ? customerRequest.getName() : customer.getName());
         customer.setEmail(customerRequest.getEmail() != null ? customerRequest.getEmail() : customer.getEmail());
@@ -114,13 +132,13 @@ public class CustomerServiceImpl implements CustomerService{
 
         String email = requestParams.get("email");
 
-        
+
         if (name != null) {
-            return customerResponseMapper.toCustomersResponse(customerRepository.findAllByNameStartingWith(name));
+            return customerResponseMapper.toCustomersResponse(customerRepository.findAllByNameStartingWithAndVerified(name, true));
         }
 
         if (email != null) {
-            return customerResponseMapper.toCustomersResponse(customerRepository.findAllByEmailStartingWith(email));
+            return customerResponseMapper.toCustomersResponse(customerRepository.findAllByEmailStartingWithAndVerified(email, true));
         }
 
         return customerResponseMapper.toCustomersResponse(customerRepository.findAll());
@@ -128,5 +146,79 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
 
+    public void verifyEmail(String token, String email) {
+
+        VerificationToken verificationToken = verificationTokenRepository.getVerificationTokenByTokenAndEmail(token, email);
+
+
+        if (verificationToken == null)
+            throw new InvalidRequestException("Invalid token");
+
+        Calendar cal = Calendar.getInstance();
+        if (verificationToken.getExpiryDate().before(cal.getTime())) {
+            throw new InvalidRequestException("Token expired");
+        }
+
+        if (!verificationToken.getEmail().equals(email))
+            throw new InvalidRequestException("Invalid email");
+
+        Customer customer = customerRepository.getCustomerByEmailAndUserId(email, verificationToken.getUserId());
+
+        if (customer == null)
+            throw new CustomerNotFoundException("Customer not found");
+
+        customer.setVerified(true);
+
+        customerRepository.save(customer);
+
+        verificationTokenRepository.delete(verificationToken);
+    }
+
+    @Override
+    public void verifyCustomer(String userId) throws MessagingException {
+
+        Customer customer = customerRepository.getCustomerByUserId(userId);
+
+        if (customer == null)
+            throw new CustomerNotFoundException("Customer not found");
+
+        if (customer.isVerified())
+            throw new InvalidRequestException("Customer already verified");
+
+        VerificationToken verificationToken = verificationTokenRepository.getVerificationTokenByUserId(userId);
+
+
+        if (verificationToken != null) {
+            if (!Objects.equals(verificationToken.getEmail(), customer.getEmail())) {
+                verificationTokenRepository.delete(verificationToken);
+                sendVerificationEmail(userId, customer.getEmail());
+                return;
+            }
+            Calendar cal = Calendar.getInstance();
+            if (verificationToken.getExpiryDate().after(cal.getTime())) {
+                throw new InvalidRequestException("Token already sent, please check your email, otherwise try again in 15 minutes");
+            }
+            verificationTokenRepository.delete(verificationToken);
+        }
+
+        sendVerificationEmail(userId, customer.getEmail());
+
+    }
+
+    public void sendVerificationEmail(String userId, String email) throws MessagingException {
+        VerificationToken verificationToken = new VerificationToken(userId, email);
+
+        verificationTokenRepository.save(verificationToken);
+
+
+        HashMap<String, String> emailParams = new HashMap<>();
+
+
+        emailParams.put("url", frontendDomain + "verify/email/" + verificationToken.getEmail() + "/" + verificationToken.getToken());
+
+        emailService.sendEmail(email, "Verification de couriel/Verify your email", "verify-email", emailParams);
+
+
+    }
 
 }

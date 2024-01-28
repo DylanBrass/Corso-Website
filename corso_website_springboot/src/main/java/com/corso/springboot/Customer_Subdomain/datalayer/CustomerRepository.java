@@ -13,8 +13,10 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     boolean existsByUserId(String userId);
 
 
-    List<Customer> findAllByNameStartingWith(String name);
+    List<Customer> findAllByNameStartingWithAndVerified(String name,boolean isVerified);
 
-    List<Customer> findAllByEmailStartingWith(String email);
+    List<Customer> findAllByEmailStartingWithAndVerified(String email, boolean isVerified);
+
+    Customer getCustomerByEmailAndUserId(String email, String userId);
 
 }

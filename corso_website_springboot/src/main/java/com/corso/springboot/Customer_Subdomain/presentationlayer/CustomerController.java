@@ -7,6 +7,7 @@ import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Review_Subdomain.businesslayer.ReviewService;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.email.datalayer.VerificationTokenRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,7 @@ public class CustomerController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<CustomerResponse> createCustomer(@AuthenticationPrincipal OidcUser principal,
-                                                           @Valid @RequestBody CustomerRequest customerRequest) {
+                                                           @Valid @RequestBody CustomerRequest customerRequest) throws MessagingException {
         String userId = principal.getSubject();
         log.info("Create customer with userId: {}", userId);
 
@@ -83,7 +84,7 @@ public class CustomerController {
     @PutMapping
     @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal OidcUser principal,
-                                                           @Valid @RequestBody CustomerRequest customerRequest) {
+                                                           @Valid @RequestBody CustomerRequest customerRequest) throws MessagingException {
         String userId = principal.getSubject();
         log.info("Update customer with userId: {}", userId);
 
@@ -141,5 +142,18 @@ public class CustomerController {
         String userId = principal.getSubject();
         log.info("Update review with userId: {}", userId);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateCustomerReview(reviewId, userId, reviewUpdateRequest));
+    }
+
+
+    @PostMapping("/request/verification")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<Void> verifyCustomer(@AuthenticationPrincipal OidcUser principal) throws MessagingException {
+        String userId = principal.getSubject();
+        log.info("Verify customer with userId: {}", userId);
+
+        customerService.verifyCustomer(userId);
+
+        return ResponseEntity.noContent().build();
+
     }
 }
