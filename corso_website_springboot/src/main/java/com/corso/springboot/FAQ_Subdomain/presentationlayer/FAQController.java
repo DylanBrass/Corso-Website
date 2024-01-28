@@ -5,6 +5,7 @@ import com.corso.springboot.FAQ_Subdomain.businesslayer.FAQService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,13 +45,19 @@ public class FAQController {
     }
 
 
-   @PreAuthorize("hasAnyAuthority('Admin')")
+    @Cacheable(value = "faq", key = "#faqId")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/{faqId}")
     public ResponseEntity<FAQResponse> getFaqByFaqId(@PathVariable String faqId){
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFaqByFaqId(faqId));
     }
 
-    @CacheEvict(value = "faqsPreferred", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "faqs", allEntries = true),
+            @CacheEvict(value = "faqsCount", allEntries = true),
+            @CacheEvict(value = "faqsPreferred", allEntries = true),
+            @CacheEvict(value = "faq", key = "#faqId")
+    })
     @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/{faqId}")
     public ResponseEntity<FAQResponse> deleteFaqByFaqId(@PathVariable String faqId){
@@ -58,10 +65,22 @@ public class FAQController {
     }
 
 
+    @Cacheable(value = "faqsCount", key = "#root.methodName")
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/count")
     public ResponseEntity<Integer> getFAQCount() {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFAQCount());
+    }
+    @Caching(evict = {
+            @CacheEvict(value = "faqs", allEntries = true),
+            @CacheEvict(value = "faqsCount", allEntries = true),
+            @CacheEvict(value = "faqsPreferred", allEntries = true),
+            @CacheEvict(value = "faq", key = "#faqId")
+    })
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PutMapping("/{faqId}")
+    public ResponseEntity<FAQResponse> updateFaqByFaqId(@PathVariable String faqId, @RequestBody FAQRequest faqRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(faqService.modifyFAQ(faqId, faqRequest));
     }
 
 }

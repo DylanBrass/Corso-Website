@@ -5,6 +5,7 @@ import com.corso.springboot.FAQ_Subdomain.datalayer.FAQ;
 import com.corso.springboot.FAQ_Subdomain.datalayer.FAQRepository;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQRequestMapper;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQResponseMapper;
+import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQResponse;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.ThreeFAQsRequest;
 import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
@@ -90,6 +91,24 @@ public class FAQServiceImpl implements FAQService{
     public Integer getFAQCount() {
         return faqRepository.countFAQBy();
     }
+
+    @Override
+    public FAQResponse modifyFAQ(String faqId, FAQRequest faqRequest) {
+        FAQ faqToUpdate = faqRepository.getFAQByFAQId_FAQId(faqId);
+
+        if (faqToUpdate == null) {
+            throw new FAQNotFoundException("FAQ not found.");
+        }
+
+        faqToUpdate.setQuestion(faqRequest.getQuestion());
+        faqToUpdate.setAnswer(faqRequest.getAnswer());
+        faqToUpdate.setPreference(faqRequest.isPreference());
+
+        FAQ updatedFAQ = faqRepository.save(faqToUpdate);
+
+        return faqResponseMapper.toFAQResponse(updatedFAQ);
+    }
+
 
 
 }
