@@ -96,6 +96,13 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.getReviewByReviewIdAndUserId(reviewId, userId));
     }
 
+    
+    @Caching(evict = {
+            @CacheEvict(value = "reviewsPinned", allEntries = true),
+            @CacheEvict(value = "reviewCountPinned", allEntries = true),
+            @CacheEvict(value = "reviewCount", allEntries = true)       
+
+    })
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<Void> deleteCustomerReview(@AuthenticationPrincipal OidcUser principal, @PathVariable String reviewId) throws MessagingException {
