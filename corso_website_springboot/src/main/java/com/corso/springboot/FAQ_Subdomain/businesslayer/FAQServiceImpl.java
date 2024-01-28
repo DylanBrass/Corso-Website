@@ -94,20 +94,21 @@ public class FAQServiceImpl implements FAQService{
 
     @Override
     public FAQResponse modifyFAQ(String faqId, FAQRequest faqRequest) {
-
         FAQ faqToUpdate = faqRepository.getFAQByFAQId_FAQId(faqId);
 
         if (faqToUpdate == null) {
             throw new FAQNotFoundException("FAQ not found.");
         }
 
-        FAQ updatedFAQ = faqRequestMapper.toFAQ(faqRequest);
-        updatedFAQ.setId(faqToUpdate.getId());
-        updatedFAQ.setFAQId(faqToUpdate.getFAQId());
-        updatedFAQ.setPreference(faqToUpdate.isPreference());
+        faqToUpdate.setQuestion(faqRequest.getQuestion());
+        faqToUpdate.setAnswer(faqRequest.getAnswer());
+        faqToUpdate.setPreference(faqRequest.isPreference());
 
-        return faqResponseMapper.toFAQResponse(faqRepository.save(updatedFAQ));
+        FAQ updatedFAQ = faqRepository.save(faqToUpdate);
+
+        return faqResponseMapper.toFAQResponse(updatedFAQ);
     }
+
 
 
 }
