@@ -4,11 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #444;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        a:hover {
+            background-color: #005f73;
+        }
+        p {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
 <h1>Verification de votre couriel</h1>
 
+<p>Cet email a été envoyé pour vérifier l'adresse courriel que vous avez saisie sur notre site web. Si vous n'avez pas demandé cette vérification ou si ce n'est pas votre email, veuillez contacter notre équipe à (514) 703-8552 ou corsoelectriqueinc@gmail.com </p>
 
 <a th:href="${url}" target="_blank">
     Cliquez ici pour verifier votre couriel
