@@ -235,7 +235,7 @@ function ProfilePage() {
 
                                         </CCarousel>
                                         :
-                                        <CCarousel>
+                                        <CCarousel interval={false}>
                                             {orders.map((order: Order) => (
 
                                                 <CCarouselItem key={order.orderTrackingNumber}
