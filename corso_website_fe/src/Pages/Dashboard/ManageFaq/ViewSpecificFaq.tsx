@@ -50,7 +50,7 @@ function ViewFaq() {
 
     const saveFaq = async () => {
         try {
-            const response = await axios.put(`${process.env.REACT_APP_BE_HOST}api/v1/corso/faqs/${faqId}`, faqData, {
+            await axios.put(`${process.env.REACT_APP_BE_HOST}api/v1/corso/faqs/${faqId}`, faqData, {
                 headers: {
                     // @ts-ignore
                     'X-XSRF-TOKEN': auth.getXsrfToken(),
