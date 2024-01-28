@@ -152,4 +152,12 @@ backend:
 website:
   domain: corso-dev.com
 
+logging:
+  level:
+    root: INFO
+    com.corso: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+
 spring.datasource.hikari.initializationFailTimeout: 60000

@@ -5,15 +5,16 @@ import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerRespons
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import org.reactivestreams.Publisher;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 
 public interface CustomerService {
     CustomerResponse getCustomerByUserId(String userId);
 
-    CustomerResponse createCustomer(CustomerRequest customerRequest, String userId);
+    CustomerResponse createCustomer(CustomerRequest customerRequest, String userId) throws MessagingException;
 
-    CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId);
+    CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId) throws MessagingException;
 
     void deleteCustomer(String userId);
 
@@ -21,4 +22,7 @@ public interface CustomerService {
 
     List<CustomerResponse> getCustomerByQueryParams(Map<String, String> requestParams);
 
+    void verifyEmail(String token,String email);
+
+    void verifyCustomer(String userId) throws MessagingException;
 }

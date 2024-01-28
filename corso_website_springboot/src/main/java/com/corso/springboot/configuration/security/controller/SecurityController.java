@@ -1,6 +1,8 @@
 package com.corso.springboot.configuration.security.controller;
 
+import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
+import com.corso.springboot.configuration.security.models.VerifyEmailRequest;
 import com.corso.springboot.configuration.security.service.Auth0LoginService;
 
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
@@ -9,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -34,6 +37,7 @@ public class SecurityController {
 
     private final Auth0LoginService auth0LoginService;
     private final Auth0ManagementService auth0ManagementService;
+    private final CustomerService customerService;
 
     @Value("${okta.oauth2.groupsClaim}")
     private String roleTokenLocation;
@@ -114,5 +118,21 @@ public class SecurityController {
         return ResponseEntity.ok().body(auth0ManagementService.getUserInfo(userId));
     }
 
+
+    @PostMapping("/verify")
+    public ResponseEntity<Void> verifyUser(@RequestBody VerifyEmailRequest verifyEmailRequest) throws IOException, InterruptedException {
+
+        String token = verifyEmailRequest.getToken();
+        String email = verifyEmailRequest.getEmail();
+
+
+        if (token == null || email == null)
+            return ResponseEntity.badRequest().build();
+
+
+        customerService.verifyEmail(token, email);
+
+        return ResponseEntity.ok().build();
+    }
 
 }

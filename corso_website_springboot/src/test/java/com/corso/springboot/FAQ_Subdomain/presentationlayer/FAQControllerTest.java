@@ -211,7 +211,11 @@ class FAQControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(Integer.class).isEqualTo(expectedCount);
+                .expectBody().jsonPath("$").isEqualTo(5);
+
+
     }
+
+
 
 }

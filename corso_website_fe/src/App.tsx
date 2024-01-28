@@ -38,6 +38,7 @@ import ModifyServicePage from "./Pages/Dashboard/UpdateService/ModifyServicePage
 import React from 'react';
 import CustomerViewsSpecificReview from "./Pages/Profile/ManageReviews/CustomerViewsSpecificReview";
 import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpecificGallery";
+import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
 
 
 export default function App() {
@@ -79,6 +80,9 @@ export default function App() {
                         <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>
                         <Route path="/logout" element={<LogoutRedirect/>}/>
                         <Route path="/verify" element={<VerifyRedirect/>}/>
+
+                        <Route path={"/verify/email/:email/:token"} element={<VerifyEmail/>}/>
+
                         <Route path="/external" element={<ExternalHandling/>}/>
                         <Route path={"/services"} element={<ServicesThroughDashboard/>}/>
                         <Route path={"/add-service"} element={<AddServicePage/>}/>

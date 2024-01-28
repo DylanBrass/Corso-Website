@@ -12,7 +12,7 @@ import {useTranslation} from "react-i18next";
 
 function NavigationBar() {
 
-    const [currentIndex, setCurrentIndex] = React.useState(1)
+    const auth = useAuth()
 
 
     const languages = ["fr", "en"]
@@ -21,11 +21,11 @@ function NavigationBar() {
 
     const {t, i18n} = useTranslation();
 
-    const auth = useAuth()
 
     const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng);
+        i18n.changeLanguage(lng)
     }
+    const [currentIndex, setCurrentIndex] = React.useState(1)
 
 
     useEffect(() => {

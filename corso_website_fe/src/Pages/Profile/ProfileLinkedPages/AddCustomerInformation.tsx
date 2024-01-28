@@ -6,29 +6,35 @@ import swal from "sweetalert";
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
+import {useNavigate} from "react-router";
 
 
-
-function AddCustomerInformation(){
+function AddCustomerInformation() {
     const auth = useAuth();
+
 
     const [hasProfile, setHasProfile] = useState(false);
 
+    const [isVerified, setIsVerified] = useState(false);
 
-    const { ref } = usePlacesWidget({
+    const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const {ref} = usePlacesWidget({
         apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
         onPlaceSelected: (place) => {
             try {
                 document.getElementById("city")!.setAttribute("value", place.address_components[2].long_name)
                 document.getElementById("postalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
-                
-            }catch (e) {
-                
+
+            } catch (e) {
+
             }
         },
         options: {
             types: ["address"],
-            componentRestrictions: { country: "ca" },
+            componentRestrictions: {country: "ca"},
         }
     })
 
@@ -41,7 +47,7 @@ function AddCustomerInformation(){
 
 
         checkIfProfileExists().then(r => {
-            
+
         })
 
 
@@ -50,24 +56,26 @@ function AddCustomerInformation(){
 
 
     const checkIfProfileExists = async () => {
-        await axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers?simpleCheck=true", {
+        await axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers?simpleCheck=true", {
             headers: {
                 // @ts-ignore
                 "X-XSRF-TOKEN": auth.getXsrfToken(),
             }
         }).then(r => {
-            
+
             if (r.status === 200) {
                 setHasProfile(true);
-                
-                axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
+
+                axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
                     headers: {
                         // @ts-ignore
                         "X-XSRF-TOKEN": auth.getXsrfToken(),
                     },
                 }).then(r => {
                     if (r.status === 200) {
-                        
+
+                        setIsVerified(r.data.verified)
+
                         document.getElementById("name")!.setAttribute("value", r.data.name);
                         document.getElementById("email")!.setAttribute("value", r.data.email);
                         document.getElementById("address")!.setAttribute("value", r.data.address);
@@ -78,7 +86,7 @@ function AddCustomerInformation(){
                             document.getElementById("apartmentNumber")!.setAttribute("value", r.data.apartmentNumber);
                     }
                 }).catch(e => {
-                        
+
                     }
                 )
             } else {
@@ -87,8 +95,9 @@ function AddCustomerInformation(){
                 document.getElementById("email")!.setAttribute("value", Cookies.get("email")!);
             }
         }).catch(e => {
-                
+
                 setHasProfile(false);
+                setIsVerified(true)
                 document.getElementById("name")!.setAttribute("value", Cookies.get("username")!);
                 document.getElementById("email")!.setAttribute("value", Cookies.get("email")!);
             }
@@ -97,9 +106,11 @@ function AddCustomerInformation(){
 
     }
 
+
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        setIsLoading(true);
         const phoneInput = document.getElementById("phone") as HTMLInputElement;
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
@@ -137,17 +148,23 @@ function AddCustomerInformation(){
             apartmentNumber: data.get("apartmentNumber")
         };
         if (hasProfile) {
-            axios.put(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", body, {
+            axios.put(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", body, {
                 headers: {
                     // @ts-ignore
                     "X-XSRF-TOKEN": auth.getXsrfToken(),
                 },
             }).then(r => {
                 if (r.status === 200) {
-                    
+                    if (Cookies.get("email") !== r.data.email)
+                        swal("Profile Updated Successfully", "Please verify your new email address, otherwise we will use your verified one!", "success").then(r => {
+                            navigate(-1)
+                        })
+                    else swal("Profile Updated Successfully", "", "success").then(r => {
+                        navigate(-1)
+                    })
+
                     Cookies.set("username", r.data.name);
                     Cookies.set("email", r.data.email);
-                    swal("Profile Updated Successfully", "", "success")
                 }
             })
                 .catch(e => {
@@ -165,10 +182,12 @@ function AddCustomerInformation(){
                         // @ts-ignore
                         auth.authError(e.response.status)
                     })
-                });
+                }).finally(() => {
+                setIsLoading(false);
+            })
         } else {
             axios
-                .post(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", body, {
+                .post(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", body, {
                     headers: {
                         // @ts-ignore
                         "X-XSRF-TOKEN": auth.getXsrfToken(),
@@ -176,10 +195,13 @@ function AddCustomerInformation(){
                 })
                 .then((r: any) => {
                     if (r.status === 201) {
-                        
+
                         Cookies.set("username", r.data.name);
                         Cookies.set("email", r.data.email);
-                        swal("Profile Created Successfully", "", "success")
+                        swal("Profile Created Successfully", "Please verify your new email address, otherwise we will use your verified one!", "success")
+                            .then(r => {
+                                navigate(-1)
+                            })
                         setHasProfile(true);
                     }
                 }).catch(e => {
@@ -198,6 +220,8 @@ function AddCustomerInformation(){
                     // @ts-ignore
                     auth.authError(e.response.status)
                 })
+            }).finally(() => {
+                setIsLoading(false);
             })
         }
     };
@@ -207,22 +231,22 @@ function AddCustomerInformation(){
         event.preventDefault();
 
         try {
-            const response = await axios.delete(process.env.REACT_APP_BE_HOST+"api/v1/corso/customers", {
+            const response = await axios.delete(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
                 headers: {
                     // @ts-ignore
                     "X-XSRF-TOKEN": auth.getXsrfToken(),
                 }
             });
 
-            
+
             if (response.status === 204) {
-                
+
                 Cookies.remove("username");
                 Cookies.remove("email");
 
                 await swal("Profile Deleted Successfully", "Only your default profile was kept (username and email)!", "success");
 
-                axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/security/user-info", {
+                axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/security/user-info", {
 
                     headers: {
                         // @ts-ignore
@@ -241,34 +265,36 @@ function AddCustomerInformation(){
                     document.getElementById("city")!.setAttribute("value", "");
                     document.getElementById("apartmentNumber")!.setAttribute("value", "");
                 }).catch(e => {
-                        
+
                         if (e.response.status === 401 || e.response.status === 403) {
                             // @ts-ignore
                             auth.authError(e.response.status);
-                        }else if(e.response.status === 404){
+                        } else if (e.response.status === 404) {
                             swal("No Profile Found", "You don't have a profile yet!", "warning")
-                        }else {
+                        } else {
                             swal("Error!", e.response.data.message, "error")
                         }
                     }
                 )
                 setHasProfile(false);
+
+                setIsVerified(true)
             } else {
                 swal("Error!", "Something went wrong", "error");
             }
-        } catch (e:any) {
+        } catch (e: any) {
             if (e.response.status === 401 || e.response.status === 403) {
                 // @ts-ignore
                 auth.authError(e.response.status);
-            }else if(e.response.status === 404){
+            } else if (e.response.status === 404) {
                 swal("No Profile Found", "You don't have any information saved !", "warning")
-            }else {
+            } else {
                 swal("Error!", e.response.data.message, "error")
             }
         }
     };
 
-    return(
+    return (
         <div className={"h-100"} style={{
             backgroundColor: "#F3F3F3",
             minHeight: "100vh",
@@ -291,18 +317,47 @@ function AddCustomerInformation(){
                                 Name:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="username" className="form-control mb-2" placeholder="Name"
+                                }} type="text" name="username" className="form-control mb-2 " placeholder="Name"
                                        id={"name"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
-                            <label>
-                                Email:
-                                <input onKeyDown={(e) => {
-                                    e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="email" className="form-control mb-2" placeholder="Email"
-                                       id={"email"}
-                                       required={true}/>
+                            <label className={"mt-2"}>
+                                Email {isVerified ? <span className={"col-1 m-auto"}
+                                                          style={{color: "green"}}>(Verified)</span> :
+                                <span className={"mt-auto mb-auto text-end"}
+                                      style={{color: "red"}}>(Not Verified)</span>}:
+                                <div className={"d-flex flex-row"}>
+                                    <div className={"col-10"}>
+                                    <input
+                                            onChange={
+                                                (e) => {
+                                                    if (e.target.value !== Cookies.get("email"))
+                                                        setIsVerified(false)
+
+                                                }
+                                            }
+                                            onKeyDown={(e) => {
+                                                e.key === 'Enter' && e.preventDefault()
+                                            }} type="text" name="email" className="form-control mb-2 col-10"
+                                            placeholder="Email"
+                                            id={"email"}
+                                            required={true}/>
+                                    </div>
+                                    {
+                                        isVerified ?
+                                            <div className={"row col-2 text-end ms-auto"}>
+                                                <h1 className={"text-end"} style={{color: "green"}}>✓</h1>
+
+                                            </div>
+                                            :
+                                            <div className={"row col-2 text-end ms-auto"}>
+                                                <h1 className={"text-end"} style={{color: "red"}}>✗</h1>
+
+                                            </div>
+
+                                    }
+                                </div>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
@@ -371,6 +426,7 @@ function AddCustomerInformation(){
                                         fontWeight: "700",
                                         marginBottom: "20px",
                                     }}
+                                    disabled={isLoading}
                             >
                                 Submit
                             </button>
@@ -384,6 +440,7 @@ function AddCustomerInformation(){
                                 type="submit"
                                 className="btn btn-primary cancel-btn"
                                 id={"delete-btn"}
+                                disabled={!hasProfile}
                             >
                                 Delete Information
                             </button>

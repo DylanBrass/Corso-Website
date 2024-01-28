@@ -10,5 +10,6 @@ public interface CustomerRequestMapper {
 
     @Mapping(ignore = true, target = "userId")
     @Mapping(ignore = true, target = "id")
+    @Mapping(ignore = true, target = "verified")
     Customer toCustomer(CustomerRequest customerRequest);
 }

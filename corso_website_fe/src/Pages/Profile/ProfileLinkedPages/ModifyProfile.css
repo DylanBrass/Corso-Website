@@ -1,59 +1,64 @@
 .profile-box {
-  width: 60%;
-  height: 80%;
+    width: 60%;
+    height: 80%;
 
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.3s ease-in-out;
-  background: #F7F7F7;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  input{
-    color: rgba(0, 0, 0, 0.50);
-    font-family: Nunito;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: 0.6px;
-    width: 100%;
-    border: none;
-    background: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.25);
-    border-radius: 0;
-    padding-left: 80px;
-  }
-  label{
-    color: rgba(0, 0, 0, 0.50);
-    font-family: Nunito;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: 0.4px;
-  }
-  h5{
-    color: rgba(0, 0, 0, 0.50);
-    font-family: Nunito;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: 0.8px;
-  }
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    background: #F7F7F7;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
-    @media screen and (max-width: 768px) {
+    input {
+        color: rgba(0, 0, 0, 0.50);
+        font-family: Nunito;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 0.6px;
+        width: 100%;
+        border: none;
+        background: none;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+        border-radius: 0;
+        padding-left: 80px;
+
+
+    }
+
+    label {
+        color: rgba(0, 0, 0, 0.50);
+        font-family: Nunito;
+        font-size: 10px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 0.4px;
+    }
+
+    h5 {
+        color: rgba(0, 0, 0, 0.50);
+        font-family: Nunito;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 0.8px;
+    }
+
+    @media screen and (max-width: 800px) {
         width: 100%;
         height: 100%;
-        input{
+        input {
             padding-left: 0;
         }
     }
 }
 
-.cancel-btn{
+.cancel-btn {
     border: none;
     width: 100%;
     height: 100%;
@@ -65,29 +70,30 @@
     font-weight: 700;
     margin: auto auto 20px;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         color: #FFFFFF;
         background: #E34234;
     }
 }
+
 .profile-page {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .swal-modal .swal-text {
-  text-align: center;
+    text-align: center;
 }
 
 .swal-footer {
-  text-align: center;
+    text-align: center;
 }
 
-.swal-button{
+.swal-button {
     background-color: #064BEC;
     border-radius: 5px;
     border: none;
