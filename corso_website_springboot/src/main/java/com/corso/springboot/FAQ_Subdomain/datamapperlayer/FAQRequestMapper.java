@@ -20,10 +20,13 @@ public interface FAQRequestMapper {
             @Mapping(target = "answer", ignore = true),
     })
     FAQ toThreeFAQsRequest(ThreeFAQsRequest threeFAQsRequest);
+
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "FAQId", ignore = true)
+            @Mapping(target = "FAQId", ignore = true),
     })
-    FAQ toFAQ(FAQRequest FAQRequest);
+    FAQ toFAQ(FAQRequest faqRequest);
+
+
 
 }

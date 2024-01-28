@@ -2,6 +2,7 @@ package com.corso.springboot.FAQ_Subdomain.businesslayer;
 
 
 import com.corso.springboot.FAQ_Subdomain.datalayer.FAQ;
+import com.corso.springboot.FAQ_Subdomain.datalayer.FAQIdentifier;
 import com.corso.springboot.FAQ_Subdomain.datalayer.FAQRepository;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQRequestMapper;
 import com.corso.springboot.FAQ_Subdomain.datamapperlayer.FAQResponseMapper;
@@ -107,6 +108,14 @@ public class FAQServiceImpl implements FAQService{
         FAQ updatedFAQ = faqRepository.save(faqToUpdate);
 
         return faqResponseMapper.toFAQResponse(updatedFAQ);
+    }
+
+
+    @Override
+    public FAQResponse createFaq(FAQRequest faqRequest) {
+        FAQ faq = faqRequestMapper.toFAQ(faqRequest);
+        faq.setFAQId(new FAQIdentifier());
+        return faqResponseMapper.toFAQResponse(faqRepository.save(faq));
     }
 
 

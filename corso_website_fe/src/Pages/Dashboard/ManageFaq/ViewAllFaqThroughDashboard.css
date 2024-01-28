@@ -126,4 +126,15 @@
         margin-left: 10px;
     }
 
+
+
+    .goToFAQBtn {
+        border: none;
+        background-color: white;
+        margin-left: 90%;
+    &:hover {
+    cursor: pointer;
+       }
+    }
+
 }

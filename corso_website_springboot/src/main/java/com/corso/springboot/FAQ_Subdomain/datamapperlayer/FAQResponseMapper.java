@@ -15,6 +15,7 @@ import java.util.List;
 public interface FAQResponseMapper {
 
     @Mapping(expression="java(faq.getFAQId().getFAQId())", target = "FAQId")
+
     FAQResponse toFAQResponse(FAQ faq);
     List<FAQResponse> toFAQsResponse(List<FAQ> faqs);
 

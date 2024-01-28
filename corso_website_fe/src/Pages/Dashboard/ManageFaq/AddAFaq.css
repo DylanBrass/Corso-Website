@@ -1,0 +1,210 @@
+.add-a-faq {
+    text-align: center;
+    color: #000;
+    font-family: Nunito;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.add-a-faq-form {
+    background: #F5F5F5;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    padding-top: 20px;
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 20px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .add-a-faq-title {
+        width: 100%;
+        color: #000;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    .add-a-faq-form-answer-title {
+        width: 100%;
+        color: #000;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+        margin-top: 20px;
+    }
+
+    .add-a-faq-form-question {
+        text-align: center;
+    }
+
+    .add-a-faq-form-question-title {
+        width: 100%;
+        color: #000;
+        text-align: center;
+        font-family: Nunito;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+    & input,
+    & textarea {
+        width: 80%;
+        padding: 6px;
+        margin-bottom: 12px;
+        resize: vertical;
+        min-height: 40px;
+        outline: none;
+        border: none;
+        font-size: 20px;
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
+    }
+
+    textarea {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    & button {
+        color: white;
+        background-color: #064BEC;
+        border: none;
+        padding: 10px 30px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: background-color 0.3s ease;
+    }
+
+    & button:hover {
+        background-color: #0454a4;
+    }
+
+    .faq-image-preview-container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-left: 0;
+        margin-bottom: 10px;
+
+        & .service-image,
+        & .service-icon {
+            width: 100%;
+            height: auto;
+            margin-bottom: 0;
+        }
+    }
+
+    & .placeholder-rectangle,
+    & .placeholder-circle {
+        width: 100%;
+        height: 200px;
+        background-color: #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    & .placeholder-circle {
+        border-radius: 50%;
+    }
+
+    & .grid-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 10px;
+        padding: 10px;
+
+        & .grid-item {
+            text-align: center;
+        }
+
+        & .grid-item-full {
+            grid-column: span 2;
+        }
+    }
+
+    @media (max-width: 1500px) {
+        & input,
+        & textarea {
+            width: 80%;
+            padding: 6px;
+            margin-bottom: 12px;
+            /*box-sizing: border-box;*/
+            resize: vertical;
+            min-height: 40px;
+        }
+    }
+}
+
+.spinner-visible {
+    .spinner {
+        margin-top: 25px;
+    }
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    color: white;
+    border: none;
+    padding: 10px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50px;
+    background: #064BEC;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    @media (max-width: 430px) {
+        padding: 10px 30px;
+        font-size: 13px;
+    }
+
+    .answer-faq-pen-icon {
+        width: 30px;
+        height: 30px;
+        position: fixed;
+        margin-bottom: 100px;
+    }
+
+    .question-faq-pen-icon {
+        width: 30px;
+        height: 30px;
+        position: fixed;
+        margin-right: 10px;
+        margin-bottom: 50%;
+    }
+
+}

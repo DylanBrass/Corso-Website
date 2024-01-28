@@ -11,30 +11,24 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static com.codeborne.selenide.Selenide.*;
 
 @SpringBootTest
-public class DeleteSpecificFAQTest {
+public class DeleteAFAQTest {
 
     @BeforeEach
     void setUp() {
         WebDriverManager.chromedriver().setup();
         open("http://localhost:3000/"); // Open the Corso Main Page
     }
-    private static final Logger logger = LoggerFactory.getLogger(DeleteSpecificFAQTest.class);
-
-
-    /*
-
-    HAVE TO DO IT AFTER I DO MY ADD A FAQ STORY, OTHERWISE IT DOESNT WORK
+    private static final Logger logger = LoggerFactory.getLogger(DeleteAFAQTest.class);
 
 
     @Test
-    public void viewAllFaqByIdTest() {
-        $(By.linkText("LOGIN")).click();
+    public void DeleteAFAQ() {
+        $(By.linkText("CONNEXION")).click();
         $("#username").setValue("Admin");
         $("[name='action']").click();
         $("#password").setValue("Password!!").pressEnter();
         $(By.linkText("DASHBOARD")).click();
         open("http://localhost:3000/manage/faqs");
-
         $(".col-12:nth-child(1)").click();
         sleep(2000);
         $(".col-md-6:nth-child(1) .edit-specific-classBtn > img").click();
@@ -42,6 +36,5 @@ public class DeleteSpecificFAQTest {
 
     }
 
-     */
 
 }

@@ -35,9 +35,11 @@ function ViewFaq() {
                     'X-XSRF-TOKEN': auth.getXsrfToken(),
                 },
             });
+
             console.log("API Response:", response.data);
-            swal("FAQ Deleted Successfully", "", "success");
-            goBack();
+            swal("FAQ Deleted Successfully", "", "success").then(() => {
+                goBack();
+            });
         } catch (error) {
             console.error("API Error:", error);
             swal("FAQ Not Deleted", "", "error");
