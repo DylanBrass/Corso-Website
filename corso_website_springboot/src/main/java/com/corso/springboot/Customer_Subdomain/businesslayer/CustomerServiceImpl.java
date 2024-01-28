@@ -159,9 +159,6 @@ public class CustomerServiceImpl implements CustomerService {
             throw new InvalidRequestException("Token expired");
         }
 
-        if (!verificationToken.getEmail().equals(email))
-            throw new InvalidRequestException("Invalid email");
-
         Customer customer = customerRepository.getCustomerByEmailAndUserId(email, verificationToken.getUserId());
 
         if (customer == null)

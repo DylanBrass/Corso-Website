@@ -1,10 +1,15 @@
 package com.corso.springboot.Customer_Subdomain.presentationlayer;
 
 
+import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.email.datalayer.VerificationToken;
+import com.corso.springboot.email.datalayer.VerificationTokenRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -12,11 +17,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+
+
+
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -28,6 +37,14 @@ class CustomerControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private EmailService emailService;
+
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
 
 
     @Test
@@ -79,14 +96,15 @@ class CustomerControllerIntegrationTest {
                         .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|newuser")).authorities(new SimpleGrantedAuthority("Customer")))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "    \"phone\": \"4506597338\",\n" +
-                                "    \"address\": \"123 Main St\",\n" +
-                                "    \"email\": \"email@email.com\",\n" +
-                                "    \"city\": \"New York\",\n" +
-                                "    \"postalCode\": \"J5R 5J4\",\n" +
-                                "    \"apartmentNumber\": \"1\"\n" +
-                                "}"))
+                        .content("""
+                                {
+                                    "phone": "4506597338",
+                                    "address": "123 Main St",
+                                    "email": "email@email.com",
+                                    "city": "New York",
+                                    "postalCode": "J5R 5J4",
+                                    "apartmentNumber": "1"
+                                }"""))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.phone").value("4506597338"))
                 .andExpect(jsonPath("$.address").value("123 Main St"))
@@ -113,14 +131,14 @@ class CustomerControllerIntegrationTest {
                         .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|newuser")))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "    \"phone\": \"4506597338\",\n" +
-                                "    \"address\": \"123 Main St\",\n" +
-                                "    \"email\": \"emailemail.com\",\n" +
-                                "    \"city\": \"New York\",\n" +
-                                "    \"postalCode\": \"J5R 5J4\",\n" +
-                                "    \"apartmentNumber\": \"1\"\n" +
-                                "}"))
+                        .content("""
+                                {    "phone": "4506597338",
+                                    "address": "123 Main St",
+                                    "email": "emailemail.com",
+                                    "city": "New York",
+                                    "postalCode": "J5R 5J4",
+                                    "apartmentNumber": "1"
+                                }"""))
                 .andExpect(status().isBadRequest());
 
     }
@@ -217,6 +235,9 @@ class CustomerControllerIntegrationTest {
 
     @Test
     void customerRequestsToCancelOrderRequest_ShouldSucceed() throws Exception {
+
+        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
+
         mockMvc.perform(delete(BASE_URI_CUSTOMERS + "/orders/a0119367-4963-4019-b433-ba639fdf6b41")
                         .with(csrf())
                         .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|65702e81e9661e14ab3aac89"))
@@ -259,6 +280,8 @@ class CustomerControllerIntegrationTest {
 
     @Test
     void updateOrderRequest_ShouldSucceed() throws Exception {
+
+        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
 
 
         mockMvc.perform(patch(BASE_URI_CUSTOMERS + "/orders/a0119367-4963-4019-b433-ba639fdf6b41")
@@ -371,5 +394,122 @@ class CustomerControllerIntegrationTest {
     }
 
 
+    @Test
+    void verifyCustomer_ShouldSucceed() throws Exception {
 
+        verificationTokenRepository.deleteAll();
+
+
+
+        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
+
+
+        mockMvc.perform(post(BASE_URI_CUSTOMERS + "/request/verification")
+
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|6543210987"))
+                                .authorities(new SimpleGrantedAuthority("Customer"))))
+                .andExpect(status().isNoContent());
+
+
+    }
+
+    @Test
+    void verifyNotFoundCustomer_ShouldReturn404() throws Exception {
+
+
+        mockMvc.perform(post(BASE_URI_CUSTOMERS + "/request/verification")
+
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|wrong"))
+                                .authorities(new SimpleGrantedAuthority("Customer"))))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    void verifyAlreadyVerifiedCustomer_ShouldReturn400() throws Exception {
+
+        mockMvc.perform(post(BASE_URI_CUSTOMERS + "/request/verification")
+
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789"))
+                                .authorities(new SimpleGrantedAuthority("Customer"))))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+
+    @Test
+    void verifyUserWithExpiredAlreadyExistingToken_ShouldSucceed() throws Exception {
+
+        VerificationToken verificationToken = new VerificationToken("test@email.com",
+                "123456789");
+
+        verificationTokenRepository.save(verificationToken);
+
+
+        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
+
+
+        mockMvc.perform(post(BASE_URI_CUSTOMERS + "/request/verification")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|6543210987"))
+                                .authorities(new SimpleGrantedAuthority("Customer"))))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.message").value("Email already sent, please check your inbox, otherwise try again in 15 minutes"));
+
+
+
+    }
+
+
+    @Test
+    void verifyUserWithExpiredAlreadyExistingTokenSameEmail_ShouldSucceed() throws Exception {
+
+        verificationTokenRepository.deleteAll();
+
+        VerificationToken verificationToken = new VerificationToken("auth0|6543210987",
+                "sophia.lee@outlook.com");
+
+        verificationTokenRepository.save(verificationToken);
+
+
+        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
+
+
+        mockMvc.perform(post(BASE_URI_CUSTOMERS + "/request/verification")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|6543210987"))
+                                .authorities(new SimpleGrantedAuthority("Customer"))))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.message").value("Email already sent, please check your inbox, otherwise try again in 15 minutes"));
+
+
+
+    }
+
+
+    @Test
+    void verifyUserWithExpiredAlreadyExistingTokenDifferentEmail_ShouldSucceed() throws Exception {
+
+        verificationTokenRepository.deleteAll();
+
+        VerificationToken verificationToken = new VerificationToken("auth0|6543210987",
+                "test.lee@outlook.com");
+
+        verificationTokenRepository.save(verificationToken);
+
+
+        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
+
+
+        mockMvc.perform(post(BASE_URI_CUSTOMERS + "/request/verification")
+                        .with(csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("auth0|6543210987"))
+                                .authorities(new SimpleGrantedAuthority("Customer"))))
+                .andExpect(status().isNoContent());
+
+
+
+    }
 }

@@ -45,25 +45,25 @@ VALUES
     ('7dcca21e-4d7b-4e8c-8c58-1a044acba519', 'auth0|65702e81e9661e14ab3aac89', 'David Brown', '2023-06-15', 'Noticed a significant improvement in website traffic after SEO optimization. Thank you!', 5, false);
 
 -- Inserting a customer named Dylan Brassard
-INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
-VALUES (16, 'facebook|311881271807762', 'Dylan Brassard', 'dylan.brassard@outlook.com', '', '3333 Street', 'J5R 5J4', '', 'City');
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city, verified)
+VALUES (16, 'facebook|311881271807762', 'Dylan Brassard', 'dylan.brassard@outlook.com', '', '3333 Street', 'J5R 5J4', '', 'City',true);
 
 -- Inserting a customer named Alice Doe
-INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
-VALUES (17, 'google|123456789', 'Alice Doe', 'alice.doe@gmail.com', '+1234567890', '123 Main St', 'A1B 2C3', 'Apt 5', 'Cityville');
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city, verified)
+VALUES (17, 'google|123456789', 'Alice Doe', 'alice.doe@gmail.com', '+1234567890', '123 Main St', 'A1B 2C3', 'Apt 5', 'Cityville', true);
 
 -- Inserting a customer named John Smith
-INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
-VALUES (18, 'apple|987654321', 'John Smith', 'john.smith@yahoo.com', '+9876543210', '456 Oak St', 'X0X 1Y2', '', 'Towndale');
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city, verified)
+VALUES (18, 'apple|987654321', 'John Smith', 'john.smith@yahoo.com', '+9876543210', '456 Oak St', 'X0X 1Y2', '', 'Towndale', true);
 
 -- Inserting a customer named Emma Johnson
-INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
-VALUES (19, 'auth0|456789012', 'Emma Johnson', 'emma.johnson@hotmail.com', '+1122334455', '789 Pine St', 'M1N 2P3', 'Apt 10', 'Metrocity');
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city, verified)
+VALUES (19, 'auth0|456789012', 'Emma Johnson', 'emma.johnson@hotmail.com', '+1122334455', '789 Pine St', 'M1N 2P3', 'Apt 10', 'Metrocity', true);
 
 -- Inserting a customer named Michael Brown
-INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
-VALUES (20, 'auth0|9876543210', 'Michael Brown', 'michael.brown@gmail.com', '+9876543210', '101 Elm St', 'Z9Z 8X7', '', 'Greenville');
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city, verified)
+VALUES (20, 'auth0|9876543210', 'Michael Brown', 'michael.brown@gmail.com', '+9876543210', '101 Elm St', 'Z9Z 8X7', '', 'Greenville', true);
 
 -- Inserting a customer named Sophia Lee
-INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city)
-VALUES (21, 'auth0|6543210987', 'Sophia Lee', 'sophia.lee@outlook.com', '+1122334455', '555 Maple St', 'K4K 7L6', 'Apt 3', 'Techtown');
+INSERT INTO `customers` (id, user_id, name, email, phone, address, postal_code, apartment_number, city, verified)
+VALUES (21, 'auth0|6543210987', 'Sophia Lee', 'sophia.lee@outlook.com', '+1122334455', '555 Maple St', 'K4K 7L6', 'Apt 3', 'Techtown', false);

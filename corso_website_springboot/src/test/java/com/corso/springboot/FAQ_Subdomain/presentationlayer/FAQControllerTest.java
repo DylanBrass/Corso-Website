@@ -155,4 +155,21 @@ class FAQControllerTest {
                 .exchange().expectStatus().isNotFound();
     }
 
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getFaqCount() {
+
+        webTestClient.get()
+                .uri(BASE_URI_FAQS + "/count")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$").isEqualTo(5);
+
+
+    }
+
+
+
 }

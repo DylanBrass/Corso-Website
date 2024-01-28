@@ -7,6 +7,8 @@ import com.corso.springboot.Customer_Subdomain.datamapperlayer.CustomerResponseM
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerRequest;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerResponse;
 import com.corso.springboot.Order_Subdomain.datalayer.Order;
+import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.email.datalayer.VerificationTokenRepository;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.mail.MessagingException;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 
@@ -38,8 +42,15 @@ class CustomerServiceUnitTest {
     @Mock
     private CustomerRequestMapper customerRequestMapper;
 
+    @Mock
+    private VerificationTokenRepository verificationTokenRepository;
+
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
     private CustomerServiceImpl customerService;
+
     @Test
     void getCustomerByUserId() {
         String userId = "google|123456789";
@@ -69,7 +80,6 @@ class CustomerServiceUnitTest {
         when(customerResponseMapper.toCustomerResponse(mockCustomer)).thenReturn(mockCustomerResponse);
 
         CustomerResponse result = customerService.getCustomerByUserId(userId);
-
 
 
         assertEquals(mockCustomer.getAddress(), result.getAddress());
@@ -124,6 +134,11 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
+
+        when(verificationTokenRepository.save(Mockito.any())).thenReturn(null);
+
+        when(emailService.sendEmail(anyString(), anyString(), anyString(), anyMap())).thenReturn(200);
+
         when(customerRepository.existsByUserId(userId)).thenReturn(false);
 
         when(customerRequestMapper.toCustomer(mockCustomerRequest)).thenReturn(mockCustomer);
@@ -147,7 +162,6 @@ class CustomerServiceUnitTest {
         assertEquals(mockCustomer.getPhone(), result.getPhone());
 
         assertEquals(mockCustomer.getPostalCode(), result.getPostalCode());
-
 
 
     }
@@ -186,7 +200,6 @@ class CustomerServiceUnitTest {
                 .apartmentNumber("Apt 5")
                 .city("new city")
                 .build();
-
 
 
         when(customerRepository.getCustomerByUserId(userId)).thenReturn(mockCustomerExisting);
@@ -298,7 +311,6 @@ class CustomerServiceUnitTest {
     }
 
 
-
     @Test
     void deleteFailsForCustomer() {
 
@@ -309,6 +321,7 @@ class CustomerServiceUnitTest {
         assertThrows(InvalidRequestException.class, () -> customerService.deleteCustomer(userId));
 
     }
+
     @Test
     void checkIfCustomerExists() {
 
@@ -323,7 +336,7 @@ class CustomerServiceUnitTest {
 
 
     @Test
-    void getCustomerByName(){
+    void getCustomerByName() {
         Map<String, String> requestParams = Map.of("name", "Alice");
 
         Customer mockCustomer = Customer.builder()
@@ -336,7 +349,7 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
-        when(customerRepository.findAllByNameStartingWithAndVerified("Alice",true)).thenReturn(List.of(mockCustomer));
+        when(customerRepository.findAllByNameStartingWithAndVerified("Alice", true)).thenReturn(List.of(mockCustomer));
 
         CustomerResponse mockCustomerResponse = CustomerResponse.builder()
                 .name("Alice Doe")
@@ -375,7 +388,7 @@ class CustomerServiceUnitTest {
                 .city("Cityville")
                 .build();
 
-        when(customerRepository.findAllByEmailStartingWithAndVerified(requestParams.get("email"),true)).thenReturn(List.of(mockCustomer));
+        when(customerRepository.findAllByEmailStartingWithAndVerified(requestParams.get("email"), true)).thenReturn(List.of(mockCustomer));
 
         CustomerResponse mockCustomerResponse = CustomerResponse.builder()
                 .name(mockCustomer.getName())
@@ -395,7 +408,6 @@ class CustomerServiceUnitTest {
 
         assertEquals(mockCustomerResponse.getEmail(), result.get(0).getEmail());
     }
-
 
 
 }
