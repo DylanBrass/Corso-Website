@@ -8,7 +8,9 @@
   "testimonials": "Témoignages",
   "answer": "Réponse",
   "viewfaqs": "Voir toutes les FAQ",
-  "anonymousBanner": "Inscrivez-vous aujourd'hui pour nous avoir comme électricien de confiance",
-  "registerNow": "Inscrivez-vous maintenant"
+  "anonymousBannerWelcome": "Bienvenue à Corso",
+  "anonymousBannerRegisterPrompt": "Inscrivez-vous aujourd'hui pour nous avoir comme électricien de confiance",
+  "registerNow": "Inscrivez-vous maintenant",
+  "requestNow": "Demander une commande"
 
 }

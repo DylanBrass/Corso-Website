@@ -8,7 +8,9 @@
   "testimonials": "Testimonials",
   "answer": "Answer",
   "viewfaqs": "View All FAQs",
-  "anonymousBanner": "Register today to have us as your trusted electrician",
-  "registerNow": "Register Now"
+  "anonymousBannerWelcome": "Welcome to Corso",
+  "anonymousBannerRegisterPrompt": "Register today to have us as your trusted electrician",
+  "registerNow": "Register Now",
+  "requestNow": "Request An Order Now"
 
 }
