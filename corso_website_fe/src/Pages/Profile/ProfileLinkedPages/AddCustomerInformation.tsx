@@ -343,10 +343,13 @@ function AddCustomerInformation() {
                         </div>
                         <div className="row w-75 m-auto">
                             <label className={"mt-2"}>
-                                Email:
+                                Email {isVerified ? <span className={"col-1 m-auto"}
+                                                          style={{color: "green"}}>(Verified)</span> :
+                                <span className={"mt-auto mb-auto text-end"}
+                                      style={{color: "red"}}>(Not Verified)</span>}:
                                 <div className={"d-flex flex-row"}>
                                     <div className={"col-10"}>
-                                        <input
+                                    <input
                                             onChange={
                                                 (e) => {
                                                     if (e.target.value !== Cookies.get("email"))
@@ -363,16 +366,14 @@ function AddCustomerInformation() {
                                     </div>
                                     {
                                         isVerified ?
-                                            <div className={"row col-2"}>
-                                                <h1 className={"col-1"} style={{color: "green"}}>✓</h1>
-                                                <span className={"col-1 m-auto"}
-                                                      style={{color: "green"}}>Verified</span>
+                                            <div className={"row col-2 text-end ms-auto"}>
+                                                <h1 className={"text-end"} style={{color: "green"}}>✓</h1>
+
                                             </div>
                                             :
-                                            <div className={"row col-2"}>
-                                                <h1 className={"col-1"} style={{color: "red"}}>✗</h1>
-                                                <span className={"col-1 m-auto"}
-                                                      style={{color: "red"}}>Not Verified</span>
+                                            <div className={"row col-2 text-end ms-auto"}>
+                                                <h1 className={"text-end"} style={{color: "red"}}>✗</h1>
+
                                             </div>
 
                                     }

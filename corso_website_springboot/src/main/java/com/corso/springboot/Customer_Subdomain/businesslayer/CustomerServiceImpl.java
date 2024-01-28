@@ -152,7 +152,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
         if (verificationToken == null)
-            throw new InvalidRequestException("Invalid token");
+            throw new InvalidRequestException("No verification request found");
 
         Calendar cal = Calendar.getInstance();
         if (verificationToken.getExpiryDate().before(cal.getTime())) {
@@ -196,7 +196,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
             Calendar cal = Calendar.getInstance();
             if (verificationToken.getExpiryDate().after(cal.getTime())) {
-                throw new InvalidRequestException("Token already sent, please check your email, otherwise try again in 15 minutes");
+                throw new InvalidRequestException("Email already sent, please check your inbox, otherwise try again in 15 minutes");
             }
             verificationTokenRepository.delete(verificationToken);
         }
@@ -207,6 +207,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void sendVerificationEmail(String userId, String email) throws MessagingException {
         VerificationToken verificationToken = new VerificationToken(userId, email);
+
+        verificationTokenRepository.deleteAll(verificationTokenRepository.getAllByUserId(userId));
 
         verificationTokenRepository.save(verificationToken);
 

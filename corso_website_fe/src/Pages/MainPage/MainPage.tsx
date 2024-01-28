@@ -8,6 +8,7 @@ import Footer from "../../Components/Footer/Footer";
 import FaqPinnedMainPage from "./Main Page Components/FAQ/FaqPinnedMainPage";
 import ReviewPinned from "./Main Page Components/Reviews/ReviewPinned";
 import React from "react";
+import {Outlet} from "react-router-dom";
 
 
 function MainPage() {

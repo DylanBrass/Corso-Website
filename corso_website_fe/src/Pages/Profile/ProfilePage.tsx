@@ -53,6 +53,10 @@ function ProfilePage() {
                 // @ts-ignore
                 auth.authError(e.response.status);
             } else {
+                if (e.response.status === 422) {
+                    swal("Warning!", e.response.data.message, "warning")
+                    return
+                }
                 swal("Error!", e.response.data.message, "error")
             }
         })
@@ -191,29 +195,19 @@ function ProfilePage() {
                                 <h1 className={"contact-title"}>Contact Information</h1>
                                 <p className={"profile-text"}>Phone Number: {phone}</p>
                                 <p className={"profile-text"}>Email: {email}
-                                    <span>
+                                    <span className={"mx-5"}>
                                         {verified ?
-                                            <div className={"row col-2"}>
-                                                <h1 className={"col-1"} style={{color: "green"}}>✓</h1>
-                                                <span className={"col-1 m-auto"}
-                                                      style={{color: "green"}}>Verified</span>
-                                            </div>
+                                            <span style={{color: "green", fontSize: "2.125rem"}}>✓</span>
                                             :
-                                            <div>
-                                                <div className={"row col-2"}>
-                                                    <h1 className={"col-1"} style={{color: "red"}}>
-                                                        ✗
-                                                    </h1>
-                                                    <span className={"col-1 m-auto"}
-                                                          style={{color: "red"}}>Not Verified
-                                                </span>
-
-                                                </div>
-                                                <button className={""} id={"send-verification-btn"}
+                                            <span style={{color: "red", fontSize: "2.125rem"}}>
+                                                        &#x21;
+                                                <button id={"send-verification-btn"}
+                                                        style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}
                                                         onClick={sendVerificationEmail}>
                                                     Resend Email
                                                 </button>
-                                            </div>
+                                                    </span>
+
                                         }
                                     </span>
 
