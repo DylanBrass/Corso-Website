@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "./ViewSpecificFaq.css";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
-import FAQ from "../../../ressources/Models/FAQ";
 import Trash_light from "../../../ressources/images/Trash_light.svg";
 import swal from "sweetalert";
 import { useAuth } from "../../../security/Components/AuthProvider";
+import "./ViewSpecificFaq.css";
 
 function ViewFaq() {
     const auth = useAuth();
-    const [specificFaq, setSpecificFaq] = useState<FAQ | null>(null);
-    const {faqId} = useParams();
-
+    const [faqData, setFaqData] = useState({ question: '', answer: '', preference: false });
+    const { faqId } = useParams();
 
     useEffect(() => {
-        console.log("FAQ ID:", faqId);
-
         axios
             .get(`${process.env.REACT_APP_BE_HOST}api/v1/corso/faqs/${faqId}`)
             .then((response) => {
-                console.log("API Response:", response.data);
-                setSpecificFaq(response.data);
+                setFaqData(response.data);
             })
             .catch((error) => {
                 console.error("API Error:", error);
@@ -31,7 +26,6 @@ function ViewFaq() {
     const goBack = () => {
         window.location.href = "/manage/faqs";
     }
-
 
     const deleteFaq = async () => {
         try {
@@ -50,33 +44,74 @@ function ViewFaq() {
         }
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFaqData({ ...faqData, [e.target.name]: e.target.value });
+    };
 
+    const saveFaq = async () => {
+        try {
+            const response = await axios.put(`${process.env.REACT_APP_BE_HOST}api/v1/corso/faqs/${faqId}`, faqData, {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken(),
+                },
+            });
+            swal("FAQ Updated Successfully", "", "success")
+                .then((value) => {
+                    window.location.href = "/manage/faqs";
+                });
 
-
+        } catch (error) {
+            console.error("API Error:", error);
+            swal("FAQ Not Updated", "", "error");
+        }
+    };
 
     return (
         <div>
             <NavigationBar/>
-
-            <div className="specific-view-faq-container">
-                    <button className={"specific-faq-back-btn"} onClick={goBack}>Back</button>
-                <div className="specific-faq-container">
-                    {specificFaq && (
-                        <div className="specific-faq-main-box">
-
+            <div>
+                <div className="faq-button-container">
+                    <button className="specific-faq-back-btn" onClick={goBack}>Back</button>
+                </div>
+                <div>
+                    <div className="container view-faq-admin-container">
+                        <div className={"faq-button-container"}>
                             <button className="specific-trash-faq-img" onClick={deleteFaq}>
                                 <img src={Trash_light} alt="Trash light"/>
                             </button>
-
-                            <div className="specific-faq-content">
-                                <h2 className="specific-h2">{specificFaq.question}</h2>
-                                <p className="specific-p">{specificFaq.answer}</p>
-                            </div>
                         </div>
-                    )}
+
+                        <div className={"row"}>
+                            <h3>Question</h3>
+                            <input
+                                type="text"
+                                name="question"
+                                value={faqData.question}
+                                onChange={handleInputChange}
+                                className={"input-faq-styling"}
+                            />
+                        </div>
+                        <div className={"row"}>
+                            <h3>Answer</h3>
+                            <textarea
+                                name="answer"
+                                value={faqData.answer}
+                                onChange={handleInputChange}
+                                className={"input-faq-styling"}
+
+                            />
+                        </div>
+                        <div className={"faq-button-container"}>
+                            <button className={"save-faq-button"} onClick={saveFaq}>
+                                Save
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     );
 }
 
