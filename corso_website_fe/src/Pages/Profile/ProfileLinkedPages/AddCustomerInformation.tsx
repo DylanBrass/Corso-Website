@@ -19,6 +19,7 @@ function AddCustomerInformation() {
 
     const navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(false);
 
     const {ref} = usePlacesWidget({
         apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
@@ -107,34 +108,9 @@ function AddCustomerInformation() {
 
 
 
-    const sendVerificationEmail = async () => {
-        axios.post(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers/request/verification", {}, {
-            headers: {
-                // @ts-ignore
-                "X-XSRF-TOKEN": auth.getXsrfToken(),
-            }
-        }).then(r => {
-            if (r.status === 200) {
-                swal("Email Sent Successfully", "Please check your email for a verification link", "success")
-                    .then(r => {
-                        document.getElementById("send-verification-btn")!.setAttribute("disabled", "true")
-                    })
-            }
-        }).catch(e => {
-            if (e.response.status === 401 || e.response.status === 403) {
-                // @ts-ignore
-                auth.authError(e.response.status);
-            } else {
-                swal("Error!", e.response.data.message, "error")
-            }
-        })
-
-    }
-
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        setIsLoading(true);
         const phoneInput = document.getElementById("phone") as HTMLInputElement;
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
@@ -206,7 +182,9 @@ function AddCustomerInformation() {
                         // @ts-ignore
                         auth.authError(e.response.status)
                     })
-                });
+                }).finally(() => {
+                setIsLoading(false);
+            })
         } else {
             axios
                 .post(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", body, {
@@ -242,6 +220,8 @@ function AddCustomerInformation() {
                     // @ts-ignore
                     auth.authError(e.response.status)
                 })
+            }).finally(() => {
+                setIsLoading(false);
             })
         }
     };
@@ -446,6 +426,7 @@ function AddCustomerInformation() {
                                         fontWeight: "700",
                                         marginBottom: "20px",
                                     }}
+                                    disabled={isLoading}
                             >
                                 Submit
                             </button>
@@ -459,6 +440,7 @@ function AddCustomerInformation() {
                                 type="submit"
                                 className="btn btn-primary cancel-btn"
                                 id={"delete-btn"}
+                                disabled={!hasProfile}
                             >
                                 Delete Information
                             </button>
