@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-.Gallery-landing-page{
+.Gallery-landing-page {
+    --cui-gutter-x: 0rem;
+
     & h1 {
         color: #333;
         text-align: center;
         font-family: "Bebas Neue", sans-serif;
-        font-size: 70px;
+        font-size: 60px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -16,7 +18,7 @@
         color: #4058A6;
         text-align: center;
         font-family: "Bebas Neue", sans-serif;
-        font-size: 70px;
+        font-size: 60px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -113,10 +115,12 @@
         .swiper_container {
             height: 47rem;
         }
+
         .swiper-slide {
             width: 28rem !important;
             height: 36rem !important;
         }
+
         .swiper-slide img {
             width: 28rem !important;
             height: 36rem !important;
@@ -210,4 +214,66 @@
 
     }
 
+    .wrapper {
+        position: relative;
+    }
+
+    .img-z-stack {
+        z-index: 1;
+        width: 100%;
+        height: auto;
+        border-radius: 0.3rem;
+        object-fit: cover;
+    }
+
+    .description-z-stack {
+        position: absolute;
+        z-index: 2;
+        top: 73%;
+        left: 42%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: left;
+        width: 90%;
+        padding-left: 3rem;
+        color: rgba(255, 255, 255, 0.75);
+        font-family: Inter, sans-serif;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+    }
+
+    .title-z-stack {
+        position: absolute;
+        z-index: 2;
+        top: 60%;
+        left: 42%;
+        transform: translate(-50%, -50%);
+        text-align: left;
+        width: 90%;
+        padding-left: 3rem;
+        color: #FFF;
+        font-family: "Bebas Neue", serif;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+
+
+    .overlay {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 50%;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        border-radius: 0.3rem;
+    }
+
+
+
 }
+
