@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import './OurPreviousProjects.css';
-import { CCarousel, CCarouselItem, CCarouselCaption, CImage } from "@coreui/react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@coreui/coreui/dist/css/coreui.min.css';
 import axios from "axios";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
+
 
 interface ImageData {
     galleryId: string;
@@ -17,8 +20,7 @@ interface ImageData {
 
 function OurPreviousProjects() {
     const [images, setImages] = useState<ImageData[]>([]);
-
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -34,30 +36,44 @@ function OurPreviousProjects() {
     }, []);
 
     return (
-        <div className={"carousel-box"}>
-            <h1>{t("previousProjects")}</h1>
-            {images.length > 0 && (
-                <CCarousel controls indicators>
-                    {images
-                        .sort((a, b) => a.image_position - b.image_position)
-                        .map((image, index) => {
-                            const aspectRatio = image.width / image.height;
-                            return (
-                                <CCarouselItem key={index} style={{ height: "700px" }}>
-                                    <CImage
-                                        src={image.photo}
-                                        className="d-block w-75 h-auto mx-auto"
-                                        style={{ objectFit: "cover", aspectRatio: `${aspectRatio}` }}
-                                        alt={`Image ${index + 1}`}
-                                    />
-                                    <CCarouselCaption>
-                                        <h3>{image.description}</h3>
-                                    </CCarouselCaption>
-                                </CCarouselItem>
-                            );
-                        })}
-                </CCarousel>
-            )}
+        <div className={"Gallery-landing-page"}>
+            <div className={"row"}>
+                <div className={"col-md-6 col-12 d-flex justify-content-md-end justify-content-center"}>
+                    <h1>{t("previousProjectsPart1")}</h1>
+                </div>
+                <div className={"col-md-6 col-12 d-flex justify-content-md-start justify-content-center"}>
+                    <h1 className={"blue-header"}>{t("previousProjectsPart2")}</h1>
+                </div>
+            </div>
+
+            <Swiper
+                effect={'coverflow'}
+                grabCursor={true}
+                centeredSlides={true}
+                loop={true}
+                slidesPerView={'auto'}
+                coverflowEffect={{
+                    rotate: 0,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 2.5,
+                }}
+                pagination={{ el: '.swiper-pagination', clickable: true }}
+                navigation={{
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                    clickable: true,
+                }}
+                className="swiper_container"
+            >
+                {images.map((image) => (
+                    <SwiperSlide key={image.galleryId}>
+                        <img src={image.photo} alt={image.description} />
+                        <h3>{image.description}</h3>
+                    </SwiperSlide>
+                ))}
+
+            </Swiper>
         </div>
     );
 }
