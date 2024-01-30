@@ -10,6 +10,8 @@ package "FAQ_Subdomain"{
             + getFaqByFaqId(faqId: String): ResponseEntity<FAQResponse>
             + deleteFaqByFaqId(faqId: String): ResponseEntity<FAQResponse>
             + getFAQCount(): ResponseEntity<Integer>
+            + updateFaqByFaqId(faqId: String, faqRequest: FAQRequest): ResponseEntity<FAQResponse>
+            + createFaq(faqRequest: FAQRequest): ResponseEntity<FAQResponse>
         }
         class "FAQRequest" as FAQRequest {
             + question: String
@@ -36,6 +38,8 @@ package "FAQ_Subdomain"{
             + getFaqByFaqId(faqId: String): FAQResponse
             + deleteFaqByFaqId(faqId: String): FAQResponse
             + getFAQCount(): Integer
+            + modifyFAQ(faqId: String, faqRequest: FAQRequest): FAQResponse
+            + createFAQ(faqRequest: FAQRequest): FAQResponse
          }
 
          class "<<service>>\nFAQServiceImpl" as FAQServiceImpl {
@@ -49,6 +53,8 @@ package "FAQ_Subdomain"{
             + getFaqByFaqId(faqId: String): FAQResponse
             + deleteFaqByFaqId(faqId: String): FAQResponse
             + getFAQCount(): Integer
+            + modifyFAQ(faqId: String, faqRequest: FAQRequest): FAQResponse
+            + createFAQ(faqRequest: FAQRequest): FAQResponse
          }
          class FAQServiceImpl implements FAQService
     }
