@@ -14,6 +14,8 @@ package "Order_Subdomain"{
             + CountByOrderStatus(status: String): ResponseEntity<Integer>
             + CountAllOrders(): ResponseEntity<Integer>
             + UpdateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+            + UpdateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+            + countAllOverdueOrders(): ResponseEntity<Integer>
         }
         class "OrderResponse" as orderResponse{
             + orderId: String
@@ -33,8 +35,9 @@ package "Order_Subdomain"{
             + customerCity: String
             + customerPostalCode: String
             + customerApartmentNumber: String
+            + totalOrdersMatchingRequest: int
             + estimatedDuration: int
-            + daysLeft: int
+            + hoursWorked: int
 
         }
 
@@ -52,7 +55,7 @@ package "Order_Subdomain"{
             + customerPostalCode: String
             + customerApartmentNumber: String
             + estimatedDuration: int
-            + daysLeft: int
+            + hoursWorked: int
         }
 
         class "AcceptOrderRequest" as acceptOrderRequest{
@@ -64,7 +67,7 @@ package "Order_Subdomain"{
         class "DeclineOrderRequest" as declineOrderRequest{
             + recipient: String
             + reasonForDecline: String
-            + DeclineOrderRequest(recipient: String)
+            + DeclineOrderRequest(recipient: String, reasonForDecline: String)
             + DeclineOrderRequest()
         }
 
@@ -87,9 +90,10 @@ package "Order_Subdomain"{
             + countAllOrders(): int
             + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
             + findAnyUserOrders(userId: String): List<Order>
+            + updateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
             + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
-
-
+            + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
+            + countAllOverdueOrders(): Integer
         }
 
 
@@ -113,15 +117,14 @@ package "Order_Subdomain"{
             + getCustomerCurrentOrders(userId: String, status: String): List<OrderResponse>
             + countAllOrders(): int
             + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + updateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
             + findAnyUserOrders(userId: String): List<Order>
             + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
-
-            + getOrderResponse(orderId: String, order: Order): OrderResponse
-            + setOrderResponseDetails(orderResponse: OrderResponse, totalOrders: int): OrderResponse
+            + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
             + getAllOrdersWithPagination(pageSize: int, offset: int): List<OrderResponse>
             + getAllOrdersWithDefaultSettings(): List<OrderResponse>
             + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
-
+            + countAllOverdueOrders(): Integer
 
         }
 
@@ -174,7 +177,6 @@ package "Order_Subdomain"{
             - orderIdentifier: OrderIdentifier
             - orderTrackingNumber: OrderTrackingNumber
             - serviceId: String
-            - service: Service
             - userId: String
             - progressInformation: String
             - orderDate: String
@@ -189,9 +191,9 @@ package "Order_Subdomain"{
             - customerPostalCode: String
             - customerApartmentNumber: String
             - estimatedDuration: int
-            - daysLeft: int
+            - hoursWorked: int
 
-            + Order(serviceId: String, userId: String, progressInformation: String, dueDate: String, orderDescription: String, customerFullName: String, customerEmail: String, customerPhone: String, customerAddress: String, customerCity: String, customerPostalCode: String, customerApartmentNumber: String, estimatedDuration: int, daysLeft: int)
+            + Order(serviceId: String, userId: String, progressInformation: String, orderDate:String, dueDate: String, orderStatus: String, orderDescription: String, customerFullName: String, customerEmail: String, customerPhone: String, customerAddress: String, customerCity: String, customerPostalCode: String, customerApartmentNumber: String, estimatedDuration: int, hoursWorked: int)
         }
 
         interface orderRepository extends JpaRepository

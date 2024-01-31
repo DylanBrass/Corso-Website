@@ -47,6 +47,7 @@ package "Review_Subdomain"{
             + getCountAllReviews(): Integer
             + getReviewByReviewIdAndUserId(reviewId: String, userId: String): ReviewResponse
             + deleteCustomerReview(reviewId: String, userId: String): Void
+            + updateCustomerReview(reviewId: String, userId: String, reviewRequest: ReviewRequest): ReviewResponse
         }
         class "<<service>>\nReviewServiceImpl" as reviewServiceImpl {
             - orderService: OrderService
@@ -66,6 +67,7 @@ package "Review_Subdomain"{
             + getCountAllReviews(): Integer
             + getReviewByReviewIdAndUserId(reviewId: String, userId: String): ReviewResponse
             + deleteCustomerReview(reviewId: String, userId: String): Void
+            + updateCustomerReview(reviewId: String, userId: String, reviewRequest: ReviewRequest): ReviewResponse
             + sendEmailToAdmins(subject: String, template: String, parameters: Map<String, String>): Void
         }
         class reviewServiceImpl implements reviewService
@@ -150,6 +152,8 @@ package "Order_Subdomain"{
             + CountByOrderStatus(status: String): ResponseEntity<Integer>
             + CountAllOrders(): ResponseEntity<Integer>
             + UpdateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+            + UpdateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+            + countAllOverdueOrders(): ResponseEntity<Integer>
         }
         class "OrderResponse" as orderResponse{
             + orderId: String
@@ -169,8 +173,9 @@ package "Order_Subdomain"{
             + customerCity: String
             + customerPostalCode: String
             + customerApartmentNumber: String
+            + totalOrdersMatchingRequest: int
             + estimatedDuration: int
-            + daysLeft: int
+            + hoursWorked: int
 
         }
 
@@ -188,7 +193,7 @@ package "Order_Subdomain"{
             + customerPostalCode: String
             + customerApartmentNumber: String
             + estimatedDuration: int
-            + daysLeft: int
+            + hoursWorked: int
         }
 
         class "AcceptOrderRequest" as acceptOrderRequest{
@@ -200,7 +205,7 @@ package "Order_Subdomain"{
         class "DeclineOrderRequest" as declineOrderRequest{
             + recipient: String
             + reasonForDecline: String
-            + DeclineOrderRequest(recipient: String)
+            + DeclineOrderRequest(recipient: String, reasonForDecline: String)
             + DeclineOrderRequest()
         }
 
@@ -223,9 +228,10 @@ package "Order_Subdomain"{
             + countAllOrders(): int
             + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
             + findAnyUserOrders(userId: String): List<Order>
+            + updateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
             + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
-
-
+            + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
+            + countAllOverdueOrders(): Integer
         }
 
 
@@ -249,15 +255,14 @@ package "Order_Subdomain"{
             + getCustomerCurrentOrders(userId: String, status: String): List<OrderResponse>
             + countAllOrders(): int
             + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + updateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
             + findAnyUserOrders(userId: String): List<Order>
             + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
-
-            + getOrderResponse(orderId: String, order: Order): OrderResponse
-            + setOrderResponseDetails(orderResponse: OrderResponse, totalOrders: int): OrderResponse
+            + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
             + getAllOrdersWithPagination(pageSize: int, offset: int): List<OrderResponse>
             + getAllOrdersWithDefaultSettings(): List<OrderResponse>
             + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
-
+            + countAllOverdueOrders(): Integer
 
         }
 
@@ -310,7 +315,6 @@ package "Order_Subdomain"{
             - orderIdentifier: OrderIdentifier
             - orderTrackingNumber: OrderTrackingNumber
             - serviceId: String
-            - service: Service
             - userId: String
             - progressInformation: String
             - orderDate: String
@@ -325,9 +329,9 @@ package "Order_Subdomain"{
             - customerPostalCode: String
             - customerApartmentNumber: String
             - estimatedDuration: int
-            - daysLeft: int
+            - hoursWorked: int
 
-            + Order(serviceId: String, userId: String, progressInformation: String, dueDate: String, orderDescription: String, customerFullName: String, customerEmail: String, customerPhone: String, customerAddress: String, customerCity: String, customerPostalCode: String, customerApartmentNumber: String, estimatedDuration: int, daysLeft: int)
+            + Order(serviceId: String, userId: String, progressInformation: String, orderDate:String, dueDate: String, orderStatus: String, orderDescription: String, customerFullName: String, customerEmail: String, customerPhone: String, customerAddress: String, customerCity: String, customerPostalCode: String, customerApartmentNumber: String, estimatedDuration: int, hoursWorked: int)
         }
 
         interface orderRepository extends JpaRepository
@@ -387,14 +391,17 @@ package "Customer_Subdomain" {
         class "<<Controller>>\nCustomerController" as customerController {
             - customerService: CustomerService
             - orderService: OrderService
+            - reviewService: ReviewService
             + deleteCustomer(principal: OidcUser): ResponseEntity<Void>
             + getCustomerByUserId(principal: OidcUser, requestParams: Map<String, String>): ResponseEntity<CustomerResponse>
             + createCustomer(principal: OidcUser, customerRequest: CustomerRequest): ResponseEntity<CustomerResponse>
             + updateCustomer(principal: OidcUser, customerRequest: CustomerRequest): ResponseEntity<CustomerResponse>
             + getCustomerWithOrders(principal: OidcUser, pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
             + getOrderByOrderId(principal: OidcUser, orderId: String): ResponseEntity<OrderResponse>
-            + deleteOrderByOrderId(orderId: String, cancelOrderRequest: CancelOrderRequest, principal: OidcUser): ResponseEntity<Void>
+            + deleteOrderByOrderId(orderId: String, cancelOrderRequest: CustomerCancelOrderRequest, principal: OidcUser): ResponseEntity<Void>
             + updateOrderByOrderId(orderId: String, customerUpdateOrderRequest: OrderCustomerRequest, principal: OidcUser): ResponseEntity<OrderResponse>
+            + updateCustomerReview(principal: OidcUser, reviewId: String, reviewRequest: ReviewRequest): ResponseEntity<ReviewResponse>
+            + verifyCustomer(principal: OidcUser): ResponseEntity<Void>
         }
         class "CustomerResponse" as customerResponse {
             + userId: String
@@ -405,6 +412,7 @@ package "Customer_Subdomain" {
             + postalCode: String
             + city: String
             + apartmentNumber: String
+            + verified: boolean
         }
         class "CustomerRequest" as customerRequest {
             + email: String
@@ -429,17 +437,24 @@ package "Customer_Subdomain" {
             + deleteCustomer(userId: String): Void
             + checkIfCustomerExists(userId: String): Boolean
             + getCustomerByQueryParams(queryParams: Map<String, String>): List<CustomerResponse>
+            + verifyEmail(token: String, email:String): Void
+            + verifyCustomer(userId: String): Void
         }
         class "<<service>>\nCustomerServiceImpl" as customerServiceImpl {
             - customerRepository: CustomerRepository
             - customerResponseMapper: CustomerResponseMapper
             - customerRequestMapper: CustomerRequestMapper
+            - emailService: EmailService
+            - verificationTokenRepository: VerificationTokenRepository
             + getCustomerByUserId(userId: String): CustomerResponse
             + createCustomer(customerRequest: CustomerRequest, userId: String): CustomerResponse
             + updateCustomer(customerRequest: CustomerRequest, userId: String): CustomerResponse
             + deleteCustomer(userId: String): Void
             + checkIfCustomerExists(userId: String): Boolean
             + getCustomerByQueryParams(queryParams: Map<String, String>): List<CustomerResponse>
+            + verifyEmail(token: String, email:String): Void
+            + verifyCustomer(userId: String): Void
+            + sendVerificationEmail(userId: String, email: String): Void
         }
         class customerServiceImpl implements customerService
     }
@@ -449,8 +464,9 @@ package "Customer_Subdomain" {
             + getCustomerByUserId(userId: String): Customer
             + deleteCustomerByUserId(userId: String): Void
             + existsByUserId(userId: String): Boolean
-            + findAllByNameStartingWith(name: String): List<Customer>
-            + findAllByEmailStartingWith(email: String): List<Customer>
+            + findAllByNameStartingWithAndVerified(name: String, isVerified: Boolean): List<Customer>
+            + findAllByEmailStartingWithAndVerified(email: String, isVerified: Boolean): List<Customer>
+            + getCustomerByEmailAndUserId(email: String, userId: String): Customer
         }
         class Customer {
             - id: int
@@ -462,6 +478,7 @@ package "Customer_Subdomain" {
             - postalCode: String
             - city: String
             - apartmentNumber: String
+            - verified: boolean
         }
         interface customerRepository extends JpaRepository
     }
@@ -477,9 +494,12 @@ package "Customer_Subdomain" {
     }
 
     customerController ..> customerService
+    customerController ..> orderService
+    customerController ..> reviewService
 
     customerController ..> customerResponse
     customerController ..> customerRequest
+    customerController ..> customerCancelOrderRequest
 
     customerServiceImpl ..> customerRepository
 
@@ -487,11 +507,13 @@ package "Customer_Subdomain" {
 
     customerServiceImpl ..> customerRequestMapper
 
+    customerServiceImpl ..> emailService
+
+    customerServiceImpl ..> verificationTokenRepository
+
     customerRepository ..> Customer
 
     customerRequestMapper ..> customerRequest
-
-    customerRequestMapper ..> customerCancelOrderRequest
 
     customerResponseMapper ..> customerResponse
 }
