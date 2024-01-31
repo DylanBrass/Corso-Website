@@ -45,7 +45,7 @@ spring:
         globally_quoted_identifiers: true
         auto-quote-keyword: true
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect  # Adjust the dialect based on your database
+        dialect: org.hibernate.dialect.MySQLDialect
     defer-datasource-initialization: true
   sql:
     init:

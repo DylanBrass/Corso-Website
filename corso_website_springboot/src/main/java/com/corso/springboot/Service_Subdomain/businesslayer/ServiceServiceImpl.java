@@ -91,21 +91,18 @@ public class ServiceServiceImpl implements ServiceService{
             // Check if the icon needs to be updated
             if (serviceRequest.getServiceIcon() != null) {
                 // Extract the public ID from the existing Cloudinary URL
-                String existingIconUrl = existingServiceEntity.getServiceIcon();
-                String existingPublicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(existingIconUrl);
+                String existingPublicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(existingServiceEntity.getServiceIcon());
 
                 // Update the existing icon image in Cloudinary
                 if(!serviceRequest.getServiceIcon().contains("https://") && !serviceRequest.getServiceIcon().contains("http://")) {
-                    String updatedIconUrl = cloudinaryService.updateCloudinaryImage(existingPublicId, serviceRequest.getServiceIcon());
-                    existingServiceEntity.setServiceIcon(updatedIconUrl);
+                    existingServiceEntity.setServiceIcon(cloudinaryService.updateCloudinaryImage(existingPublicId, serviceRequest.getServiceIcon()));
                 }
             }
 
             // Check if the image needs to be updated
             if (serviceRequest.getServiceImage() != null) {
                 // Extract the public ID from the existing Cloudinary URL
-                String existingImageUrl = existingServiceEntity.getServiceImage();
-                String existingImagePublicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(existingImageUrl);
+                String existingImagePublicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(existingServiceEntity.getServiceImage());
 
                 // Update the existing image in Cloudinary
                 if(!serviceRequest.getServiceImage().contains("https://") && !serviceRequest.getServiceImage().contains("http://")) {
@@ -114,11 +111,8 @@ public class ServiceServiceImpl implements ServiceService{
                 }
             }
 
-            // Save the updated service
-            serviceRepository.save(existingServiceEntity);
-
             // Preparing the response
-            return serviceResponseMapper.toServiceResponse(existingServiceEntity);
+            return serviceResponseMapper.toServiceResponse(serviceRepository.save(existingServiceEntity));
         } catch (IOException e) {
             throw new RuntimeException("Failed to update images.", e);
         }

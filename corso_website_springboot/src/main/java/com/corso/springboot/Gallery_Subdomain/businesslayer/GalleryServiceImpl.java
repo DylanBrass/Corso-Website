@@ -75,7 +75,7 @@ public class GalleryServiceImpl implements GalleryService{
         log.info("GalleryServiceImpl.createGallery() called");
         log.info("URL: " + imageUrl);
 
-        Gallery gallery = galleryRequestMapper.toGalleryOrderRequest(galleryRequest);
+        Gallery gallery = galleryRequestMapper.toGalleryRequest(galleryRequest);
 
         gallery.setGalleryId(new GalleryIdentifier());
 

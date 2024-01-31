@@ -5,7 +5,7 @@ actor Customer
 
 participant "<<View>>\nProfilePage" as Pfp
 
-participant SpecificReviewPage as "<<View>>\n SpecificReviewPage"
+participant CustomerViewsSpecificReview as "<<View>>\nCustomerViewsSpecificReview"
 
 participant EditReviewPage as "<<View>>\n EditReviewPage"
 
@@ -35,19 +35,19 @@ ViewReviews
 end ref
 
 opt
-Customer -> SpecificReviewPage: viewSpecificReviewPage()
-activate SpecificReviewPage
+Customer -> CustomerViewsSpecificReview: CustomerViewsSpecificReview()
+activate CustomerViewsSpecificReview
 
-SpecificReviewPage -> ReviewController: GET /api/v1/coReviewServiceo/reviews/{reviewId}
+CustomerViewsSpecificReview -> ReviewController: GET /api/v1/corso/reviews/{reviewId}
 activate ReviewController
 
-ReviewController -> ReviewService: getReviewById(reviewId, CustomerId)
+ReviewController -> ReviewService: getReviewByIdAndUserId(reviewId, userId)
 activate ReviewService
 
 ReviewService -> ReviewRepository: findByReviewIdAndCustomerId(reviewId)
 activate ReviewRepository
 
-ReviewRepository -> Database: SELECT * FROM reviews WHERE review_id = ? AND Customer_id = ?
+ReviewRepository -> Database: SELECT * FROM reviews WHERE review_id = ? AND user_id = ?
 activate Database
 Database --> Review : review: Review
 activate Review
@@ -58,7 +58,7 @@ deactivate Database
 ReviewService <-- ReviewRepository: review: Review
 deactivate ReviewRepository
 
-ReviewService -> ReviewResponseMapper: mapReviewToReviewResponse(review)
+ReviewService -> ReviewResponseMapper: toReviewResponse(review)
 activate ReviewResponseMapper
 
 ReviewResponseMapper --> ReviewResponse: ReviewResponse
@@ -74,7 +74,7 @@ ReviewService <-- ReviewResponse: reviewResponse: ReviewResponse
 ReviewController <-- ReviewService: reviewResponse: ReviewResponse
 deactivate ReviewService
 
-ReviewController -> SpecificReviewPage: reviewResponse: ReviewResponse
+ReviewController -> CustomerViewsSpecificReview: reviewResponse: ReviewResponse
 deactivate ReviewResponse
 opt
 

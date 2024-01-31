@@ -1,17 +1,17 @@
 @startuml
 actor User
 
-participant "Profile" as DashB
+participant "<<View>>\nProfile" as DashB
 
-participant "ReviewsPage" as AllServP
+participant "<<View>>\nCustomerViewSpecificReview" as AllServP
 
-participant "ReviewController" as Sc
+participant "<<Controller>>\nReviewController" as Sc
 
-participant "ReviewService" as Rs
+participant "<<Service>>\nReviewService" as Rs
 
-participant "EmailService" as Semail
+participant "<<Service>>\nEmailService" as Semail
 
-participant "ReviewRepository" as Rrep
+participant "<<Repository>>\nReviewRepository" as Rrep
 
 participant "review : Review" as R
 
@@ -23,36 +23,57 @@ end ref
 
 opt
 
-User -> DashB : deleteAReview(reviewId:String)
+User -> DashB : CustomerViewSpecificReview(reviewId:String)
+activate DashB
 
 DashB -> AllServP : render()
+activate AllServP
 
 AllServP -> Sc : DELETE api/v1/corso/reviews/{reviewId}
-
+activate Sc
 Sc -> Rs : deleteReview(reviewId:String)
+activate Rs
+
+Rs -> Rrep : findReviewByReviewId_ReviewIdAndUserId(reviewId:String, userId:String)
+activate Rrep
+
+Rrep -> Db : SELECT * FROM reviews WHERE review_id = reviewId AND user_id = userId
+
+activate Db
+
+Db --> R : review
+
+deactivate Db
+
+activate R
+
+
+R --> Rrep : review : Review
+
+deactivate Rrep
+
+
 
 alt Review is Pinned
-Rs -> Rrep : isPinned(reviewId:String)
 
-Rrep -> Db : DELETE FROM reviews WHERE review_id = reviewId AND pinned = true
 
-Db --> R : review: Review
-
-R --> Rrep : review: Review
-
-Rrep --> Rs : review: Review
-
-Rs -> Semail : sendEmail(review:Review)
+Rs -> Semail : sendEmail(recipient: String,subject: String, template: String, data: parameters:Map<String, String>)
 activate Semail
 deactivate Semail
 
-else Review is not Pinned
+end
 
-Rs -> Rrep : deleteReview(reviewId:String)
+Rs -> Rrep : delete(review)
 
+deactivate R
+
+activate Rrep
 Rrep -> Db : DELETE FROM reviews WHERE review_id = reviewId
+activate Db
+
 
 Db --> Rrep : void
+deactivate Db
 
 Rrep --> Rs : void
 
@@ -60,8 +81,5 @@ Rs --> Sc : void
 
 Sc --> AllServP : void
 
-end
-
-end
 
 @enduml

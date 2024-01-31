@@ -22,5 +22,5 @@ public interface GalleryRequestMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "galleryId", expression = "java(new com.corso.springboot.Gallery_Subdomain.datalayer.GalleryIdentifier())"),
     })
-    Gallery toGalleryOrderRequest(GalleryRequest galleryRequest);
+    Gallery toGalleryRequest(GalleryRequest galleryRequest);
 }

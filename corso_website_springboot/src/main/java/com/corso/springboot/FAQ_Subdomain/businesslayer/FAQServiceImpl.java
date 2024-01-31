@@ -51,7 +51,7 @@ public class FAQServiceImpl implements FAQService{
             }
         }
 
-        if (numberOfPrefferedFAQs > 3 || numberOfPrefferedFAQs < 3) {
+        if (numberOfPrefferedFAQs != 3) {
             throw new ThreePrefferedFaqsException("Choose 3 FAQs to display on the main page.");
         }
 

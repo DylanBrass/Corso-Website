@@ -3,7 +3,7 @@
 actor User
 
 participant "Dashboard" as Dashboard
-participant "WriteFAQPage" as WriteFAQPage
+participant "AddAFaq" as WriteFAQPage
 participant "faqRequest : FAQRequest" as FAQRquest
 participant "FAQController" as FAQController
 participant "faqResponse : FAQResponse" as FAQRsponse
@@ -22,7 +22,7 @@ ref over Dashboard, WriteFAQPage, FAQRquest, FAQController, FAQRsponse, FAQServi
 end ref
 
 opt
-User -> Dashboard: WriteFAQPage()
+User -> Dashboard: AddAFaq()
 activate Dashboard
 
 Dashboard -> WriteFAQPage: Render()
@@ -38,15 +38,6 @@ activate FAQController
 
 FAQController -> FAQService: createFAQ()
 activate FAQService
-
-FAQService -> Db : SELECT CASE WHEN EXISTS ( SELECT 1 FROM faqs WHERE faq_id = faqRequest.faq_id)
-activate Db
-Db --> FAQRpository: bool:Boolean
-activate FAQRpository
-deactivate Db
-
-FAQRpository --> FAQService: bool:Boolean
-deactivate FAQRpository
 
 FAQService -> FAQRquestMapper: mapToFAQ(faqRequest)
 activate FAQRquestMapper

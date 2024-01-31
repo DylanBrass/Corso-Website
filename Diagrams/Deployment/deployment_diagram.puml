@@ -70,20 +70,20 @@ Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable a
 Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
 
 
-api <---> database: SQL/TCP\n[JBDC]
+api ---> database: SQL/TCP\n[JBDC]
 
-api <-> frontend: Makes Api calls\n[JSON/HTTPS]
+api -> frontend: Makes Api calls\n[JSON/HTTPS]
 
-api <---> cloudinary: Makes Api calls\n[JSON/HTTPS]
+api ---> cloudinary: Makes Api calls\n[JSON/HTTPS]
 
-api <---> auth: Authenticates\n[OAuth2/OpenID]
+api ---> auth: Authenticates\n[OAuth2/OpenID]
 
-api <---> email: Sends Emails\n[SMTP/TCP/IP]
+api ---> email: Sends Emails\n[SMTP/TCP/IP]
 
 
-reactPage <--> frontend: Uses website and delivers it\n[HTML/CSS/JS]
+reactPage --> frontend: Uses website and delivers it\n[HTML/CSS/JS]
 
-reactPage_mobile <--> frontend: Uses website and delivers it\n[HTML/CSS/JS]
+reactPage_mobile --> frontend: Uses website and delivers it\n[HTML/CSS/JS]
 
 
 SHOW_LEGEND()
