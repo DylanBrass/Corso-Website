@@ -3,11 +3,12 @@ title Delete FAQ of FAQ
 
 actor Admin
 
-participant "Dashboard" as Dashboard
-participant "CurrentFAQ" as CurrentFAQ
-participant "FAQController" as FAQController
-participant "FAQService" as FAQService
-participant "FAQRepository" as FAQRepository
+participant "<<View>>\nDashboard" as Dashboard
+participant "<<View>>\nViewSpecificFaq" as CurrentFAQ
+participant "<<Controller>>\nFAQController" as FAQController
+participant "<<Service>>\nFAQService" as FAQService
+participant FAQ as "faq: FAQ"
+participant "<<repository>>\nFAQRepository" as FAQRepository
 participant "Database" as Db
 
 ref over Dashboard, CurrentFAQ, FAQController, FAQService, FAQRepository, Db
@@ -18,7 +19,7 @@ end
 
 
 opt
-Admin -> Dashboard: deleteFAQ(faqId: String)
+Admin -> Dashboard: ViewSpecificFaq(faqId: String)
 activate Dashboard
 
 Dashboard -> CurrentFAQ: render()
@@ -27,13 +28,29 @@ activate CurrentFAQ
 CurrentFAQ -> FAQController: DELETE api/v1/corso/faqs/{faqId}
 activate FAQController
 
-FAQController -> FAQService: deleteFAQ(faqId: String)
+FAQController -> FAQService: deleteFAQByFaqId(faqId: String)
 activate FAQService
 
-FAQService -> FAQRepository: deleteFAQ(faqId: String)
+FAQService -> FAQRepository: getFAQBYFAQId_FAQId(faqId: String)
+
 activate FAQRepository
 
-FAQRepository -> Db: DELETE FROM faqs WHERE faq_id = faqId
+FAQRepository -> Db: SELECT * FROM faq WHERE faqId = faqId
+
+activate Db
+
+Db --> FAQ : faq: FAQ
+deactivate Db
+
+activate FAQ
+FAQ --> FAQRepository: faq
+
+FAQRepository --> FAQService: faq
+
+FAQService -> FAQRepository: delete(faq)
+
+FAQRepository -> Db: DELETE FROM faq WHERE faqId = faqId
+deactivate FAQ
 activate Db
 
 Db --> FAQRepository: void

@@ -61,7 +61,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final EmailService emailService;
     private final ReviewRequestMapper reviewRequestMapper;
 
-    private final CustomerRepository customerRepository;
 
 
 
@@ -196,11 +195,13 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewResponse getReviewByReviewIdAndUserId(String reviewId, String userId) {
 
-        if (reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId) == null) {
+        Review review = reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId);
+
+        if (review == null) {
             throw new ReviewNotFoundException("Review not found");
         }
 
-        return reviewResponseMapper.toReviewResponse(reviewRepository.findReviewByReviewId_ReviewIdAndUserId(reviewId, userId));
+        return reviewResponseMapper.toReviewResponse(review);
     }
 
     @Override

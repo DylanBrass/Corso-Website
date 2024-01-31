@@ -3,15 +3,15 @@ actor Admin
 
 participant "Dashboard" as DashB
 
-participant "ModifyAService" as ModServP
+participant "<<View>>\nServicesThroughDashboard" as ModServP
 
-participant "ServiceController" as Sc
+participant "<<Controller>>\nServiceController" as Sc
 
-participant "ServiceService" as Ss
+participant "<<Service>>\nServiceService" as Ss
 
 participant "service : Service" as S
 
-participant "ServiceRepository" as Srep
+participant "<<Repository>>\nServiceRepository" as Srep
 
 participant "serviceDb : Service" as Sdb
 
@@ -34,26 +34,42 @@ activate ModServP
 ModServP -> Sc: PATCH /api/v1/corso/services/{serviceId}/visibility
 activate Sc
 
-Sc -> Ss: updateServiceVisibilityById)serviceId)
+Sc -> Ss: changeServiceVisibility(serviceId)
 activate Ss
 
 Ss -> Srep: findByServiceIdentifier_serviceId(serviceId)
 activate Srep
 
+Srep -> Db: SELECT * FROM services WHERE service_identifier = :serviceId
 
-Srep -> Db: UPDATE services SET active = :active WHERE service_identifier = :serviceId
+activate Db
+
+Db --> S: service
+activate S
+
+S -> Srep: service
+
+Srep --> Ss: service
+
+deactivate Db
+
+
+Ss -> Srep: save(service)
+
+Srep -> Db: UPDATE services SET active = :active WHERE service_id = :serviceId
 activate Db
 
 Db --> Srep: service
 deactivate Db
+deactivate S
 
 Srep --> S: service
-deactivate Srep
+
 
 activate S
 S --> Ss : service:Service
 
-Ss -> SresM: mapToServiceResponse(service)
+Ss -> SresM: toServiceResponse(service)
 deactivate S
 activate SresM
 

@@ -1,23 +1,25 @@
 @startuml
 actor User
 
-participant "Dashboard" as DashB
+participant "<<View>>\nDashboard" as DashB
 
-participant "ModifyAService" as ModServP
+participant "<<View>>\nModifyServicePage" as ModServP
 
 participant "serviceRequest : ServiceRequest" as Sq
 
-participant "ServiceController" as Sc
+participant "<<Controller>>\nServiceController" as Sc
 
 participant "serviceResponse : ServiceResponse" as Sr
 
-participant "ServiceService" as Ss
+participant "<<Service>>\nCloudinaryService" as Cs
+
+participant "<<Service>>\nServiceService" as Ss
 
 
 participant "service : Service" as S
 
 
-participant "ServiceRepository" as Srep
+participant "<<Repository>>\nServiceRepository" as Srep
 
 participant "serviceDb : Service" as Sdb
 
@@ -49,51 +51,93 @@ activate Sc
 Sc -> Ss : modifyService(serviceId, serviceRequest)
 activate Ss
 
-Ss -> SreqM : mapToService(serviceRequest)
-activate SreqM
+Ss -> Srep: findByServiceIdentifier_Service_Id(serviceId)
 
-SreqM -> S: Service
+activate Srep
 
-deactivate Sq
-deactivate SreqM
+Srep -> Db: SELECT * FROM service WHERE service_id = :serviceId
 
-activate S
-
-S -> Ss : service : Service
-
-
-
-Ss -> Srep: save(service)
-deactivate S
-
-Srep -> Db: UPDATE service SET service_name = :serviceName, service_description = :serviceDescription, service_icon = :serviceIcon, service_image WHERE user_id = :userId AND review_id = :reviewId
 activate Db
 
 Db -> Sdb: serviceDb : Service
+
 deactivate Db
 
 activate Sdb
+
 Sdb -> Srep: serviceDb : Service
 
 Srep -> Ss: serviceDb : Service
+
 deactivate Srep
-Ss -> SresM: mapToServiceResponse(service)
+
+
+alt serviceRequest.getServiceIcom() != null
+
+       Ss -> Cs : extractPublicIdFromCloudinaryUrl(serviceDb.getServiceIcon())
+       activate Cs
+
+deactivate Cs
+    alt serviceRequest.getServiceIcon().contains("http://") && serviceRequest.getServiceIcon().contains("https://")
+        Ss -> Cs : updateCloudinaryImage(serviceRequest.getServiceIcon())
+        activate Cs
+
+        deactivate Cs
+
+    end
+
+end
+
+alt serviceRequest.getServiceImage() != null
+
+         Ss -> Cs : extractPublicIdFromCloudinaryUrl(serviceDb.getServiceImage())
+         activate Cs
+
+    alt serviceRequest.getServiceImage().contains("http://") && serviceRequest.getServiceImage().contains("https://")
+        Ss -> Cs : updateCloudinaryImage(serviceRequest.getServiceImage())
+        activate Cs
+
+        deactivate Cs
+
+    end
+
+end
+
+
+Ss -> Srep: save(serviceDb)
+
+activate Srep
+
+Srep -> Db: INSERT INTO service (service_id, service_name, service_description, service_icon, service_image, service_price, service_duration, service_status, service_category, service_subcategory, service_created_at, service_updated_at) VALUES (:serviceId, :serviceName, :serviceDescription, :serviceIcon, :serviceImage, :servicePrice, :serviceDuration, :serviceStatus, :serviceCategory, :serviceSubcategory, :serviceCreatedAt, :serviceUpdatedAt)
 deactivate Sdb
+activate Db
+
+Db --> Sdb: serviceDb : Service
+
+activate Sdb
+
+Sdb -> SresM: toServiceResponse(serviceDb)
+
 activate SresM
 
+SresM --> Sr: serviceResponse : ServiceResponse
 
-SresM --> Sr: ServiceResponse
 deactivate SresM
 activate Sr
 
-Sr --> Ss : serviceResponse : ServiceResponse
+Sr --> Ss: serviceResponse : ServiceResponse
+
+deactivate Sr
 
 Ss --> Sc: serviceResponse : ServiceResponse
 
+deactivate Ss
 
 Sc --> ModServP: serviceResponse : ServiceResponse
 
-deactivate Sr
+
+
+
 
 end opt
 

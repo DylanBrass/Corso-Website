@@ -3,7 +3,7 @@ actor Admin
 
 participant "Dashboard" as DashB
 
-participant "ModifyAFAQ" as ModFAQP
+participant "ViewSpecificFaq" as ModFAQP
 
 participant "faqRequest : FAQRequest" as Fq
 
@@ -36,7 +36,7 @@ end
 
 
 opt
-Admin -> DashB : ModifyFAQ()
+Admin -> DashB : ViewSpecificFaq()
 activate DashB
 
 DashB -> ModFAQP : Render()
@@ -52,19 +52,26 @@ activate Fc
 Fc -> Fs : modifyFAQ(faqId, faqRequest)
 activate Fs
 
-Fs -> FreqM : mapToFAQ(faqRequest)
-activate FreqM
 
-FreqM -> F: FAQ
+Fs -> Frep: getFAQById(faqId)
 
-deactivate Fq
-deactivate FreqM
+activate Frep
+
+Frep -> Db: SELECT * FROM faqs WHERE faq_id = :faqId;
+activate Db
+
+Db -> F: faq : FAQ
+deactivate Db
 
 activate F
 
 F -> Fs : faq : FAQ
 
 
+
+deactivate Fdb
+
+deactivate Fq
 
 Fs -> Frep: save(faq)
 deactivate F
@@ -85,7 +92,7 @@ deactivate Fdb
 activate FresM
 
 
-FresM --> Fr: FerviceResponse
+FresM --> Fr: FaqResponse
 deactivate FresM
 activate Fr
 

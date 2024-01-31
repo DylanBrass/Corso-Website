@@ -4,7 +4,8 @@ title View a specific FAQ
 actor Admin
 
 participant Dashboard as "<<View>> Dashboard"
-participant CurrentFAQS as "<<View>> CurrentFAQS"
+participant CurrentFAQS as "<<View>> ViewAllFaqThroughDashboard"
+participant ViewFaq as "<<View>> ViewFaq"
 participant FAQController as "<<Controller>> FAQController"
 participant FAQService as "<<Service>> FAQService"
 participant FAQResponse as "faqResponse: FAQResponse"
@@ -28,13 +29,18 @@ activate Dashboard
 Dashboard -> CurrentFAQS: render()
 activate CurrentFAQS
 
-CurrentFAQS -> FAQController: GET api/v1/corso/faqs/{faqId} HTTP/1.1
+Admin -> CurrentFAQS: viewASpecificFAQ(String faqId)
+
+CurrentFAQS -> ViewFaq: render()
+activate ViewFaq
+
+ViewFaq -> FAQController: GET api/v1/corso/faqs/{faqId} HTTP/1.1
 activate FAQController
 
 FAQController -> FAQService: getFAQByFAQId(String faqId)
 activate FAQService
 
-FAQService -> FAQRepository: findFaqByFaqId(String faqId)
+FAQService -> FAQRepository: getFaqByFaqId_FAQId(String faqId)
 activate FAQRepository
 
 FAQRepository -> Database: SELECT * FROM faqs WHERE faqId = ?
@@ -53,10 +59,10 @@ FAQService -> FAQResponseMapper: mapToFAQResponse(FAQ faq)
 activate FAQResponseMapper
 
 FAQResponseMapper --> FAQResponse: FAQResponse
+activate FAQResponse
 deactivate FAQResponseMapper
 
 FAQResponse --> FAQService: FAQResponse
-deactivate FAQResponse
 
 FAQService --> FAQController: FAQResponse
 deactivate FAQService

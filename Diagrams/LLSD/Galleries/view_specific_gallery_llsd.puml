@@ -5,7 +5,7 @@ actor Admin
 
 participant Dashboard as "<<View>> Dashboard"
 
-participant EditGalleryPage as "<<View>> EditGalleryPage"
+participant EditGalleryPage as "<<View>> ViewSpecificGallery"
 
 participant GalleryController as "<<Controller>> GalleryController"
 
@@ -35,11 +35,11 @@ activate EditGalleryPage
 
 EditGalleryPage -> GalleryController: GET api/v1/corso/galleries/{galleryId} HTTP/1.1
 activate GalleryController
-GalleryController -> GalleryService: getGallery(String galleryId)
+GalleryController -> GalleryService: getGalleryById(String galleryId)
 
 activate GalleryService
 
-GalleryService -> GalleryRepository: fingGalleryById(String galleryId)
+GalleryService -> GalleryRepository: getGalleryByGalleryId_GalleryId(String galleryId)
 
 activate GalleryRepository
 
@@ -53,7 +53,7 @@ deactivate Database
 
 GalleryRepository --> Gallery: Gallery
 activate Gallery
-Gallery --> GalleryService: all: Gallery
+Gallery --> GalleryService: gallery: Gallery
 
 deactivate GalleryRepository
 
@@ -61,26 +61,23 @@ GalleryService -> GalleryResponseMapper: mapToGalleryResponse(Gallery gallery)
 
 activate GalleryResponseMapper
 
-GalleryResponseMapper --> GalleryResponse: all: Gallery: gallery
+GalleryResponseMapper --> GalleryResponse: gallery: Gallery
 
 activate GalleryResponse
 
 deactivate GalleryResponseMapper
 
-GalleryResponse --> GalleryService: Gallery: gallery
+GalleryResponse --> GalleryService: gallery: Gallery
 
-GalleryService --> GalleryController: Gallery: gallery
+GalleryService --> GalleryController: gallery: Gallery
 
 deactivate GalleryService
 
-GalleryController --> EditGalleryPage: Gallery: gallery
+GalleryController --> EditGalleryPage: gallery: Gallery
 
 deactivate GalleryResponse
 deactivate GalleryController
 
-Admin -> EditGalleryPage: Back()
 
-EditGalleryPage --> Dashboard: render()
-deactivate EditGalleryPage
 end opt
 @enduml

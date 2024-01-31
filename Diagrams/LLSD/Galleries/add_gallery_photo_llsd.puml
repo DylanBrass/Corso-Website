@@ -4,7 +4,7 @@ actor Admin
 
 participant "<<View>>\nProfilePage" as Pfp
 
-participant "<<View>>\nAddGalleryPage" as Wrp
+participant "<<View>>\nAddGallery" as Wrp
 
 participant "galleryRequest : GalleryRequest" as Gq
 
@@ -13,6 +13,8 @@ participant "<<Controller>>\nGalleryController" as Rc
 participant "galleryResponse : GalleryResponse" as Gr
 
 participant "<<Service>>\nGalleryService" as Gs
+
+participant "<<Service>>\nCloudinaryService" as Cs
 
 
 participant "gallery : Gallery" as G
@@ -29,31 +31,32 @@ participant "<<Mapper>>\nGalleryResponseMapper" as GresM
 participant "<<Mapper>>\nGalleryRequestMapper" as GreqM
 
 ref over Pfp, Wrp, Gq, Rc, Gr, Gs, G, Grep, Gdb, Db, GresM, GreqM
-
     ViewCarousel
 end
 
 opt
-Admin -> Pfp: AddGalleryPage()
+Admin -> Pfp: AddGallery()
 activate Pfp
 
 Pfp -> Wrp: Render()
 activate Wrp
 
-Wrp -> Gq: POST /api/v1/coGso/galleries
+Wrp -> Gq: POST /api/v1/coGso/galleries/carousel
 
 activate Gq
 
 Gq -> Rc
 
-
-
 activate Rc
 
-Rc -> Gs: addGallery()
+Rc -> Gs: createGallery(galleryRequest)
 activate Gs
 
-Gs -> GreqM: mapToGallery(galleryRequest)
+Gs -> Cs: uploadBase64Image(galleryRequest.getPhoto():String)
+activate Cs
+
+deactivate Cs
+Gs -> GreqM: toGalleryRequest(galleryRequest)
 
 activate GreqM
 
@@ -69,6 +72,7 @@ G -> Gs : gallery : Gallery
 
 
 Gs -> Grep: save(gallery)
+activate Grep
 deactivate G
 
 Grep -> Db: INSERT INTO galleries (...) VALUES (...)
@@ -82,7 +86,7 @@ Gdb -> Grep: galleryDb : Gallery
 
 Grep -> Gs: galleryDb : Gallery
 deactivate Grep
-Gs -> GresM: mapToGalleryResponse(gallery)
+Gs -> GresM: toGalleryResponse(gallery)
 deactivate Gdb
 activate GresM
 

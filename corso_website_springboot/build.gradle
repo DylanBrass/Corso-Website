@@ -113,7 +113,7 @@ test {
     exclude("**/CancelOrderRequestCustomerTest.class")
     exclude("**/LeaveReviewTest.class")
     exclude("**/ViewProfileOrdersTest.class")
-    exclude ("**/CustomerViewTheirReviewsTest.class")
+    exclude("**/CustomerViewTheirReviewsTest.class")
     exclude("**/ViewAllOrdersWithFiltersTest.class")
     exclude("**/ViewSpecificOrderCustomerTest.class")
     exclude '**/ViewCarouselTest.class'

@@ -3,11 +3,11 @@ actor User
 
 participant "ProfilePage" as Pfp
 
-participant "UpdateReviewPage" as Urp
+participant "CustomerViewsSpecificReview" as Urp
 
 participant "reviewRequest : ReviewRequest" as Rq
 
-participant "ReviewController" as Rc
+participant "CustomerController" as Rc
 
 participant "reviewResponse : ReviewResponse" as Rr
 
@@ -32,39 +32,47 @@ ref over User, Pfp, Urp, Rq, Rc, Rr, Rs, R, Rrep, Rdb, Db, RresM, RreqM
 end ref
 
 opt
-User -> Pfp : UpdateReview()
+User -> Pfp : CustomerViewsSpecificReview()
 activate Pfp
 
 
 Pfp -> Urp : Render()
 activate Urp
 
-Urp -> Rq : PUT api/v1/corso/reviews/{reviewId}
+Urp -> Rq : PATCH api/v1/corso/customers/reviews/{reviewId}
 activate Rq
 
 Rq -> Rc
 
 activate Rc
 
-Rc -> Rs : updateReview(reviewId, reviewRequest)
+Rc -> Rs : updateCustomerReview(reviewId, userId, reviewRequest)
 activate Rs
 
-Rs -> RreqM : mapToReview(reviewRequest)
-activate RreqM
+Rs -> Rrep: findReviewByReviewId_ReviewIdAndUserId(reviewId, userId)
 
-RreqM -> R: Review
+activate Rrep
 
-deactivate Rq
-deactivate RreqM
+Rrep -> Db: SELECT * FROM review WHERE review_id = :reviewId AND user_id = :userId;
 
-activate R
+activate Db
 
-R -> Rs : review : Review
+Db -> Rdb: reviewDb : Review
+
+deactivate Db
+
+activate Rdb
+
+Rdb -> Rrep: reviewDb : Review
+
+deactivate Rdb
+
+Rrep -> Rs: reviewDb : Review
+
 
 
 
 Rs -> Rrep: save(review)
-deactivate R
 
 Rrep -> Db: UPDATE review SET review_date = :reviewDate, message = :message, review_rating = :reviewRating, WHERE user_id = :userId AND review_id = :reviewId;
 activate Db
@@ -77,7 +85,7 @@ Rdb -> Rrep: reviewDb : Review
 
 Rrep -> Rs: reviewDb : Review
 deactivate Rrep
-Rs -> RresM: mapToReviewResponse(review)
+Rs -> RresM: toReviewResponse(review)
 deactivate Rdb
 activate RresM
 
