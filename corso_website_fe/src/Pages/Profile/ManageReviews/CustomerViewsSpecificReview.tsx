@@ -90,7 +90,7 @@ function CustomerViewsSpecificReview() {
             .then(res => {
                 // @ts-ignore
                 swal("Review deleted successfully!", "Your review has been successfully deleted!", "success").then(
-                    () =>  window.location.href = '/profile/reviews';
+                    () =>  window.location.href = '/profile/reviews'
 
                 )
             })
