@@ -1,0 +1,253 @@
+@startuml
+
+actor Admin as "Admin"
+
+participant "<<View>>\nDashboard" as DashB
+
+participant "<<View>>\nAdminReportsPage" as ServiceV
+
+participant OrderController as "<<Controller>>\nOrderController"
+
+participant ServiceController as "<<Controller>>\nServiceController"
+
+participant ServiceTimeByResponse as "response:ServiceTimeByResponse"
+
+participant OrdersPerServiceResponse as "response:OrdersPerServiceResponse"
+
+participant OrdersPerMonthResponse as "response:OrdersPerMonthResponse"
+
+participant ServiceService as "<<Service>>\nServiceService"
+
+participant OrdersResponse as "response:OrdersResponse"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant ServiceResponse as "response:ServiceResponse"
+
+participant Database as "<<Database>>\nDatabase"
+
+
+Admin -> DashB: openReportsPage()
+activate DashB
+
+DashB -> ServiceV: render()
+activate ServiceV
+
+opt
+
+alt Selected Time-by-Service
+
+    ServiceV -> ServiceController: GET /api/v1/corso/services/time-by-service
+    activate ServiceController
+
+    ServiceController -> ServiceService: getTimeByService()
+    activate ServiceService
+
+    ServiceService -> OrderService: getOrdersByStatusForReports(Status.COMPLETED, Status.IN_PROGRESS)
+    activate OrderService
+
+    OrderService -> OrderRepository: getOrdersByStatusOrStatus(Status.COMPLETED, Status.IN_PROGRESS)
+    activate OrderRepository
+
+    OrderRepository -> Database: SELECT * FROM orders WHERE status = ':status1' OR status = ':status2';
+    activate Database
+
+    Database --> OrderRepository: orders
+    deactivate Database
+
+    OrderRepository --> OrderService: orders
+deactivate OrderRepository
+    OrderService -> OrderResponseMapper: toOrdersResponse(orders)
+
+    activate OrderResponseMapper
+
+    OrderResponseMapper --> OrdersResponse: ordersResponse
+
+    deactivate OrderResponseMapper
+
+    activate OrdersResponse
+
+    OrdersResponse --> OrderService: ordersResponse
+
+    OrderService --> ServiceService: ordersResponse
+    deactivate OrderService
+
+    ServiceService --> ServiceRepository: findAll()
+    activate ServiceRepository
+
+    ServiceRepository -> Database: SELECT * FROM services;
+
+    activate Database
+
+    Database --> ServiceRepository: services
+
+    deactivate Database
+
+
+
+    ServiceRepository --> ServiceResponse: services
+    activate ServiceResponse
+    deactivate ServiceRepository
+
+    ServiceResponse --> ServiceService: services
+
+
+    ServiceService --> ServiceTimeByResponse: serviceTimeByResponse
+    activate ServiceTimeByResponse
+    deactivate OrdersResponse
+    deactivate ServiceResponse
+
+    ServiceTimeByResponse --> ServiceController: serviceTimeByResponse
+
+    ServiceController --> ServiceV: serviceTimeByResponse
+
+
+
+
+    deactivate ServiceService
+
+
+    deactivate ServiceController
+
+    deactivate ServiceTimeByResponse
+
+else Selected Monthly-Orders
+
+    ServiceV -> OrderController: GET /api/v1/corso/services/monthly-orders?month={?}&year={?}
+    activate OrderController
+
+    OrderController ->  OrderService: getOrdersByMonthAndYear(month, year)
+    activate OrderService
+
+    OrderService -> OrderRepository: getOrdersByMonthAndYear(month, year)
+    activate OrderRepository
+
+    OrderRepository -> Database: SELECT * FROM orders WHERE month = ':month' AND year = ':year';
+    activate Database
+
+    Database --> OrderRepository: orders
+    deactivate Database
+
+    OrderRepository --> OrderService: orders
+    deactivate OrderRepository
+
+    OrderService -> OrderResponseMapper: toOrdersResponse(orders)
+
+    activate OrderResponseMapper
+
+    OrderResponseMapper --> OrdersResponse: ordersResponse
+
+    deactivate OrderResponseMapper
+
+    activate OrdersResponse
+
+    OrdersResponse --> OrderService: ordersResponse
+
+    OrderService --> OrdersPerMonthResponse: ordersPerMonthResponse
+    activate OrdersPerMonthResponse
+    deactivate OrderService
+
+    deactivate OrdersResponse
+
+    OrdersPerMonthResponse --> OrderController: ordersPerMonthResponse
+
+    OrderController --> ServiceV: ordersPerMonthResponse
+
+    deactivate OrdersPerMonthResponse
+
+
+
+
+
+    deactivate OrderController
+    deactivate OrdersResponse
+
+else Selected Orders-per-service
+
+    ServiceV -> ServiceController: GET /api/v1/corso/services/orders-per-service
+    activate ServiceController
+
+    ServiceController -> ServiceService: getOrdersPerService()
+    activate ServiceService
+
+    ServiceService -> OrderService: getAllOrders()
+    activate OrderService
+
+    OrderService -> OrderRepository: findAll()
+    activate OrderRepository
+
+    OrderRepository -> Database: SELECT * FROM orders;
+
+    activate Database
+
+    Database --> OrderRepository: orders
+
+    deactivate Database
+
+    OrderRepository --> OrderService: orders
+
+    deactivate OrderRepository
+
+    OrderService -> OrderResponseMapper: toOrdersResponse(orders)
+
+    activate OrderResponseMapper
+
+    OrderResponseMapper --> OrdersResponse: ordersResponse
+
+    deactivate OrderResponseMapper
+
+    activate OrdersResponse
+
+    OrdersResponse --> OrderService: ordersResponse
+
+    OrderService --> ServiceService: ordersResponse
+
+    deactivate OrderService
+
+    ServiceService -> ServiceRepository: findAll()
+
+    activate ServiceRepository
+
+    ServiceRepository -> Database: SELECT * FROM services;
+
+    activate Database
+
+    Database --> ServiceRepository: services
+
+    deactivate Database
+
+    ServiceRepository --> ServiceResponse: services
+
+    activate ServiceResponse
+
+    deactivate ServiceRepository
+
+    ServiceResponse --> ServiceService: services
+
+    ServiceService --> OrdersPerServiceResponse: ordersPerServiceResponse
+
+    activate OrdersPerServiceResponse
+
+    deactivate OrdersResponse
+
+    deactivate ServiceResponse
+
+    OrdersPerServiceResponse --> ServiceController: ordersPerServiceResponse
+
+    ServiceController --> ServiceV: ordersPerServiceResponse
+
+    deactivate ServiceService
+
+    deactivate ServiceController
+
+    deactivate OrdersPerServiceResponse
+
+end
+
+@enduml
