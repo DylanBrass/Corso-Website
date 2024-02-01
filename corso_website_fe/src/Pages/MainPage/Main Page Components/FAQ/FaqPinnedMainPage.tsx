@@ -42,29 +42,35 @@ function FaqPinnedMainPage() {
                 <div className="col-md-5">
                     <h1 className="faq-title-mainPage">{t("faq")}</h1>
                     <p className="faq-blurb">{t("faqBlurb")}</p>
-                    <div className={"row"}>
-                        <div className={"col-8 align-items-right"}>
+                    <div className="row flex-row">
+                        <div className="col-8">
                             <a href="/faq" className="view-more-faq">View More Faq</a>
                         </div>
-                        <div className={"col-4 align-items-left"}>
-                            <img src={arrowImg} alt="arrow" className={"arrow"}/>
+                        <div className="col-4 align-items-left">
+                            <img src={arrowImg} alt="arrow" className="arrow"/>
                         </div>
                     </div>
                 </div>
                 <div className="col-md-7">
-                    {preferredFaq.map((value) => (
-                        <FaqTileMainPage
+                    {preferredFaq.map((value, index) => (
+                        <div
                             // @ts-ignore
                             key={value.id}
-                            // @ts-ignore
-                            id={value.id}
-                            // @ts-ignore
-                            question={value.question}
-                            // @ts-ignore
-                            answer={value.answer}
-                        />
+                            style={index < 3 ? { marginTop: '1rem' } : {}}
+                            className={index < 3 ? "faq-item-small-screen" : ""}
+                        >
+                            <FaqTileMainPage
+                                // @ts-ignore
+                                id={value.id}
+                                // @ts-ignore
+                                question={value.question}
+                                // @ts-ignore
+                                answer={value.answer}
+                            />
+                        </div>
                     ))}
                 </div>
+
             </div>
         </div>
     );

@@ -1,4 +1,6 @@
 .services-container {
+    margin-top: 90px;
+    margin-bottom: 30px;
 
     .subtitle-services {
     color: rgba(0, 0, 0, 0.50);
@@ -25,18 +27,6 @@
         padding: 3rem 2rem;
         min-height: 400px;
         width: 95%;
-        transition: all 0.5s ease-in-out;
-
-        &:hover{
-            box-shadow: 5px 5px 20px 0px rgba(64, 88, 166, 0.5);
-            transition: all 0.5s ease-in-out;
-        }
-
-        &:after{
-            box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s ease-in-out;
-        }
-
 
     }
 
