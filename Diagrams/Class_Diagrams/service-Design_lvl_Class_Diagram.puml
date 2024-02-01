@@ -101,9 +101,6 @@ package "ServiceSubdomain"{
 
         interface repository extends JpaRepository
 
-
-        serviceImpl --> service
-
         repository --> service
 
         service --> ServiceIdentifier

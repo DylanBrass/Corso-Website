@@ -1,0 +1,970 @@
+@startuml
+
+package "Review_Subdomain"{
+    package "presentationlayer" {
+        class "<<controller>>\nReviewController" as reviewController {
+            - reviewService: ReviewService
+            + getAllReviews(queryParams: Map<String, String>, pageSize: int, offset: int): ResponseEntity<List<ReviewResponse>>
+            + getPinnedReviews(idToken: String): ResponseEntity<List<ReviewResponse>>
+            + getReviewsByUserId(principal: OidcUser): ResponseEntity<List<ReviewResponse>>
+            + updateReview(reviewId: String, reviewUpdateRequest: ReviewUpdateRequest): ResponseEntity<ReviewResponse>
+            + getPinnedReviewsCount(): ResponseEntity<Integer>
+            + getAllReviewsCount(): ResponseEntity<Integer>
+            + customerCreateReview(principal: OidcUser, reviewRequest: ReviewRequest): ResponseEntity<ReviewResponse>
+            + getReviewByReviewIdAndUserId((principal: OidcUser, reviewId: String): ResponseEntity<ReviewResponse>
+            + deleteCustomerReview(principal: OidcUser, reviewId: String): ResponseEntity<Void>
+        }
+        class "ReviewResponse" as reviewResponse {
+            + reviewId: String
+            + userId: String
+            + customerFullName: String
+            + reviewDate: String
+            + message: String
+            + reviewRating: int
+            + pinned: boolean
+            + totalReviewsMatchingRequest: int
+        }
+        class "ReviewRequest" as reviewRequest {
+            + customerFullName: String
+            + message: String
+            + reviewRating: int
+        }
+        class "ReviewUpdateRequest" as reviewUpdateRequest {
+            + reviewId: String
+            + pinned: boolean
+        }
+    }
+
+    package "businesslayer" {
+        interface "ReviewService" as reviewService {
+            + getReviews(params: Map<String, String>, pageSize: int, offset: int): List<ReviewResponse>
+            + getPinnedReviews(pinned: boolean): List<ReviewResponse>
+            + getReviewsByUserId(userId: String): List<ReviewResponse>
+            + getReviewByReviewId(reviewId: String): ReviewResponse
+            + updatePinnedReviewByReviewId(reviewId: String, reviewRequest: ReviewRequest): ReviewResponse
+            + customerCreateReview(userId: String, reviewRequest: ReviewRequest): ReviewResponse
+            + getCountAllByState(state: boolean): Integer
+            + getCountAllReviews(): Integer
+            + getReviewByReviewIdAndUserId(reviewId: String, userId: String): ReviewResponse
+            + deleteCustomerReview(reviewId: String, userId: String): Void
+            + updateCustomerReview(reviewId: String, userId: String, reviewRequest: ReviewRequest): ReviewResponse
+        }
+        class "<<service>>\nReviewServiceImpl" as reviewServiceImpl {
+            - orderService: OrderService
+            - reviewRepository: ReviewRepository
+            - reviewResponseMapper: ReviewResponseMapper
+            - customerService: CustomerService
+            - auth0ManagementService: Auth0ManagementService
+            - emailService: EmailService
+            - reviewRequestMapper: ReviewRequestMapper
+            + getReviews(params: Map<String, String>, pageSize: int, offset: int): List<ReviewResponse>
+            + getPinnedReviews(pinned: boolean): List<ReviewResponse>
+            + getReviewsByUserId(userId: String): List<ReviewResponse>
+            + getReviewByReviewId(reviewId: String): ReviewResponse
+            + updatePinnedReviewByReviewId(reviewId: String, reviewRequest: ReviewRequest): ReviewResponse
+            + customerCreateReview(userId: String, reviewRequest: ReviewRequest): ReviewResponse
+            + getCountAllByState(state: boolean): Integer
+            + getCountAllReviews(): Integer
+            + getReviewByReviewIdAndUserId(reviewId: String, userId: String): ReviewResponse
+            + deleteCustomerReview(reviewId: String, userId: String): Void
+            + updateCustomerReview(reviewId: String, userId: String, reviewRequest: ReviewRequest): ReviewResponse
+            + sendEmailToAdmins(subject: String, template: String, parameters: Map<String, String>): Void
+        }
+        class reviewServiceImpl implements reviewService
+    }
+
+    package "datalayer" {
+        interface "<<repository>>\nReviewRepository" as reviewRepository {
+            + getReviewByPinned(pinned: boolean): List<Review>
+            + findReviewByReviewId_ReviewId(reviewId: String): Review
+            + countAllByPinned(pinned: boolean): Integer
+            + findAllByCustomerFullNameStartingWithAndPagination(customerFullName: String, pageSize: int, offset: int): List<Review>
+            + findAllByUserId(userId: String): List<Review>
+            + findAllReviews(pageSize: int, offset: int): List<Review>
+            + reviewInLastWeekForUser(userId: String): boolean
+            + countAllByCustomerFullNameStartingWith(customerFullName: String): Integer
+            + countAllBy(): Integer
+            + findReviewByReviewId_ReviewIdAndUserId(reviewId: String, userId: String): Review
+        }
+        class "ReviewIdentifier" as reviewIdentifier {
+            + reviewId: String
+            + ReviewIdentifier()
+            + getReviewId(): String
+        }
+        class "Review" as review {
+            - id: int
+            - reviewId: ReviewIdentifier
+            - userId: String
+            - customerFullName: String
+            - reviewDate: LocalDate
+            - message: String
+            - reviewRating: int
+            - pinned: boolean
+        }
+        interface reviewRepository extends JpaRepository
+    }
+
+    package "datamapperlayer" {
+        interface "<<Mapper>>\nReviewRequestMapper" as reviewRequestMapper {
+            + toReview(reviewRequest: ReviewRequest): Review
+        }
+        interface "<<Mapper>>\nReviewResponseMapper" as reviewResponseMapper {
+            + toReviewResponse(review: Review): ReviewResponse
+            + toReviewsResponse(reviews: List<Review>): List<ReviewResponse>
+        }
+    }
+}
+
+reviewController ..> reviewService
+
+reviewController ..> reviewResponse
+reviewController ..> reviewRequest
+reviewController ..> reviewUpdateRequest
+
+reviewServiceImpl ..> reviewRepository
+
+reviewServiceImpl ..> reviewResponseMapper
+
+reviewServiceImpl ..> reviewRequestMapper
+
+reviewRepository ..> review
+
+reviewRequestMapper ..> reviewRequest
+
+reviewResponseMapper ..> reviewResponse
+
+review *-> reviewIdentifier
+
+reviewServiceImpl ..> emailService
+reviewServiceImpl ..> auth0ManagementService
+
+package "Order_Subdomain"{
+    package "presentationlayer" {
+        class "<<controller>>\nOrderController" as orderController {
+            - orderService: OrderService
+            + GetAllOrders(querryParams: Map<String, String>, pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + GetAllOrdersByStatus(querryParams: Map<String, String>, pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + GetAllOverdueOrders(pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + createOrderExternal(orderRequestExternal: OrderRequestExternal): ResponseEntity<OrderResponse>
+            + GetOrderByOrderId(orderId: String): ResponseEntity<OrderResponse>
+            + GetCustomerOrders(principal: OidcUser): ResponseEntity<List<OrderResponse>>
+            + UpdateOrderStatusToAccepted(acceptOrderRequest:AcceptOrderRequest, orderId: String): ResponseEntity<OrderResponse>
+            + CountByOrderStatus(status: String): ResponseEntity<Integer>
+            + CountAllOrders(): ResponseEntity<Integer>
+            + UpdateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+            + UpdateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
+            + countAllOverdueOrders(): ResponseEntity<Integer>
+        }
+        class "OrderResponse" as orderResponse{
+            + orderId: String
+            + orderTrackingNumber: String
+            + serviceId: String
+            + service: ServiceResponse
+            + userId: String
+            + progressInformation: String
+            + orderDate: String
+            + dueDate: String
+            + orderStatus: Status
+            + orderDescription: String
+            + customerFullName: String
+            + customerEmail: String
+            + customerPhone: String
+            + customerAddress: String
+            + customerCity: String
+            + customerPostalCode: String
+            + customerApartmentNumber: String
+            + totalOrdersMatchingRequest: int
+            + estimatedDuration: int
+            + hoursWorked: int
+
+        }
+
+        class "OrderRequestExternal" as orderRequestExternal{
+            + serviceId: String
+            + userId: String
+            + progressInformation: String
+            + dueDate: String
+            + orderDescription: String
+            + customerFullName: String
+            + customerEmail: String
+            + customerPhone: String
+            + customerAddress: String
+            + customerCity: String
+            + customerPostalCode: String
+            + customerApartmentNumber: String
+            + estimatedDuration: int
+            + hoursWorked: int
+        }
+
+        class "AcceptOrderRequest" as acceptOrderRequest{
+            + recipient: String
+            + AcceptOrderRequest(recipient: String)
+            + AcceptOrderRequest()
+
+        }
+        class "DeclineOrderRequest" as declineOrderRequest{
+            + recipient: String
+            + reasonForDecline: String
+            + DeclineOrderRequest(recipient: String, reasonForDecline: String)
+            + DeclineOrderRequest()
+        }
+
+
+
+    }
+
+    package "businesslayer" {
+        interface "OrderService" as orderService{
+            + getAllOrders(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOrdersByStatus(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOverdueOrders(pageSize: int, offset: int): List<OrderResponse>
+            + createOrderExternal(orderRequestExternal: OrderRequestExternal): OrderResponse
+            + getOrderByOrderId(orderId: String): OrderResponse
+            + getCustomerOrders(userId: String, pageSize: int, offset: int): List<OrderResponse>
+            + getOrderByIdAndUserId(orderId: String, userId: String): Order
+            + updateOrderStatusToAccepted(orderId: String, acceptOrderRequest:AcceptOrderRequest): OrderResponse
+            + countByOrderStatus(status: String): Integer
+            + getCustomerCurrentOrders(userId: String, status: String): List<OrderResponse>
+            + countAllOrders(): int
+            + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + findAnyUserOrders(userId: String): List<Order>
+            + updateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
+            + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
+            + countAllOverdueOrders(): Integer
+        }
+
+
+        class "<<service>>\nOrderServiceImpl" as orderServiceImpl{
+            - orderRepository: OrderRepository
+            - orderResponseMapper: OrderResponseMapper
+            - orderRequestMapper: OrderRequestMapper
+            - serviceService: ServiceService
+            - auth0ManagementService: Auth0ManagementService
+            - emailService: EmailService
+            ---
+            + getAllOrders(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOrdersByStatus(querryParams: Map<String, String>, pageSize: int, offset: int): List<OrderResponse>
+            + getAllOverdueOrders(pageSize: int, offset: int): List<OrderResponse>
+            + createOrderExternal(orderRequestExternal: OrderRequestExternal): OrderResponse
+            + getOrderByOrderId(orderId: String): OrderResponse
+            + getCustomerOrders(userId: String, pageSize: int, offset: int): List<OrderResponse>
+            + getOrderByIdAndUserId(orderId: String, userId: String): Order
+            + updateOrderStatusToAccepted(orderId: String, acceptOrderRequest:AcceptOrderRequest): OrderResponse
+            + countByOrderStatus(status: String): Integer
+            + getCustomerCurrentOrders(userId: String, status: String): List<OrderResponse>
+            + countAllOrders(): int
+            + updateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + updateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): OrderResponse
+            + findAnyUserOrders(userId: String): List<Order>
+            + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
+            + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
+            + getAllOrdersWithPagination(pageSize: int, offset: int): List<OrderResponse>
+            + getAllOrdersWithDefaultSettings(): List<OrderResponse>
+            + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
+            + countAllOverdueOrders(): Integer
+
+        }
+
+        class orderServiceImpl implements orderService
+
+    }
+
+    package "datalayer" {
+
+        interface "<<repository>>\nOrderRepository" as orderRepository{
+            + findAllByOrderStatusEquals(status: String): List<Order>
+            + findAllByOrderStatusWithPagination(status: String, pageSize: int, offset: int): List<Order>
+            + findAllOrders(pageSize: int, offset: int): List<Order>
+            + findAllOverdueOrdersWithPagination(pageSize: int, offset: int): List<Order>
+            + findAllOverdueOrders(): List<Order>
+            + findByOrderId_OrderId(orderId: String): Order
+            + findAllByUserIdWithPagination(userId: String, pageSize: int, offset: int): List<Order>
+            + countByUserId(userId: String): Integer
+            + countByOrderStatus(status: String): Integer
+            + countOverdueOrders(): Integer
+            + findByOrderId_OrderIdAndUserId_UserId(orderId: String, userId: String): Order
+            + findAllByUserIdAndOrderStatusWithPagination(userId: String, pageSize: int, offset: int, status: String): List<Order>
+            + countByUserIdAndOrderStatus(userId: String, status: String): Integer
+            + findAllByUserIdAndOrderStatus(userId: String, status: String): List<Order>
+            + countAllBy(): Integer
+            + existsByUserId(userId: String): Boolean
+        }
+        class OrderIdentifier {
+            - orderId: String
+            + OrderIdentifier()
+            + getOrderId(): String
+        }
+
+        class OrderTrackingNumber {
+            - orderTrackingNumber: String
+            + OrderTrackingNumber()
+            + generateRandomString(length: int): String
+        }
+
+        enum Status {
+            PENDING,
+             IN_PROGRESS,
+             COMPLETED,
+             CANCELLED,
+             DEClINED
+        }
+
+        class "Order" as order{
+            - id: String
+            - orderIdentifier: OrderIdentifier
+            - orderTrackingNumber: OrderTrackingNumber
+            - serviceId: String
+            - userId: String
+            - progressInformation: String
+            - orderDate: String
+            - dueDate: String
+            - orderStatus: Status
+            - orderDescription: String
+            - customerFullName: String
+            - customerEmail: String
+            - customerPhone: String
+            - customerAddress: String
+            - customerCity: String
+            - customerPostalCode: String
+            - customerApartmentNumber: String
+            - estimatedDuration: int
+            - hoursWorked: int
+
+            + Order(serviceId: String, userId: String, progressInformation: String, orderDate:String, dueDate: String, orderStatus: String, orderDescription: String, customerFullName: String, customerEmail: String, customerPhone: String, customerAddress: String, customerCity: String, customerPostalCode: String, customerApartmentNumber: String, estimatedDuration: int, hoursWorked: int)
+        }
+
+        interface orderRepository extends JpaRepository
+    }
+
+    package "datamapperlayer" {
+
+        interface "<<Mapper>>\nOrderRequestMapper" as orderRequestMapper{
+            + requestModelToOrder(requestModel: OrderRequestExternal): Order
+        }
+
+        interface "<<Mapper>>\nOrderResponseMapper" as orderResponseMapper{
+            + toOrderResponse(order: Order): OrderResponse
+            + toOrdersResponse(orders: List<Order>): List<OrderResponse>
+        }
+    }
+}
+
+orderResponse ..> Status
+
+orderController ..> orderService
+
+orderController ..> orderResponse
+
+orderController ..> orderRequestExternal
+
+orderController ..> acceptOrderRequest
+
+orderController ..> declineOrderRequest
+
+orderServiceImpl ..> orderRepository
+
+orderServiceImpl ..> orderResponseMapper
+
+orderServiceImpl ..> orderRequestMapper
+
+orderServiceImpl ..> auth0ManagementService
+
+orderServiceImpl ..> emailService
+
+orderRepository ..> order
+
+orderRequestMapper ..> orderRequestExternal
+
+orderResponseMapper ..> orderResponse
+
+order *--> OrderIdentifier
+
+order *--> OrderTrackingNumber
+
+order ..> Status
+
+reviewServiceImpl ..> orderService
+
+package "Customer_Subdomain" {
+    package "presentationlayer" {
+        class "<<Controller>>\nCustomerController" as customerController {
+            - customerService: CustomerService
+            - orderService: OrderService
+            - reviewService: ReviewService
+            + deleteCustomer(principal: OidcUser): ResponseEntity<Void>
+            + getCustomerByUserId(principal: OidcUser, requestParams: Map<String, String>): ResponseEntity<CustomerResponse>
+            + createCustomer(principal: OidcUser, customerRequest: CustomerRequest): ResponseEntity<CustomerResponse>
+            + updateCustomer(principal: OidcUser, customerRequest: CustomerRequest): ResponseEntity<CustomerResponse>
+            + getCustomerWithOrders(principal: OidcUser, pageSize: int, offset: int): ResponseEntity<List<OrderResponse>>
+            + getOrderByOrderId(principal: OidcUser, orderId: String): ResponseEntity<OrderResponse>
+            + deleteOrderByOrderId(orderId: String, cancelOrderRequest: CustomerCancelOrderRequest, principal: OidcUser): ResponseEntity<Void>
+            + updateOrderByOrderId(orderId: String, customerUpdateOrderRequest: OrderCustomerRequest, principal: OidcUser): ResponseEntity<OrderResponse>
+            + updateCustomerReview(principal: OidcUser, reviewId: String, reviewRequest: ReviewRequest): ResponseEntity<ReviewResponse>
+            + verifyCustomer(principal: OidcUser): ResponseEntity<Void>
+        }
+        class "CustomerResponse" as customerResponse {
+            + userId: String
+            + email: String
+            + name: String
+            + phone: String
+            + address: String
+            + postalCode: String
+            + city: String
+            + apartmentNumber: String
+            + verified: boolean
+        }
+        class "CustomerRequest" as customerRequest {
+            + email: String
+            + name: String
+            + phone: String
+            + address: String
+            + postalCode: String
+            + city: String
+            + apartmentNumber: String
+        }
+        class "CustomerCancelOrderRequest" as customerCancelOrderRequest {
+            + reasonForCancel: String
+            CustomerCancelOrderRequest(reason: String)
+        }
+    }
+
+    package "businesslayer" {
+        interface "CustomerService" as customerService {
+            + getCustomerByUserId(userId: String): CustomerResponse
+            + createCustomer(customerRequest: CustomerRequest, userId: String): CustomerResponse
+            + updateCustomer(customerRequest: CustomerRequest, userId: String): CustomerResponse
+            + deleteCustomer(userId: String): Void
+            + checkIfCustomerExists(userId: String): Boolean
+            + getCustomerByQueryParams(queryParams: Map<String, String>): List<CustomerResponse>
+            + verifyEmail(token: String, email:String): Void
+            + verifyCustomer(userId: String): Void
+        }
+        class "<<service>>\nCustomerServiceImpl" as customerServiceImpl {
+            - customerRepository: CustomerRepository
+            - customerResponseMapper: CustomerResponseMapper
+            - customerRequestMapper: CustomerRequestMapper
+            - emailService: EmailService
+            - verificationTokenRepository: VerificationTokenRepository
+            + getCustomerByUserId(userId: String): CustomerResponse
+            + createCustomer(customerRequest: CustomerRequest, userId: String): CustomerResponse
+            + updateCustomer(customerRequest: CustomerRequest, userId: String): CustomerResponse
+            + deleteCustomer(userId: String): Void
+            + checkIfCustomerExists(userId: String): Boolean
+            + getCustomerByQueryParams(queryParams: Map<String, String>): List<CustomerResponse>
+            + verifyEmail(token: String, email:String): Void
+            + verifyCustomer(userId: String): Void
+            + sendVerificationEmail(userId: String, email: String): Void
+        }
+        class customerServiceImpl implements customerService
+    }
+
+    package "datalayer" {
+        interface "<<repository>>\nCustomerRepository" as customerRepository {
+            + getCustomerByUserId(userId: String): Customer
+            + deleteCustomerByUserId(userId: String): Void
+            + existsByUserId(userId: String): Boolean
+            + findAllByNameStartingWithAndVerified(name: String, isVerified: Boolean): List<Customer>
+            + findAllByEmailStartingWithAndVerified(email: String, isVerified: Boolean): List<Customer>
+            + getCustomerByEmailAndUserId(email: String, userId: String): Customer
+        }
+        class Customer {
+            - id: int
+            - userId: String
+            - name: String
+            - email: String
+            - phone: String
+            - address: String
+            - postalCode: String
+            - city: String
+            - apartmentNumber: String
+            - verified: boolean
+        }
+        interface customerRepository extends JpaRepository
+    }
+
+    package "datamapperlayer" {
+        interface "<<Mapper>>\nCustomerRequestMapper" as customerRequestMapper {
+                + toCustomer(customerRequest: CustomerRequest): Customer
+        }
+        interface "<<Mapper>>\nCustomerResponseMapper" as customerResponseMapper {
+            + toCustomerResponse(customer: Customer): CustomerResponse
+            + toCustomersResponse(allByNameAndEmail: List<Customer>): List<CustomerResponse>
+        }
+    }
+
+    customerController ..> customerService
+    customerController ..> orderService
+    customerController ..> reviewService
+
+    customerController ..> customerResponse
+    customerController ..> customerRequest
+    customerController ..> customerCancelOrderRequest
+
+    customerServiceImpl ..> customerRepository
+
+    customerServiceImpl ..> customerResponseMapper
+
+    customerServiceImpl ..> customerRequestMapper
+
+    customerServiceImpl ..> emailService
+
+    customerServiceImpl ..> verificationTokenRepository
+
+    customerRepository ..> Customer
+
+    customerRequestMapper ..> customerRequest
+
+    customerResponseMapper ..> customerResponse
+}
+
+reviewServiceImpl ..> customerService
+
+package "FAQ_Subdomain"{
+    package "presentationlayer" {
+        class "<<controller>>\nFAQController" as FAQController {
+            - faqService: FAQService
+            + getFAQs(): ResponseEntity<List<FAQResponse>>
+            + getPreferredFAQs(): ResponseEntity<List<FAQResponse>>
+            + chooseThreeFAQs(threeFAQsRequests: List<ThreeFAQsRequest>): ResponseEntity<List<FAQResponse>>
+            + getFaqByFaqId(faqId: String): ResponseEntity<FAQResponse>
+            + deleteFaqByFaqId(faqId: String): ResponseEntity<FAQResponse>
+            + getFAQCount(): ResponseEntity<Integer>
+            + updateFaqByFaqId(faqId: String, faqRequest: FAQRequest): ResponseEntity<FAQResponse>
+            + createFaq(faqRequest: FAQRequest): ResponseEntity<FAQResponse>
+        }
+        class "FAQRequest" as FAQRequest {
+            + question: String
+            + answer: String
+            + preference: boolean
+        }
+        class "ThreeFAQsRequest" as ThreeFAQsRequest {
+            + faqId: String
+            + preference: boolean
+        }
+        class "FAQResponse" as FAQResponse {
+            + FAQId: String
+            + question: String
+            + answer: String
+            + preference: boolean
+        }
+    }
+
+    package "businesslayer" {
+         interface "FAQService" as FAQService {
+            + getFAQs(): List<FAQResponse>
+            + getPreferredFAQs(): List<FAQResponse>
+            + chooseThreeFAQs(threeFAQsRequests: List<ThreeFAQsRequest>): List<FAQResponse>
+            + getFaqByFaqId(faqId: String): FAQResponse
+            + deleteFaqByFaqId(faqId: String): FAQResponse
+            + getFAQCount(): Integer
+            + modifyFAQ(faqId: String, faqRequest: FAQRequest): FAQResponse
+            + createFAQ(faqRequest: FAQRequest): FAQResponse
+         }
+
+         class "<<service>>\nFAQServiceImpl" as FAQServiceImpl {
+            - faqRepository: FAQRepository
+            - faqResponseMapper: FAQResponseMapper
+            - faqRequestMapper: FAQRequestMapper
+            --
+            + getFAQs(): List<FAQResponse>
+            + getPreferredFAQs(): List<FAQResponse>
+            + chooseThreeFAQs(threeFAQsRequests: List<ThreeFAQsRequest>): List<FAQResponse>
+            + getFaqByFaqId(faqId: String): FAQResponse
+            + deleteFaqByFaqId(faqId: String): FAQResponse
+            + getFAQCount(): Integer
+            + modifyFAQ(faqId: String, faqRequest: FAQRequest): FAQResponse
+            + createFAQ(faqRequest: FAQRequest): FAQResponse
+         }
+         class FAQServiceImpl implements FAQService
+    }
+
+    package "datalayer" {
+        interface "<<repository>>\nFAQRepository" as FAQRepository {
+            + getFAQByFAQId_FAQId(faqId: String): FAQ
+            + getFAQSByPreferenceTrue(): List<FAQ>
+            + countFAQBy(): Integer
+        }
+
+        class "FAQIdentifier" as FAQIdentifier {
+            + FAQId: String
+            + FAQIdentifier()
+            + getFAQId(): String
+        }
+
+        class "FAQ" as FAQ {
+            + id: int
+            + FAQId: FAQIdentifier
+            + question: String
+            + answer: String
+            + preference: boolean
+            + FAQ(question: String, answer: String, preference: boolean)
+        }
+        interface FAQRepository extends JpaRepository
+    }
+
+    package "datamapperlayer" {
+        interface "<<Mapper>>\nFAQResponseMapper" as FAQResponseMapper {
+            + toFAQResponse(faq: FAQ): FAQResponse
+            + toFAQsResponse(faqs: List<FAQ>): List<FAQResponse>
+        }
+        interface "<<Mapper>>\nFAQRequestMapper" as FAQRequestMapper {
+            + toThreeFAQsRequests(threeFaqsRequest ThreeFAQsRequest): FAQ
+        }
+    }
+
+}
+
+FAQController ..> FAQService
+
+FAQController ..> FAQRequest
+FAQController ..> ThreeFAQsRequest
+FAQController ..> FAQResponse
+
+FAQServiceImpl..> FAQRepository
+FAQServiceImpl..> FAQResponseMapper
+FAQServiceImpl..> FAQRequestMapper
+
+FAQRepository ..> FAQ
+
+FAQRequestMapper ..> FAQRequest
+
+FAQRequestMapper ..> ThreeFAQsRequest
+FAQResponseMapper ..> FAQResponse
+
+FAQ *-> FAQIdentifier
+
+package "GallerySubdomain"{
+    package "Presentation Layer" {
+        class "<<controller>>\nGalleryController" as galleryController {
+            - galleryService : GalleryService
+            ---
+            + GalleryController(galleryService : GalleryService)
+            + GetGallery() : ResponseEntity<List<GalleryResponse>>
+            + updateGalleryOrder(galleryOrderUpdateRequest: List<GalleryOrderUpdateRequest>) : ResponseEntity<List<GalleryResponse>>
+            + getGalleryCount() : ResponseEntity<Integer>
+            + createGallery(galleryRequest : GalleryRequest) : ResponseEntity<GalleryResponse>
+            + getGalleryById(galleryId : String) : ResponseEntity<GalleryResponse>
+        }
+
+
+        class "GalleryResponse" as galleryResponse{
+            - galleryId : String
+            - description : String
+            - photo : String
+            - image_position : int
+            ---
+
+        }
+
+        class "GalleryRequest" as galleryRequest{
+            - description : String
+            - photo : String
+            - image_position : int
+            ---
+
+        }
+
+        class "GalleryOrderUpdateRequest" as galleryOrderUpdateRequest{
+            - galleryId : String
+            - image_position : int
+            ---
+
+        }
+
+
+    }
+
+    package "Business Layer"{
+        interface "GalleryService" as galleryService{
+            ---
+            + getGallery: List<GalleryResponse>
+            + updateGalleryOrder(galleryOrderUpdateRequest: List<GalleryOrderUpdateRequest>) : List<GalleryResponse>
+            + getGalleryCount() : Integer
+            + createGallery(galleryRequest : GalleryRequest) : GalleryResponse throws IOException
+            + getGalleryById(galleryId : String) : GalleryResponse
+        }
+
+        class "<<service>>\nGalleryServiceImpl" as galleryServiceImpl{
+            - galleryRepository : GalleryRepository
+            - galleryRequestMapper : GalleryRequestMapper
+            - galleryResponseMapper : GalleryResponseMapper
+            - cloudinaryService : CloudinaryService
+            ---
+            + getGallery() : List<GalleryResponse>
+            + updateGalleryOrder(galleryOrderUpdateRequest: List<GalleryOrderUpdateRequest>) : List<GalleryResponse>
+            + getGalleryCount() : Integer
+            + createGallery(galleryRequest : GalleryRequest) : GalleryResponse throws IOException
+            + getGalleryById(galleryId : String) : GalleryResponse
+
+        }
+        class galleryServiceImpl extends galleryService
+
+    }
+
+
+    package "Datalayer"{
+
+        interface "<<repository>>\nGalleryRepository" as galleryRepository{
+            ---
+            + getGalleryByGalleryId_GalleryId(galleryId : String) : Gallery
+            + countGalleryBy() : Integer
+        }
+
+        class GalleryIdentifier {
+            - galleryId : String
+            ---
+            + GalleryIdentifier()
+            + getGalleryId() : String
+
+        }
+
+        class "Gallery" as gallery{
+            - id : int
+            - galleryId : GalleryIdentifier
+            - description : String
+            - photo : String
+            - image_position : int
+            ---
+            + Gallery(description : String, photo : String, image_position : int)
+
+        }
+
+
+
+
+    }
+
+
+
+    package "Mapperlayer"{
+
+        interface "<<Mapper>>\nGalleryRequestMapper" as galleryRequestMapper{
+            ---
+                + toGalleryOrderUpdateRequest(galleryOrderUpdateRequest : GalleryOrderUpdateRequest) : Gallery
+                + toGalleryRequest(galleryRequest : GalleryRequest) : Gallery
+
+            }
+
+        interface "<<Mapper>>\nGalleryResponseMapper" as galleryResponseMapper{
+            ---
+            + toGalleryResponse(gallery : Gallery) : GalleryResponse
+            + toGalleriesResponse(galleries : List<Gallery>) : List<GalleryResponse>
+        }
+
+    }
+
+
+    galleryRequestMapper ..> galleryRequest
+
+    galleryResponseMapper ..> galleryResponse
+
+
+    galleryRequestMapper ..> galleryOrderUpdateRequest
+
+
+    galleryRepository ..> gallery
+
+    galleryServiceImpl ..> galleryResponseMapper
+    galleryServiceImpl ..> galleryRequestMapper
+
+
+
+
+    galleryController ..> galleryResponse
+    galleryController ..> galleryRequest
+
+
+
+    galleryController ..> galleryService
+    galleryController ..> galleryOrderUpdateRequest
+
+    galleryServiceImpl ..> galleryRepository
+
+    gallery ..> GalleryIdentifier
+}
+
+
+package "cloudinary"{
+
+    class CloudinaryService {
+        - cloudinary : Cloudinary
+        ---
+        + CloudinaryService()
+        + uploadBase64Image(base64Image : String) : String throws IOException
+        + extractPublicIdFromCloudinaryUrl(cloudinaryUrl : String) : String
+        + updateCloudinaryImage(publicId: String, base64Image : String) : String throws IOException
+    }
+
+}
+
+galleryServiceImpl ..> CloudinaryService
+
+package "ServiceSubdomain"{
+
+    package "PresentationLayer"{
+
+        class "<<controller>>\nServicesController" as serviceController {
+            - serviceService : ServiceService
+            ---
+            + ServiceController(serviceService : ServiceService)
+            + getServiceById(serviceId : String) : ResponseEntity<ServiceResponse>
+            + getAllServices() : ResponseEntity<List<ServiceResponse>>
+            + getAllVisibleServices() : ResponseEntity<List<ServiceResponse>>
+            + createService(serviceRequest : ServiceRequest) : ResponseEntity<ServiceResponse>
+            + countAllServices() : ResponseEntity<Integer>
+            + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ResponseEntity<ServiceResponse>
+            + changeServiceVisibility(serviceId : String) : ResponseEntity<ServiceResponse>
+        }
+
+        class "ServiceResponse" as serviceResponse{
+                - serviceId : String
+                - serviceName: String
+                - serviceDescription : String
+                - serviceIcon : String
+                - serviceImage : String
+                - isActive : boolean
+               ---
+        }
+
+        class "ServiceRequest" as serviceRequest{
+               - serviceName: String
+               - serviceDescription : String
+               - serviceIcon : String
+               - serviceImage : String
+               - isActive : boolean
+               ---
+        }
+
+
+    }
+
+    package "BusinessLayer"{
+        interface "ServiceService" as serviceService {
+            ---
+            + getServiceByServiceId(serviceId : String) : ServiceResponse
+            + getAllServices() : List<ServiceResponse>
+            + getAllVisibleServices() : List<ServiceResponse>
+            + createService(serviceRequest : ServiceRequest) : ServiceResponse
+            + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
+            + changeServiceVisibility(serviceId : String) : ServiceResponse
+            + countAllServices() : int
+        }
+
+        class "<<service>>\nServiceServiceImpl" as serviceServiceImpl{
+            - serviceRepository : ServiceRepository
+            - serviceRequestMapper : ServiceRequestMapper
+            - serviceResponseMapper : ServiceResponseMapper
+            - cloudinaryService : CloudinaryService
+            ---
+             + getServiceByServiceId(serviceId : String) : ServiceResponse
+             + getAllServices() : List<ServiceResponse>
+             + getAllVisibleServices() : List<ServiceResponse>
+             + createService(serviceRequest : ServiceRequest) : ServiceResponse
+             + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
+             + changeServiceVisibility(serviceId : String) : ServiceResponse
+             + countAllServices() : int
+        }
+
+        class serviceServiceImpl extends serviceService
+    }
+
+    package "DataLayer"{
+        interface "<<repository>>\nServiceRepository" as serviceRepository{
+            ---
+            + findByServiceIdentifier_ServiceId(serviceId : String) : Service
+            + findAllByIsActive(isActive : boolean) : List<Service>
+            + countAllBy() : int
+        }
+
+        class ServiceIdentifier {
+            - serviceId : String
+            ---
+            + ServiceIdentifier(serviceId : String)
+            + ServiceIdentifier()
+            + getServiceId() : String
+
+        }
+
+        class "ServiceEntity" as serviceEntity{
+            - id : int
+            - serviceId : ServiceIdentifier
+            - serviceName: String
+            - serviceDescription : String
+            - serviceIcon : String
+            - serviceImage : String
+            - isActive : boolean
+            ---
+            + ServiceEntity()
+            + ServiceEntity(serviceName: String, serviceDescription: String, serviceIcon: String, serviceImage: Sting, isActive: boolean)
+
+        }
+
+        interface serviceRepository extends JpaRepository
+
+        serviceRepository ..> serviceEntity
+
+        serviceEntity ..> ServiceIdentifier
+
+    }
+
+    package "MapperLayer"{
+
+
+    interface "<<Mapper>>\nServiceRequestMapper" as serviceRequestMapper{
+        ---
+        + toService(serviceRequest : ServiceRequest) : ServiceEntity
+    }
+
+    interface "<<Mapper>>\nServiceResponseMapper" as serviceResponseMapper{
+        ---
+        + toServiceResponse(service : Service) : ServiceResponse
+        + toServiceResponses(services : List<Services>) : List<ServiceResponse>
+    }
+
+
+
+    }
+
+
+
+
+    serviceRequestMapper ..> serviceRequest
+
+    serviceResponseMapper ..> serviceResponse
+
+
+
+
+    serviceServiceImpl ..> serviceResponseMapper
+    serviceServiceImpl ..> serviceRequestMapper
+
+
+    serviceController ..> serviceResponse
+    serviceController ..> serviceRequest
+
+
+
+    serviceController ..> serviceServiceImpl
+
+    serviceServiceImpl ..> serviceRepository
+
+}
+
+package "cloudinary"{
+
+    class CloudinaryService {
+        - cloudinary : Cloudinary
+        ---
+        + CloudinaryService()
+        + uploadBase64Image(base64Image : String) : String throws IOException
+        + extractPublicIdFromCloudinaryUrl(cloudinaryUrl : String) : String
+        + updateCloudinaryImage(publicId: String, base64Image : String) : String throws IOException
+    }
+
+}
+
+serviceServiceImpl ..> CloudinaryService
+
+orderServiceImpl ..> serviceService
+@enduml
