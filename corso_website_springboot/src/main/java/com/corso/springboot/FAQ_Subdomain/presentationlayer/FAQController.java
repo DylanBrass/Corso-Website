@@ -37,7 +37,13 @@ public class FAQController {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getPreferedFAQs());
     }
 
-    @CacheEvict(value = "faqsPreferred", allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "faqs", allEntries = true),
+                    @CacheEvict(value = "faqsCount", allEntries = true),
+                    @CacheEvict(value = "faqsPreferred", allEntries = true)
+            }
+    )
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PatchMapping("/viewable")
     public ResponseEntity<List<FAQResponse>> chooseThreeFAQs(@RequestBody List<ThreeFAQsRequest> threeFAQsRequests) {
@@ -56,7 +62,7 @@ public class FAQController {
             @CacheEvict(value = "faqs", allEntries = true),
             @CacheEvict(value = "faqsCount", allEntries = true),
             @CacheEvict(value = "faqsPreferred", allEntries = true),
-            @CacheEvict(value = "faq", key = "#faqId")
+            @CacheEvict(value = "faq", allEntries = true)
     })
     @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/{faqId}")
@@ -71,11 +77,12 @@ public class FAQController {
     public ResponseEntity<Integer> getFAQCount() {
         return ResponseEntity.status(HttpStatus.OK).body(faqService.getFAQCount());
     }
+
     @Caching(evict = {
             @CacheEvict(value = "faqs", allEntries = true),
             @CacheEvict(value = "faqsCount", allEntries = true),
             @CacheEvict(value = "faqsPreferred", allEntries = true),
-            @CacheEvict(value = "faq", key = "#faqId")
+            @CacheEvict(value = "faq",allEntries = true)
     })
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PutMapping("/{faqId}")
@@ -87,8 +94,9 @@ public class FAQController {
     @Caching(evict = {
             @CacheEvict(value = "faqs", allEntries = true),
             @CacheEvict(value = "faqsCount", allEntries = true),
-    })
+            @CacheEvict(value = "faqsPreferred", allEntries = true)
 
+    })
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping()
     public ResponseEntity<FAQResponse> createFAQ(@RequestBody FAQRequest faqRequest){
