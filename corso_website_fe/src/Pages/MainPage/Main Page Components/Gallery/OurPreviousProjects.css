@@ -3,6 +3,11 @@
 .Gallery-landing-page {
     --cui-gutter-x: 0rem;
 
+    .row-carousel{
+        --bs-gutter-x: 0rem;
+        --cui-gutter-x: 0rem;
+    }
+
     & h1 {
         color: #333;
         text-align: center;
@@ -273,7 +278,17 @@
         border-radius: 0.3rem;
     }
 
+    .subtitle-carousel{
+        color: rgba(0, 0, 0, 0.70);
+        text-align: center;
+        font-family: Inter, sans-serif;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+    }
 
 
 }
+
 

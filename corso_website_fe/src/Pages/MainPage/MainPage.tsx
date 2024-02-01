@@ -16,7 +16,7 @@ function MainPage() {
 
 
     return (
-        <div>
+        <div className={"remove-gutter"}>
             <NavigationBar/>
             <div id={"banner"}>
                 {

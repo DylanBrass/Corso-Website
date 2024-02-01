@@ -40,12 +40,16 @@ function OurPreviousProjects() {
 
     return (
         <div className={"Gallery-landing-page"}>
-            <div className={"row"}>
+            <div className={"row row-carousel"}>
                 <div className={"col-12 d-flex justify-content-center"}>
                     <h1>{t("previousProjectsPart1")} <span className={"blue-header"}>{t("previousProjectsPart2")}</span></h1>
                 </div>
             </div>
-
+            <div className={"row row-carousel"}>
+                <div className={"col-12 d-flex "}>
+                    <p className={"subtitle-carousel"}>{t("pastProjectsBlurb")}</p>
+                </div>
+            </div>
             <Swiper
                 autoplay={{
                     delay: 2000,
@@ -68,7 +72,7 @@ function OurPreviousProjects() {
                     prevEl: '.swiper-button-prev',
                     clickable: true,
                 }}
-                className="swiper_container"
+                className="swiper_container row-carousel"
             >
                 {images.map((image) => (
                     <SwiperSlide key={image.galleryId}>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AllServices.css';
-import {useTranslation} from "react-i18next"; // Importing CSS file
+import {useTranslation} from "react-i18next";
+import serviceDetailIcon from '../../../../ressources/images/Sign_in_circle.svg';
 
 interface Service {
     serviceId: string;
     serviceName: string;
     serviceIcon: string;
+    serviceDescription: string;
 }
 
 function AllServices() {
@@ -30,10 +32,31 @@ function AllServices() {
         fetchServices();
     }, []);
 
+    function truncateDescription(description: string, wordLimit: number): string {
+        const wordsArray = description.split(' ');
+        if (wordsArray.length > wordLimit) {
+            return wordsArray.slice(0, wordLimit).join(' ') + '...';
+        } else {
+            return description;
+        }
+    }
+
+    function handleImageClick(serviceId: string) {
+        window.location.href = `/ViewServiceDetails/${serviceId}`;
+    }
+
+
     return (
         <div className="container services-container">
-            <div className="row service-header">
-                <h1 className="service-title">{t("services")}</h1>
+            <div className={"border-service mb-5"}>
+                <div className="row service-header">
+                    <h1 className="title-services">{t("services")}</h1>
+                </div>
+                <div className={"row"}>
+                    <div className={"col-12 d-flex"}>
+                        <p className={"subtitle-services"}>{t("servicesBlurb")}</p>
+                    </div>
+                </div>
             </div>
             {error && (
                 <div className="row">
@@ -52,9 +75,22 @@ function AllServices() {
                                 </div>
                                 <div className="service-info">
                                     <h2 className="service-name">{service.serviceName}</h2>
-                                    <a href={`/ViewServiceDetails/${service.serviceId}`} className="details-hyperlink">
-                                        View Details
-                                    </a>
+                                    <p className="service-description">
+                                        {truncateDescription(service.serviceDescription, 20)}
+                                    </p>
+                                    <div className="row align-items-end justify-content-end mt-5">
+                                        <div className="col-6 d-flex justify-content-start align-items-center">
+                                            <p className="learn-more-text">Learn More</p>
+                                        </div>
+                                        <div className="col-6 d-flex justify-content-end align-items-center">
+                                            <img
+                                                src={serviceDetailIcon}
+                                                alt={`${service.serviceName} icon`}
+                                                className="service-detail-icon"
+                                                onClick={() => handleImageClick(service.serviceId)}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

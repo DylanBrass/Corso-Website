@@ -1,0 +1,6 @@
+.remove-gutters {
+  padding-left: 0;
+  padding-right: 0;
+    --bs-gutter-x: 0rem;
+    --cui-gutter-x: 0rem;
+}
