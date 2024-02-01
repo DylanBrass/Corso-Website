@@ -25,7 +25,7 @@ function OurPreviousProjects() {
                 const sortedImages = response.data.sort((a, b) => a.image_position - b.image_position);
                 setImages(sortedImages);
             } catch (error) {
-                // Handle error
+                console.error("API Error:", error);
             }
         };
         fetchImages();
