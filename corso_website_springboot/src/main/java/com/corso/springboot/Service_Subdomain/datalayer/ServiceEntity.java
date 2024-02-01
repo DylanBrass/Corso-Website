@@ -19,9 +19,13 @@ public class ServiceEntity {
     private ServiceIdentifier serviceIdentifier;
 
     private String serviceName;
+
     private String serviceDescription;
+
     private String serviceIcon;
+
     private String serviceImage;
+
     private boolean isActive;
 
     public ServiceEntity(){
