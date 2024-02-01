@@ -9,7 +9,6 @@ import star_fill from "../../../ressources/images/Star_fill.svg";
 import star_empty from "../../../ressources/images/Star.svg";
 import pen from "../../../ressources/images/pen.svg";
 import Trash from "../../../ressources/images/Trash_light.svg";
-import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
 import Popup from 'reactjs-popup';
 import {Rating} from "@mui/material";
@@ -21,7 +20,6 @@ function CustomerViewsSpecificReview() {
     let {reviewId} = useParams();
 
     const auth = useAuth();
-    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
