@@ -37,7 +37,7 @@ function FaqPinnedMainPage() {
     }, []);
 
     return (
-        <div className="faq-container">
+        <div className="faq-container faq-mainPage-container">
             <div className="row">
                 <div className="col-md-5">
                     <h1 className="faq-title-mainPage">{t("faq")}</h1>

@@ -46,7 +46,7 @@ function ReviewPinned() {
                     <Carousel
                         responsive={responsive}
                         infinite={true}
-                        autoPlay={true}
+                        //autoPlay={true}
                         autoPlaySpeed={3000}
                         keyBoardControl={true}
                         customTransition="transform 300ms ease-in-out"

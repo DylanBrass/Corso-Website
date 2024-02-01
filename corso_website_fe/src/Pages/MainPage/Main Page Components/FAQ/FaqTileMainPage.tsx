@@ -7,7 +7,7 @@ function FaqTileMainPage(faq: FAQ) {
     const {t} = useTranslation();
 
     return (
-        <div className={"faq-tile-box"}>
+        <div className={"faq-tile-box faq-mainPage-container"}>
 
             <div className={"row  ms-lg-4"}>
                 <div className={"col-10"}>
