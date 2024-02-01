@@ -1,0 +1,90 @@
+@startuml
+
+actor Admin as User
+
+participant OrdersPage as "<<View>>\nOrdersPage"
+participant CurrentOrdersPage as "<<View>>\nCurrentOrdersPage"
+participant OrderRequest as "orderRequest: OrderRequest"
+participant Controller as "<<Controller>>\nController"
+participant OrderService as "<<Service>>\nOrderService"
+participant EmailService as "<<Service>>\nEmailService"
+participant Response as "response: OrderResponse"
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+participant Order as "order: Order"
+participant Database as "<<Database>>\nDatabase"
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+
+ref over OrdersPage, CurrentOrdersPage, OrderRequest, Controller, OrderService, EmailService, Response, OrderRepository, Order, Database, OrderResponseMapper, OrderRequestMapper
+    ViewAndUpdateOrderStatus
+end ref
+
+opt
+
+--> OrdersPage: updateOrderStatus
+activate OrdersPage
+
+OrdersPage -> CurrentOrdersPage: render()
+activate CurrentOrdersPage
+
+CurrentOrdersPage -> OrderRequest: PATCH /api/v1/corso/orders/{orderId}/progression HTTP/1.1
+activate OrderRequest
+
+OrderRequest -> Controller: updateOrderProgression(orderId, orderRequest)
+activate Controller
+
+Controller -> OrderService: updateOrderProgression(orderId, orderRequest)
+activate OrderService
+
+OrderService -> EmailService: sendEmail(admin: UserInfoResponse.getEmail, String, String, Map<String, String>)
+activate EmailService
+
+EmailService --> OrderService: int
+deactivate EmailService
+
+OrderService -> OrderRequestMapper: maptoOrderRequest: order: Order
+activate OrderRequestMapper
+
+OrderRequestMapper --> Order: order: Order
+activate Order
+
+deactivate OrderRequestMapper
+
+Order --> OrderService: order: Order
+
+OrderService -> OrderRepository: save(order)
+deactivate Order
+
+activate OrderRepository
+
+OrderRepository -> Database: UPDATE INTO orders SET status = order.getStatus() WHERE id = order.getId()
+activate Database
+
+Database --> Order
+deactivate Database
+activate Order
+
+Order -> OrderRepository: order: Order
+
+OrderRepository --> OrderService: order: Order
+deactivate OrderRepository
+
+OrderService -> OrderResponseMapper: maptoOrders
+deactivate Order
+activate OrderResponseMapper
+
+OrderResponseMapper -> Response: response: OrderResponse
+deactivate OrderResponseMapper
+activate Response
+
+Response --> OrderService: response: OrderResponse
+
+OrderService --> Controller: response: OrderResponse
+
+Controller --> CurrentOrdersPage: response: OrderResponse
+
+CurrentOrdersPage -> OrdersPage: render()
+
+end opt
+
+@enduml
