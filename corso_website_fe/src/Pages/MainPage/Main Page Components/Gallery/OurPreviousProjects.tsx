@@ -16,7 +16,7 @@ interface ImageData {
 
 function OurPreviousProjects() {
     const [images, setImages] = useState<ImageData[]>([]);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchImages = async () => {
