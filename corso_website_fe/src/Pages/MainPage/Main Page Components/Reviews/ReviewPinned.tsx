@@ -46,7 +46,7 @@ function ReviewPinned() {
                     <Carousel
                         responsive={responsive}
                         infinite={true}
-                        //autoPlay={true}
+                        autoPlay={true}
                         autoPlaySpeed={3000}
                         keyBoardControl={true}
                         customTransition="transform 300ms ease-in-out"
@@ -81,7 +81,7 @@ function ReviewPinned() {
                     <div className="border-review mb-5">
                         <h1 className="title-reviews">{t("testimonials")}</h1>
                         <p className="subtitle-reviews">
-                            Here is a default description for the testimonials section.
+                            {t("testimonialsBlurb")}
                         </p>
                     </div>
                 </div>
