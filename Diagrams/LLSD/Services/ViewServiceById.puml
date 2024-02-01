@@ -15,13 +15,10 @@ participant ServiceController as "<<Controller>>\nServiceController"
 
 participant ServiceService as "<<Service>>\nServiceService"
 
-participant all as "all:List<Service>"
 
 participant Service as "service:Service"
 
 participant ServiceRepository as "<<Repository>>\nServiceRepository"
-
-participant allResponse as "allResponse:List<ServiceResponse>"
 
 participant ServiceResponse as "response:ServiceResponse"
 

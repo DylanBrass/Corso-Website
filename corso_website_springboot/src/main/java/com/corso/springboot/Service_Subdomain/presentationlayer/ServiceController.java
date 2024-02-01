@@ -80,6 +80,5 @@ public class ServiceController {
     public ResponseEntity<ServiceResponse> changeServiceVisibility(@PathVariable String serviceId){
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.changeServiceVisibility(serviceId));
     }
-
 }
 

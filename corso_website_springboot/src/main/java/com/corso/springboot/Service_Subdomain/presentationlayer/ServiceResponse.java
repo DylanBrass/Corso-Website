@@ -2,8 +2,7 @@ package com.corso.springboot.Service_Subdomain.presentationlayer;
 
 import lombok.*;
 
-@EqualsAndHashCode(callSuper=false)
-//@Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Builder
 @Value
