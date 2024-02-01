@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.logging.Logger;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @DataJpaTest
 @ActiveProfiles("test")
 class ServiceRepositoryTest {
+
+    Logger logger = Logger.getLogger(ServiceRepositoryTest.class.getName());
 
     @Autowired
     ServiceRepository serviceRepository;
