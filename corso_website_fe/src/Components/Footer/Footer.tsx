@@ -64,7 +64,8 @@ function Footer() {
                             </div>
                             <div className="col-9">
                                 <div className="centered-content">
-                                    <p>Future link to instagram</p>
+                                    <a href="https://www.instagram.com/corsoelectriqueinc/" target="_blank" rel="noopener noreferrer">Take Me There!</a>
+
                                 </div>
                             </div>
                         </div>

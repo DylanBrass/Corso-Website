@@ -1,10 +1,9 @@
 import React from 'react';
-import './ReviewPinnedTileMainPage.css';
 import star_fill from "../../../../ressources/images/Star_fill.svg";
 import star_empty from "../../../../ressources/images/Star.svg";
+import "./ReviewPinned.css";
 
-
- class Reviews {
+class Reviews {
     id: string;
     customerFullName: string;
     reviewDate: Date;
@@ -20,7 +19,6 @@ import star_empty from "../../../../ressources/images/Star.svg";
         this.reviewRating = reviewRating;
         this.pinned = pinned;
     }
-
 }
 
 function ReviewsPinnedTileMainPage(reviews: Reviews) {
@@ -38,24 +36,21 @@ function ReviewsPinnedTileMainPage(reviews: Reviews) {
     }
 
     return (
-                                <div className="testimonies-info">
-                                    <div className="testimonies-box-name row tex">
-                                        <div className="col-12 text-center p-2 m-2">
-                                            <span className="testimonies-name">{reviews.customerFullName}</span>
-                                        </div>
-                                        <div className="testimonies-content">
-                                            <div className="col-12">
-                                                <p className="testimonies-message">{reviews.message}</p>
-                                                <div className={"testimonies-rating text-center m-3"}>
-                                                    {filledStars}
-                                                    {emptyStars}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+        <div className={"review-mainPage-component"}>
+            <div className={"review-container"}>
+                <div >
+                    <h1 className={"review-title"} >{reviews.customerFullName}</h1>
+                </div>
+                <div>
+                    <div>
+                        {filledStars}
+                        {emptyStars}
+                    </div>
+                    <p className={"review-description"}>{reviews.message}</p>
+                </div>
+            </div>
+        </div>
     );
 }
 
-
-export {ReviewsPinnedTileMainPage, Reviews}
+export { ReviewsPinnedTileMainPage, Reviews };
