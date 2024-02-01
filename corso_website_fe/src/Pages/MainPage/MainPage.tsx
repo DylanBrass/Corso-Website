@@ -16,7 +16,7 @@ function MainPage() {
 
 
     return (
-        <div>
+        <div className={"remove-gutter"}>
             <NavigationBar/>
             <div id={"banner"}>
                 {
@@ -29,16 +29,16 @@ function MainPage() {
                         <BannerMainPageAnonymous
                             image={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702332049/banner_cqmadc.png"}/>
                 }
-                <div id={"carousel"}>
+                <div id={"carousel"} className={"mt-5 mb-5"}>
                     <OurPreviousProjects/>
                 </div>
                 <AllServices/>
 
-                <div id={"testimonies"}>
+                <div id={"testimonies"} className={"mt-5 mb-5"}>
                     <ReviewPinned/>
                 </div>
 
-                <div id={"faq"}>
+                <div id={"faq"} className={"mt-5 mb-5"}>
                     <FaqPinnedMainPage/>
                 </div>
                 <Footer/>

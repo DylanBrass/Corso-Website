@@ -1,10 +1,11 @@
-import "./FaqPinned.css"
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {FAQ, FaqTileMainPage} from "./FaqTileMainPage";
 import {useAuth} from "../../../../security/Components/AuthProvider";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import "./FaqTile.css"
+import arrowImg from "../../../../ressources/images/arrow.svg"
 
 function FaqPinnedMainPage() {
 
@@ -36,39 +37,43 @@ function FaqPinnedMainPage() {
     }, []);
 
     return (
-        <div className={"faq-container"}>
+        <div className="faq-container faq-mainPage-container">
+            <div className="row">
+                <div className="col-md-5">
+                    <h1 className="faq-title-mainPage">{t("faq")}</h1>
+                    <p className="faq-blurb">{t("faqBlurb")}</p>
+                    <div className="row flex-row">
+                        <div className="col-8">
+                            <a href="/faq" className="view-more-faq">{t("viewMoreFaq")}</a>
+                        </div>
+                        <div className="col-4 align-items-left">
+                            <img src={arrowImg} alt="arrow" className="arrow"/>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-7">
+                    {preferredFaq.map((value, index) => (
+                        <div
+                            // @ts-ignore
+                            key={value.id}
+                            style={index < 3 ? { marginTop: '1rem' } : {}}
+                            className={index < 3 ? "faq-item-small-screen" : ""}
+                        >
+                            <FaqTileMainPage
+                                // @ts-ignore
+                                id={value.id}
+                                // @ts-ignore
+                                question={value.question}
+                                // @ts-ignore
+                                answer={value.answer}
+                            />
+                        </div>
+                    ))}
+                </div>
 
-            <div className={"faq-main-box"}>
-                <div className={"faq-title-box d-none d-md-flex"}>
-                    <img alt={"three dots"} src={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702413426/Meatballs_menu_bcolze.svg\n"}/>
-                    <span className={"faq-title text-sm-center m-sm-0"}>
-                        FAQ
-                    </span>
-                </div>
-                <div className={"text-center d-block d-md-none"}>
-                    <span className={"faq-title"}>
-                        FAQ
-                    </span>
-                </div>
-                {preferredFaq.map((value) => (
-                    <FaqTileMainPage
-                        //@ts-ignore
-                        key={value.id}
-                        //@ts-ignore
-                        id={value.id}
-                        //@ts-ignore
-                        question={value.question}
-                        //@ts-ignore
-                        answer={value.answer}
-                    />
-                ))}
-                <div className={"link-all-faqs"}>
-                    <a href={"/faq"}>{t("viewfaqs")}</a>
-                </div>
             </div>
-
         </div>
-    )
+    );
 }
 
 export default FaqPinnedMainPage

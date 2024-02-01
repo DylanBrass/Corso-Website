@@ -40,41 +40,30 @@ function BannerMainPage({image}) {
 
     return (
         <div className={"banner-box"} style={{
-            backgroundImage: `url(${image})`
+            backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0)), url(${image})`
         }}>
+            <div className={"row row-banner m-4 m-s-0"}>
+            <h1 id={"greeting"} className={"mt-5 anonymous-banner-title"}>Hello {name}!</h1>
 
-            <h1 id={"greeting"} className={"mt-5"}>Hello {name}!</h1>
-            <div className={"row row-banner"}>
-                <div className={"row d-none d-lg-flex"}>
-                    <div className={"col-12 col-lg-6 text-center"}>
-                        <h3 className={"mt-5"}>View All past orders</h3>
-
-                    </div>
-                    <div className={"col-12 col-lg-6 text-center"}>
-                        <h3 className={"mt-5"}>View current Orders</h3>
-
-                    </div>
-                </div>
-                <div className={"row"}>
-                    <div className={"col-12 col-lg-6 text-center"}>
-
-                        <button className={"banner-btn mt-5 mb-5"}
+                <div className={"col-12 d-flex flex-column flex-md-row"}>
+                        <button className={"banner-btn mb-4"}
                                 onClick={() => {
                                     window.location.href = "/profile/orders"
                                 }}>Past Orders
                         </button>
-                    </div>
-                    <div className={"col-12 col-lg-6 text-center"}>
-
-                        <button className={"banner-btn mt-5 mb-5"}
+                        <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
-                                    
-                                }}>Request Now!
+
+                                }}>View Current Orders
+                        </button>
+                        <button className={"banner-btn ms-lg-3 mb-4"}
+                                onClick={() => {
+
+                                }}>Request An Order Now
                         </button>
                     </div>
 
                 </div>
-            </div>
         </div>
     )
 }

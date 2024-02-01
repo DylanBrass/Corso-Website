@@ -4,11 +4,19 @@
   "login": "Connexion",
   "logout": "Déconnexion",
   "services": "Nos Services",
-  "previousProjects": "Projets Réalisés",
+  "previousProjectsPart1": "Projets ",
+  "previousProjectsPart2": "Réalisés",
   "testimonials": "Témoignages",
   "answer": "Réponse",
   "viewfaqs": "Voir toutes les FAQ",
-  "anonymousBanner": "Inscrivez-vous aujourd'hui pour nous avoir comme électricien de confiance",
-  "registerNow": "Inscrivez-vous maintenant"
+  "anonymousBannerWelcome": "Bienvenue à Corso",
+  "anonymousBannerRegisterPrompt": "Inscrivez-vous aujourd'hui pour nous avoir comme électricien de confiance",
+  "registerNow": "Inscrivez-vous maintenant",
+  "requestNow": "Demander une commande",
+  "pastProjectsBlurb": "Nous sommes spécialisés dans divers projets électriques, des installations domestiques intelligentes à la modernisation de bâtiments historiques, en mettant l'accent sur les solutions énergétiques durables telles que les panneaux solaires. Notre passion est d'assurer sécurité, efficacité et durabilité.",
+  "servicesBlurb": "Nous proposons une large gamme de services électriques, allant de simples réparations à des installations complexes. Notre équipe d'experts se consacre à fournir les meilleures solutions pour vos besoins en électricité. Nous nous engageons à fournir un travail de haute qualité et un service client exceptionnel. Notre objectif est de dépasser vos attentes et d'assurer votre satisfaction.",
+  "faqBlurb": "Découvrez les réponses aux questions les plus fréquemment posées sur notre activité. Pour des informations plus détaillées, n'hésitez pas à cliquer sur le lien ci-dessous pour explorer notre section FAQ complète.",
+  "testimonialsBlurb": "Découvrez les témoignages authentiques de nos précieux clients, qui témoignent de leur expérience réelle et de leur satisfaction à l'égard de notre service exceptionnel.",
+  "viewMoreFaq": "Voir plus de FAQ"
 
 }

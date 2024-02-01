@@ -1,104 +1,102 @@
-.testimonies-box {
-    .testimonies-main-box {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
-        margin-bottom: 2em;
-        background: #F4F4F4 url(../../../../ressources/images/electrician2_Testimonies.png) center no-repeat;
-        background-size: cover;
-        height: 100%;
-        img {
-            border-radius: 10px;
-        }
-        div {
-            margin: auto;
-        }
+.review-mainPage-component {
+    width: 100%;
+    .review-container {
+        border-radius: 15px;
+        background: #FFF;
+        box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        padding: 20px;
+        margin: 2rem;
     }
 
-    .testimonies-container {
-        margin-top: 5em;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-
-
-    }
-
-    .link-all-testimonies {
-        margin-top: 5em;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .testimonies-title-box {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-
-    }
-
-
-    .testimonies-title {
-        color: #0A1B44;
-        text-align: center;
-        font-family: Nunito;
-        font-size: 70px;
+    .review-title {
+        color: #000;
+        font-family: Nunito, sans-serif;
+        font-size: 20px;
         font-style: normal;
-        font-weight: 200;
+        font-weight: 600;
         line-height: normal;
+        letter-spacing: 0.8px;
         text-transform: uppercase;
-
+        text-align: left;
     }
 
-    .testimonials-title {
-        color: #FFF;
-        text-align: center;
-        font-family: Nunito;
-        font-size: 70px;
+    .review-description {
+        color: #000;
+        font-family: Nunito, sans-serif;
+        font-size: 15px;
         font-style: normal;
-        font-weight: 200;
+        font-weight: 300;
         line-height: normal;
-        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        padding-top: 5px;
+    }
+}
+
+.review-mainPage-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .subtitle-reviews {
+        color: rgba(0, 0, 0, 0.50);
+        font-family: Inter, sans-serif;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
     }
 
-    .testimonies-info {
+    .title-reviews {
+        color: #4058A6;
+        font-family: "Bebas Neue", serif;
+        font-size: 50px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .border-review {
+        border-left: 5px solid #4058A6;
+        padding-left: 1rem;
+    }
+
+    .carousel-container {
         width: 100%;
-    }
-
-    @media (min-width: 768px) {
-        .review-tile-box {
-            width: 48%;
-        }
-    }
-
-    @media (min-width: 992px) {
-        .review-tile-box {
-            width: 30%;
-        }
-    }
-
-    @media (max-width: 1092px) {
-        .testimonies-message {
-            height: 15vh;
-        }
-        .review-tile-box {
-            transform: scale(0.8);
-        }
-    }
-
-    @media (min-width: 768px) {
-        .testimonies-message {
-            height: 10vh;
-            margin: 5px;
-        }
+        max-width: 550px;
+        margin: auto;
     }
 
 
+}
+
+.custom-dot-list-style {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.custom-dot-list-style li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.custom-dot-list-style .react-multi-carousel-dot--active button {
+    background-color: #4058A6;
+}
+
+.custom-dot-list-style li button {
+    border: 1px solid #4058A6;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    padding: 0;
+    background-color: #fff;
+}
+
+.custom-dot-list-style li button:hover {
+    background-color: #4058A6;
+    border-color: #4058A6;
 }

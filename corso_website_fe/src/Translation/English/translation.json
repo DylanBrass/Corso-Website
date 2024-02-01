@@ -4,11 +4,19 @@
   "login": "Login",
   "logout": "Logout",
   "services": "All Services",
-  "previousProjects": "Our Previous Projects",
+  "previousProjectsPart1": "Our Previous ",
+  "previousProjectsPart2": "Projects",
   "testimonials": "Testimonials",
   "answer": "Answer",
   "viewfaqs": "View All FAQs",
-  "anonymousBanner": "Register today to have us as your trusted electrician",
-  "registerNow": "Register Now"
+  "anonymousBannerWelcome": "Welcome to Corso",
+  "anonymousBannerRegisterPrompt": "Register today to have us as your trusted electrician",
+  "registerNow": "Register Now",
+  "requestNow": "Request An Order Now",
+  "pastProjectsBlurb": "We specialize in diverse electrical projects, from smart home installations to modernizing historic buildings, with a focus on sustainable energy solutions like solar panels. Our passion is ensuring safety, efficiency, and sustainability in our ever-evolving world.",
+  "servicesBlurb": "We offer a wide range of electrical services, from simple repairs to complex installations. Our team of experts is dedicated to providing the best solutions for your electrical needs. We are committed to delivering high-quality work and exceptional customer service. Our goal is to exceed your expectations and ensure your satisfaction.",
+  "faqBlurb": "Discover answers to our most frequently asked questions about our business. For more detailed information, feel free to click the link below to explore our comprehensive FAQ section.",
+  "testimonialsBlurb": "Explore genuine testimonials from our valued customers, showcasing their real experiences and satisfaction with our exceptional service.",
+  "viewMoreFaq": "View More FAQs"
 
 }
