@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {useNavigate} from "react-router";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import {Rating} from "@mui/material";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
@@ -12,7 +11,6 @@ import Cookies from "js-cookie";
 function CreateReview() {
 
     const auth = useAuth();
-    const navigate = useNavigate();
     const leaveReview = (event: any) => {
 
         event.preventDefault();
@@ -43,7 +41,8 @@ function CreateReview() {
                 if (res.status === 201) {
                     // @ts-ignore
                     swal("Success!", "Your review has been submitted!", "success").then(
-                        () => navigate(-1)
+                        () => window.location.href = '/profile/reviews'
+
                     )
                 }
             })
