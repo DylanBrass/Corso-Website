@@ -10,6 +10,7 @@ import CreateAdminPage from "./Pages/Dashboard/CreateAdmin/CreateAdminPage";
 import CurrentOrdersPage from "./Pages/Dashboard/OrdersPages/CurrentOrdersPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import ViewAllFaq from "./Pages/MainPage/AllFAQs/ViewAllFaq";
+import AddAFaq from "./Pages/Dashboard/ManageFaq/AddAFaq";
 
 import CompletedOrdersPage from "./Pages/Dashboard/OrdersPages/CompleteOrdersPage";
 import ServiceDetailsPage from "./Pages/Dashboard/ManageServices/ServiceDetailsPage";
@@ -53,6 +54,7 @@ export default function App() {
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/faq" element={<ViewAllFaq/>}/>
                         <Route path="/manage/faqs" element={<ViewAllFaqThroughDashboard/>}/>
+                        <Route path={"/manage/faqs/create"} element={<AddAFaq/>}/>
                         <Route path="/faqs/:faqId" element={<ViewSpecificFaq/>}/>
                         <Route path="/dashboard" element={<Dashboard/>}/>
                         <Route path="/create/orders/external" element={<CreateExternalOrderPage/>}/>
