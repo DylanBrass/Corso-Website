@@ -30,7 +30,7 @@ function CustomerViewsSpecificReview() {
     useEffect(() => {
         // @ts-ignore
         if (!auth.isAuthenticated || !auth.userRoles().includes('Customer')) {
-            window.location.href = 'http://localhost:3000/';
+            window.location.href = '/';
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -90,7 +90,8 @@ function CustomerViewsSpecificReview() {
             .then(res => {
                 // @ts-ignore
                 swal("Review deleted successfully!", "Your review has been successfully deleted!", "success").then(
-                    () => navigate(-1)
+                    () =>  window.location.href = '/profile/reviews';
+
                 )
             })
             .catch(err => {
