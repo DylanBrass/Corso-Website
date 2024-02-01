@@ -1,0 +1,51 @@
+@startuml
+title Delete Gallery Image of Gallery
+
+actor Admin
+
+participant "Dashboard" as Dashboard
+participant "Gallery" as Gallery
+participant "GalleryController" as GalleryController
+participant "GalleryService" as GalleryService
+participant "GalleryRepository" as GalleryRepository
+participant "Database" as Db
+
+ref over Dashboard, Gallery, GalleryController, GalleryService, GalleryRepository, Db
+
+    ViewGallery
+
+end
+
+
+opt
+Admin -> Dashboard: deleteGallery(galleryId: String)
+activate Dashboard
+
+Dashboard -> Gallery: render()
+activate Gallery
+
+Gallery -> GalleryController: DELETE api/v1/corso/gallery/{galleryId}
+activate GalleryController
+
+GalleryController -> GalleryService: deleteGallery(galleryId: String)
+activate GalleryService
+
+GalleryService -> GalleryRepository: deleteGallery(galleryId: String)
+activate GalleryRepository
+
+GalleryRepository -> Db: DELETE FROM gallery WHERE gallery_id = galleryId
+activate Db
+
+Db --> GalleryRepository: void
+deactivate Db
+
+GalleryRepository --> GalleryService: void
+deactivate GalleryRepository
+
+GalleryService --> GalleryController: void
+deactivate GalleryService
+
+GalleryController --> Gallery: void
+deactivate GalleryController
+end
+@enduml

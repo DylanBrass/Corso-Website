@@ -1,8 +1,8 @@
 @startuml
 
-actor User
+actor Admin as User
 
-participant "Dashboard" as Dashboard
+participant "ManageFAQ" as Dashboard
 participant "AddAFaq" as WriteFAQPage
 participant "faqRequest : FAQRequest" as FAQRquest
 participant "FAQController" as FAQController
@@ -39,7 +39,7 @@ activate FAQController
 FAQController -> FAQService: createFAQ()
 activate FAQService
 
-FAQService -> FAQRquestMapper: mapToFAQ(faqRequest)
+FAQService -> FAQRquestMapper: toFAQ(faqRequest)
 activate FAQRquestMapper
 
 FAQRquestMapper -> Fq: FAQ
@@ -63,7 +63,7 @@ deactivate Db
 Fdb -> FAQRpository: faqDb : FAQ
 FAQRpository -> FAQService: faqDb : FAQ
 deactivate FAQRpository
-FAQService -> FAQResponseMapper: mapToFAQResponse(faq)
+FAQService -> FAQResponseMapper: toFAQResponse(faq)
 deactivate Fdb
 activate FAQResponseMapper
 
