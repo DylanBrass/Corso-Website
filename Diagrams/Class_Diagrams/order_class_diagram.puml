@@ -338,19 +338,15 @@ package "Service_Subdomain"{
 
 
 
-serviceController ..> serviceService
+serviceController -> serviceService
 
+serviceServiceImpl -> serviceRepository
 
-serviceController ..> serviceResponse
-serviceController ..> serviceRequest
+serviceServiceImpl -> serviceRequestMapper
 
-serviceServiceImpl ..> serviceRepository
+serviceServiceImpl -> serviceResponseMapper
 
-serviceServiceImpl ..> serviceRequestMapper
-
-serviceServiceImpl ..> serviceResponseMapper
-
-serviceRepository ..> service
+serviceRepository -> service
 
 serviceRequestMapper ..> serviceRequest
 
@@ -358,32 +354,23 @@ serviceResponseMapper ..> serviceResponse
 
 service *-> ServiceIdentifier
 
-orderResponse ..> serviceResponse
-orderResponse ..> Status
+orderResponse -> serviceResponse
+orderResponse -> Status
 
-orderController ..> orderService
+orderController -> orderService
 
-orderController ..> orderResponse
+orderServiceImpl -> orderRepository
 
-orderController ..> orderRequestExternal
+orderServiceImpl -> orderResponseMapper
 
-orderController ..> acceptOrderRequest
+orderServiceImpl -> orderRequestMapper
 
-orderController ..> declineOrderRequest
+orderServiceImpl -> serviceService
 
-orderServiceImpl ..> orderRepository
+orderServiceImpl -> auth0ManagementService
 
-orderServiceImpl ..> orderResponseMapper
+orderServiceImpl -> emailService
 
-orderServiceImpl ..> orderRequestMapper
-
-orderServiceImpl ..> serviceService
-
-orderServiceImpl ..> auth0ManagementService
-
-orderServiceImpl ..> emailService
-
-orderRepository ..> order
 
 orderRequestMapper ..> orderRequestExternal
 
@@ -393,11 +380,11 @@ order *--> OrderIdentifier
 
 order *--> OrderTrackingNumber
 
-order ..> Status
+order -> Status
 
 
 
-serviceServiceImpl ..> cloudinaryService
+serviceServiceImpl --> cloudinaryService
 
 
 

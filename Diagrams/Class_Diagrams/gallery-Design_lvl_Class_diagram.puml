@@ -1,116 +1,169 @@
 @startuml
+package "GallerySubdomain"{
+    package "Presentation Layer" {
+        class "<<controller>>\nGalleryController" as controller {
+            - galleryService : GalleryService
+            ---
+            + GalleryController(galleryService : GalleryService)
+            + GetGallery() : ResponseEntity<List<GalleryResponse>>
+            + updateGalleryOrder(galleryOrderUpdateRequest: List<GalleryOrderUpdateRequest>) : ResponseEntity<List<GalleryResponse>>
+            + getGalleryCount() : ResponseEntity<Integer>
+            + createGallery(galleryRequest : GalleryRequest) : ResponseEntity<GalleryResponse>
+            + getGalleryById(galleryId : String) : ResponseEntity<GalleryResponse>
+        }
 
-class "<<controller>>\nGalleryController" as controller {
-    - galleryService : GalleryService
-    ---
-    + getGalleries() : ResponseEntity<List<GalleryResponse>>
-    + getGalleryById() : ResponseEntity<GalleryResponse>
-    + addGallery() : ResponseEntity<GalleryResponse>
-    + deleteGallery() : ResponseEntity<Void>
-    + editGallery() : ResponseEntity<GalleryResponse>
+
+        class "GalleryResponse" as galleryResponse{
+            - galleryId : String
+            - description : String
+            - photo : String
+            - image_position : int
+            ---
+
+        }
+
+        class "GalleryRequest" as galleryRequest{
+            - description : String
+            - photo : String
+            - image_position : int
+            ---
+
+        }
+
+        class "GalleryOrderUpdateRequest" as galleryOrderUpdateRequest{
+            - galleryId : String
+            - image_position : int
+            ---
+
+        }
+
+
+    }
+
+    package "Business Layer"{
+        interface "GalleryService" as service{
+            ---
+            + getGallery: List<GalleryResponse>
+            + updateGalleryOrder(galleryOrderUpdateRequest: List<GalleryOrderUpdateRequest>) : List<GalleryResponse>
+            + getGalleryCount() : Integer
+            + createGallery(galleryRequest : GalleryRequest) : GalleryResponse throws IOException
+            + getGalleryById(galleryId : String) : GalleryResponse
+        }
+
+        class "<<service>>\nGalleryServiceImpl" as serviceImpl{
+            - galleryRepository : GalleryRepository
+            - galleryRequestMapper : GalleryRequestMapper
+            - galleryResponseMapper : GalleryResponseMapper
+            - cloudinaryService : CloudinaryService
+            ---
+            + getGallery() : List<GalleryResponse>
+            + updateGalleryOrder(galleryOrderUpdateRequest: List<GalleryOrderUpdateRequest>) : List<GalleryResponse>
+            + getGalleryCount() : Integer
+            + createGallery(galleryRequest : GalleryRequest) : GalleryResponse throws IOException
+            + getGalleryById(galleryId : String) : GalleryResponse
+
+        }
+        class serviceImpl extends service
+
+    }
+
+
+    package "Datalayer"{
+
+        interface "<<repository>>\nGalleryRepository" as repository{
+            ---
+            + getGalleryByGalleryId_GalleryId(galleryId : String) : Gallery
+            + countGalleryBy() : Integer
+        }
+
+        class GalleryIdentifier {
+            - galleryId : String
+            ---
+            + GalleryIdentifier()
+            + getGalleryId() : String
+
+        }
+
+        class "Gallery" as gallery{
+            - id : int
+            - galleryId : GalleryIdentifier
+            - description : String
+            - photo : String
+            - image_position : int
+            ---
+            + Gallery(description : String, photo : String, image_position : int)
+
+        }
+
+
+
+
+    }
+
+
+
+    package "Mapperlayer"{
+
+        interface "<<Mapper>>\nGalleryRequestMapper" as requestMapper{
+            ---
+                + toGalleryOrderUpdateRequest(galleryOrderUpdateRequest : GalleryOrderUpdateRequest) : Gallery
+                + toGalleryRequest(galleryRequest : GalleryRequest) : Gallery
+
+            }
+
+        interface "<<Mapper>>\nGalleryResponseMapper" as responseMapper{
+            ---
+            + toGalleryResponse(gallery : Gallery) : GalleryResponse
+            + toGalleriesResponse(galleries : List<Gallery>) : List<GalleryResponse>
+        }
+
+    }
+
+
+    requestMapper --> galleryRequest
+
+    responseMapper --> galleryResponse
+
+
+    galleryOrderUpdateRequest --> requestMapper
+
+
+    repository --> gallery
+
+    serviceImpl --> responseMapper
+    serviceImpl --> requestMapper
+
+
+
+
+    controller --> galleryResponse
+    controller --> galleryRequest
+
+
+
+    controller --> serviceImpl
+    controller --> galleryOrderUpdateRequest
+
+    serviceImpl --> repository
+
+    gallery --> GalleryIdentifier
 }
 
-interface "GalleryService" as service{
-    ---
-    + getGalleries() : List<GalleryResponse>
-    + getGalleryById() : GalleryResponse
-    + addGallery() : GalleryResponse
-    + deleteGallery() : void
-    + editGallery() : GalleryResponse
-}
 
-class "<<service>>\nGalleryServiceImpl" as serviceImpl{
-    - galleryRepository : GalleryRepository
-    - galleryRequestMapper : GalleryRequestMapper
-    - galleryResponseMapper : GalleryResponseMapper
-    ---
-    + getGalleries() : List<GalleryResponse>
-    + getGalleryById() : GalleryResponse
-    + addGallery() : GalleryResponse
-    + deleteGallery() : void
-    + editGallery() : GalleryResponse
-}
+package "cloudinary"{
 
-class serviceImpl extends service
-
-interface "<<repository>>\nGalleryRepository" as repository{
-    ---
-    + getGalleryById() : Gallery
-}
-
-class GalleryIdentifier {
-    - galleryId : String
-    ---
-    + setGalleryId(galleryId : String) : void
-    + getGalleryId() : String
+    class CloudinaryService {
+        - cloudinary : Cloudinary
+        ---
+        + CloudinaryService()
+        + uploadBase64Image(base64Image : String) : String throws IOException
+        + extractPublicIdFromCloudinaryUrl(cloudinaryUrl : String) : String
+        + updateCloudinaryImage(publicId: String, base64Image : String) : String throws IOException
+    }
 
 }
 
-class "Gallery" as gallery{
-    - id : int
-    - galleryId : GalleryIdentifier
-    - description : String
-    - image : String
-    - orderInGallery : int
-    ---
-  
-}
+serviceImpl --> CloudinaryService
 
-class "GalleryResponse" as galleryResponse{
-    - galleryId : String
-    - description : String
-    - image : String
-    - orderInGallery : int
-    ---
-  
-}
-
-class "GalleryRequest" as galleryRequest{
-    - description : String
-    - image : String
-    - orderInGallery : int
-    ---
-  
-}
-
-
-requestMapper --> galleryRequest
-
-responseMapper --> galleryResponse
-
-
-
-serviceImpl --> gallery
-
-repository --> gallery
-
-serviceImpl --> responseMapper
-serviceImpl --> requestMapper
-
-
-interface "<<Mapper>>\nGalleryRequestMapper" as requestMapper{
-    ---
-    + toGallery(galleryRequest : GalleryRequest) : Gallery
-    + toGalleries(galleryRequests : List<GalleryRequest>) : List<Gallery>
-}
-
-interface "<<Mapper>>\nGalleryResponseMapper" as responseMapper{
-    ---
-    + toGalleryResponse(gallery : Gallery) : GalleryResponse
-    + toGalleryResponses(galleries : List<Gallery>) : List<GalleryResponse>
-}
-
-
-controller --> galleryResponse
-controller --> galleryRequest
-
-
-interface repository extends JpaRepository
-
-controller --> serviceImpl
-
-serviceImpl --> repository
-
-gallery --> GalleryIdentifier
 
 @endpuml

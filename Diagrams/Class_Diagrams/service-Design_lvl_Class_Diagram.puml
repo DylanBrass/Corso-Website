@@ -1,119 +1,170 @@
 @startuml
+package "ServiceSubdomain"{
 
-class "<<controller>>\nServicesController" as controller {
-    - serviceService : ServiceService
-    ---
-    + getServices() : ResponseEntity<List<ServiceResponse>>
-    + getServiceById() : ResponseEntity<ServiceResponse>
-    + addService() : ResponseEntity<ServiceResponse>
-    + deleteService() : ResponseEntity<Void>
-    + editService() : ResponseEntity<ServiceResponse>
+    package "PresentationLayer"{
+
+        class "<<controller>>\nServicesController" as controller {
+            - serviceService : ServiceService
+            ---
+            + ServiceController(serviceService : ServiceService)
+            + getServiceById(serviceId : String) : ResponseEntity<ServiceResponse>
+            + getAllServices() : ResponseEntity<List<ServiceResponse>>
+            + getAllVisibleServices() : ResponseEntity<List<ServiceResponse>>
+            + createService(serviceRequest : ServiceRequest) : ResponseEntity<ServiceResponse>
+            + countAllServices() : ResponseEntity<Integer>
+            + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ResponseEntity<ServiceResponse>
+            + changeServiceVisibility(serviceId : String) : ResponseEntity<ServiceResponse>
+        }
+
+        class "ServiceResponse" as serviceResponse{
+                - serviceId : String
+                - serviceName: String
+                - serviceDescription : String
+                - serviceIcon : String
+                - serviceImage : String
+                - isActive : boolean
+               ---
+        }
+
+        class "ServiceRequest" as serviceRequest{
+               - serviceName: String
+               - serviceDescription : String
+               - serviceIcon : String
+               - serviceImage : String
+               - isActive : boolean
+               ---
+        }
+
+
+    }
+
+    package "BusinessLayer"{
+        interface "ServiceService" as service {
+            ---
+            + getServiceByServiceId(serviceId : String) : ServiceResponse
+            + getAllServices() : List<ServiceResponse>
+            + getAllVisibleServices() : List<ServiceResponse>
+            + createService(serviceRequest : ServiceRequest) : ServiceResponse
+            + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
+            + changeServiceVisibility(serviceId : String) : ServiceResponse
+            + countAllServices() : int
+        }
+
+        class "<<service>>\nServiceServiceImpl" as serviceImpl{
+            - serviceRepository : ServiceRepository
+            - serviceRequestMapper : ServiceRequestMapper
+            - serviceResponseMapper : ServiceResponseMapper
+            - cloudinaryService : CloudinaryService
+            ---
+             + getServiceByServiceId(serviceId : String) : ServiceResponse
+             + getAllServices() : List<ServiceResponse>
+             + getAllVisibleServices() : List<ServiceResponse>
+             + createService(serviceRequest : ServiceRequest) : ServiceResponse
+             + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
+             + changeServiceVisibility(serviceId : String) : ServiceResponse
+             + countAllServices() : int
+        }
+
+        class serviceImpl extends service
+    }
+
+    package "DataLayer"{
+        interface "<<repository>>\nServiceRepository" as repository{
+            ---
+            + findByServiceIdentifier_ServiceId(serviceId : String) : Service
+            + findAllByIsActive(isActive : boolean) : List<Service>
+            + countAllBy() : int
+        }
+
+        class ServiceIdentifier {
+            - serviceId : String
+            ---
+            + ServiceIdentifier(serviceId : String)
+            + ServiceIdentifier()
+            + getServiceId() : String
+
+        }
+
+        class "ServiceEntity" as service{
+            - id : int
+            - serviceId : ServiceIdentifier
+            - serviceName: String
+            - serviceDescription : String
+            - serviceIcon : String
+            - serviceImage : String
+            - isActive : boolean
+            ---
+            + ServiceEntity()
+            + ServiceEntity(serviceName: String, serviceDescription: String, serviceIcon: String, serviceImage: Sting, isActive: boolean)
+
+        }
+
+        interface repository extends JpaRepository
+
+
+        serviceImpl --> service
+
+        repository --> service
+
+        service --> ServiceIdentifier
+
+    }
+
+    package "MapperLayer"{
+
+
+    interface "<<Mapper>>\nServiceRequestMapper" as requestMapper{
+        ---
+        + toService(serviceRequest : ServiceRequest) : ServiceEntity
+    }
+
+    interface "<<Mapper>>\nServiceResponseMapper" as responseMapper{
+        ---
+        + toServiceResponse(service : Service) : ServiceResponse
+        + toServiceResponses(services : List<Services>) : List<ServiceResponse>
+    }
+
+
+
+    }
+
+
+
+
+    requestMapper --> serviceRequest
+
+    responseMapper --> serviceResponse
+
+
+
+
+    serviceImpl --> responseMapper
+    serviceImpl --> requestMapper
+
+
+    controller --> serviceResponse
+    controller --> serviceRequest
+
+
+
+    controller --> serviceImpl
+
+    serviceImpl --> repository
+
 }
 
-interface "ServiceService" as service{
-    ---
-    + getServices() : List<ServiceResponse>
-    + getServicesById() : ServiceResponse
-    + addService() : ServiceResponse
-    + deleteService() : void
-    + editService() : ServiceResponse
-}
+package "cloudinary"{
 
-class "<<service>>\nServiceServiceImpl" as serviceImpl{
-    - serviceRepository : ServiceRepository
-    - serviceRequestMapper : ServiceRequestMapper
-    - serviceResponseMapper : ServiceResponseMapper
-    ---
-    + getServices() : List<ServiceResponse>
-    + getServiceById() : ServiceResponse
-    + addService() : ServiceResponse
-    + deleteService() : void
-    + editService() : ServiceResponse
-}
-
-class serviceImpl extends service
-
-interface "<<repository>>\nServiceRepository" as repository{
-    ---
-    + getServiceById() : Service
-}
-
-class ServiceIdentifier {
-    - serviceId : String
-    ---
-    + setServiceId(serviceId : String) : void
-    + getServiceId() : String
+    class CloudinaryService {
+        - cloudinary : Cloudinary
+        ---
+        + CloudinaryService()
+        + uploadBase64Image(base64Image : String) : String throws IOException
+        + extractPublicIdFromCloudinaryUrl(cloudinaryUrl : String) : String
+        + updateCloudinaryImage(publicId: String, base64Image : String) : String throws IOException
+    }
 
 }
 
-class "Service" as service{
-    - id : int
-    - serviceId : ServiceIdentifier
-    - serviceName: String
-    - serviceDescription : String
-    - serviceIcon : String
-    - serviceImage : String
-    ---
-
-}
-
-class "ServiceResponse" as serviceResponse{
-     - serviceId : ServiceIdentifier
-     - serviceName: String
-     - serviceDescription : String
-     - serviceIcon : String
-     - serviceImage : String
-    ---
-
-}
-
-class "ServiceRequest" as serviceRequest{
-    - serviceName: String
-    - serviceDescription : String
-    - serviceIcon : String
-    - serviceImage : String
-    ---
-
-}
-
-
-requestMapper --> serviceRequest
-
-responseMapper --> serviceResponse
-
-
-
-serviceImpl --> service
-
-repository --> service
-
-serviceImpl --> responseMapper
-serviceImpl --> requestMapper
-
-
-interface "<<Mapper>>\nServiceRequestMapper" as requestMapper{
-    ---
-    + toService(serviceRequest : ServiceRequest) : Service
-    + toServices(serviceRequests : List<ServiceRequest>) : List<Service>
-}
-
-interface "<<Mapper>>\nServiceResponseMapper" as responseMapper{
-    ---
-    + toServiceResponse(service : Service) : ServiceResponse
-    + toServiceResponses(services : List<Services>) : List<ServiceResponse>
-}
-
-
-controller --> serviceResponse
-controller --> serviceRequest
-
-
-interface repository extends JpaRepository
-
-controller --> serviceImpl
-
-serviceImpl --> repository
-
-service --> ServiceIdentifier
-
+serviceImpl --> CloudinaryService
 @endpuml
