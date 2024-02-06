@@ -8,6 +8,7 @@ import "./ViewSpecificGallery.css";
 import pen from "../../../../ressources/images/pen.svg";
 import templateImg from "../../../../ressources/images/Upload_Image_Preview.png";
 import Cloudinary from "../../../../Services/Cloudinary";
+import swal from "sweetalert";
 
 function ViewSpecificGallery() {
 
@@ -29,6 +30,7 @@ function ViewSpecificGallery() {
         }).then((response) => {
             setGallery(response.data);
             setImagePreview(response.data.photo);
+            console.log(response.data)
         }).catch((error) => {
             // @ts-ignore
             auth.authError(error.response.status);
@@ -41,7 +43,37 @@ function ViewSpecificGallery() {
     }, []);
 
 
-    const updateGallery = async () => {
+    const updateGallery = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const data = {
+            description: gallery.description,
+            photo: imagePreview,
+            image_position: gallery.image_position
+        };
+
+        try {
+            const response = await axios.put(
+                `${process.env.REACT_APP_BE_HOST}api/v1/corso/galleries/carousel/${galleryId}`,
+                data,
+                {
+                    headers: {
+                        // @ts-ignore
+                        'X-XSRF-TOKEN': auth.getXsrfToken(),
+                    },
+                }
+            );
+
+            if(response.status === 200) {
+                await swal("Gallery Updated!", "The gallery has been updated successfully!", "success");
+            }
+        } catch (error) {
+            // @ts-ignore
+            swal('Error!', error.response.data.message, 'error')
+            // @ts-ignore
+            auth.authError(error.response.status);
+        }
+
     }
 
     return (
@@ -59,6 +91,7 @@ function ViewSpecificGallery() {
                             required
                             className={"col-12 col-md-10"}
                             value={gallery.description}
+                            onChange={(event) => setGallery({...gallery, description: event.target.value})}
                         />
                     </div>
                     <div className={"row mt-4"}>
@@ -89,7 +122,7 @@ function ViewSpecificGallery() {
                         <p className={"col-12"}>Tip!: compatible image types include PNG, SVG</p>
                     </div>
                     <div className={"row"}>
-                        <button className={"btn btn-primary m-auto w-50"} type={"submit"}>
+                        <button className={"btn btn-primary m-auto w-50"} type={"submit"} value={"Update"}>
                             Update
                         </button>
                     </div>

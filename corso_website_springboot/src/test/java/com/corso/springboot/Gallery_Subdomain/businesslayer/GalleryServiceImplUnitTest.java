@@ -6,7 +6,9 @@ import com.corso.springboot.Gallery_Subdomain.datalayer.GalleryRepository;
 import com.corso.springboot.Gallery_Subdomain.datamapperlayer.GalleryRequestMapper;
 import com.corso.springboot.Gallery_Subdomain.datamapperlayer.GalleryResponseMapper;
 import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryOrderUpdateRequest;
+import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryRequest;
 import com.corso.springboot.Gallery_Subdomain.presentationlayer.GalleryResponse;
+import com.corso.springboot.cloudinary.CloudinaryService;
 import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class GalleryServiceImplUnitTest {
@@ -36,6 +40,9 @@ class GalleryServiceImplUnitTest {
 
     @Mock
     private GalleryRequestMapper galleryRequestMapper;
+
+    @Mock
+    private CloudinaryService cloudinaryService;
 
 
     @Test
@@ -148,6 +155,80 @@ class GalleryServiceImplUnitTest {
         } catch (Exception e) {
             assertEquals("Gallery not found", e.getMessage());
         }
+    }
+
+    @Test
+    void modifyGallery_ShouldSucceed() throws Exception {
+        // Arrange
+        GalleryRequest galleryRequest = GalleryRequest.builder()
+                .description("Test Gallery 1")
+                .photo("Test Gallery 1 Description")
+                .image_position(1)
+                .build();
+
+        Gallery gallery = Gallery.builder()
+                .description("Test Gallery 1")
+                .photo("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .image_position(1)
+                .build();
+
+        GalleryResponse galleryResponse = GalleryResponse.builder()
+                .galleryId("62b068a9-ef01-4bfd-8ee4-437deb43c3f6")
+                .description("Test Gallery 1")
+                .photo("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .image_position(1)
+                .build();
+
+        Mockito.when(galleryRepository.getGalleryByGalleryId_GalleryId(Mockito.anyString())).thenReturn(gallery);
+        Mockito.when(galleryRequestMapper.toGalleryRequest(Mockito.any(GalleryRequest.class))).thenReturn(gallery);
+        Mockito.when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public_id");
+        Mockito.when(cloudinaryService.updateCloudinaryImage(Mockito.anyString(), Mockito.anyString())).thenReturn("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg");
+        Mockito.when(galleryRepository.save(Mockito.any(Gallery.class))).thenReturn(gallery);
+        Mockito.when(galleryResponseMapper.toGalleryResponse(Mockito.any(Gallery.class))).thenReturn(galleryResponse);
+
+        // Act
+        GalleryResponse result = galleryService.modifyGallery("62b068a9-ef01-4bfd-8ee4-437deb43c3f6", galleryRequest);
+
+        // Assert
+        assertEquals(galleryResponse, result);
+        assertEquals(galleryResponse.getGalleryId(), result.getGalleryId());
+        assertEquals(galleryResponse.getDescription(), result.getDescription());
+        assertEquals(galleryResponse.getPhoto(), result.getPhoto());
+        assertEquals(galleryResponse.getImage_position(), result.getImage_position());
+
+    }
+
+    @Test
+    public void modifyGallery_ThrowsRuntimeException() throws IOException {
+        // Arrange
+        GalleryRequest galleryRequest = GalleryRequest.builder()
+                .description("Test Gallery 1")
+                .photo("Test Gallery 1 Description")
+                .image_position(1)
+                .build();
+
+        Gallery gallery = Gallery.builder()
+                .description("Test Gallery 1")
+                .photo("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .image_position(1)
+                .build();
+
+        GalleryResponse galleryResponse = GalleryResponse.builder()
+                .galleryId("62b068a9-ef01-4bfd-8ee4-437deb43c3f6")
+                .description("Test Gallery 1")
+                .photo("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .image_position(1)
+                .build();
+
+        Mockito.when(galleryRepository.getGalleryByGalleryId_GalleryId(Mockito.anyString())).thenReturn(gallery);
+        Mockito.when(galleryRequestMapper.toGalleryRequest(Mockito.any(GalleryRequest.class))).thenReturn(gallery);
+        Mockito.when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public_id");
+        Mockito.when(cloudinaryService.updateCloudinaryImage(Mockito.anyString(), Mockito.anyString())).thenThrow(new IOException("Simulated IOException"));
+        Mockito.when(galleryRepository.save(Mockito.any(Gallery.class))).thenReturn(gallery);
+        Mockito.when(galleryResponseMapper.toGalleryResponse(Mockito.any(Gallery.class))).thenReturn(galleryResponse);
+
+        //act & assert
+        assertThrows(RuntimeException.class, () -> galleryService.modifyGallery("62b068a9-ef01-4bfd-8ee4-437deb43c3f6", galleryRequest));
     }
 
 

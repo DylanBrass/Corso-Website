@@ -87,6 +87,33 @@ public class GalleryServiceImpl implements GalleryService{
     }
 
     @Override
+    public GalleryResponse modifyGallery(String galleryId, GalleryRequest galleryRequest) throws IOException {
+        try {
+            Gallery existingGallery = galleryRepository.getGalleryByGalleryId_GalleryId(galleryId);
+
+            if (existingGallery == null){
+                throw new GalleryNotFoundException("Gallery not found");
+            }
+
+            existingGallery.setDescription(galleryRequest.getDescription());
+
+            if (galleryRequest.getPhoto() != null){
+                String existingPhotoPublicId = cloudinary.extractPublicIdFromCloudinaryUrl(existingGallery.getPhoto());
+
+                if(!galleryRequest.getPhoto().contains("https://") && !galleryRequest.getPhoto().contains("http://")){
+                    existingGallery.setPhoto(cloudinary.updateCloudinaryImage(existingPhotoPublicId, galleryRequest.getPhoto()));
+                }
+            }
+
+            //return galleryResponseMapper.toGalleryResponse(galleryRepository.save(existingGallery));
+            return null;
+        }
+        catch (IOException e){
+            throw new RuntimeException("Failed to update images", e);
+        }
+    }
+
+    @Override
     public GalleryResponse getGalleryById(String galleryId) {
         Gallery gallery = galleryRepository.getGalleryByGalleryId_GalleryId(galleryId);
         

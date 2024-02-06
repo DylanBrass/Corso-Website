@@ -50,6 +50,14 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.createGallery(galleryRequest));
     }
 
+    @CacheEvict(value = "gallery", allEntries = true)
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PutMapping("/carousel/{galleryId}")
+    public ResponseEntity<GalleryResponse> modifyGallery(@PathVariable String galleryId, @RequestBody GalleryRequest galleryRequest) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(galleryService.modifyGallery(galleryId, galleryRequest));
+    }
+
+
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/carousel/{galleryId}")
     public ResponseEntity<GalleryResponse> getGalleryById(@PathVariable String galleryId){
