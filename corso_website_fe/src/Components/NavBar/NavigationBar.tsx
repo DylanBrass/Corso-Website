@@ -26,7 +26,7 @@ function NavigationBar() {
 
     useEffect(() => {
         changeLanguage(language);
-    }, [language]); // Trigger effect whenever language state changes
+    }, [language, changeLanguage]);
 
     return (
         <div id={"nav-bar-box"}>
