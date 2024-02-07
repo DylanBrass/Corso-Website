@@ -18,11 +18,12 @@ function NavigationBar() {
     const languages = ["fr", "en"];
     const [language, setLanguage] = useState(i18n.language); // Initialize language state with current language
 
-    const changeLanguage = (lng: React.SetStateAction<string>) => {
-        setLanguage(lng); // Update language state with selected language
+  const changeLanguage = useCallback((lng: React.SetStateAction<string> | undefined) => {
+        // @ts-ignore
+        setLanguage(lng);
         // @ts-ignore
         i18n.changeLanguage(lng);
-    };
+    }, [i18n]);
 
     useEffect(() => {
         changeLanguage(language);
