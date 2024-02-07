@@ -105,8 +105,7 @@ public class GalleryServiceImpl implements GalleryService{
                 }
             }
 
-            //return galleryResponseMapper.toGalleryResponse(galleryRepository.save(existingGallery));
-            return null;
+            return galleryResponseMapper.toGalleryResponse(galleryRepository.save(existingGallery));
         }
         catch (IOException e){
             throw new RuntimeException("Failed to update images", e);

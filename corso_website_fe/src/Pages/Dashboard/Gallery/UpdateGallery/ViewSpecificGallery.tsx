@@ -9,10 +9,13 @@ import pen from "../../../../ressources/images/pen.svg";
 import templateImg from "../../../../ressources/images/Upload_Image_Preview.png";
 import Cloudinary from "../../../../Services/Cloudinary";
 import swal from "sweetalert";
+import {useNavigate} from "react-router";
 
 function ViewSpecificGallery() {
 
     const auth = useAuth();
+
+    const navigate = useNavigate();
 
     const [gallery, setGallery] = useState<Gallery>(new Gallery("", "", "", 0));
 
@@ -66,6 +69,7 @@ function ViewSpecificGallery() {
 
             if(response.status === 200) {
                 await swal("Gallery Updated!", "The gallery has been updated successfully!", "success");
+                navigate(-1)
             }
         } catch (error) {
             // @ts-ignore
