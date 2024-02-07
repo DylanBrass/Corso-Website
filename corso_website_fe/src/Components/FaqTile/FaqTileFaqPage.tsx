@@ -3,6 +3,7 @@ import {useState} from "react";
 import expand from "../../ressources/images/expand-plus.svg"
 import expanded from "../../ressources/images/expanded-minus.svg"
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 
 class FAQ {
@@ -22,6 +23,7 @@ class FAQ {
 function FaqTileFaqPage(faq: FAQ) {
 
     const [isExpanded, setExpandedState] = useState(false)
+    const [t] = useTranslation()
 
     return (
         <div className={"tile-box mt-5"}>
@@ -55,7 +57,7 @@ function FaqTileFaqPage(faq: FAQ) {
                                 textAlign: "justify",
                                 textJustify: "inter-word"
                             }}>
-                                <strong>Answer: </strong>{faq.answer}
+                                <strong>{t("answer")}: </strong>{faq.answer}
                             </p>
                         </div>
                     </div>

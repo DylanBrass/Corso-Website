@@ -2,12 +2,14 @@ import "./BannerMain.css";
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 
 // @ts-ignore
 function BannerMainPage({image}) {
 
     const [name, setName] = useState("")
+    const [t,] = useTranslation();
 
     useEffect(() => {
 
@@ -43,23 +45,23 @@ function BannerMainPage({image}) {
             backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0)), url(${image})`
         }}>
             <div className={"row row-banner m-4 m-s-0"}>
-            <h1 id={"greeting"} className={"mt-5 anonymous-banner-title"}>Hello {name}!</h1>
+            <h1 id={"greeting"} className={"mt-5 anonymous-banner-title"}>{t("greetingCustomer")} {name}!</h1>
 
                 <div className={"col-12 d-flex flex-column flex-md-row"}>
                         <button className={"banner-btn mb-4"}
                                 onClick={() => {
                                     window.location.href = "/profile/orders"
-                                }}>Past Orders
+                                }}>{t("pastOrders")}
                         </button>
                         <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
 
-                                }}>View Current Orders
+                                }}>{t("viewCurrentOrders")}
                         </button>
                         <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
 
-                                }}>Request An Order Now
+                                }}>{t("requestAnOrderNow")}
                         </button>
                     </div>
 

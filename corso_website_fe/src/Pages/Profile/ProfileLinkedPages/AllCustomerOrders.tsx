@@ -4,10 +4,12 @@ import OrderTile, {Order} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useAuth} from "../../../security/Components/AuthProvider";
+import {useTranslation} from "react-i18next";
 
 function AllCustomerOrders() {
 
     const auth = useAuth();
+    const [t]= useTranslation()
 
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
@@ -68,8 +70,8 @@ function AllCustomerOrders() {
                     {orders.length <= 0 &&
                         <div className="row text-center">
                             <div className="col-12">
-                                <h1 className="error">No orders found, you can request one <a
-                                    href={"/create/orders"}>here</a></h1>
+                                <h1 className="error">{t("noOrdersForCustomer")} <a
+                                    href={"/create/orders"}>{t("here")}</a></h1>
                             </div>
                         </div>
                     }

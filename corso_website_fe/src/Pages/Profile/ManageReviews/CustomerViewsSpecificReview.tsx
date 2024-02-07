@@ -12,6 +12,7 @@ import Trash from "../../../ressources/images/Trash_light.svg";
 import {SyncLoader} from "react-spinners";
 import Popup from 'reactjs-popup';
 import {Rating} from "@mui/material";
+import {useTranslation} from "react-i18next";
 
 function CustomerViewsSpecificReview() {
 
@@ -20,6 +21,8 @@ function CustomerViewsSpecificReview() {
     let {reviewId} = useParams();
 
     const auth = useAuth();
+    const [t] = useTranslation();
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
@@ -87,7 +90,7 @@ function CustomerViewsSpecificReview() {
         })
             .then(res => {
                 // @ts-ignore
-                swal("Review deleted successfully!", "Your review has been successfully deleted!", "success").then(
+                swal(t("deleteReviewAlertTitle"), t("deleteReviewAlertMessage"), "success").then(
                     () =>  window.location.href = '/profile/reviews'
 
                 )
@@ -141,7 +144,7 @@ function CustomerViewsSpecificReview() {
         )
             .then(res => {
                 // @ts-ignore
-                swal("Review saved successfully!", "Your review has been successfully saved!", "success")
+                swal(t("updateReviewAlertTitle"), t("updateReviewAlertMessage"), "success")
                     .then(() => {
                         getReview()
                         setIsEdit(!isEdit)
@@ -168,7 +171,7 @@ function CustomerViewsSpecificReview() {
                     <div className="col-2 review-box-stars">
                         {!isEdit &&
                             <button className="btn btn-primary" onClick={saveReview}>
-                                Save
+                                {t("save")}
                             </button>
                         }
                     </div>
@@ -211,7 +214,7 @@ function CustomerViewsSpecificReview() {
                                 }}
                             >
                                 <div className="text-center">
-                                    <div style={{ marginBottom: '15px' }}>Deleting Review ...</div>
+                                    <div style={{ marginBottom: '15px' }}>{t("deletingReview")}</div>
                                     <SyncLoader className="spinner" color="#054AEB" />
                                 </div>
                             </Popup>
@@ -219,7 +222,7 @@ function CustomerViewsSpecificReview() {
                     </div>
                 </div>
                 <div className="row">
-                    {review.pinned && <p className="review-message">Your review is pinned to the landing page</p>}
+                    {review.pinned && <p className="review-message">{t("reviewPinnedMessage")}</p>}
                     <input className="review-message" id={"message-edit"} onChange={(event) => {
                         setMessage(event.target.value)
                     }} defaultValue={message} disabled={isEdit}/>

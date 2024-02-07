@@ -11,10 +11,12 @@ import {useNavigate} from "react-router";
 
 import './UpdateOrder.css'
 import {SyncLoader} from "react-spinners";
+import {useTranslation} from "react-i18next";
 
 function UpdateOrder() {
 
     const auth = useAuth();
+    const {t} = useTranslation();
 
     const navigate = useNavigate()
 
@@ -92,7 +94,7 @@ function UpdateOrder() {
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
         if (phoneValue !== "" && !phonePattern.test(phoneValue)) {
-            swal("Invalid Phone Number", "Please enter a valid phone number\n\nValid formats:\n" +
+            swal(t("invalidPhoneNumberAlertTitle"), t("invalidPhoneNumberAlertMessage") +
                 "(123) 456-7890\n" +
                 "(123)456-7890\n" +
                 "123-456-7890\n" +
@@ -123,7 +125,7 @@ function UpdateOrder() {
                 if (res.status === 200) {
                     setOrder(order);
 
-                    swal("Order Updated", "Your order has been updated successfully", "success")
+                    swal(t("orderUpdatedTitle"), t("orderUpdatedMessage"), "success")
                         .then(() => {
                             navigate(-1)
                         })
@@ -147,12 +149,12 @@ function UpdateOrder() {
         <div>
             <NavigationBar/>
             <div className={"update-order-customer-box px-5"}>
-                <h1>Update Order</h1>
-                <h2>Order ID: #{order.orderTrackingNumber}</h2>
+                <h1>{t("updateOrder")}</h1>
+                <h2>{t("orderId")}: #{order.orderTrackingNumber}</h2>
                 <form onSubmit={updateOrder} className={"w-100"}>
                     <div className="row mb-3">
                         <label htmlFor={"customerAddress"} className="col-sm-2 col-form-label">
-                            Address
+                            {t("address")}
                         </label>
                         <div className="col-sm-10">
                             <input
@@ -172,7 +174,7 @@ function UpdateOrder() {
                     </div>
                     <div className="row mb-3">
                         <label htmlFor={"customerApartment"} className="col-sm-3 col-form-label">
-                            Apartment Number
+                            {t("apartmentNumber")}
                         </label>
                         <div className="col-sm-4">
                             <input
@@ -180,13 +182,13 @@ function UpdateOrder() {
                                 id={"customerApartment"}
                                 type="text"
                                 className="form-control"
-                                placeholder="Customer Apartment Number"
+                                placeholder={t("apartmentNumberCustomer")}
                                 defaultValue={order.customerApartmentNumber}
                             />
                         </div>
 
                         <label htmlFor={"customerPostalCode"} className="col-sm-2 col-form-label">
-                            Postal Code
+                            {t("postalCode")}
                         </label>
                         <div className="col-sm-3">
                             <input
@@ -195,7 +197,7 @@ function UpdateOrder() {
                                 id={"customerPostalCode"}
                                 type="text"
                                 className="form-control"
-                                placeholder="Customer Postal Code"
+                                placeholder={t("postalCodeCustomer")}
                                 defaultValue={order.customerPostalCode}
                             />
                         </div>
@@ -203,7 +205,7 @@ function UpdateOrder() {
 
                     <div className="row">
                         <label htmlFor={"customerPhone"} className="col-sm-2 col-form-label">
-                            Phone
+                            {t("phoneNumber")}
                         </label>
                         <div className="col-sm-5">
                             <input
@@ -211,13 +213,13 @@ function UpdateOrder() {
                                 id={"customerPhone"}
                                 type="text"
                                 className="form-control"
-                                placeholder="Customer Phone"
+                                placeholder={t("phoneNumberCustomer")}
                                 defaultValue={order.customerPhone}
                             />
                         </div>
 
                         <label htmlFor={"customerCity"} className="col-sm-2 col-form-label">
-                            City
+                            {t("city")}
                         </label>
                         <div className="col-sm-3">
                             <input
@@ -225,7 +227,7 @@ function UpdateOrder() {
                                 id={"customerCity"}
                                 type="text"
                                 className="form-control"
-                                placeholder="Customer City"
+                                placeholder={t("cityCustomer")}
                                 defaultValue={order.customerCity}
                             />
                         </div>
@@ -250,7 +252,7 @@ function UpdateOrder() {
                             fontSize: "20px",
                             padding: "10px 30px",
                         }}>
-                            Update Order
+                            {t("updateOrder")}
                         </button>
                     </div>
                 </form>

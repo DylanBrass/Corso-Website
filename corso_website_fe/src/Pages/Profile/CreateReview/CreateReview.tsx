@@ -7,23 +7,25 @@ import logo from "../../../ressources/images/customcolor_text-logoname_transpare
 
 import './CreateReview.css';
 import Cookies from "js-cookie";
+import {useTranslation} from "react-i18next";
 
 function CreateReview() {
 
     const auth = useAuth();
+    const [t] = useTranslation();
     const leaveReview = (event: any) => {
 
         event.preventDefault();
 
         if (event.target.review.value.length < 10) {
             // @ts-ignore
-            swal("Warning!", "Review must be at least 10 characters long!", "warning");
+            swal(t("warningAlertTitle"), t("reviewConstraintMessage"), "warning");
             return;
         }
 
         if (rating === 0) {
             // @ts-ignore
-            swal("Warning!", "Please select a rating!", "warning");
+            swal(t("warningAlertTitle"), t("selectRatingMessage"), "warning");
             return;
         }
 
@@ -40,7 +42,7 @@ function CreateReview() {
             .then(res => {
                 if (res.status === 201) {
                     // @ts-ignore
-                    swal("Success!", "Your review has been submitted!", "success").then(
+                    swal(t("success"), t("submitReviewSuccessMessage"), "success").then(
                         () => window.location.href = '/profile/reviews'
 
                     )
@@ -74,11 +76,8 @@ function CreateReview() {
             <NavigationBar/>
             <div className={"create-review-page-content"}>
                 <div className={"create-review-page-header"}>
-                    <h1>Leave a private review to Corso</h1>
-                    <h3>This review will be visible by you and Corso, but we retain the right to display your review on
-                        the
-                        main
-                        page, you will be informed when your review is added or removed from the main page.</h3>
+                    <h1>{t("leavePrivateReviewTitle")}</h1>
+                    <h3>{t("leavePrivateReviewBlurb")}</h3>
                 </div>
                 <div className={"add-review-box"}>
                     <div className={"row create-box"}>
@@ -92,20 +91,20 @@ function CreateReview() {
                             </div>
                             <div className={"row form-box w-100"}>
                                 <div className={"col-12 m-auto"}>
-                                    <h3>Leave a review</h3>
+                                    <h3>{t("leaveAReview")}</h3>
                                     <form onSubmit={leaveReview} className={"m-auto w-100"}>
 
 
                                         <div className="form-group">
-                                            <label className={"review-label"} htmlFor="review">Review</label>
+                                            <label className={"review-label"} htmlFor="review">{t("review")}</label>
                                             <textarea className="form-control" id="review" rows={3}
-                                                      placeholder="Enter review"
+                                                      placeholder={t("enterReview")} required
                                                       minLength={10}/>
                                         </div>
                                         <div className="form-group">
-                                            <label className={"review-label"} htmlFor="review">Full Name</label>
+                                            <label className={"review-label"} htmlFor="review">{t("fullName")}</label>
                                             <input type="text" className="form-control" id="customerFullName"
-                                                   placeholder="Enter your full name" required minLength={3}/>
+                                                   placeholder={t("enterFullName")} required minLength={3}/>
                                         </div>
 
                                         <div className="form-group">
@@ -122,7 +121,7 @@ function CreateReview() {
                                                 />
                                             </div>
                                         </div>
-                                        <button type="submit" className="btn btn-primary">Submit</button>
+                                        <button type="submit" className="btn btn-primary">{t("submitButton")}</button>
                                     </form>
                                 </div>
                             </div>

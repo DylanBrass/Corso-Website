@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '@mui/material/Pagination';
+import {useTranslation} from "react-i18next";
 
 interface CustomPaginationProps {
     onPageChange: (pageNumber: number, pageSize: number) => void;
@@ -16,6 +17,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
                                                            }) => {
     const [page, setPage] = useState(1);
     const [localPageSize, setLocalPageSize] = useState(pageSize);
+    const [t] = useTranslation();
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
@@ -50,7 +52,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <label htmlFor="pageSize" style={{ marginRight: '10px' }}>
-                    Items per page:{' '}
+                    {t("itemsPerPage")}:{' '}
                 </label>
                 <select id="pageSize" value={localPageSize} onChange={handlePageSizeChange}>
                     <option value={1}>1</option>

@@ -3,6 +3,7 @@ import axios from "axios";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import ReviewTile from "../../../Components/ReviewTile/ReviewTile";
 import './CustomerReviews.css';
+import {useTranslation} from "react-i18next";
 
 interface Review {
     reviewId: string;
@@ -14,6 +15,7 @@ interface Review {
 
 function CustomerReviews() {
     const [reviews, setReviews] = useState<Review[]>([]);
+    const [t] = useTranslation();
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -36,7 +38,7 @@ function CustomerReviews() {
         <>
             <NavigationBar/>
             <div className="customer-review-container">
-                <h1>My Reviews</h1>
+                <h1>{t("myReviews")}</h1>
                 <div className="customer-review-tiles-container w-75">
                     {reviews.length > 0 ? reviews.map((review, index) => (
                         <ReviewTile
@@ -53,8 +55,8 @@ function CustomerReviews() {
                                 window.location.href = `/profile/reviews/${review.reviewId}`
                             }}
                         />
-                    )) : <h1 className="error">No reviews found, create one <a
-                        href={"/profile/reviews/create"}>here</a></h1>
+                    )) : <h1 className="error">{t("createReviewMessage")} <a
+                        href={"/profile/reviews/create"}>{t("here")}</a></h1>
                     }
                 </div>
             </div>

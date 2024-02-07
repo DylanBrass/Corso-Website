@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import './ViewServiceDetails.css'; 
+import './ViewServiceDetails.css';
+import {useTranslation} from "react-i18next";
 
 
 interface ServiceDetails {
@@ -17,6 +18,7 @@ function ViewServiceDetails() {
     const { serviceId } = useParams<{ serviceId: string }>();
     const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [t] = useTranslation();
 
     useEffect(() => {
         const fetchServiceDetails = async () => {
@@ -54,8 +56,8 @@ function ViewServiceDetails() {
                         <p className="lead">{serviceDetails.serviceDescription}</p>
                     </div>
                 <div className="row custom-row">
-                    <a href="/public" className="home-hyperlink">
-                        Back to Main Page
+                    <a href="/" className="home-hyperlink">
+                        {t("backToMainPage")}
                     </a>
                 </div>
                 </div>
