@@ -138,6 +138,7 @@ test {
     exclude '**/CreateAServiceTest.class'
     exclude '**/ViewServiceDetailsAdmin.class'
     exclude '**/ModifyServiceTest.class'
+    exclude '**/ModifyGalleryTest.class'
     exclude '**/DeleteReviewTest.class'
     exclude '**/ChooseViewableFaqsTest.class'
     exclude '**/ChooseVisibleServicesTest.class'

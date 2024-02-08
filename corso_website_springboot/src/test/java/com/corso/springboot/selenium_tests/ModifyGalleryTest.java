@@ -45,7 +45,7 @@ public class ModifyGalleryTest {
 
         $("button[type='submit'][value='Update']").click();
 
-        sleep(5000);
+        sleep(10000);
 
         // Wait for the SweetAlert to appear
         $(".swal-title").should(Condition.exist);
@@ -59,6 +59,12 @@ public class ModifyGalleryTest {
 
         // Click on the "OK" button of the SweetAlert
         $(".swal-button").click();
+
+        sleep(2000);
+
+        $$(".mt-2").get(2).click();
+
+        assertEquals("Test", $("#description").getValue());
 
 
     }
