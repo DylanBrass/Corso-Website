@@ -122,7 +122,8 @@ public class SpringSecurityConfigBean {
         return (request, response, authException) -> {
             final String json;
             final ErrorMessage errorMessage;
-            if (Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals("isAuthenticated"))) {
+
+            if (request.getCookies() != null && Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals("isAuthenticated"))) {
 
                 errorMessage = ErrorMessage.from("Your session has expired.");
 

@@ -195,6 +195,14 @@ public class OrderServiceImpl implements OrderService {
             order.setUserId(orderRequestExternal.getUserId());
         }
 
+        if (orderRequestExternal.getHoursWorked() > orderRequestExternal.getEstimatedDuration()) {
+            throw new InvalidRequestException("Hours worked cannot be greater than estimated duration");
+        }
+
+        if (orderRequestExternal.getHoursWorked() < 0) {
+            throw new InvalidRequestException("Hours worked cannot be less than 0");
+        }
+
         order.setOrderId(new OrderIdentifier());
 
         order.setOrderTrackingNumber(new OrderTrackingNumber());

@@ -3,6 +3,7 @@ package com.corso.springboot.Service_Subdomain.presentationlayer;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectriqueinc.tech/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectriqueinc.tech/"}, allowCredentials = "true")
 @Slf4j
 @RestController
 @RequestMapping("api/v1/corso/services")
@@ -32,41 +33,43 @@ public class ServiceController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<ServiceResponse>> getAllServices(){
+    public ResponseEntity<List<ServiceResponse>> getAllServices() {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getAllServices());
     }
 
-    @Cacheable(value = "services", key = "#root.methodName",sync = true)
+    @Cacheable(value = "services", key = "#root.methodName", sync = true)
     @GetMapping("/visible")
-    public ResponseEntity<List<ServiceResponse>> getAllVisibleServices(){
+    public ResponseEntity<List<ServiceResponse>> getAllVisibleServices() {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getAllVisibleServices());
     }
 
     @Caching(evict = {
             @CacheEvict(value = "services", allEntries = true),
             @CacheEvict(value = "servicesCount", allEntries = true),
+            @CacheEvict(value = "serviceTimeByService", allEntries = true)
     })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<ServiceResponse> createService(@RequestBody ServiceRequest serviceRequest){
+    public ResponseEntity<ServiceResponse> createService(@RequestBody ServiceRequest serviceRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceService.createService(serviceRequest));
     }
 
     @Cacheable(value = "servicesCount", key = "#root.methodName")
     @GetMapping("/count")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<Integer> countAllServices(){
+    public ResponseEntity<Integer> countAllServices() {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.countAllServices());
     }
 
-     @Caching(evict = {
-        @CacheEvict(value = "services", allEntries = true),
-        @CacheEvict(value = "servicesCount", allEntries = true),
-        @CacheEvict(value = "service", key = "#serviceId")
+    @Caching(evict = {
+            @CacheEvict(value = "services", allEntries = true),
+            @CacheEvict(value = "servicesCount", allEntries = true),
+            @CacheEvict(value = "service", key = "#serviceId"),
+            @CacheEvict(value = "serviceTimeByService", allEntries = true)
     })
     @PutMapping("/{serviceId}")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<ServiceResponse> modifyService(@PathVariable String serviceId, @Valid @RequestBody ServiceRequest serviceRequest){
+    public ResponseEntity<ServiceResponse> modifyService(@PathVariable String serviceId, @Valid @RequestBody ServiceRequest serviceRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.modifyService(serviceId, serviceRequest));
     }
 
@@ -77,8 +80,16 @@ public class ServiceController {
     })
     @PatchMapping("/{serviceId}/visibility")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<ServiceResponse> changeServiceVisibility(@PathVariable String serviceId){
+    public ResponseEntity<ServiceResponse> changeServiceVisibility(@PathVariable String serviceId) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.changeServiceVisibility(serviceId));
+    }
+
+
+    @Cacheable(value = "serviceTimeByService", key = "#root.methodName + #dateStart + #dateEnd")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/time-by-service")
+    public ResponseEntity<List<ServiceTimeByResponse>> getServiceTimeByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
+        return ResponseEntity.status(HttpStatus.OK).body(serviceService.getServiceTimeByService(dateStart, dateEnd));
     }
 }
 

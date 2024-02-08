@@ -5,6 +5,8 @@ import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
+
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/filter")
@@ -51,11 +54,15 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOverdueOrders(pageSize, offset));
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+    })
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/external")
     public ResponseEntity<OrderResponse> createOrderExternal(@Valid @RequestBody OrderRequestExternal orderRequestExternal) throws IOException, InterruptedException {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrderExternal(orderRequestExternal));
     }
+
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/manage/{orderId}")
@@ -72,11 +79,15 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getCustomerCurrentOrders(userId, Status.IN_PROGRESS));
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+    })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/acceptOrder/{orderId}")
     public ResponseEntity<OrderResponse> UpdateOrderStatusToAccepted(@RequestBody AcceptOrderRequest acceptOrderRequest, @PathVariable String orderId) throws MessagingException {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToAccepted(orderId, acceptOrderRequest));
     }
+
 
     @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/manage/count")
@@ -91,6 +102,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.countAllOrders());
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+    })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/declineOrder/{orderId}")
     public ResponseEntity<OrderResponse> UpdateOrderStatusToDeclined(@PathVariable String orderId, @RequestBody DeclineOrderRequest declineOrderRequest) throws MessagingException {
@@ -99,6 +113,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderStatusToDeclined(orderId, declineOrderRequest));
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+    })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/cancelOrder/{orderId}")
     public ResponseEntity<OrderResponse> UpdateOrderStatusToCancelled(@PathVariable String orderId, @RequestBody DeclineOrderRequest declineOrderRequest) throws MessagingException {

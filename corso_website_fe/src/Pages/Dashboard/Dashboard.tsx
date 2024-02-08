@@ -3,9 +3,8 @@ import {useAuth} from "../../security/Components/AuthProvider";
 import AdminDashboardTile from "../../Components/Dashboard/AdminDashboardTile";
 import "./Dashboard.css"
 import Cookies from "js-cookie";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import React from "react";
 
 function Dashboard() {
 
@@ -30,7 +29,7 @@ function Dashboard() {
     const [totalGalleryImages, setTotalGalleryImages] = useState("loading...")
 
     const getTotalReviews = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/reviews/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -38,7 +37,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    
+
                     setTotalReviews(r.data)
                 }
             })
@@ -49,7 +48,7 @@ function Dashboard() {
     }
 
     const getTotalPinnedReviews = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/reviews/count/pinned", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/reviews/count/pinned", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -57,7 +56,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    
+
                     setTotalPinnedReviews(r.data)
                 }
             })
@@ -76,7 +75,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    
+
                     setTotalAdmins(r.data)
                 }
             })
@@ -87,7 +86,7 @@ function Dashboard() {
     }
 
     const getTotalOrders = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/all/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/orders/all/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -95,7 +94,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    
+
                     setTotalOrders(r.data)
                 }
             })
@@ -106,7 +105,7 @@ function Dashboard() {
     }
 
     const getVisitors = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/auth0/manage/get-stats-last-30-days", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/auth0/manage/get-stats-last-30-days", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -114,7 +113,7 @@ function Dashboard() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    
+
                     setVisitors(r.data)
                 }
             })
@@ -125,7 +124,7 @@ function Dashboard() {
     }
 
     const getInProgressCount = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/orders/manage/count", {
             params: {
                 status: "IN_PROGRESS"
             },
@@ -140,14 +139,14 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                
+
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
     };
 
     const getPendingCount = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/orders/manage/count", {
             params: {
                 status: "PENDING"
             },
@@ -162,13 +161,13 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                
+
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
     };
     const getCompletedCount = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/orders/manage/count", {
             params: {
                 status: "COMPLETED"
             },
@@ -183,14 +182,14 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                
+
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
     };
 
     const getServicesCount = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/services/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/services/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -202,7 +201,7 @@ function Dashboard() {
                 }
             })
             .catch(error => {
-                
+
                 // @ts-ignore
                 auth.authError(error.response.status);
             });
@@ -210,7 +209,7 @@ function Dashboard() {
 
 
     const getFaqCount = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/faqs/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/faqs/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -229,9 +228,8 @@ function Dashboard() {
     }
 
 
-
     const getTotalOverdueOrders = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/manage/overdue/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/orders/manage/overdue/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -250,7 +248,7 @@ function Dashboard() {
     }
 
     const getTotalGalleryImages = async () => {
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/galleries/carousel/count", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/galleries/carousel/count", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -278,11 +276,11 @@ function Dashboard() {
         }
 
         getTotalAdmins().then(r => {
-            
+
         })
 
         getVisitors().then(r => {
-            
+
         })
 
         getInProgressCount().then(() => {
@@ -297,15 +295,15 @@ function Dashboard() {
         getServicesCount()
 
         getTotalOrders().then(r => {
-            
+
         })
 
         getTotalReviews().then(r => {
-            
+
         })
 
         getTotalPinnedReviews().then(r => {
-            
+
         })
 
         getFaqCount().then(r => {
@@ -340,7 +338,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon1_arlmbi.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/orders/completed"
                             }}
                         />
@@ -354,7 +352,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon2_upzhcv.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/orders/current"
                             }}
                         />
@@ -368,7 +366,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon3_fv4ddv.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/orders/pending"
                             }}
                         />
@@ -383,7 +381,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267713/icon4_v5phq3.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/orders/all"
                             }}
                         />
@@ -397,7 +395,7 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon5_tgqojw.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/orders/overdue"
                             }}
                         />
@@ -426,16 +424,17 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon7_vftm9q.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/carousel/order"
                             }}
                         />
                     </div>
                     <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
 
-                        <AdminDashboardTile title1={"Reports"} text1={""} title2={""} text2={""} icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon13_pxn61t.png"}
+                        <AdminDashboardTile title1={"Reports"} text1={""} title2={""} text2={""}
+                                            icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon13_pxn61t.png"}
                                             action={() => {
-                                                
+                                                window.location.href = "/reports"
                                             }}/>
                     </div>
                     <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
@@ -474,8 +473,8 @@ function Dashboard() {
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon11_pprfnf.png"}
                             action={() => {
-                                
-                                window.location.href="/services"
+
+                                window.location.href = "/services"
                             }}
                         />
                     </div>
@@ -499,12 +498,12 @@ function Dashboard() {
 
                         <AdminDashboardTile
                             title1={totalReviews.toString()}
-                            title2={totalPinnedReviews+"/6"}
+                            title2={totalPinnedReviews + "/6"}
                             text1={"Total Testimonies"}
                             text2={"Pinned Testimonies"}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon8_jbbxv9.png"}
                             action={() => {
-                                
+
                                 window.location.href = "/manage/testimonies"
                             }}
                         />

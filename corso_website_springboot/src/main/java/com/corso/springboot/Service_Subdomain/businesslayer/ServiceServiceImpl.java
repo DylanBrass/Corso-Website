@@ -7,8 +7,10 @@ import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapp
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
+import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
 import com.corso.springboot.cloudinary.CloudinaryService;
 import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
+import com.corso.springboot.utils.exceptions.services.ServiceBadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ServiceServiceImpl implements ServiceService{
+public class ServiceServiceImpl implements ServiceService {
 
     private final ServiceResponseMapper serviceResponseMapper;
     private final ServiceRequestMapper serviceRequestMapper;
@@ -29,7 +31,7 @@ public class ServiceServiceImpl implements ServiceService{
     @Override
     public ServiceResponse getServiceByServiceId(String serviceId) {
         ServiceEntity service = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
-        if(service == null){
+        if (service == null) {
             throw new ServiceNotFoundException("Unknown service id : " + serviceId);
         }
         return serviceResponseMapper.toServiceResponse(service);
@@ -61,13 +63,12 @@ public class ServiceServiceImpl implements ServiceService{
             service.setActive(true);
 
 
-
             // Saving the service
             ServiceEntity savedService = serviceRepository.save(service);
 
             // Preparing the response
             return serviceResponseMapper.toServiceResponse(savedService);
-            
+
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload images", e);
@@ -94,7 +95,7 @@ public class ServiceServiceImpl implements ServiceService{
                 String existingPublicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(existingServiceEntity.getServiceIcon());
 
                 // Update the existing icon image in Cloudinary
-                if(!serviceRequest.getServiceIcon().contains("https://") && !serviceRequest.getServiceIcon().contains("http://")) {
+                if (!serviceRequest.getServiceIcon().contains("https://") && !serviceRequest.getServiceIcon().contains("http://")) {
                     existingServiceEntity.setServiceIcon(cloudinaryService.updateCloudinaryImage(existingPublicId, serviceRequest.getServiceIcon()));
                 }
             }
@@ -105,7 +106,7 @@ public class ServiceServiceImpl implements ServiceService{
                 String existingImagePublicId = cloudinaryService.extractPublicIdFromCloudinaryUrl(existingServiceEntity.getServiceImage());
 
                 // Update the existing image in Cloudinary
-                if(!serviceRequest.getServiceImage().contains("https://") && !serviceRequest.getServiceImage().contains("http://")) {
+                if (!serviceRequest.getServiceImage().contains("https://") && !serviceRequest.getServiceImage().contains("http://")) {
                     String updatedImageUrl = cloudinaryService.updateCloudinaryImage(existingImagePublicId, serviceRequest.getServiceImage());
                     existingServiceEntity.setServiceImage(updatedImageUrl);
                 }
@@ -136,5 +137,18 @@ public class ServiceServiceImpl implements ServiceService{
     @Override
     public int countAllServices() {
         return serviceRepository.countAllBy();
+    }
+
+    @Override
+    public List<ServiceTimeByResponse> getServiceTimeByService(String dateStart, String dateEnd) {
+        try {
+
+            return serviceRepository.getHoursWorkedByServiceFromOrdersInRange(dateStart, dateEnd)
+                    .stream()
+                    .map(ServiceTimeByResponse::new)
+                    .toList();
+        } catch (Exception e) {
+            throw new ServiceBadRequestException("Failed to generate time by service report :" + e.getMessage());
+        }
     }
 }

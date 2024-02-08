@@ -40,6 +40,7 @@ import React from 'react';
 import CustomerViewsSpecificReview from "./Pages/Profile/ManageReviews/CustomerViewsSpecificReview";
 import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpecificGallery";
 import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
+import ReportsPage from "./Pages/Dashboard/ReportsPages/ReportsPage";
 
 
 export default function App() {
@@ -75,6 +76,8 @@ export default function App() {
                         <Route path="/profile/reviews/:reviewId" element={<CustomerViewsSpecificReview/>}/>
                         <Route path="/profile/reviews/create" element={<CreateReview/>}/>
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
+
+                        <Route path={"/reports"} element={<ReportsPage/>}/>
 
                         <Route path="/manage/gallery/:galleryId" element={<ViewSpecificGallery/>}/>
 

@@ -15,8 +15,10 @@ import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersExcepti
 import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
 import com.corso.springboot.utils.exceptions.Review.ReviewStateConflictException;
 import com.corso.springboot.utils.exceptions.Review.*;
+import com.corso.springboot.utils.exceptions.services.ServiceBadRequestException;
 import lombok.Generated;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,6 +32,23 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 public class GlobalControllerHandler {
 
+
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public HttpErrorInfo handleIllegalArgumentException(IllegalArgumentException ex) {
+        return createHttpErrorInfo(UNPROCESSABLE_ENTITY, ex);
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public HttpErrorInfo handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        return createHttpErrorInfo(BAD_REQUEST, ex);
+    }
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(ServiceBadRequestException.class)
+    public HttpErrorInfo handleErrorWhileCreatingReport(ServiceBadRequestException ex) {
+        return createHttpErrorInfo(BAD_REQUEST, ex);
+    }
 
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(IOException.class)

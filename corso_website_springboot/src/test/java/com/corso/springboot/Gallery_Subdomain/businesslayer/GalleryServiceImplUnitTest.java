@@ -159,4 +159,6 @@ class GalleryServiceImplUnitTest {
         //act & assert
         assertThrows(GalleryNotFoundException.class, () -> galleryService.getGalleryById(invalidId));
     }
+
+
 }
