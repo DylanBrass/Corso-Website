@@ -22,8 +22,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -128,8 +127,8 @@ public class ServiceServiceImplUnitTest {
         assertEquals(2, result.size());
         assertEquals("Test Service 1", result.get(0).getServiceName());
         assertEquals("Test Service 2", result.get(1).getServiceName());
-        assertEquals(true, result.get(0).isActive());
-        assertEquals(true, result.get(1).isActive());
+        assertTrue(result.get(0).isActive());
+        assertTrue(result.get(1).isActive());
     }
 
     @Test

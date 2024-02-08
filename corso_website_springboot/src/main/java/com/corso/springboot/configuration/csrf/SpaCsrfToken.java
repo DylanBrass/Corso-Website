@@ -1,7 +1,6 @@
 package com.corso.springboot.configuration.csrf;
 
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Generated;
@@ -12,7 +11,6 @@ import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.function.Supplier;
 
 @Slf4j

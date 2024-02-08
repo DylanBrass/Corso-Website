@@ -488,7 +488,7 @@ public class OrderServiceImpl implements OrderService {
 
         }
 
-        log.info("Sending email to {}", recipients.toString());
+        log.info("Sending email to {}", recipients);
 
         recipients.deleteCharAt(recipients.length() - 1);
 

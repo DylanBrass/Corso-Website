@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -42,7 +43,7 @@ class ViewCarouselTest {
         assertTrue(carouselIndicators.isDisplayed());
 
         // Assert there are 5 carousel indicators
-        assertTrue(carouselIndicators.findAll("li").size() == 5);
+        assertEquals(5, carouselIndicators.findAll("li").size());
 
         // Find the carousel controls (the arrows on the sides of the carousel)
         SelenideElement carouselControlPrev = $("button[class='carousel-control-prev']");
@@ -54,7 +55,7 @@ class ViewCarouselTest {
         // Assert that the carousel items are displayed
         assertTrue(carouselItems.isDisplayed());
         // 4 instead of 5 because one of them is carousel-item active
-        assertTrue(carouselItems.findAll("div[class='carousel-item']").size() == 4);
+        assertEquals(4, carouselItems.findAll("div[class='carousel-item']").size());
 
         // Assert that the first carousel item is active
         assertTrue(carouselItems.find("div[class='carousel-item active']").isDisplayed());

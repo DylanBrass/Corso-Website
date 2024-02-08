@@ -8,10 +8,7 @@ public enum Status {
     CANCELLED("cancelled"),
     DECLINED("declined");
 
-    private final String status;
-
     Status(String status) {
-        this.status = status;
     }
 
 }

@@ -1,30 +1,20 @@
 package com.corso.springboot.Review_Subdomain.businesslayer;
 
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
-import com.corso.springboot.Customer_Subdomain.datalayer.Customer;
-import com.corso.springboot.Customer_Subdomain.datalayer.CustomerRepository;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Review_Subdomain.datalayer.Review;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewIdentifier;
 import com.corso.springboot.Review_Subdomain.datalayer.ReviewRepository;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewRequestMapper;
 import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMapper;
-import com.corso.springboot.Review_Subdomain.presentationlayer.*;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
+import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
-import com.corso.springboot.utils.exceptions.InvalidRequestException;
-import com.corso.springboot.utils.exceptions.Review.ReviewsNotFoundException;
-import com.corso.springboot.utils.exceptions.Review.ReviewNotFoundException;
-import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
-import com.corso.springboot.utils.exceptions.Review.ReviewStateConflictException;
-import com.corso.springboot.configuration.security.service.Auth0ManagementService;
-import com.corso.springboot.email.businessLayer.EmailService;
-import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
-import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Review.*;
-import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,13 +22,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.HashMap;
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -293,7 +276,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         }
 
-        log.info("Sending email to {}", recipients.toString());
+        log.info("Sending email to {}", recipients);
 
         recipients.deleteCharAt(recipients.length() - 1);
 

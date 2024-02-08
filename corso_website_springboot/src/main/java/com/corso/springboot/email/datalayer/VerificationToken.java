@@ -3,7 +3,6 @@ package com.corso.springboot.email.datalayer;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.commons.codec.digest.Md5Crypt;
 
 import java.util.Calendar;
 import java.util.Date;

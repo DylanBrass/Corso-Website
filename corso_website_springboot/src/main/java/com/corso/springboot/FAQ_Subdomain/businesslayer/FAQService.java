@@ -1,8 +1,6 @@
 package com.corso.springboot.FAQ_Subdomain.businesslayer;
 
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest;
-import com.corso.springboot.FAQ_Subdomain.datalayer.FAQ;
-import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQRequest;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.FAQResponse;
 import com.corso.springboot.FAQ_Subdomain.presentationlayer.ThreeFAQsRequest;
 

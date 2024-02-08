@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @EqualsAndHashCode(callSuper=false)
 @Data

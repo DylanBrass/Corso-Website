@@ -1,7 +1,9 @@
 package com.corso.springboot.Gallery_Subdomain.datalayer;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class GalleryIdentifier {
 
@@ -12,7 +14,4 @@ public class GalleryIdentifier {
     }
 
 
-    public String getGalleryId() {
-        return galleryId;
-    }
 }

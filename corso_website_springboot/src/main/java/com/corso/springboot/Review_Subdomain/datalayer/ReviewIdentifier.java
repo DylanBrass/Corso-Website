@@ -3,7 +3,9 @@ package com.corso.springboot.Review_Subdomain.datalayer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class ReviewIdentifier {
 
@@ -14,7 +16,4 @@ public class ReviewIdentifier {
         this.reviewId = java.util.UUID.randomUUID().toString();
     }
 
-    public String getReviewId() {
-        return reviewId;
-    }
 }

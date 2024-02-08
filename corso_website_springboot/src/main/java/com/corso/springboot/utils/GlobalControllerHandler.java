@@ -1,19 +1,11 @@
 package com.corso.springboot.utils;
 
-import com.corso.springboot.configuration.security.exceptions.AddingAdminFailed;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
-import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
-import com.corso.springboot.utils.exceptions.FAQ.ThreePrefferedFaqsException;
 import com.corso.springboot.utils.exceptions.FAQ.FAQNotFoundException;
 import com.corso.springboot.utils.exceptions.FAQ.ThreePrefferedFaqsException;
 import com.corso.springboot.utils.exceptions.Gallery.GalleryNotFoundException;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
-import com.corso.springboot.utils.exceptions.Review.ReviewBadRequestException;
-import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
-import com.corso.springboot.utils.exceptions.Review.ReviewUserHasNoOrdersException;
-import com.corso.springboot.utils.exceptions.Review.ReviewPinnedLimitReachedException;
-import com.corso.springboot.utils.exceptions.Review.ReviewStateConflictException;
 import com.corso.springboot.utils.exceptions.Review.*;
 import com.corso.springboot.utils.exceptions.services.ServiceBadRequestException;
 import lombok.Generated;
@@ -24,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.mail.MessagingException;
-
 import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.*;

@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -143,7 +144,7 @@ class GalleryServiceImplUnitTest {
 
         // Act & Assert
         try {
-            galleryService.updateGalleryOrder(Arrays.asList(mockGalleryOrderUpdateRequest));
+            galleryService.updateGalleryOrder(Collections.singletonList(mockGalleryOrderUpdateRequest));
         } catch (Exception e) {
             assertEquals("Gallery not found", e.getMessage());
         }

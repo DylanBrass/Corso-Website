@@ -3,7 +3,9 @@ package com.corso.springboot.FAQ_Subdomain.datalayer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class FAQIdentifier {
 
@@ -14,7 +16,4 @@ public class FAQIdentifier {
         this.FAQId = java.util.UUID.randomUUID().toString();
     }
 
-    public String getFAQId() {
-        return FAQId;
-    }
 }

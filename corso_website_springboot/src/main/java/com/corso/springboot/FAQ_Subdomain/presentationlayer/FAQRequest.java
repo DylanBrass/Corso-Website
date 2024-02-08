@@ -1,7 +1,6 @@
 package com.corso.springboot.FAQ_Subdomain.presentationlayer;
 
 
-import com.corso.springboot.FAQ_Subdomain.datalayer.FAQIdentifier;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,5 @@
 package com.corso.springboot.utils;
 
-import lombok.Generated;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
