@@ -18,8 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
@@ -173,7 +172,27 @@ public class ServiceControllerIntegrationTest {
         // Verify that the service in the repository has been updated
         ServiceEntity modifiedService = serviceRepository.findByServiceIdentifier_ServiceId(serviceId);
         assertNotNull(modifiedService);
-        assertEquals(false, modifiedService.isActive());
+        assertFalse(modifiedService.isActive());
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getTimeByServiceReport_ShouldSucceed() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/time-by-service?date_start=2021-01-01&date_end=2025-12-31")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(5)
+                .jsonPath("$[0].serviceId").isEqualTo("982577e6-1909-46b8-8583-e08c9daa4e9b")
+                .jsonPath("$[0].serviceName").isEqualTo("Electrical Repairs")
+                .jsonPath("$[0].hours_worked").isEqualTo(6)
+                .jsonPath("$[1].serviceId").isEqualTo("b581b538-d6d5-44f1-b288-b45824e4dd4c")
+                .jsonPath("$[1].serviceName").isEqualTo("Lighting Installation")
+                .jsonPath("$[1].hours_worked").isEqualTo(0);
+
     }
 
 }

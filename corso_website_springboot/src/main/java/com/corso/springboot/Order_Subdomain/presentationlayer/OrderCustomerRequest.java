@@ -2,7 +2,6 @@ package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.utils.annotations.ValidCanadianPostalCode;
 import com.corso.springboot.utils.annotations.ValidPhoneNumber;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

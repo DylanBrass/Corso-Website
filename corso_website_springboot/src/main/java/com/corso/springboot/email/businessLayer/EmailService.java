@@ -1,7 +1,6 @@
 package com.corso.springboot.email.businessLayer;
 
 import lombok.Generated;
-import org.thymeleaf.engine.TemplateData;
 
 import javax.mail.MessagingException;
 import java.util.Map;

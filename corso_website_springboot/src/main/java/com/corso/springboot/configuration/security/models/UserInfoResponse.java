@@ -2,10 +2,9 @@ package com.corso.springboot.configuration.security.models;
 
 import lombok.*;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
 @Builder

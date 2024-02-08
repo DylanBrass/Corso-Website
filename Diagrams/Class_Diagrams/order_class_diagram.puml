@@ -16,7 +16,18 @@ package "Order_Subdomain"{
             + UpdateOrderStatusToDeclined(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
             + UpdateOrderStatusToCancelled(orderId: String, declineOrderRequest: DeclineOrderRequest): ResponseEntity<OrderResponse>
             + countAllOverdueOrders(): ResponseEntity<Integer>
+            + getOrdersByMonthAndYear(month: int, year: int): ResponseEntity<List<ordersPerMonthResponse>>
         }
+
+
+        class "ordersPerMonthResponse" as ordersPerMonthResponse{
+            + month: int
+            + year: int
+            + totalOrders: int
+            + orders: List<OrderResponse>
+        }
+
+
         class "OrderResponse" as orderResponse{
             + orderId: String
             + orderTrackingNumber: String
@@ -94,6 +105,7 @@ package "Order_Subdomain"{
             + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
             + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
             + countAllOverdueOrders(): Integer
+            + getOrdersByMonthAndYear(month: int, year: int): List<ordersPerMonthResponse>
         }
 
 
@@ -125,12 +137,20 @@ package "Order_Subdomain"{
             + getAllOrdersWithDefaultSettings(): List<OrderResponse>
             + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
             + countAllOverdueOrders(): Integer
+            + getOrdersByMonthAndYear(month: int, year: int): List<ordersPerMonthResponse>
 
         }
+
+
+        orderServiceImpl -> acceptOrderRequest
+
+        orderServiceImpl -> declineOrderRequest
 
         class orderServiceImpl implements orderService
 
     }
+
+    orderServiceImpl -> ordersPerMonthResponse
 
     package "datalayer" {
 
@@ -151,6 +171,7 @@ package "Order_Subdomain"{
             + findAllByUserIdAndOrderStatus(userId: String, status: String): List<Order>
             + countAllBy(): Integer
             + existsByUserId(userId: String): Boolean
+            + getOrdersByStatusOrStatus(status1: String, status2: String): List<Order>
         }
         class OrderIdentifier {
             - orderId: String

@@ -38,7 +38,7 @@ activate Pfp
 
 Pfp -> Urp : Render()
 activate Urp
-
+User -> Urp : saveReview()
 Urp -> Rq : PATCH api/v1/corso/customers/reviews/{reviewId}
 activate Rq
 

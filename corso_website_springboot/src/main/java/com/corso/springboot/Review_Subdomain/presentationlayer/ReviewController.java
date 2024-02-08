@@ -3,7 +3,6 @@ package com.corso.springboot.Review_Subdomain.presentationlayer;
 
 import com.corso.springboot.Review_Subdomain.businesslayer.ReviewService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;

@@ -1,7 +1,9 @@
 package com.corso.springboot.Service_Subdomain.datalayer;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class ServiceIdentifier {
 
@@ -15,7 +17,4 @@ public class ServiceIdentifier {
         this.serviceId = serviceId;
     }
 
-    public String getServiceId() {
-        return serviceId;
-    }
 }

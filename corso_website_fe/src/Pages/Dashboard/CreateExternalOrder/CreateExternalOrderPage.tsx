@@ -24,21 +24,21 @@ function CreateExternalOrderPage() {
     const auth = useAuth()
 
 
-    const { ref } = usePlacesWidget({
+    const {ref} = usePlacesWidget({
         apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
         onPlaceSelected: (place) => {
             try {
                 document.getElementById("customerAddress")!.setAttribute("value", place.formatted_address)
                 document.getElementById("customerCity")!.setAttribute("value", place.address_components[2].long_name)
                 document.getElementById("customerPostalCode")!.setAttribute("value", place.address_components[place.address_components.length - 1].long_name)
-                
-            }catch (e) {
-                
+
+            } catch (e) {
+
             }
         },
         options: {
             types: ["address"],
-            componentRestrictions: { country: "ca" },
+            componentRestrictions: {country: "ca"},
         }
     })
 
@@ -52,7 +52,7 @@ function CreateExternalOrderPage() {
         }
         let param = "?" + selectedSearchField + "=" + (document.getElementById("search-value") as HTMLInputElement).value
 
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/auth0/manage/users" + param, {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/auth0/manage/users" + param, {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -72,7 +72,7 @@ function CreateExternalOrderPage() {
 
     const getServices = async () => {
 
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/services", {
+        axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/services", {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -94,8 +94,6 @@ function CreateExternalOrderPage() {
         event.preventDefault()
 
 
-        
-
         let data = {
             "serviceId": (document.getElementById("serviceId") as HTMLInputElement).value,
             "userId": selectedUser,
@@ -113,7 +111,12 @@ function CreateExternalOrderPage() {
             "progressInformation": (document.getElementById("progressText") as HTMLInputElement).value,
         }
 
-        axios.post(process.env.REACT_APP_BE_HOST+"api/v1/corso/orders/external", data, {
+        if (data.hoursWorked > data.estimatedDuration) {
+            swal("Error!", "Hours worked cannot be greater than estimated duration!", "error")
+            return
+        }
+
+        axios.post(process.env.REACT_APP_BE_HOST + "api/v1/corso/orders/external", data, {
             headers: {
                 // @ts-ignore
                 'X-XSRF-TOKEN': auth.getXsrfToken()
@@ -218,7 +221,7 @@ function CreateExternalOrderPage() {
                                                 setSelectedRowIndex(index);
                                             }
                                             }
-                                            className={"user-row " && selectedRowIndex === index ? "selected-row" : "" }
+                                            className={"user-row " && selectedRowIndex === index ? "selected-row" : ""}
                                         >
                                             <td>{user.name || "Not Applicable"}</td>
                                             <td>{user.email || "Not Applicable"}</td>
@@ -245,7 +248,7 @@ function CreateExternalOrderPage() {
                     document.getElementById("customerPostalCode")!.setAttribute("value", "");
                     document.getElementById("customerCity")!.setAttribute("value", "");
                     document.getElementById("customerApartment")!.setAttribute("value", "");
-                    
+
                 }
             }
                     className={"mt-1 mb-5 btn-style"}
@@ -459,19 +462,19 @@ function CreateExternalOrderPage() {
                             </div>
                         </div>
 
-                            <div className="row mb-3">
-                                <label htmlFor={"progressText"} className="col-sm-3 col-form-label">
-                                    Progress Description
-                                </label>
-                                <div className="col-sm-9">
+                        <div className="row mb-3">
+                            <label htmlFor={"progressText"} className="col-sm-3 col-form-label">
+                                Progress Description
+                            </label>
+                            <div className="col-sm-9">
                                     <textarea
                                         name={"progressText"}
                                         id={"progressText"}
                                         className="form-control"
                                         placeholder="Describe what was done"
                                     />
-                                </div>
                             </div>
+                        </div>
 
                         <div className="row mb-3">
                             <div className="col-sm-9 offset-sm-3">

@@ -2,7 +2,7 @@
 
 actor Admin
 
-participant "<<View>>\nProfilePage" as Pfp
+participant "<<View>>\nEditGallery" as Pfp
 
 participant "<<View>>\nAddGallery" as Wrp
 
@@ -35,11 +35,11 @@ ref over Pfp, Wrp, Gq, Rc, Gr, Gs, G, Grep, Gdb, Db, GresM, GreqM
 end
 
 opt
-Admin -> Pfp: AddGallery()
 activate Pfp
 
 Pfp -> Wrp: Render()
 activate Wrp
+Admin -> Wrp: postNewGallery()
 
 Wrp -> Gq: POST /api/v1/coGso/galleries/carousel
 

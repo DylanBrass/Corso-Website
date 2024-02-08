@@ -14,6 +14,27 @@ package "ServiceSubdomain"{
             + countAllServices() : ResponseEntity<Integer>
             + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ResponseEntity<ServiceResponse>
             + changeServiceVisibility(serviceId : String) : ResponseEntity<ServiceResponse>
+            + getTimeByService() : ResponseEntity<List<TimeByServiceResponse>>
+            +getOrdersPerService() : ResponseEntity<List<OrdersPerServiceResponse>>
+        }
+
+
+        class "OrdersPerServiceResponse" as ordersPerServiceResponse{
+            - serviceId : String
+            - serviceName: String
+            - totalOrders : int
+            ---
+        }
+
+
+
+
+
+        class "TimeByServiceResponse" as timeByServiceResponse{
+            - serviceId : String
+            - serviceName: String
+            - totalHours : int
+            ---
         }
 
         class "ServiceResponse" as serviceResponse{
@@ -36,6 +57,8 @@ package "ServiceSubdomain"{
         }
 
 
+
+
     }
 
     package "BusinessLayer"{
@@ -48,7 +71,11 @@ package "ServiceSubdomain"{
             + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
             + changeServiceVisibility(serviceId : String) : ServiceResponse
             + countAllServices() : int
+            + getTimeByService() : List<TimeByServiceResponse>
+            + getOrdersPerService() : List<OrdersPerServiceResponse>
+
         }
+
 
         class "<<service>>\nServiceServiceImpl" as serviceImpl{
             - serviceRepository : ServiceRepository
@@ -63,7 +90,11 @@ package "ServiceSubdomain"{
              + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
              + changeServiceVisibility(serviceId : String) : ServiceResponse
              + countAllServices() : int
+                + getTimeByService() : List<TimeByServiceResponse>
+                + getOrdersPerService() : List<OrdersPerServiceResponse>
         }
+
+        serviceImpl --> timeByServiceResponse
 
         class serviceImpl extends service
     }
@@ -74,6 +105,7 @@ package "ServiceSubdomain"{
             + findByServiceIdentifier_ServiceId(serviceId : String) : Service
             + findAllByIsActive(isActive : boolean) : List<Service>
             + countAllBy() : int
+
         }
 
         class ServiceIdentifier {
@@ -101,6 +133,14 @@ package "ServiceSubdomain"{
 
         interface repository extends JpaRepository
 
+<<<<<<< Updated upstream
+=======
+
+        serviceImpl --> service
+
+        serviceImpl --> ordersPerServiceResponse
+
+>>>>>>> Stashed changes
         repository --> service
 
         service --> ServiceIdentifier

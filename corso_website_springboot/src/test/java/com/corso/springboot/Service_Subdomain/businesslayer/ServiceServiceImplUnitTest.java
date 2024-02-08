@@ -6,8 +6,10 @@ import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapp
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
+import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
 import com.corso.springboot.cloudinary.CloudinaryService;
 import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
+import com.corso.springboot.utils.exceptions.services.ServiceBadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,11 +18,11 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -125,8 +127,8 @@ public class ServiceServiceImplUnitTest {
         assertEquals(2, result.size());
         assertEquals("Test Service 1", result.get(0).getServiceName());
         assertEquals("Test Service 2", result.get(1).getServiceName());
-        assertEquals(true, result.get(0).isActive());
-        assertEquals(true, result.get(1).isActive());
+        assertTrue(result.get(0).isActive());
+        assertTrue(result.get(1).isActive());
     }
 
     @Test
@@ -364,5 +366,72 @@ public class ServiceServiceImplUnitTest {
         assertEquals("No service found.", exception.getMessage());
     }
 
+
+    @Test
+    void whenGettingServiceTimeBy_DatabaseShouldThrowError(){
+
+        // Arrange
+        when(serviceRepository.getHoursWorkedByServiceFromOrdersInRange(Mockito.anyString(), Mockito.anyString())).thenThrow(new RuntimeException("Simulated Database Error"));
+
+        // Act & Assert
+        ServiceBadRequestException exception = assertThrows(ServiceBadRequestException.class, () -> {
+            serviceService.getServiceTimeByService("2021-01-01", "2021-12-31");
+        });
+
+        assertEquals("Failed to generate time by service report :Simulated Database Error", exception.getMessage());
+
+    }
+
+    @Test
+    void whenCallingServiceByTimeResponseWithBadlyFormedTuple_thenReturnException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", "Test Service 1", "Test Service 1 Description", "Test Service 1 Icon", "Test Service 1 Image", true};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new ServiceTimeByResponse(tuple);
+        });
+
+        assertEquals("Invalid tuple length: 6", exception.getMessage());
+    }
+
+    @Test
+    void whenCallingServiceByTimeResponseWithBadTypeOnTuplePositionOne_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{1, "Test Service 1", 10L};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new ServiceTimeByResponse(tuple);
+        });
+
+        assertEquals("Invalid type for first field of tuple: class java.lang.Integer", exception.getMessage());
+    }
+
+    @Test
+    void whenCallingServiceByTimeResponseWithBadTypeOnTuplePositionTwo_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", 1, 10L};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new ServiceTimeByResponse(tuple);
+        });
+
+        assertEquals("Invalid type for second field of tuple: class java.lang.Integer", exception.getMessage());
+    }
+
+    @Test
+    void whenCallingServiceByTimeResponseWithBadTypeOnTuplePositionThree_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", "Test Service 1", 10};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new ServiceTimeByResponse(tuple);
+        });
+
+        assertEquals("Invalid type for third field of tuple: class java.lang.Integer", exception.getMessage());
+    }
 
 }
