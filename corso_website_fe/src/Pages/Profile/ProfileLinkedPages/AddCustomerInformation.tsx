@@ -7,11 +7,12 @@ import {usePlacesWidget} from "react-google-autocomplete";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useNavigate} from "react-router";
+import {useTranslation} from "react-i18next";
 
 
 function AddCustomerInformation() {
     const auth = useAuth();
-
+    const {t} = useTranslation("translation");
 
     const [hasProfile, setHasProfile] = useState(false);
 
@@ -115,7 +116,7 @@ function AddCustomerInformation() {
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
         if (phoneValue !== "" && !phonePattern.test(phoneValue)) {
-            swal("Invalid Phone Number", "Please enter a valid phone number\n\nValid formats:\n" +
+            swal(t("invalidPhoneNumberAlertTitle"), t("invalidPhoneNumberAlertMessage") +
                 "(123) 456-7890\n" +
                 "(123)456-7890\n" +
                 "123-456-7890\n" +
@@ -131,7 +132,7 @@ function AddCustomerInformation() {
         const canadianPostalCodePattern = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i
 
         if (!canadianPostalCodePattern.test(postalCodeValue)) {
-            swal("Invalid Postal Code", "Please enter a valid Canadian postal code (e.g., A1A 1A1)", "error");
+            swal(t("invalidPostalCodeAlertTitle"), t("invalidPostalCodeAlertMessage"), "error");
             return;
         }
 
@@ -156,10 +157,10 @@ function AddCustomerInformation() {
             }).then(r => {
                 if (r.status === 200) {
                     if (Cookies.get("email") !== r.data.email)
-                        swal("Profile Updated Successfully", "Please verify your new email address, otherwise we will use your verified one!", "success").then(r => {
+                        swal(t("profileUpdatedSuccessAlertTitle"), t("profileSuccessAlertMessage"), "success").then(r => {
                             navigate(-1)
                         })
-                    else swal("Profile Updated Successfully", "", "success").then(r => {
+                    else swal(t("profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
                         navigate(-1)
                     })
 
@@ -178,7 +179,7 @@ function AddCustomerInformation() {
                     }
 
 
-                    swal("Error!", "A or multiple errors present !\n" + errors, "error").then(r => {
+                    swal(t("errorAlertTitle"), t("errorAlertMessage") + errors, "error").then(r => {
                         // @ts-ignore
                         auth.authError(e.response.status)
                     })
@@ -198,7 +199,7 @@ function AddCustomerInformation() {
 
                         Cookies.set("username", r.data.name);
                         Cookies.set("email", r.data.email);
-                        swal("Profile Created Successfully", "Please verify your new email address, otherwise we will use your verified one!", "success")
+                        swal(t("profileCreatedSuccessAlertTitle"), t("profileSuccessAlertMessage"), "success")
                             .then(r => {
                                 navigate(-1)
                             })
@@ -216,7 +217,7 @@ function AddCustomerInformation() {
                 }
 
 
-                swal("Error!", "A or multiple errors present !\n" + errors, "error").then(r => {
+                swal(t("errorAlertTitle"), t("errorAlertMessage") + errors, "error").then(r => {
                     // @ts-ignore
                     auth.authError(e.response.status)
                 })
@@ -244,7 +245,7 @@ function AddCustomerInformation() {
                 Cookies.remove("username");
                 Cookies.remove("email");
 
-                await swal("Profile Deleted Successfully", "Only your default profile was kept (username and email)!", "success");
+                await swal(t("profileDeletedSuccessAlertTitle"), t("profileDeletedSuccessAlertMessage"), "success");
 
                 axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/security/user-info", {
 
@@ -270,9 +271,9 @@ function AddCustomerInformation() {
                             // @ts-ignore
                             auth.authError(e.response.status);
                         } else if (e.response.status === 404) {
-                            swal("No Profile Found", "You don't have a profile yet!", "warning")
+                            swal(t("noProfileFoundAlertTitle"), t("noProfileFoundAlertMessage"), "warning")
                         } else {
-                            swal("Error!", e.response.data.message, "error")
+                            swal(t("errorAlertTitle"), e.response.data.message, "error")
                         }
                     }
                 )
@@ -280,16 +281,16 @@ function AddCustomerInformation() {
 
                 setIsVerified(true)
             } else {
-                swal("Error!", "Something went wrong", "error");
+                swal(t("errorAlertTitle"), t("errorAlertMessageSomethingWentWrong"), "error");
             }
         } catch (e: any) {
             if (e.response.status === 401 || e.response.status === 403) {
                 // @ts-ignore
                 auth.authError(e.response.status);
             } else if (e.response.status === 404) {
-                swal("No Profile Found", "You don't have any information saved !", "warning")
+                swal(t("noProfileFoundAlertTitle"), t("errorNoInformationSaved"), "warning")
             } else {
-                swal("Error!", e.response.data.message, "error")
+                swal(t("errorAlertTitle"), e.response.data.message, "error")
             }
         }
     };
@@ -303,30 +304,28 @@ function AddCustomerInformation() {
             <NavigationBar/>
             <div className="profile-page">
                 <div className="profile-box mt-5 mb-5">
-                    <h1>Profile</h1>
+                    <h1>{t("profile")}</h1>
 
                     <p className={"text-center fs-4 m-3"}>
-                        Please enter your information below. This information will be used to fill in the order form
-                        automatically. This information will be saved and can be modified at any time. If your email is
-                        invalid, we will use the email you used to signup.
+                        {t("profileInformationBlurb")}
                     </p>
 
                     <form onSubmit={handleSubmit} className="container">
                         <div className="row w-75 m-auto">
                             <label>
-                                Name:
+                                {t("name")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="username" className="form-control mb-2 " placeholder="Name"
+                                }} type="text" name="username" className="form-control mb-2 " placeholder={t("name")}
                                        id={"name"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label className={"mt-2"}>
-                                Email {isVerified ? <span className={"col-1 m-auto"}
-                                                          style={{color: "green"}}>(Verified)</span> :
+                                {t("email")} {isVerified ? <span className={"col-1 m-auto"}
+                                                          style={{color: "green"}}>({t("verifiedEmail")})</span> :
                                 <span className={"mt-auto mb-auto text-end"}
-                                      style={{color: "red"}}>(Not Verified)</span>}:
+                                      style={{color: "red"}}>({t("unverifiedEmail")})</span>}:
                                 <div className={"d-flex flex-row"}>
                                     <div className={"col-10"}>
                                     <input
@@ -340,7 +339,7 @@ function AddCustomerInformation() {
                                             onKeyDown={(e) => {
                                                 e.key === 'Enter' && e.preventDefault()
                                             }} type="text" name="email" className="form-control mb-2 col-10"
-                                            placeholder="Email"
+                                            placeholder={t("email")}
                                             id={"email"}
                                             required={true}/>
                                     </div>
@@ -362,52 +361,52 @@ function AddCustomerInformation() {
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                Address:
+                                {t("address")}:
                                 {/*// @ts-ignore*/}
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
 
                                     // @ts-ignore
                                 }} ref={ref} type="text" name="address" className="form-control mb-2"
-                                       placeholder="Address"
+                                       placeholder={t("address")}
                                        id={"address"}
                                        required={true}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                Postal Code:
+                                {t("postalCode")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
                                 }} type="text" name="postalCode" className="form-control mb-2"
-                                       placeholder="Postal Code" required={true}
+                                       placeholder={t("postalCode")} required={true}
                                        id={"postalCode"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                City:
+                                {t("city")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="city" className="form-control mb-2" placeholder="City"
+                                }} type="text" name="city" className="form-control mb-2" placeholder={t("city")}
                                        required={true} id={"city"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                Apartment Number:
+                                {t("apartmentNumber")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
                                 }} type="text" name="apartmentNumber" className="form-control mb-2"
-                                       placeholder="Apartment Number" id={"apartmentNumber"}/>
+                                       placeholder={t("apartmentNumber")} id={"apartmentNumber"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                Phone:
+                                {t("phoneNumber")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="phone" className="form-control mb-2" placeholder="Phone"
+                                }} type="text" name="phone" className="form-control mb-2" placeholder={t("phoneNumber")}
                                        id={"phone"}/>
                             </label>
                         </div>
@@ -428,7 +427,7 @@ function AddCustomerInformation() {
                                     }}
                                     disabled={isLoading}
                             >
-                                Submit
+                                {t("submitButton")}
                             </button>
                         </div>
                     </form>
@@ -442,7 +441,7 @@ function AddCustomerInformation() {
                                 id={"delete-btn"}
                                 disabled={!hasProfile}
                             >
-                                Delete Information
+                                {t("deleteInformationButton")}
                             </button>
                         </div>
                     </form>

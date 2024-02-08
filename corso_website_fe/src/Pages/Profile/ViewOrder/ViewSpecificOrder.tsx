@@ -14,10 +14,12 @@ import {useNavigate} from "react-router";
 import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import {CCarousel, CCarouselItem} from "@coreui/react";
+import {useTranslation} from "react-i18next";
 
 function ViewSpecificOrder() {
 
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     let {orderId} = useParams();
@@ -29,7 +31,7 @@ function ViewSpecificOrder() {
 
     const auth = useAuth()
 
-    const [messagesLoading,] = useState(["This may take a few seconds", "Please wait a moment", "We are notifying our electricians"]);
+    const [messagesLoading,] = useState([t("loadingMessage1"), t("loadingMessage2"), t("loadingMessage3")]);
 
     const getOrder = () => {
         axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/customers/orders/${orderId}`,
@@ -76,7 +78,7 @@ function ViewSpecificOrder() {
             .then(res => {
                 if (res.status === 204) {
                     // @ts-ignore
-                    swal("Order Cancelled", "Your order has been cancelled", "success")
+                    swal(t("cancelledOrderTitle"), t("cancelledOrderMessage"), "success")
                         .then(() => {
                             navigate(-1);
                         })
@@ -110,7 +112,7 @@ function ViewSpecificOrder() {
             <NavigationBar/>
             <div className="container specific-order">
                 <div className="row">
-                    <h1 className="display-4 title text-center" id={"title"}>Order #{order.orderTrackingNumber}</h1>
+                    <h1 className="display-4 title text-center" id={"title"}>{t("order")} #{order.orderTrackingNumber}</h1>
                 </div>
                 <div className="row">
                     <div className="col-lg-6 col-md-12 request-info-box">
@@ -119,17 +121,17 @@ function ViewSpecificOrder() {
                             <p>{order.customerFullName}</p>
                         </div>
                         <div className="row text-start overflow-scroll">
-                            <h1>Address</h1>
+                            <h1>{t("address")}</h1>
                             <p>
-                                Address
+                                {t("address")}
                                 : {order.customerAddress} {order.customerApartmentNumber !== null ? "Apartment " + order.customerApartmentNumber : ""}, {order.customerCity}  </p>
-                            <p>Postal code : {order.customerPostalCode}</p>
+                            <p>{t("postalCode")}: {order.customerPostalCode}</p>
                         </div>
                         <div className="row text-start">
-                            <h1>Contact Information</h1>
-                            <p>Email : {order.customerEmail}</p>
+                            <h1>{t("contactInformation")}</h1>
+                            <p>{t("email")}: {order.customerEmail}</p>
                             {(order.customerPhone !== null && order.customerPhone !== "") &&
-                                <p> Phone Number : {order.customerPhone}</p>}
+                                <p> {t("phoneNumber")}: {order.customerPhone}</p>}
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
@@ -142,7 +144,7 @@ function ViewSpecificOrder() {
                             </div>
                         }
                         <div className="row text-start">
-                            <h1>Order Status</h1>
+                            <h1>{t("orderStatus")}</h1>
                             <p className={"text-capitalize"}>{
                                 order.orderStatus.replace("_", " ").toLowerCase()
                             }</p>
@@ -180,24 +182,23 @@ function ViewSpecificOrder() {
                                         </ProgressBar>
 
                                         <div>
-                                            <h5 className={"text-center mt-2"}>{order.hoursWorked} / {order.estimatedDuration} hours</h5>
+                                            <h5 className={"text-center mt-2"}>{order.hoursWorked} / {order.estimatedDuration} {t("hours")}</h5>
                                         </div>
                                     </div>
                                 }
                                 {order.estimatedDuration <= 0 &&
-                                    <p>We haven't started to work on your order, but we will soon !</p>
+                                    <p>{t("orderNotStartedMessage")}</p>
                                 }
                             </div>
                             <div className={"row"}>
-                                <h4 className={"notes-title"}>Electrician Notes</h4>
+                                <h4 className={"notes-title"}>{t("electricianNotesTitle")}</h4>
                                 <div className={"notes-box overflow-scroll"}>
                                     {order.progressInformation !== null && order.progressInformation.length > 0 &&
                                         <p>{order.progressInformation}</p>
                                     }
                                     {
                                         (order.progressInformation === null || order.progressInformation.length < 0) &&
-                                        <p>No notes yet, but when we want to inform you about something, it will appear
-                                            here !</p>
+                                        <p>{t("noNotesYetMessage")}</p>
 
                                     }
                                 </div>
@@ -206,7 +207,7 @@ function ViewSpecificOrder() {
                                 <div className={"col-12"}>
                                     <button className={"m-4 float-end customer-interactions-btn p-2"} onClick={() => {
                                         window.location.href = `/profile/reviews/create`;
-                                    }}>Leave a Review
+                                    }}>{t("leaveAReview")}
                                     </button>
                                 </div>
                                 {order.orderStatus.toLowerCase() === "pending" &&
@@ -219,7 +220,7 @@ function ViewSpecificOrder() {
                                                 }
                                                 }
                                         >
-                                            Edit Request
+                                            {t("editRequestButton")}
                                         </button>
                                     </div>
                                 }
@@ -228,7 +229,7 @@ function ViewSpecificOrder() {
                                     <Popup trigger={<div className={"col-12"}>
                                         <button className={"m-4 float-end customer-interactions-btn p-2"}
                                                 onClick={handleCancelOrderModal}
-                                        >Cancel Request
+                                        >{t("cancelRequestButton")}
                                         </button>
                                     </div>
                                     } modal>
@@ -254,19 +255,19 @@ function ViewSpecificOrder() {
                                                   className={"p-4" + (loading ? " hidden" : "")}>
                                                 <div className="row">
                                                     <div className="col-12">
-                                                        <h1 className={"text-center"}>Cancel Request</h1>
+                                                        <h1 className={"text-center"}>{t("cancelRequestText")}</h1>
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-12">
                                                         <textarea className="form-control" id="reason"
-                                                                  placeholder="Reason for cancellation" required/>
+                                                                  placeholder={t("cancelRequestReason")} required/>
                                                     </div>
                                                     <div className="row mt-3">
                                                         <div className="col-12 text-center">
                                                             <button type="submit"
                                                                     className="btn btn-primary send-email-btn">
-                                                                Submit
+                                                                {t("submitButton")}
                                                             </button>
                                                         </div>
                                                     </div>

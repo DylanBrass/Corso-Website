@@ -2,6 +2,7 @@
 import React from 'react';
 import './OrderTile.css';
 import ServiceOrder from "../../ressources/Models/ServiceOrder";
+import {useTranslation} from "react-i18next";
 
 export {};
 
@@ -40,27 +41,26 @@ export class OverdueOrder extends Order {
 
 
 function OrderTile({ order, action}: { order: Order, action: () => void }) {
+    const [t] = useTranslation();
     if(order instanceof OverdueOrder) {
         order.orderStatus = "overdue";
     }
 
     order.orderStatus = order.orderStatus.replace("_", " ").toLowerCase();
-    // Get the first 4 characters of orderId
-
 
     return (
         <div className="orders-tile" onClick={action}>
             <div className="box-body">
                 <div className={"order-data-separation col-6 text-start"}>
-                    <p className="order-id"><b>ORDER NUMBER</b> {order.orderTrackingNumber}</p>
-                    <p className={"customer-full-name"}><b>CUSTOMER </b>: {order.customerFullName}</p>
+                    <p className="order-id"><b>{t("orderNumber").toUpperCase()}</b> {order.orderTrackingNumber}</p>
+                    <p className={"customer-full-name"}><b>{t("customer").toUpperCase()} </b>: {order.customerFullName}</p>
                 </div>
                 <div className={"order-data-separation col-6 text-start"}>
                     <p className="order-service text-capitalize"><b>Service</b>: {order.service.serviceName}</p>
-                    <p className="order-status text-capitalize"><b>Order Status</b>: {order.orderStatus}</p>
+                    <p className="order-status"><b>{t("orderStatus")}</b>: {order.orderStatus}</p>
                     {order instanceof OverdueOrder && (
                         <>
-                            <p className="order-days"><b>Overdue by</b>: {order.overdueDays} days</p>
+                            <p className="order-days"><b>{t("overdueBy")}</b>: {order.overdueDays} {t("days")}</p>
                         </>
                     )}
                 </div>

@@ -5,10 +5,12 @@ import {FAQ, FaqTileFaqPage} from "../../../Components/FaqTile/FaqTileFaqPage";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import "./ViewAllFaq.css"
 import React from "react";
+import {useTranslation} from "react-i18next";
 function ViewAllFaq() {
     const auth = useAuth()
 
     const [faqs, setFaqs] = useState([FAQ])
+    const [t] = useTranslation()
 
     const getFaqs = () => {
         axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/faqs",
@@ -42,7 +44,7 @@ function ViewAllFaq() {
                 </div>
                 <div className={"text-center text-md-end me-0 me-md-5"}>
                     <a href={"/#faq"}>
-                        Back To Main Page
+                        {t("backToMainPage")}
                     </a>
                 </div>
                 <div className={"tiles-container"}>

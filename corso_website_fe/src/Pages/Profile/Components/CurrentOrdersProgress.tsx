@@ -4,13 +4,15 @@ import {ProgressBar, Step} from "react-step-progress-bar";
 import check from "../../../ressources/images/check_done.png";
 import Order from "../../../ressources/Models/Order";
 import checkToDo from "../../../ressources/images/check_notDone.png";
+import {useTranslation} from "react-i18next";
 
 function CurrentOrdersProgress({order}: { order: Order}) {
+    const [t] = useTranslation();
     return(
         <div className={"p-4 w-75 m-auto order-box"} onClick={()=>{
             window.location.href = `/orders/${order.orderId}`
         }}>
-            <h4 className={`${order.estimatedDuration > 0 ? "mb-3" : "mb-0"}`}>Order #{order.orderTrackingNumber}</h4>
+            <h4 className={`${order.estimatedDuration > 0 ? "mb-3" : "mb-0"}`}>{t("order")} #{order.orderTrackingNumber}</h4>
 
             {order.estimatedDuration > 0 &&
 
@@ -42,7 +44,7 @@ function CurrentOrdersProgress({order}: { order: Order}) {
 
             {order.estimatedDuration <= 0 &&
                 <div className={"w-100 text-center mb-0 p-0"}>
-                    No Timeline
+                    {t("noTimeline")}
                 </div>
             }
         </div>

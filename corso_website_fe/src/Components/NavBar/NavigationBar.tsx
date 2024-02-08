@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Container, Nav, Navbar} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './NavigationBar.css';
@@ -14,25 +14,20 @@ function NavigationBar() {
 
     const auth = useAuth()
 
+    const { t, i18n } = useTranslation();
+    const languages = ["fr", "en"];
+    const [language, setLanguage] = useState(i18n.language); // Initialize language state with current language
 
-    const languages = ["fr", "en"]
-
-    const [language, setLanguage] = React.useState("fr")
-
-    const {t, i18n} = useTranslation();
-
-
-    const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng)
-    }
-    const [currentIndex, setCurrentIndex] = React.useState(1)
-
+  const changeLanguage = useCallback((lng: React.SetStateAction<string>) => {
+        // @ts-ignore
+        setLanguage(lng);
+        // @ts-ignore
+        i18n.changeLanguage(lng);
+    }, [i18n]);
 
     useEffect(() => {
-        changeLanguage(language)
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [language]);
+        changeLanguage(language);
+    }, [language, changeLanguage]);
 
     return (
         <div id={"nav-bar-box"}>
@@ -53,7 +48,7 @@ function NavigationBar() {
                                 // @ts-ignore
                                 auth.userRoles().includes("Admin") &&
                                 <Nav.Item className={"item"}>
-                                    <Nav.Link href="/dashboard" className={"m-auto item-nav-text"}>DASHBOARD</Nav.Link>
+                                    <Nav.Link href="/dashboard" className={"m-auto item-nav-text"}>{t("dashboard").toUpperCase()}</Nav.Link>
                                 </Nav.Item>
                             }
                             {
@@ -71,17 +66,15 @@ function NavigationBar() {
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item className={"item"}>
-                                <Nav.Link href="#" className={"m-auto item-nav-text"}
-                                onClick={() => {
-                                    setCurrentIndex((currentIndex + 1) % languages.length)
-
-                                    setLanguage(languages[currentIndex])
-
-                                    console.log(language)
-                                }}
+                                <Nav.Link
+                                    href="#"
+                                    className={"m-auto item-nav-text"}
+                                    onClick={() => {
+                                        const nextLanguageIndex = (languages.indexOf(language) + 1) % languages.length;
+                                        changeLanguage(languages[nextLanguageIndex]);
+                                    }}
                                 >
                                     {t("language")}
-
                                 </Nav.Link>
                             </Nav.Item>
 
@@ -129,7 +122,7 @@ function NavigationBar() {
                                                  className={"d-none d-lg-block"}/>
                                         </Link>
                                         <Nav.Link href={"/profile"} id={"profile-text"}
-                                                  className={"d-block d-lg-none item item-nav-text"}>PROFILE</Nav.Link>
+                                                  className={"d-block d-lg-none item item-nav-text"}>{t("profile")}</Nav.Link>
                                     </div>
                                 }
                             </Nav.Item>

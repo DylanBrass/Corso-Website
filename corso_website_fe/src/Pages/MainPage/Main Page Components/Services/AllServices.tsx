@@ -80,7 +80,7 @@ function AllServices() {
                                     </p>
                                     <div className="row align-items-end justify-content-end mt-5">
                                         <div className="col-6 d-flex justify-content-start align-items-center">
-                                            <p className="learn-more-text">Learn More</p>
+                                            <p className="learn-more-text">{t("learnMore")}</p>
                                         </div>
                                         <div className="col-6 d-flex justify-content-end align-items-center">
                                             <img
