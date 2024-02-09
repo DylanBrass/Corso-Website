@@ -158,6 +158,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<TotalRequestPerDate> getTotalOrderRequestByService(String dateStart, String dateEnd) {
+        if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
+            throw new ServiceBadRequestException("Invalid date range");
+        }
         try {
             List<DatabaseDTOOrdersPerService> databaseDTOOrdersPerServices = serviceRepository.getTotalOrderRequestByService(dateStart, dateEnd)
                     .stream()

@@ -1,6 +1,17 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Legend,
+    Line,
+    LineChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis
+} from "recharts";
 import {getOneYearAgo, stringToColour} from "../../../../Services/GenerateReportsService";
 import {useAuth} from "../../../../security/Components/AuthProvider";
 
@@ -9,7 +20,7 @@ export default function OrderPerService() {
     const auth = useAuth();
 
     const [orderPerService, setOrderPerService] = useState([]);
-    const diagramTypes = ["Bar Chart", "Line Chart"]
+    const diagramTypes = ["Line Chart", "Bar Chart"]
     const [diagramType, setDiagramType] = React.useState(0)
 
 
@@ -45,34 +56,81 @@ export default function OrderPerService() {
             <center>
                 <input type="date" id="start" defaultValue={getOneYearAgo()}/>
                 <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+                {diagramTypes.map((type, index) => (
+                    <button key={index} onClick={() => setDiagramType(index)}>{type}</button>
+                ))}
                 <button onClick={fetchData}>Search</button>
             </center>
-            <ResponsiveContainer width="90%" height={600}>
-                <LineChart data={orderPerService}>
-                    <XAxis dataKey="date"/>
-                    <YAxis
-                        domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}
-                    />
-                    <Tooltip/>
-                    <Legend/>
+            {diagramType === 0 &&
 
-                    {
-                        // @ts-ignore
-                        orderPerService[0]?.results.map((result: any) => (
-                            <Line
-                                key={result.serviceName}
-                                type="monotone"
-                                dataKey={obj => {
-                                    return obj.results.find((r: any) => r.serviceName === result.serviceName).total
+                <ResponsiveContainer width="90%" height={600}>
+                    <LineChart data={orderPerService} barGap={10} barCategoryGap={10}>
+                        <XAxis dataKey="date" interval={0} angle={-70}
+                               textAnchor="end" height={200}/>
+                        <YAxis
+                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}
+                        />
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <Tooltip/>
+                        <Legend
+                            verticalAlign="top"
+                        />
 
-                                }}
-                                name={result.serviceName}
-                                stroke={stringToColour(result.serviceName)}
-                            />
-                        ))}
-                </LineChart>
-            </ResponsiveContainer>
+                        {
+                            // @ts-ignore
+                            orderPerService[0]?.results.map((result: any) => (
+                                <Line
+                                    key={result.serviceName}
+                                    type="monotone"
+                                    dataKey={obj => {
+                                        return obj.results.find((r: any) => r.serviceName === result.serviceName).total
 
+                                    }}
+                                    name={result.serviceName}
+                                    stroke={stringToColour(result.serviceName)}
+                                />
+                            ))}
+                    </LineChart>
+                </ResponsiveContainer>
+            }
+            {diagramType === 1 &&
+
+                <ResponsiveContainer width="90%" height={600}>
+                    <BarChart data={orderPerService} barGap={10} barCategoryGap={10}
+                    >
+                        <XAxis dataKey="date" interval={0} angle={-70}
+                               style={{
+                                   overflow: "show",
+                                   margin: "auto",
+
+                               }}
+                               textAnchor="end" height={200}/>
+                        <YAxis
+                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}
+                        />
+                        <Tooltip/>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <Legend
+                            verticalAlign="top"
+                        />
+
+                        {
+                            // @ts-ignore
+                            orderPerService[0]?.results.map((result: any) => (
+                                <Bar
+                                    key={result.serviceName}
+                                    type="monotone"
+                                    dataKey={obj => {
+                                        return obj.results.find((r: any) => r.serviceName === result.serviceName).total
+                                    }}
+                                    fill={stringToColour(result.serviceName)}
+                                    stroke={stringToColour(result.serviceName)}
+                                    name={result.serviceName}
+                                />
+                            ))}
+                    </BarChart>
+                </ResponsiveContainer>
+            }
 
         </div>
     );
