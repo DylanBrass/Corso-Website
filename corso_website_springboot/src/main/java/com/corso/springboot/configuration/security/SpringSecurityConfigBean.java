@@ -4,7 +4,7 @@ package com.corso.springboot.configuration.security;
 import com.corso.springboot.configuration.csrf.SpaCsrfToken;
 import com.corso.springboot.configuration.filters.CsrfCustomFilter;
 import com.corso.springboot.configuration.security.models.ErrorMessage;
-import com.corso.springboot.utils.SecurityTools.DomainHandling;
+import com.corso.springboot.utils.Tools.BasicTools;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import lombok.Generated;
@@ -50,7 +50,7 @@ public class SpringSecurityConfigBean {
     @Value("${backend.url}")
     private String backendDomain;
 
-    private final DomainHandling domainHandling;
+    private final BasicTools basicTools;
 
     private final ObjectMapper mapper;
 
@@ -159,7 +159,7 @@ public class SpringSecurityConfigBean {
                     Cookie newCookie = new Cookie(cookie.getName(), "");
                     newCookie.setMaxAge(0);
                     newCookie.setPath("/");
-                    newCookie.setDomain(domainHandling.getFormattedDomain());
+                    newCookie.setDomain(basicTools.getFormattedDomain());
                     response.addCookie(newCookie);
                 });
             }
@@ -189,7 +189,7 @@ public class SpringSecurityConfigBean {
     public CookieCsrfTokenRepository csrfTokenRepository() {
         CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
         cookieCsrfTokenRepository.setCookieCustomizer(cookie -> {
-            cookie.domain(domainHandling.getFormattedDomain());
+            cookie.domain(basicTools.getFormattedDomain());
             cookie.httpOnly(false);
             cookie.path("/");
             cookie.secure(false);

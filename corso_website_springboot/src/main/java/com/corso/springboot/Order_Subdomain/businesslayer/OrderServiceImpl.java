@@ -11,6 +11,7 @@ import com.corso.springboot.configuration.security.exceptions.Auth0Error;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.Tools.BasicTools;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
 import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
@@ -41,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
     private final Auth0ManagementService auth0ManagementService;
 
     private final EmailService emailService;
+
+    private final BasicTools basicTools;
 
     @Override
     public List<OrderResponse> getAllOrders(Map<String, String> queryParams, int pageSize, int offset) {
@@ -377,7 +380,7 @@ public class OrderServiceImpl implements OrderService {
         parameters.put("name", order.getCustomerFullName());
 
         // add func
-        sendEmailToAdmins("Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled", "CustomerCancelOrder", parameters);
+        basicTools.sendEmailToAdmins("Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been cancelled", "CustomerCancelOrder", parameters);
 
         order.setOrderStatus(Status.CANCELLED);
 
@@ -398,7 +401,7 @@ public class OrderServiceImpl implements OrderService {
 
         Map<String, String> parameters = getStringStringMap(customerUpdateOrderRequest, order);
 
-        sendEmailToAdmins("Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been updated", "UpdateOrder", parameters);
+        basicTools.sendEmailToAdmins("Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been updated", "UpdateOrder", parameters);
 
         order.setCustomerAddress(customerUpdateOrderRequest.getCustomerAddress());
 
@@ -478,26 +481,5 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    private void sendEmailToAdmins(String subject, String template, Map<String, String> parameters) throws MessagingException {
-        List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
-
-        StringBuilder recipients = new StringBuilder();
-
-        for(UserInfoResponse admin : admins){
-            recipients.append(admin.getEmail()).append(",");
-
-        }
-
-        log.info("Sending email to {}", recipients);
-
-        recipients.deleteCharAt(recipients.length() - 1);
-
-        int status = emailService.sendEmail(recipients.toString(), subject, template, parameters);
-
-        if (status != 200) {
-            throw new MessagingException("Failed to send email");
-        }
-
-    }
 
 }

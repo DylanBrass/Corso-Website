@@ -1,5 +1,6 @@
 package com.corso.springboot.Service_Subdomain.businesslayer;
 
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.TotalRequestPerDate;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
@@ -22,4 +23,6 @@ public interface ServiceService {
     int countAllServices();
 
     List<ServiceTimeByResponse> getServiceTimeByService(String dateStart, String dateEnd);
+
+    List<TotalRequestPerDate> getTotalOrderRequestByService(String dateStart, String dateEnd);
 }

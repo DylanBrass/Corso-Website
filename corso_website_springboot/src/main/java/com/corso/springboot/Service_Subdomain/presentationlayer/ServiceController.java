@@ -1,6 +1,7 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.TotalRequestPerDate;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -45,7 +46,8 @@ public class ServiceController {
     @Caching(evict = {
             @CacheEvict(value = "services", allEntries = true),
             @CacheEvict(value = "servicesCount", allEntries = true),
-            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true)
     })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin')")
@@ -64,7 +66,8 @@ public class ServiceController {
             @CacheEvict(value = "services", allEntries = true),
             @CacheEvict(value = "servicesCount", allEntries = true),
             @CacheEvict(value = "service", key = "#serviceId"),
-            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true)
     })
     @PutMapping("/{serviceId}")
     @PreAuthorize("hasAnyAuthority('Admin')")
@@ -89,6 +92,13 @@ public class ServiceController {
     @GetMapping("/time-by-service")
     public ResponseEntity<List<ServiceTimeByResponse>> getServiceTimeByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getServiceTimeByService(dateStart, dateEnd));
+    }
+
+    @Cacheable(value = "totalRequestByService", key = "#root.methodName + #dateStart + #dateEnd")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/orders-per-service")
+    public ResponseEntity<List<TotalRequestPerDate>> getTotalOrderRequestByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
+        return ResponseEntity.status(HttpStatus.OK).body(serviceService.getTotalOrderRequestByService(dateStart, dateEnd));
     }
 }
 
