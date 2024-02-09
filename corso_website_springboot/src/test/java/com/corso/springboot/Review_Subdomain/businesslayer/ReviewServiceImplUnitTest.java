@@ -14,6 +14,7 @@ import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateReque
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.Tools.BasicTools;
 import com.corso.springboot.utils.exceptions.Review.*;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
@@ -55,6 +56,7 @@ class ReviewServiceImplUnitTest {
     @InjectMocks
     private ReviewServiceImpl reviewServiceImpl;
 
+
     @Mock
     private ReviewService reviewService;
 
@@ -72,7 +74,8 @@ class ReviewServiceImplUnitTest {
 
     @Mock
     private OrderService orderService;
-
+    @Mock
+    private BasicTools basicTools;
 
     @Test
     void getAllReviews() {
@@ -314,7 +317,7 @@ class ReviewServiceImplUnitTest {
         admins.add(new UserInfoResponse("auth0|65702e81e9661e14ab3aac89", "test@email.com",
                 "Doe", new HashMap<>()));
         when(auth0ManagementService.getAllAdmins()).thenReturn(admins);
-        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(500);
+        doThrow(new MessagingException("Failed to send email")).when(basicTools).sendEmailToAdmins(any(String.class), any(String.class), any(Map.class));
 
         assertThrows(MessagingException.class, () -> reviewServiceImpl.deleteCustomerReview(reviewId, userId));
 
@@ -331,7 +334,7 @@ class ReviewServiceImplUnitTest {
         when(auth0ManagementService.getAllAdmins()).thenReturn(Collections.singletonList(
                 new UserInfoResponse("auth0|adminId", "admin@example.com", "Admin", new HashMap<>())
         ));
-        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(200);
+        doThrow(new MessagingException("Failed to send email")).when(basicTools).sendEmailToAdmins(any(String.class), any(String.class), any(Map.class));
 
         // Act
         reviewServiceImpl.deleteCustomerReview(reviewId, userId);

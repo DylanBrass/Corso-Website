@@ -7,6 +7,7 @@ import com.corso.springboot.configuration.security.models.Auth0GetUsersResponse;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.models.UserRequest;
 import com.corso.springboot.configuration.security.models.UserResponse;
+import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -44,6 +46,8 @@ public class Auth0ManagementService {
     private String clientSecret;
 
     private final CustomerService customerService;
+
+    private final EmailService emailService;
     private final String ADMIN_ROLE_ID = "rol_sDxhuMYKzxiG7Sw8";
 
     public ResponseEntity<UserResponse> addAdmin(UserRequest userRequest) throws IOException, InterruptedException {
@@ -431,5 +435,8 @@ public class Auth0ManagementService {
 
         return response;
     }
+
+
+
 
 }

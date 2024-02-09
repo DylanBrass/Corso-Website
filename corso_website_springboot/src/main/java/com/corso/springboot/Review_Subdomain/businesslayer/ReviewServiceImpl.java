@@ -10,9 +10,9 @@ import com.corso.springboot.Review_Subdomain.datamapperlayer.ReviewResponseMappe
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewUpdateRequest;
-import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.Tools.BasicTools;
 import com.corso.springboot.utils.exceptions.CustomerNotFoundException;
 import com.corso.springboot.utils.exceptions.Review.*;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +42,10 @@ public class ReviewServiceImpl implements ReviewService {
     private final Auth0ManagementService auth0ManagementService;
 
     private final EmailService emailService;
+
     private final ReviewRequestMapper reviewRequestMapper;
 
+    private final BasicTools basicTools;
 
 
 
@@ -202,7 +204,7 @@ public class ReviewServiceImpl implements ReviewService {
 
                 String subject = "Pinned Review Deleted";
 
-                sendEmailToAdmins(subject, "DeletedPinnedReview", parameters);
+                basicTools.sendEmailToAdmins(subject, "DeletedPinnedReview", parameters);
             }
 
             reviewRepository.delete(review);
@@ -266,26 +268,5 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-    private void sendEmailToAdmins(String subject, String template, Map<String, String> parameters) throws MessagingException {
-        List<UserInfoResponse> admins = auth0ManagementService.getAllAdmins();
-
-        StringBuilder recipients = new StringBuilder();
-
-        for(UserInfoResponse admin : admins){
-            recipients.append(admin.getEmail()).append(",");
-
-        }
-
-        log.info("Sending email to {}", recipients);
-
-        recipients.deleteCharAt(recipients.length() - 1);
-
-        int status = emailService.sendEmail(recipients.toString(), subject, template, parameters);
-
-        if (status != 200) {
-            throw new MessagingException("Failed to send email");
-        }
-
-    }
 
 }

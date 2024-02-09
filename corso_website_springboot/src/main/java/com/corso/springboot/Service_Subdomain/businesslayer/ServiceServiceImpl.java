@@ -5,6 +5,8 @@ import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapper;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOOrdersPerService;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.TotalRequestPerDate;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
@@ -16,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -149,6 +153,38 @@ public class ServiceServiceImpl implements ServiceService {
                     .toList();
         } catch (Exception e) {
             throw new ServiceBadRequestException("Failed to generate time by service report :" + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<TotalRequestPerDate> getTotalOrderRequestByService(String dateStart, String dateEnd) {
+        try {
+            List<DatabaseDTOOrdersPerService> databaseDTOOrdersPerServices = serviceRepository.getTotalOrderRequestByService(dateStart, dateEnd)
+                    .stream()
+                    .map(DatabaseDTOOrdersPerService::new)
+                    .toList();
+
+            List<ServiceResponse> services = getAllServices();
+
+            Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByDate = databaseDTOOrdersPerServices.stream()
+                    .collect(Collectors.groupingBy(DatabaseDTOOrdersPerService::getDate));
+
+            // Add missing services with 0 total order request on that day
+            for (Map.Entry<LocalDate, List<DatabaseDTOOrdersPerService>> entry : groupedByDate.entrySet()) {
+                List<DatabaseDTOOrdersPerService> missingServices = services.stream()
+                        .filter(service -> entry.getValue().stream().noneMatch(dto -> dto.getServiceId().equals(service.getServiceId())))
+                        .map(service -> new DatabaseDTOOrdersPerService(service.getServiceId(), service.getServiceName(), 0L, entry.getKey()))
+                        .toList();
+
+                entry.getValue().addAll(missingServices);
+            }
+
+            return groupedByDate.entrySet().stream()
+                    .map(entry -> new TotalRequestPerDate(entry.getKey(), entry.getValue()))
+                    .sorted(Comparator.comparing(TotalRequestPerDate::getDate))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new ServiceBadRequestException("Failed to generate total order request by service report :" + e.getMessage());
         }
     }
 }

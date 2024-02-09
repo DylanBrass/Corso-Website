@@ -1,5 +1,7 @@
 package com.corso.springboot.email.businessLayer;
 
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -12,6 +14,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -118,5 +121,8 @@ public class EmailServiceImpl implements EmailService {
             return HttpStatus.SC_UNPROCESSABLE_ENTITY;
         }
     }
+
+
+
 }
 

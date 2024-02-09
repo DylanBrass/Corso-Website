@@ -10,25 +10,22 @@ import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
+import com.corso.springboot.utils.Tools.BasicTools;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class OrderServiceImplUnitTest {
@@ -41,6 +38,9 @@ public class OrderServiceImplUnitTest {
 
     @Mock
     private EmailService emailService;
+
+    @Mock
+    private BasicTools basicTools;
 
     @Mock
     private Auth0ManagementService auth0ManagementService;
@@ -321,8 +321,7 @@ public class OrderServiceImplUnitTest {
 
         CustomerCancelOrderRequest customerCancelOrderRequest = new CustomerCancelOrderRequest("test");
 
-        when(emailService.sendEmail(any(String.class), any(String.class), any(String.class), any())).thenReturn(500);
-
+        doThrow(new MessagingException("Failed to send email")).when(basicTools).sendEmailToAdmins(any(String.class), any(String.class), any(Map.class));
 
         assertThrows(MessagingException.class, () -> orderService.cancelByCustomerOrderByOrderId(mockOrder.getOrderId().getOrderId(), mockOrder.getUserId(), customerCancelOrderRequest));
     }

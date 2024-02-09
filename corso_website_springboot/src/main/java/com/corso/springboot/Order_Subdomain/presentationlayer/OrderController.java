@@ -80,7 +80,8 @@ public class OrderController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true)
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/acceptOrder/{orderId}")
@@ -103,7 +104,8 @@ public class OrderController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true)
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/declineOrder/{orderId}")
@@ -114,7 +116,8 @@ public class OrderController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true)
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/cancelOrder/{orderId}")

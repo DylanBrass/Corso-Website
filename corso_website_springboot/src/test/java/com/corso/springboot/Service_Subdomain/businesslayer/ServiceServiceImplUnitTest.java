@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -433,5 +432,23 @@ public class ServiceServiceImplUnitTest {
 
         assertEquals("Invalid type for third field of tuple: class java.lang.Integer", exception.getMessage());
     }
+
+    @Test
+    void whenGettingTotalOrdersPerServiceWithDatabaseError_thenReturnException() {
+        // Arrange
+        when(serviceRepository.getTotalOrderRequestByService(Mockito.anyString(), Mockito.anyString())).thenThrow(new RuntimeException("Simulated Database Error"));
+
+        // Act & Assert
+        ServiceBadRequestException exception = assertThrows(ServiceBadRequestException.class, () -> {
+            serviceService.getTotalOrderRequestByService("2021-01-01", "2021-12-31");
+        });
+
+        assertEquals("Failed to generate total order request by service report :Simulated Database Error", exception.getMessage());
+    }
+
+
+
+
+
 
 }

@@ -195,4 +195,18 @@ public class ServiceControllerIntegrationTest {
 
     }
 
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getOrderPerServices_ShouldSucceed() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/orders-per-service?date_start=2021-01-01&date_end=2025-12-31")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(4)
+                .jsonPath("$[0].results.length()").isEqualTo(5);
+    }
+
 }
