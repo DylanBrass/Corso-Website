@@ -28,7 +28,7 @@ public class ModifyGalleryTest {
 
     @Test
     void modifyGallery() {
-        $(By.linkText("CONNEXION")).click();
+        $(By.linkText("LOGIN")).click();
         $("#username").setValue("Admin");
         $("[name='action']").click();
         $("#password").setValue("Password!!").pressEnter();
