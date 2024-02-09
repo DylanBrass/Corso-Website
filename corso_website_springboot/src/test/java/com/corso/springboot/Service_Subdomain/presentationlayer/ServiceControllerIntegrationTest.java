@@ -209,4 +209,17 @@ public class ServiceControllerIntegrationTest {
                 .jsonPath("$[0].results.length()").isEqualTo(5);
     }
 
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getOrdersPerServiceWithLessThenAYearRange_ShouldSucceed() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/orders-per-service?date_start=2023-03-25&date_end=2024-03-22")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$.length()").isEqualTo(1)
+                .jsonPath("$[0].results.length()").isEqualTo(5);
+    }
+
 }

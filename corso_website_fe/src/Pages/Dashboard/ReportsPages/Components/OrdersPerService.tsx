@@ -51,6 +51,23 @@ export default function OrderPerService() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const checkIfDatesAreMoreThanOneYear = (start: string, end: string) => {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const difference = endDate.getTime() - startDate.getTime();
+        return difference > 31556952000;
+    }
+
+    const customTickFormatter = (tickItem: string | number | Date) => {
+        const date = new Date(tickItem);
+        if (checkIfDatesAreMoreThanOneYear((document.getElementById("start") as HTMLInputElement).value, (document.getElementById("end") as HTMLInputElement).value)) {
+            // If range is greater than 1, display only day and month
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+        } else {
+            // Otherwise, display day, month, and year
+            return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+    };
     return (
         <div>
             <center>
@@ -64,8 +81,9 @@ export default function OrderPerService() {
             {diagramType === 0 &&
 
                 <ResponsiveContainer width="90%" height={600}>
-                    <LineChart data={orderPerService} barGap={10} barCategoryGap={10}>
+                    <LineChart data={orderPerService}>
                         <XAxis dataKey="date" interval={0} angle={-70}
+                               tickFormatter={customTickFormatter}
                                textAnchor="end" height={200}/>
                         <YAxis
                             domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}
@@ -96,7 +114,7 @@ export default function OrderPerService() {
             {diagramType === 1 &&
 
                 <ResponsiveContainer width="90%" height={600}>
-                    <BarChart data={orderPerService} barGap={10} barCategoryGap={10}
+                    <BarChart data={orderPerService} barGap={10}
                     >
                         <XAxis dataKey="date" interval={0} angle={-70}
                                style={{
@@ -104,6 +122,7 @@ export default function OrderPerService() {
                                    margin: "auto",
 
                                }}
+                               tickFormatter={customTickFormatter}
                                textAnchor="end" height={200}/>
                         <YAxis
                             domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}

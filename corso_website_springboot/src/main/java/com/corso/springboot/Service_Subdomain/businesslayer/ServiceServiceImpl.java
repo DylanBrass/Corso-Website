@@ -169,25 +169,39 @@ public class ServiceServiceImpl implements ServiceService {
 
             List<ServiceResponse> services = getAllServices();
 
-            Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByDate = databaseDTOOrdersPerServices.stream()
-                    .collect(Collectors.groupingBy(DatabaseDTOOrdersPerService::getDate));
+            if (LocalDate.parse(dateEnd).minusYears(1).isBefore(LocalDate.parse(dateStart))) {
 
-            // Add missing services with 0 total order request on that day
-            for (Map.Entry<LocalDate, List<DatabaseDTOOrdersPerService>> entry : groupedByDate.entrySet()) {
-                List<DatabaseDTOOrdersPerService> missingServices = services.stream()
-                        .filter(service -> entry.getValue().stream().noneMatch(dto -> dto.getServiceId().equals(service.getServiceId())))
-                        .map(service -> new DatabaseDTOOrdersPerService(service.getServiceId(), service.getServiceName(), 0L, entry.getKey()))
-                        .toList();
 
-                entry.getValue().addAll(missingServices);
+                Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByDate = databaseDTOOrdersPerServices.stream()
+                        .collect(Collectors.groupingBy(DatabaseDTOOrdersPerService::getDate));
+
+                return getTotalRequestPerDates(services, groupedByDate);
+            } else {
+                Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByMonth = databaseDTOOrdersPerServices.stream()
+                        .collect(Collectors.groupingBy(dto -> dto.getDate().withDayOfMonth(1)));
+
+                return getTotalRequestPerDates(services, groupedByMonth);
+
+
             }
-
-            return groupedByDate.entrySet().stream()
-                    .map(entry -> new TotalRequestPerDate(entry.getKey(), entry.getValue()))
-                    .sorted(Comparator.comparing(TotalRequestPerDate::getDate))
-                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ServiceBadRequestException("Failed to generate total order request by service report :" + e.getMessage());
         }
+    }
+
+    private List<TotalRequestPerDate> getTotalRequestPerDates(List<ServiceResponse> services, Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedBy) {
+        for (Map.Entry<LocalDate, List<DatabaseDTOOrdersPerService>> entry : groupedBy.entrySet()) {
+            List<DatabaseDTOOrdersPerService> missingServices = services.stream()
+                    .filter(service -> entry.getValue().stream().noneMatch(dto -> dto.getServiceId().equals(service.getServiceId())))
+                    .map(service -> new DatabaseDTOOrdersPerService(service.getServiceId(), service.getServiceName(), 0L, entry.getKey()))
+                    .toList();
+
+            entry.getValue().addAll(missingServices);
+        }
+
+        return groupedBy.entrySet().stream()
+                .map(entry -> new TotalRequestPerDate(entry.getKey(), entry.getValue()))
+                .sorted(Comparator.comparing(TotalRequestPerDate::getDate))
+                .collect(Collectors.toList());
     }
 }
