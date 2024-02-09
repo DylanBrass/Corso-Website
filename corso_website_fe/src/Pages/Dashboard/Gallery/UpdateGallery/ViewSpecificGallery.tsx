@@ -10,6 +10,7 @@ import templateImg from "../../../../ressources/images/Upload_Image_Preview.png"
 import Cloudinary from "../../../../Services/Cloudinary";
 import swal from "sweetalert";
 import {useNavigate} from "react-router";
+import {SyncLoader} from "react-spinners";
 
 function ViewSpecificGallery() {
 
@@ -23,7 +24,7 @@ function ViewSpecificGallery() {
 
     const [imagePreview, setImagePreview] = useState<string>('');
 
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const getGallery = async () => {
         axios.get(`${process.env.REACT_APP_BE_HOST}api/v1/corso/galleries/carousel/${galleryId}`, {
             headers: {
@@ -55,6 +56,8 @@ function ViewSpecificGallery() {
             image_position: gallery.image_position
         };
 
+        setIsLoading(true)
+
         try {
             const response = await axios.put(
                 `${process.env.REACT_APP_BE_HOST}api/v1/corso/galleries/carousel/${galleryId}`,
@@ -66,6 +69,8 @@ function ViewSpecificGallery() {
                     },
                 }
             );
+
+            setIsLoading(false)
 
             if(response.status === 200) {
                 await swal("Gallery Updated!", "The gallery has been updated successfully!", "success");
@@ -124,6 +129,9 @@ function ViewSpecificGallery() {
                     </div>
                     <div className={"row text-center"}>
                         <p className={"col-12"}>Tip!: compatible image types include PNG, SVG</p>
+                    </div>
+                    <div className={isLoading ? "d-block spinner-visible text-center" : "d-none"}>
+                        <SyncLoader className={"spinner"} color="#054AEB"/>
                     </div>
                     <div className={"row"}>
                         <button className={"btn btn-primary m-auto w-50"} type={"submit"} value={"Update"}>
