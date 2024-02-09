@@ -152,7 +152,6 @@ class ReviewServiceImplUnitTest {
     }
 
 
-
 //    @Test
 //    void getReviewsByCustomerFullName_ShouldReturnAll(Map<String, String> params, int pageSize, int offset) {
 //        // Arrange
@@ -334,14 +333,14 @@ class ReviewServiceImplUnitTest {
         when(auth0ManagementService.getAllAdmins()).thenReturn(Collections.singletonList(
                 new UserInfoResponse("auth0|adminId", "admin@example.com", "Admin", new HashMap<>())
         ));
-        doThrow(new MessagingException("Failed to send email")).when(basicTools).sendEmailToAdmins(any(String.class), any(String.class), any(Map.class));
 
         // Act
         reviewServiceImpl.deleteCustomerReview(reviewId, userId);
 
         // Assert
-        verify(emailService, times(1)).sendEmail(any(String.class), any(String.class), any(String.class), any());
+        verify(basicTools, times(1)).sendEmailToAdmins(any(String.class), any(String.class), any());
     }
+
     @Test
     void whenCustomerDeletesReview_ButReviewDoesNotExist_ThenThrowReviewNotFoundException() {
         // Arrange
@@ -461,7 +460,7 @@ class ReviewServiceImplUnitTest {
     }
 
     @Test
-    void updateReviewWithInvalidId_ShouldThrowNotFOundException(){
+    void updateReviewWithInvalidId_ShouldThrowNotFOundException() {
         // Arrange
         String reviewId = "1";
         String userId = "google|123456789";
@@ -480,7 +479,7 @@ class ReviewServiceImplUnitTest {
 
 
     @Test
-    void updatePinnedReview_ShouldThrowBadRequestException(){
+    void updatePinnedReview_ShouldThrowBadRequestException() {
 
         // Arrange
         String reviewId = "1";

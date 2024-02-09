@@ -4,6 +4,7 @@ import com.corso.springboot.Service_Subdomain.datalayer.ServiceEntity;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapper;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOOrdersPerService;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
@@ -447,6 +448,71 @@ public class ServiceServiceImplUnitTest {
     }
 
 
+    @Test
+    void whenCallingDatabaseDTOOrdersPerServiceWithBadlyFormedTuple_thenReturnException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", "Test Service 1", 10L};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DatabaseDTOOrdersPerService(tuple);
+        });
+
+        assertEquals("Invalid tuple length: 3", exception.getMessage());
+    }
+
+
+    @Test
+    void whenCallingDatabaseDTOOrdersPerServiceWithBadTypeOnTuplePositionOne_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{1, "Test Service 1", 10L, "2021-01-01"};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DatabaseDTOOrdersPerService(tuple);
+        });
+
+        assertEquals("Invalid type for first field of tuple: class java.lang.Integer", exception.getMessage());
+    }
+
+    @Test
+    void whenCallingDatabaseDTOOrdersPerServiceWithBadTypeOnTuplePositionTwo_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", 1, 10L, "2021-01-01"};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DatabaseDTOOrdersPerService(tuple);
+        });
+
+        assertEquals("Invalid type for second field of tuple: class java.lang.Integer", exception.getMessage());
+    }
+
+    @Test
+    void whenCallingDatabaseDTOOrdersPerServiceWithBadTypeOnTuplePositionThree_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", "Test Service 1", "10", "2021-01-01"};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DatabaseDTOOrdersPerService(tuple);
+        });
+
+        assertEquals("Invalid type for third field of tuple: class java.lang.String", exception.getMessage());
+    }
+
+    @Test
+    void whenCallingDatabaseDTOOrdersPerServiceWithBadTypeOnTuplePositionFour_ShouldThrowException() {
+        // Arrange
+        Object[] tuple = new Object[]{"1", "Test Service 1", 10L, 1};
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DatabaseDTOOrdersPerService(tuple);
+        });
+
+        assertEquals("Invalid type for fourth field of tuple: class java.lang.Integer", exception.getMessage());
+    }
 
 
 
