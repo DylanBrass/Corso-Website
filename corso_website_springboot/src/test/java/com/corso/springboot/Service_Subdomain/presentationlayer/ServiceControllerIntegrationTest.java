@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebClient
-@AutoConfigureMockMvc//(addFilters = false)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class ServiceControllerIntegrationTest {
 
