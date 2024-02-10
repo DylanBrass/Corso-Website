@@ -5,25 +5,47 @@ import {
     CartesianGrid,
     Legend,
     Line,
-    LineChart,
+    LineChart, Pie, PieChart,
     ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis
 } from "recharts";
-import {getOneYearAgo, getOrdersPerService, stringToColour} from "../../../../Services/GenerateReportsService";
+import {
+    fetchTotalOrdersPerService,
+    getOneYearAgo,
+    getOrdersPerService,
+    stringToColour
+} from "../../../../Services/GenerateReportsService";
 import {useAuth} from "../../../../security/Components/AuthProvider";
 
+
+
 const checkIfDatesAreMoreOrEqualThanTwoMonths = (start: string, end: string) => {
-    const startDate = new Date(start);
+    const startDate = new Date(start)
+    //remove time
+    startDate.setHours(0, 0, 0, 0)
     const endDate = new Date(end);
-    const differenceInTime = endDate.getTime() - startDate.getTime();
-    const differenceInMonths = differenceInTime / (1000 * 3600 * 24 * 30);
-    return differenceInMonths >= 2;
+    //remove time
+    endDate.setHours(0, 0, 0, 0)
+
+
+    //remove two months from the end date
+    endDate.setMonth(endDate.getMonth() - 2)
+
+    console.log((endDate))
+    console.log(startDate)
+    console.log(endDate > startDate)
+
+
+    return endDate > startDate
 
 }
 
 
+const totalOrdersWithoutZero = (data: any) => {
+    return data.filter((service: any) => service.totalOrderRequest !== 0)
+}
 // @ts-ignore
 const CustomTooltip = ({active, payload, label}) => {
     if (active && payload && payload.length) {
@@ -66,9 +88,10 @@ export default function OrderPerService() {
     const [orderPerService, setOrderPerService] = useState([]);
     const [allServices, setAllServices] = useState<any[]>([])
 
-    const diagramTypes = ["Stacked Bar Chart", "Line Chart", "Bar Chart"]
+    const diagramTypes = ["Stacked Bar Chart", "Line Chart", "Bar Chart", "Total Orders Per Service","Pie Chart"]
     const [diagramType, setDiagramType] = React.useState(0)
 
+    const [totalOrdersPerService, setTotalOrdersPerService] = useState<any[]>([])
 
     async function fetchData() {
         let start = (document.getElementById("start") as HTMLInputElement).value;
@@ -86,6 +109,17 @@ export default function OrderPerService() {
             auth.authError(e.response.status);
         })
 
+
+        await fetchTotalOrdersPerService(start, end).then(
+            res => {
+                setTotalOrdersPerService(res);
+            }
+        ).catch((e: any) => {
+            console.error(e);
+            // @ts-ignore
+            auth.authError(e.response.status);
+        })
+
     }
 
     useEffect(() => {
@@ -94,9 +128,6 @@ export default function OrderPerService() {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-
-
 
 
     return (
@@ -215,7 +246,55 @@ export default function OrderPerService() {
                 </ResponsiveContainer>
 
             }
+            {diagramType === 3 &&
+            <ResponsiveContainer width="90%" height={600}>
+                <BarChart data={totalOrdersPerService} barSize={10}
+                >
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="serviceName"
+                           angle={-70}
+                           textAnchor="end"
+                           height={200}
+                    />
+                    <YAxis
+                        dataKey={"totalOrderRequest"}
+                        name={"Total Orders"}
+                        domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
+                    />
+                    <Tooltip
+                        content={
+                            // @ts-ignore
+                            <CustomTooltip/>}
+                    />
+                    <Bar dataKey={"totalOrderRequest"} fill={"#064bec"}
+                            name={"Total Orders"}
+                    />
 
+                </BarChart>
+            </ResponsiveContainer>
+            }
+
+            {diagramType === 4 &&
+            <ResponsiveContainer width="90%" height={600}>
+                <PieChart>
+                    <Tooltip
+                        formatter={(value, name) => [value + " total orders", name]}
+                    />
+                    <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)} nameKey={"serviceName"} cx="50%" cy="50%" outerRadius={200}
+                         fill="#8884d8"
+                         label={(entry) => {
+                             return <text x={entry.x} y={entry.y} fill="black"
+                                          textAnchor={entry.x > entry.cx ? "start" : "end"}
+                                          dominantBaseline="central">
+                                 {entry.name}
+                             </text>
+                         }}
+                    />
+                </PieChart>
+
+            </ResponsiveContainer>
+
+            }
 
         </div>
     )
@@ -223,4 +302,4 @@ export default function OrderPerService() {
 }
 
 
-export {customTickFormatter,checkIfDatesAreMoreOrEqualThanTwoMonths}
+export {customTickFormatter, checkIfDatesAreMoreOrEqualThanTwoMonths, totalOrdersWithoutZero}

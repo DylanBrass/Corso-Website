@@ -80,25 +80,38 @@ const fetchTimeByServiceReport = async (start: string | Date, end: string | Date
 
 
     let url = `${process.env.REACT_APP_BE_HOST}api/v1/corso/services/time-by-service`;
-    if (start && end) {
-        url = `${url}?date_start=${start}&date_end=${end}`
-    }
-    return axios.get(url)
-        .then(res => {
-            //add hashed color to each service
-            res.data.forEach((service: any) => {
-                service.fill = stringToColour(service.serviceName)
-            })
-            return res.data;
-
-        })
-        .catch(e => {
-            console.error(e);
-            throw e;
-
-        })
-
+    return await fetch(start, end, url);
 }
 
 
-export {getOneYearAgo, stringToColour, getOrdersPerMonth, getOrdersPerService, fetchTimeByServiceReport}
+const fetchTotalOrdersPerService = async (start: string | Date, end: string | Date) => {
+
+    let url = `${process.env.REACT_APP_BE_HOST}api/v1/corso/services/total-orders-per-service`;
+    return await fetch(start, end, url);
+}
+
+async function fetch(start: string | Date, end: string | Date, url: string) {
+    if (start && end) {
+        url = `${url}?date_start=${start}&date_end=${end}`
+    }
+    try {
+        const res = await axios.get(url);
+        res.data.forEach((service: any) => {
+                service.fill = stringToColour(service.serviceName);
+            }
+        );
+        return res.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+export {
+    getOneYearAgo,
+    stringToColour,
+    getOrdersPerMonth,
+    getOrdersPerService,
+    fetchTimeByServiceReport,
+    fetchTotalOrdersPerService
+}

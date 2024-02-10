@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
-import {Document, Page, PDFViewer, Text} from '@react-pdf/renderer';
+import {Document, Page, PDFViewer, Text, View} from '@react-pdf/renderer';
 import OrdersPerMonthPDF from "./Components/PDF/OrdersPerMonthPDF";
 import {getMonthName} from "./Components/OrdersPerMonth";
 import {
     fetchTimeByServiceReport,
+    fetchTotalOrdersPerService,
     getOneYearAgo,
     getOrdersPerMonth,
     getOrdersPerService,
@@ -14,6 +15,8 @@ import OrdersPerServicePDF from "./Components/PDF/OrdersPerServicePDF";
 import {checkIfDatesAreMoreOrEqualThanTwoMonths} from "./Components/OrdersPerService";
 import TimeByServicePDF from "./Components/PDF/TimeByServicePDF";
 import {useAuth} from "../../../security/Components/AuthProvider";
+import PresentationPage from "./Components/PDF/PresentationPage";
+import TotalOrdersPerServicePDF from "./Components/PDF/TotalOrdersPerServicePDF";
 
 const currentYear = new Date().getFullYear();
 
@@ -36,17 +39,24 @@ export default function MakePdfPage() {
     const [displayTimeByService, setDisplayTimeByService] = useState(true)
     const [timeByServiceChoice, setTimeByServiceChoice] = useState<number[]>([1])
 
+
+    const [totalOrdersPerService, setTotalOrdersPerService] = useState([])
+    const [displayTotalOrdersPerService, setDisplayTotalOrdersPerService] = useState(true)
+    const [totalOrdersPerServiceChoice, setTotalOrdersPerServiceChoice] = useState<number[]>([1])
+
     async function fetchData() {
         setTimeByService([])
-        setOrdersPerMonth(await getOrdersPerMonth((document.getElementById("year") as HTMLInputElement).value)
+        setTotalOrdersPerService([])
+
+        setOrdersPerMonth(await getOrdersPerMonth((document.getElementById("year") as HTMLInputElement)?.value)
             .catch((e: any) => {
                 console.error(e);
                 // @ts-ignore
                 auth.authError(e.response.status);
             }))
 
-        let start = (document.getElementById("start") as HTMLInputElement).value;
-        let end = (document.getElementById("end") as HTMLInputElement).value;
+        let start = (document.getElementById("start") as HTMLInputElement)?.value;
+        let end = (document.getElementById("end") as HTMLInputElement)?.value;
         await getOrdersPerService(start, end, allServices).then(
             res => {
 
@@ -62,8 +72,22 @@ export default function MakePdfPage() {
             auth.authError(e.response.status);
         })
 
-        let startTimeBy = (document.getElementById("startTimeBy") as HTMLInputElement).value;
-        let endTimeBy = (document.getElementById("endTimeBy") as HTMLInputElement).value;
+        let startTotal = (document.getElementById("startTotal") as HTMLInputElement)?.value;
+        let endTotal = (document.getElementById("endTotal") as HTMLInputElement)?.value;
+
+        await fetchTotalOrdersPerService(startTotal, endTotal).then(
+            res => {
+                console.log("res for total orders per service", res);
+                setTotalOrdersPerService(res)
+            }
+        ).catch((e: any) => {
+            console.error(e);
+            // @ts-ignore
+            auth.authError(e.response.status);
+        })
+
+        let startTimeBy = (document.getElementById("startTimeBy") as HTMLInputElement)?.value;
+        let endTimeBy = (document.getElementById("endTimeBy") as HTMLInputElement)?.value;
         await fetchTimeByServiceReport(startTimeBy, endTimeBy)
             .then(res => {
                 console.log("res for time by ", res);
@@ -74,6 +98,7 @@ export default function MakePdfPage() {
                 // @ts-ignore
                 auth.authError(e.response.status);
             })
+
 
     }
 
@@ -90,11 +115,16 @@ export default function MakePdfPage() {
         setDisplayTimeByService(!displayTimeByService)
     }
 
+    const addOrRemoveTotalOrdersPerService = () => {
+        setDisplayTotalOrdersPerService(!displayTotalOrdersPerService)
+    }
+
 
     React.useEffect(() => {
 
 
-        fetchData();        // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -102,108 +132,133 @@ export default function MakePdfPage() {
         <div>
             <NavigationBar/>
             <center>
-                <section>
-                    <h1>Reports for Orders per Month</h1>
-                    <h2>Display Orders Per Month</h2>
-                    <button onClick={addOrRemoveOrdersPerMonth}>
-                        {displayOrdersPerMonth ? "Remove" : "Add"} Orders Per Month
-                    </button>
-                    <div>
-                        <h2>Choose Year</h2>
-                        <input type="number" min="1900" max={currentYear} step="1" defaultValue={currentYear}
-                               id="year"/>
-                        <button onClick={async () => {
-                            setOrdersPerMonth(await getOrdersPerMonth((document.getElementById("year") as HTMLInputElement).value)
-                                .catch((e: any) => {
-                                    console.error(e);
-                                    // @ts-ignore
-                                    auth.authError(e.response.status);
-                                }))
-                        }}>Get Orders Per Month
-                        </button>
+                <div className={"text-center container"}>
+                    <div className={"row"}>
+                        <section className={"col-6"}>
+                            <h1>Reports for Orders per Month</h1>
+                            <h2>Display Orders Per Month</h2>
+                            <button onClick={addOrRemoveOrdersPerMonth}>
+                                {displayOrdersPerMonth ? "Remove" : "Add"} Orders Per Month
+                            </button>
+                            <div>
+                                <h2>Choose Year</h2>
+                                <input type="number" min="1900" max={currentYear} step="1" defaultValue={currentYear}
+                                       id="year"/>
+                            </div>
+
+                        </section>
+                        <section className={"col-6"}>
+                            <h1>Reports for Orders per Service</h1>
+                            <h2>Display Orders Per Service</h2>
+                            <button onClick={addOrRemoveOrdersPerService}>
+                                {displayOrdersPerService ? "Remove" : "Add"} Orders Per Service
+                            </button>
+                            <div>
+
+                                <h2>Choose Dates</h2>
+                                <input type="date" id="start" defaultValue={getOneYearAgo()}/>
+                                <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+
+                                <h2>Choose Diagrams</h2>
+
+                                <button onClick={() => {
+                                    if (page2Choice.includes(1)) {
+                                        setPage2Choice(page2Choice.filter((choice) => choice !== 1))
+                                    } else {
+                                        setPage2Choice([...page2Choice, 1])
+                                    }
+                                }}>
+                                    {page2Choice.includes(1) ? "Remove" : "Add"} Line Chart
+                                </button>
+                                <button onClick={() => {
+                                    if (page2Choice.includes(2)) {
+                                        setPage2Choice(page2Choice.filter((choice) => choice !== 2))
+                                    } else {
+                                        setPage2Choice([...page2Choice, 2])
+                                    }
+                                }}>
+                                    {page2Choice.includes(2) ? "Remove" : "Add"} Line Chart
+                                </button>
+
+                                <button onClick={() => {
+                                    if (page2Choice.includes(3)) {
+                                        setPage2Choice(page2Choice.filter((choice) => choice !== 3))
+                                    } else {
+                                        setPage2Choice([...page2Choice, 3])
+                                    }
+                                }
+                                }>
+                                    {page2Choice.includes(3) ? "Remove" : "Add"} Bar Chart
+                                </button>
+                            </div>
+
+                        </section>
                     </div>
-
-                </section>
-                <section>
-                    <h1>Reports for Orders per Service</h1>
-                    <h2>Display Orders Per Service</h2>
-                    <button onClick={addOrRemoveOrdersPerService}>
-                        {displayOrdersPerService ? "Remove" : "Add"} Orders Per Service
-                    </button>
-                    <div>
-
-                        <h2>Choose Dates</h2>
-                        <input type="date" id="start" defaultValue={getOneYearAgo()}/>
-                        <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
-                        <button onClick={fetchData}>Get Orders Per Service
-                        </button>
-
-                        <h2>Choose Diagrams</h2>
-
-                        <button onClick={() => {
-                            if (page2Choice.includes(1)) {
-                                setPage2Choice(page2Choice.filter((choice) => choice !== 1))
-                            } else {
-                                setPage2Choice([...page2Choice, 1])
-                            }
-                        }}>
-                            {page2Choice.includes(1) ? "Remove" : "Add"} Line Chart
-                        </button>
-                        <button onClick={() => {
-                            if (page2Choice.includes(2)) {
-                                setPage2Choice(page2Choice.filter((choice) => choice !== 2))
-                            } else {
-                                setPage2Choice([...page2Choice, 2])
-                            }
-                        }}>
-                            {page2Choice.includes(2) ? "Remove" : "Add"} Line Chart
-                        </button>
-
-                        <button onClick={() => {
-                            if (page2Choice.includes(3)) {
-                                setPage2Choice(page2Choice.filter((choice) => choice !== 3))
-                            } else {
-                                setPage2Choice([...page2Choice, 3])
-                            }
-                        }
-                        }>
-                            {page2Choice.includes(3) ? "Remove" : "Add"} Bar Chart
-                        </button>
-
+                    <div className={"row m-5"}>
+                        <section className={"col-5 shadow-lg p-3"}>
+                            <h3>Reports for Total Orders Per Service</h3>
+                            <h4>Display Total Orders Per Service</h4>
+                            <h4>Choose Dates</h4>
+                            <input type="date" id="startTotal" defaultValue={getOneYearAgo()}/>
+                            <input type="date" id="endTotal" defaultValue={new Date().toISOString().split('T')[0]}/>
+                            <button onClick={addOrRemoveTotalOrdersPerService}>
+                                {displayTotalOrdersPerService ? "Remove" : "Add"} Total Orders Per Service
+                            </button>
+                            <h3>Choose Diagrams</h3>
+                            <button onClick={() => {
+                                if (totalOrdersPerServiceChoice.includes(1)) {
+                                    setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 1))
+                                } else {
+                                    setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 1])
+                                }
+                            }}>
+                                {totalOrdersPerServiceChoice.includes(1) ? "Remove" : "Add"} Bar Chart
+                            </button>
+                            <button onClick={() => {
+                                if (totalOrdersPerServiceChoice.includes(2)) {
+                                    setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 2))
+                                } else {
+                                    setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 2])
+                                }
+                            }}>
+                                {totalOrdersPerServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                            </button>
+                        </section>
+                        <div className={"col-2"}></div>
+                        <section className={"col-5 shadow-lg p-3"}>
+                            <h1>Reports for Time by Service</h1>
+                            <h2>Display Time By Service</h2>
+                            <button onClick={addOrRemoveTimeByService}>
+                                {displayTimeByService ? "Remove" : "Add"} Time By Service
+                            </button>
+                            <h2>Choose Dates</h2>
+                            <input type="date" id="startTimeBy" defaultValue={getOneYearAgo()}/>
+                            <input type="date" id="endTimeBy" defaultValue={new Date().toISOString().split('T')[0]}/>
+                            <h2>Choose Diagrams</h2>
+                            <button onClick={() => {
+                                if (timeByServiceChoice.includes(1)) {
+                                    setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 1))
+                                } else {
+                                    setTimeByServiceChoice([...timeByServiceChoice, 1])
+                                }
+                            }}>
+                                {timeByServiceChoice.includes(1) ? "Remove" : "Add"} Line Chart
+                            </button>
+                            <button onClick={() => {
+                                if (timeByServiceChoice.includes(2)) {
+                                    setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 2))
+                                } else {
+                                    setTimeByServiceChoice([...timeByServiceChoice, 2])
+                                }
+                            }}>
+                                {timeByServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                            </button>
+                        </section>
                     </div>
-
-                </section>
-                <section>
-                    <h1>Reports for Time by Service</h1>
-                    <h2>Display Time By Service</h2>
-                    <button onClick={addOrRemoveTimeByService}>
-                        {displayTimeByService ? "Remove" : "Add"} Time By Service
-                    </button>
-                    <h2>Choose Dates</h2>
-                    <input type="date" id="startTimeBy" defaultValue={getOneYearAgo()}/>
-                    <input type="date" id="endTimeBy" defaultValue={new Date().toISOString().split('T')[0]}/>
-                    <button onClick={fetchData}>Get Time By Service
-                    </button>
-                    <h2>Choose Diagrams</h2>
-                    <button onClick={() => {
-                        if (timeByServiceChoice.includes(1)) {
-                            setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 1))
-                        } else {
-                            setTimeByServiceChoice([...timeByServiceChoice, 1])
-                        }
-                    }}>
-                        {timeByServiceChoice.includes(1) ? "Remove" : "Add"} Line Chart
-                    </button>
-                    <button onClick={() => {
-                        if (timeByServiceChoice.includes(2)) {
-                            setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 2))
-                        } else {
-                            setTimeByServiceChoice([...timeByServiceChoice, 2])
-                        }
-                    }}>
-                        {timeByServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
-                    </button>
-                </section>
+                </div>
+                <button onClick={fetchData} className={"m-5"}>
+                    Refresh PDF
+                </button>
             </center>
             <PDFViewer width={"100%"} height={"1000px"}
 
@@ -215,14 +270,19 @@ export default function MakePdfPage() {
                     keywords="corso, reports, pdf"
 
                 >
-                    <Page size="A4">
 
-                        {displayOrdersPerMonth &&
+                    <PresentationPage/>
+                    {displayOrdersPerMonth &&
+                        <Page size="A4">
+
                             <div>
+
                                 <Text style={{
                                     fontSize: 20,
                                     margin: 12
-                                }}>Orders Per Month</Text>
+                                }}>
+                                    Orders Per Month (In {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
+                                </Text>
 
                                 <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}/>
 
@@ -235,85 +295,141 @@ export default function MakePdfPage() {
                                     })
                                 }
                             </div>
-                        }
+                        </Page>
 
-                        {displayOrdersPerService &&
+                    }
+
+                    {displayOrdersPerService &&
+                        <Page size="A4">
+
                             <div>
                                 <Text style={{
                                     fontSize: 20,
                                     margin: 12
-                                }}>Orders Per Service</Text>
+                                }}>
+                                    Orders Per Service (Between {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} and {(document.getElementById("end") as HTMLInputElement)?.value})
+                                </Text>
                                 <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
                                                      choice={page2Choice}/>
 
-                                {
-                                    orderPerService.map((service: any) => {
+                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                                    {orderPerService.map((service: any) => {
                                         console.log("service", service);
-                                        return <Text style={{
-                                            fontSize: 12,
-                                            margin: 12
-                                        }} key={service.date}>
-                                            <Text style={{
-                                                fontSize: 20,
-                                                margin: 12
-                                            }}>
-                                                {checkIfDatesAreMoreOrEqualThanTwoMonths((document.getElementById("start") as HTMLInputElement).value,
-                                                    (document.getElementById("end") as HTMLInputElement).value) ?
-                                                    service.date.substring(0, 7) :
-                                                    service.date}
+                                        return (
+                                            <Text
+                                                wrap={false}
+                                                style={{
+                                                    fontSize: 12,
+                                                    margin: 12,
+                                                }} key={service.date}>
+                                                <Text style={{
+                                                    fontSize: 20,
+                                                    margin: 12,
+                                                }}>
+                                                    {checkIfDatesAreMoreOrEqualThanTwoMonths(
+                                                        (document.getElementById("start") as HTMLInputElement)?.value || new Date().toISOString(),
+                                                        (document.getElementById("end") as HTMLInputElement)?.value || new Date().toISOString()
+                                                    ) ? service.date.substring(0, 7) : service.date}
+                                                </Text>
+                                                {"\n"}
+                                                {Object.keys(service)
+                                                    .filter((key) => key !== "date")
+                                                    .map((key) => (
+                                                        <Text key={key}>
+                                                            {key}: {service[key]}
+                                                            {"\n"}
+                                                        </Text>
+                                                    ))}
                                             </Text>
-                                            {"\n"}{
-                                            Object.keys(service)
-                                                .filter((key) => key !== "date")
-                                                .map((key) => {
-                                                    return <Text key={key}>
-                                                        {key}: {service[key]}
-                                                        {"\n"}
-                                                    </Text>
-                                                })
-                                        }</Text>
-                                    })
-                                }
+                                        );
+                                    })}
+                                </View>
+
                             </div>
-                        }
-                        {displayTimeByService &&
+                        </Page>
+
+                    }
+                    {displayTotalOrdersPerService &&
+                        <Page size="A4">
+
                             <div>
                                 <Text style={{
                                     fontSize: 20,
                                     margin: 12
-                                }}>Time By Service</Text>
-                                <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
-                                {
-                                    timeByService.map((service: any) => {
-                                        return <Text style={{
-                                            fontSize: 12,
-                                            margin: 12,
-                                        }} key={service.serviceName}>
+                                }}>
+                                    Total Orders Per Service (Between {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
+                                </Text>
+                                <TotalOrdersPerServicePDF totalOrdersPerService={totalOrdersPerService}
+                                                          choice={totalOrdersPerServiceChoice}/>
 
-                                            <Text style={{
-                                                color: stringToColour(service.serviceName),
-                                                backgroundColor: stringToColour(service.serviceName),
-                                                padding: 5,
-                                                margin: 5,
-                                                borderRadius: 5,
-                                            }}>
+                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
+                                    {totalOrdersPerService.map((service: any) => (
+                                        <Text
+                                            style={{
+                                                fontSize: 12,
+                                                margin: 12,
+                                            }} key={service.serviceName}>
+                                            <Text
+                                                wrap={false}
+                                                style={{
+                                                    color: stringToColour(service.serviceName),
+                                                    backgroundColor: stringToColour(service.serviceName),
+                                                    padding: 5,
+                                                    margin: 5,
+                                                    borderRadius: 5,
+                                                }}>
+                                                M
+                                            </Text>
+                                            {"    "}
+                                            {service.serviceName}: {service.totalOrderRequest} Orders
+                                        </Text>
+                                    ))}
+                                </View>
+                            </div>
+                        </Page>
+                    }
+                    {displayTimeByService &&
+                        <Page size="A4">
+
+                            <div>
+
+                                <Text style={{
+                                    fontSize: 20,
+                                    margin: 12
+                                }}>
+                                    Time By Service (Between {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
+                                </Text>
+                                <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
+                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
+                                    {timeByService.map((service: any) => (
+                                        <Text
+                                            style={{
+                                                fontSize: 12,
+                                                margin: 12,
+                                            }} key={service.serviceName}>
+                                            <Text
+                                                wrap={false}
+                                                style={{
+                                                    color: stringToColour(service.serviceName),
+                                                    backgroundColor: stringToColour(service.serviceName),
+                                                    padding: 5,
+                                                    margin: 5,
+                                                    borderRadius: 5,
+                                                }}>
                                                 M
                                             </Text>
                                             {"    "}
                                             {service.serviceName}: {service.hours_worked} hours
                                         </Text>
-                                    })
-                                }
-
-
+                                    ))}
+                                </View>
                             </div>
+                        </Page>
+                    }
 
 
-                        }
-                    </Page>
                 </Document>
             </PDFViewer>
         </div>
     )
-        ;
 }

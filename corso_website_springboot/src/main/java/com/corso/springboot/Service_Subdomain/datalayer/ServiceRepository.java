@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<ServiceEntity, String> {
@@ -51,4 +52,17 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, String> 
                      DESC;
             """, nativeQuery = true)
     List<Object[]> getTotalOrderRequestByService(@Param("start_date") String dateStart, @Param("end_date") String dateEnd);
+
+    @Query(value = """
+                 SELECT s.service_id, s.service_name, COUNT(o.order_id) AS order_count
+                   FROM services s
+                        LEFT JOIN (SELECT service_id, order_status, order_date, order_id
+                            FROM orders
+                            WHERE order_date BETWEEN :start_date AND :end_date
+                                AND order_status != 'DECLINED') o
+                            ON s.service_id = o.service_id
+            GROUP BY s.service_id, s.service_name
+            ORDER BY s.service_name;
+                """, nativeQuery = true)
+    List<Object[]> getTotalOrdersPerService(@Param("start_date") String dateStart, @Param("end_date") String dateEnd);
 }

@@ -6,6 +6,7 @@ import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapper;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOOrdersPerService;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOTotalOrdersPerService;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
@@ -170,7 +171,8 @@ public class ServiceServiceImpl implements ServiceService {
 
             List<ServiceResponse> services = getAllServices();
 
-            if (LocalDate.parse(dateEnd).minusMonths(2).isBefore(LocalDate.parse(dateStart))) {
+            if (LocalDate.parse(dateEnd).minusMonths(2).isBefore(LocalDate.parse(dateStart))
+                    || LocalDate.parse(dateEnd).minusMonths(2).isEqual(LocalDate.parse(dateStart))) {
 
 
                 TreeMap<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByDate = databaseDTOOrdersPerServices.stream()
@@ -195,7 +197,7 @@ public class ServiceServiceImpl implements ServiceService {
                 //add missing months
                 LocalDate start = LocalDate.parse(dateStart).withDayOfMonth(1);
                 LocalDate end = LocalDate.parse(dateEnd).withDayOfMonth(1);
-                
+
                 while (start.isBefore(end) || start.isEqual(end)) {
                     if (!groupedByMonth.containsKey(start)) {
                         groupedByMonth.put(start, new ArrayList<>());
@@ -211,6 +213,25 @@ public class ServiceServiceImpl implements ServiceService {
         } catch (Exception e) {
             throw new ServiceBadRequestException("Failed to generate total order request by service report :" + e.getMessage());
         }
+    }
+
+    @Override
+    public List<DatabaseDTOTotalOrdersPerService> getTotalOrdersPerService(String dateStart, String dateEnd) {
+        if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
+            throw new ServiceBadRequestException("Invalid date range");
+        }
+        try {
+            return serviceRepository.getTotalOrdersPerService(dateStart, dateEnd)
+                    .stream()
+                    .map(DatabaseDTOTotalOrdersPerService::new)
+                    .sorted(Comparator.comparing(DatabaseDTOTotalOrdersPerService::getTotalOrderRequest).reversed())
+                    .toList();
+
+
+        } catch (Exception e) {
+            throw new ServiceBadRequestException("Failed to generate total orders per service report :" + e.getMessage());
+        }
+
     }
 
 

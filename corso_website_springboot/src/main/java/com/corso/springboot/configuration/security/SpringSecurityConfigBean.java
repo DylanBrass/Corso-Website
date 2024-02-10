@@ -57,8 +57,6 @@ public class SpringSecurityConfigBean {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/orders/orders-per-month")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/services/orders-per-service")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/auth0/manage/**")).hasAuthority("Admin")
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/server/status")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/security/verify")).permitAll()
