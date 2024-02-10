@@ -3,7 +3,6 @@ import {
     Bar,
     BarChart,
     CartesianGrid,
-    Legend,
     Pie,
     PieChart,
     ResponsiveContainer,

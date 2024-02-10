@@ -1,4 +1,4 @@
-import {Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
+import {Bar, BarChart, CartesianGrid, Legend, Line, LineChart, XAxis, YAxis} from "recharts";
 import ReactPDFChart from "react-pdf-charts";
 import React from "react";
 import {stringToColour} from "../../../../../Services/GenerateReportsService";

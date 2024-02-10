@@ -1,6 +1,6 @@
 import ReactPDFChart from "react-pdf-charts";
 import React from "react";
-import {Bar, BarChart, CartesianGrid, Pie, PieChart, Tooltip, XAxis, YAxis} from "recharts";
+import {Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis, YAxis} from "recharts";
 import {dataWithoutZero} from "../TimeByService";
 
 
