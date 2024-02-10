@@ -7,7 +7,6 @@ on:
       - main
       - 'releases/*'
 
-version: 1.0
 jobs:
   qodana-corso_website_springboot:
     if: github.event.pull_request.draft == false
