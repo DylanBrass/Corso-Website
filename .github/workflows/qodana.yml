@@ -7,6 +7,7 @@ on:
       - main
       - 'releases/*'
 
+version: 1.0
 jobs:
   qodana-corso_website_springboot:
     if: github.event.pull_request.draft == false
@@ -27,6 +28,8 @@ jobs:
       - name: Scan the project
         if: steps.skip-scan.outputs.should_skip != 'true'
         uses: JetBrains/qodana-action@v2023.3
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         timeout-minutes: 20
         with:
           args: --project-dir,corso_website_springboot,--baseline,qodana.sarif.json
