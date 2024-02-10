@@ -31,7 +31,7 @@ jobs:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         timeout-minutes: 20
         with:
-          args: --project-dir,corso_website_springboot,--baseline,qodana.sarif.json
+          args: --source-dir,corso_website_springboot,--baseline,qodana.sarif.json
           results-dir: ${{ runner.temp }}/qodana/results-corso_website_springboot
           artifact-name: qodana-report-corso_website_springboot
           cache-dir: ${{ runner.temp }}/qodana/caches-corso_website_springboot
