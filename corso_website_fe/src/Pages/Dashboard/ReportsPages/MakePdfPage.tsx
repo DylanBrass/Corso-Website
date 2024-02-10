@@ -131,128 +131,166 @@ export default function MakePdfPage() {
     return (
         <div>
             <NavigationBar/>
-            <center>
+            <center className={"mt-4"}>
                 <div className={"text-center container"}>
                     <div className={"row"}>
-                        <section className={"col-6"}>
-                            <h1>Reports for Orders per Month</h1>
-                            <h2>Display Orders Per Month</h2>
-                            <button onClick={addOrRemoveOrdersPerMonth}>
-                                {displayOrdersPerMonth ? "Remove" : "Add"} Orders Per Month
-                            </button>
-                            <div>
-                                <h2>Choose Year</h2>
-                                <input type="number" min="1900" max={currentYear} step="1" defaultValue={currentYear}
-                                       id="year"/>
+                        <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
+                            <div className={"w-100"}>
+
+                                <h1>Reports for Orders per Month</h1>
+                                <h2>Display Orders Per Month</h2>
+                                <button onClick={addOrRemoveOrdersPerMonth}
+                                        className={displayOrdersPerMonth ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {displayOrdersPerMonth ? "Remove" : "Add"} Orders Per Month
+                                </button>
+                                <div>
+                                    <h2>Choose Year</h2>
+                                    <input type="number" min="1900" max={currentYear} step="1"
+                                           defaultValue={currentYear}
+                                           id="year"/>
+                                </div>
                             </div>
-
-                        </section>
-                        <section className={"col-6"}>
-                            <h1>Reports for Orders per Service</h1>
-                            <h2>Display Orders Per Service</h2>
-                            <button onClick={addOrRemoveOrdersPerService}>
-                                {displayOrdersPerService ? "Remove" : "Add"} Orders Per Service
-                            </button>
-                            <div>
-
-                                <h2>Choose Dates</h2>
-                                <input type="date" id="start" defaultValue={getOneYearAgo()}/>
-                                <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
-
-                                <h2>Choose Diagrams</h2>
-
-                                <button onClick={() => {
-                                    if (page2Choice.includes(1)) {
-                                        setPage2Choice(page2Choice.filter((choice) => choice !== 1))
-                                    } else {
-                                        setPage2Choice([...page2Choice, 1])
-                                    }
-                                }}>
-                                    {page2Choice.includes(1) ? "Remove" : "Add"} Line Chart
-                                </button>
-                                <button onClick={() => {
-                                    if (page2Choice.includes(2)) {
-                                        setPage2Choice(page2Choice.filter((choice) => choice !== 2))
-                                    } else {
-                                        setPage2Choice([...page2Choice, 2])
-                                    }
-                                }}>
-                                    {page2Choice.includes(2) ? "Remove" : "Add"} Line Chart
-                                </button>
-
-                                <button onClick={() => {
-                                    if (page2Choice.includes(3)) {
-                                        setPage2Choice(page2Choice.filter((choice) => choice !== 3))
-                                    } else {
-                                        setPage2Choice([...page2Choice, 3])
-                                    }
-                                }
-                                }>
-                                    {page2Choice.includes(3) ? "Remove" : "Add"} Bar Chart
-                                </button>
-                            </div>
-
-                        </section>
-                    </div>
-                    <div className={"row m-5"}>
-                        <section className={"col-5 shadow-lg p-3"}>
-                            <h3>Reports for Total Orders Per Service</h3>
-                            <h4>Display Total Orders Per Service</h4>
-                            <h4>Choose Dates</h4>
-                            <input type="date" id="startTotal" defaultValue={getOneYearAgo()}/>
-                            <input type="date" id="endTotal" defaultValue={new Date().toISOString().split('T')[0]}/>
-                            <button onClick={addOrRemoveTotalOrdersPerService}>
-                                {displayTotalOrdersPerService ? "Remove" : "Add"} Total Orders Per Service
-                            </button>
-                            <h3>Choose Diagrams</h3>
-                            <button onClick={() => {
-                                if (totalOrdersPerServiceChoice.includes(1)) {
-                                    setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 1))
-                                } else {
-                                    setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 1])
-                                }
-                            }}>
-                                {totalOrdersPerServiceChoice.includes(1) ? "Remove" : "Add"} Bar Chart
-                            </button>
-                            <button onClick={() => {
-                                if (totalOrdersPerServiceChoice.includes(2)) {
-                                    setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 2))
-                                } else {
-                                    setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 2])
-                                }
-                            }}>
-                                {totalOrdersPerServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
-                            </button>
                         </section>
                         <div className={"col-2"}></div>
-                        <section className={"col-5 shadow-lg p-3"}>
-                            <h1>Reports for Time by Service</h1>
-                            <h2>Display Time By Service</h2>
-                            <button onClick={addOrRemoveTimeByService}>
-                                {displayTimeByService ? "Remove" : "Add"} Time By Service
-                            </button>
-                            <h2>Choose Dates</h2>
-                            <input type="date" id="startTimeBy" defaultValue={getOneYearAgo()}/>
-                            <input type="date" id="endTimeBy" defaultValue={new Date().toISOString().split('T')[0]}/>
-                            <h2>Choose Diagrams</h2>
-                            <button onClick={() => {
-                                if (timeByServiceChoice.includes(1)) {
-                                    setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 1))
-                                } else {
-                                    setTimeByServiceChoice([...timeByServiceChoice, 1])
-                                }
-                            }}>
-                                {timeByServiceChoice.includes(1) ? "Remove" : "Add"} Line Chart
-                            </button>
-                            <button onClick={() => {
-                                if (timeByServiceChoice.includes(2)) {
-                                    setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 2))
-                                } else {
-                                    setTimeByServiceChoice([...timeByServiceChoice, 2])
-                                }
-                            }}>
-                                {timeByServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
-                            </button>
+                        <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
+                            <div className={"w-100"}>
+                                <h1>Reports for Orders per Service</h1>
+                                <h2>Display Orders Per Service</h2>
+                                <button onClick={addOrRemoveOrdersPerService}
+                                        className={displayOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {displayOrdersPerService ? "Remove" : "Add"} Orders Per Service
+                                </button>
+                                <div>
+
+                                    <h2>Choose Dates</h2>
+                                    <input type="date" id="start" defaultValue={getOneYearAgo()}/>
+                                    <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+
+                                    <h2>Choose Diagrams</h2>
+
+                                    <button onClick={() => {
+                                        if (page2Choice.includes(1)) {
+                                            setPage2Choice(page2Choice.filter((choice) => choice !== 1))
+                                        } else {
+                                            setPage2Choice([...page2Choice, 1])
+                                        }
+                                    }}
+                                            className={page2Choice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    >
+                                        {page2Choice.includes(1) ? "Remove" : "Add"} Line Chart
+                                    </button>
+                                    <button onClick={() => {
+                                        if (page2Choice.includes(2)) {
+                                            setPage2Choice(page2Choice.filter((choice) => choice !== 2))
+                                        } else {
+                                            setPage2Choice([...page2Choice, 2])
+                                        }
+                                    }}
+                                            className={page2Choice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    >
+                                        {page2Choice.includes(2) ? "Remove" : "Add"} Line Chart
+                                    </button>
+
+                                    <button onClick={() => {
+                                        if (page2Choice.includes(3)) {
+                                            setPage2Choice(page2Choice.filter((choice) => choice !== 3))
+                                        } else {
+                                            setPage2Choice([...page2Choice, 3])
+                                        }
+                                    }
+                                    }
+                                            className={page2Choice.includes(3) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    >
+                                        {page2Choice.includes(3) ? "Remove" : "Add"} Bar Chart
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div className={"row mt-5"}
+                    >
+                        <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5"}>
+
+                            <div className={"w-100"}>
+                                <h3>Reports for Total Orders Per Service</h3>
+                                <h4>Display Total Orders Per Service</h4>
+                                <h4>Choose Dates</h4>
+                                <button onClick={addOrRemoveTotalOrdersPerService}
+                                        className={displayTotalOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {displayTotalOrdersPerService ? "Remove" : "Add"} Total Orders Per Service
+                                </button>
+                                <br/>
+                                <input type="date" id="startTotal" defaultValue={getOneYearAgo()}/>
+                                <input type="date" id="endTotal" defaultValue={new Date().toISOString().split('T')[0]}/>
+
+                                <h3>Choose Diagrams</h3>
+                                <button onClick={() => {
+                                    if (totalOrdersPerServiceChoice.includes(1)) {
+                                        setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 1))
+                                    } else {
+                                        setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 1])
+                                    }
+                                }}
+                                        className={totalOrdersPerServiceChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {totalOrdersPerServiceChoice.includes(1) ? "Remove" : "Add"} Bar Chart
+                                </button>
+                                <button onClick={() => {
+                                    if (totalOrdersPerServiceChoice.includes(2)) {
+                                        setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 2))
+                                    } else {
+                                        setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 2])
+                                    }
+                                }}
+                                        className={totalOrdersPerServiceChoice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {totalOrdersPerServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                                </button>
+                            </div>
+                        </section>
+                        <div className={"col-2"}></div>
+                        <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
+                            <div className={"w-100"}>
+
+                                <h1>Reports for Time by Service</h1>
+                                <h2>Display Time By Service</h2>
+                                <button onClick={addOrRemoveTimeByService}
+                                        className={displayTimeByService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {displayTimeByService ? "Remove" : "Add"} Time By Service
+                                </button>
+                                <h2>Choose Dates</h2>
+                                <input type="date" id="startTimeBy" defaultValue={getOneYearAgo()}/>
+                                <input type="date" id="endTimeBy"
+                                       defaultValue={new Date().toISOString().split('T')[0]}/>
+                                <h2>Choose Diagrams</h2>
+                                <button
+                                    onClick={() => {
+                                        if (timeByServiceChoice.includes(1)) {
+                                            setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 1))
+                                        } else {
+                                            setTimeByServiceChoice([...timeByServiceChoice, 1])
+                                        }
+                                    }}
+                                    className={timeByServiceChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {timeByServiceChoice.includes(1) ? "Remove" : "Add"} Line Chart
+                                </button>
+                                <button onClick={() => {
+                                    if (timeByServiceChoice.includes(2)) {
+                                        setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 2))
+                                    } else {
+                                        setTimeByServiceChoice([...timeByServiceChoice, 2])
+                                    }
+                                }}
+                                        className={timeByServiceChoice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                >
+                                    {timeByServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                                </button>
+                            </div>
                         </section>
                     </div>
                 </div>
@@ -260,9 +298,7 @@ export default function MakePdfPage() {
                     Refresh PDF
                 </button>
             </center>
-            <PDFViewer width={"100%"} height={"1000px"}
-
-            >
+            <PDFViewer width={"100%"} height={"900px"}>
                 <Document
                     title={"Corso Reports"}
                     author="Corso"
@@ -281,7 +317,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Orders Per Month (In {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
+                                    Orders Per Month
+                                    (In {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
                                 </Text>
 
                                 <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}/>
@@ -307,7 +344,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Orders Per Service (Between {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} and {(document.getElementById("end") as HTMLInputElement)?.value})
+                                    Orders Per Service
+                                    (Between {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} and {(document.getElementById("end") as HTMLInputElement)?.value})
                                 </Text>
                                 <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
                                                      choice={page2Choice}/>
@@ -357,7 +395,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Total Orders Per Service (Between {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
+                                    Total Orders Per Service
+                                    (Between {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
                                 </Text>
                                 <TotalOrdersPerServicePDF totalOrdersPerService={totalOrdersPerService}
                                                           choice={totalOrdersPerServiceChoice}/>
@@ -397,7 +436,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Time By Service (Between {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
+                                    Time By Service
+                                    (Between {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
                                 </Text>
                                 <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
                                 <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>

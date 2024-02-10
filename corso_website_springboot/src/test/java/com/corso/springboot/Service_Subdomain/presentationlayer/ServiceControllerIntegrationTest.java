@@ -251,7 +251,19 @@ public class ServiceControllerIntegrationTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$[0].length()").isEqualTo(3)
-                .jsonPath("$.length()").isEqualTo(6);
+                .jsonPath("$[0].totalOrderRequest").isEqualTo(1)
+                .jsonPath("$.length()").isEqualTo(5);
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getTotalOrdersPerServiceWithInvalidDateRange_ShouldFail() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/total-orders-per-service?date_start=2026-01-01&date_end=2025-12-31")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isBadRequest();
+    }
+
 
 }
