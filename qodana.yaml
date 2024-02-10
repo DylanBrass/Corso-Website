@@ -14,9 +14,12 @@ include:
   - name: VulnerableLibrariesGlobal
   - name: UNUSED_IMPORT
   - name: FieldCanBeLocal
-  #  - name: DefaultAnnotationParam
+  - name: DefaultAnnotationParam
   - name: CommentedOutCode
-#  - name: JvmCoverageInspection
+  - name: JvmCoverageInspection
+  - name: UnusedDeclaration
+  - name: UnusedImport
+
 
 projectJDK: 17 #(Applied in CI/CD pipeline)
 
