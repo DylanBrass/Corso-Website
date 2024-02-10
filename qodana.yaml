@@ -1,8 +1,2 @@
 version: "1.0"
 linter: jetbrains/qodana-jvm-community:2023.3
-
-include:
-  - name: "corso_website_springboot"
-    paths:
-      - corso_website_springboot
-      - corso_website_springboot/src/main/java
