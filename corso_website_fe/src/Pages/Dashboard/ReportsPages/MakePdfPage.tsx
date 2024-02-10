@@ -17,6 +17,7 @@ import TimeByServicePDF from "./Components/PDF/TimeByServicePDF";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import PresentationPage from "./Components/PDF/PresentationPage";
 import TotalOrdersPerServicePDF from "./Components/PDF/TotalOrdersPerServicePDF";
+import {Link} from "react-router-dom";
 
 const currentYear = new Date().getFullYear();
 
@@ -132,6 +133,8 @@ export default function MakePdfPage() {
         <div>
             <NavigationBar/>
             <center className={"mt-4"}>
+                <Link to={"/reports"}>Back to Reports</Link>
+
                 <div className={"text-center container"}>
                     <div className={"row"}>
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
