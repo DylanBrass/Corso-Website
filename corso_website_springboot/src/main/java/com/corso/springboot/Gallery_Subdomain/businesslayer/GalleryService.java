@@ -17,5 +17,7 @@ public interface GalleryService {
 
     GalleryResponse createGallery(GalleryRequest galleryRequest) throws IOException;
 
+    GalleryResponse modifyGallery(String galleryId, GalleryRequest galleryRequest) throws IOException;
+
     GalleryResponse getGalleryById(String galleryId);
 }

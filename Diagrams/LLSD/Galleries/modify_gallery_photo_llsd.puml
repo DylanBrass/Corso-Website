@@ -1,21 +1,25 @@
 @startuml
 actor Admin
 
-participant "Dashboard" as DashB
+participant "<<View>>\nDashboard" as DashB
 
-participant "ModifyAGalleryPhoto" as ModifyAGallery
+participant "<<View>>\nEditGallery" as ModifyAGallery
+
+participant "<<View>>\nViewSpecificGalleryPhoto" as ViewSpecificGalleryPhoto
 
 participant "galleryRequest : GalleryRequest" as GalleryRequest
 
-participant "GalleryController" as GalleryController
+participant "<<Controller>>\nGalleryController" as GalleryController
 
 participant "galleryResponse : GalleryResponse" as GalleryResponse
 
-participant "GalleryService" as GalleryService
+participant "<<Service>>\nCloudinaryService" as CloudinaryService
+
+participant "<<Service>>\nGalleryService" as GalleryService
 
 participant "gallery : Gallery" as Gallery
 
-participant "GalleryRepository" as GalleryRepository
+participant "<<Repository>>\nGalleryRepository" as GalleryRepository
 
 participant "galleryDb : Gallery" as GalleryDb
 
@@ -25,70 +29,92 @@ participant "GalleryResponseMapper" as GalleryResponseMapper
 
 participant "GalleryRequestMapper" as GalleryRequestMapper
 
-ref over Admin, DashB, ModifyAGallery, GalleryRequest, GalleryController, GalleryResponse, GalleryService, Gallery, GalleryRepository, GalleryDb, Db, GalleryResponseMapper, GalleryRequestMapper
+ref over Admin, DashB, ModifyAGallery, ViewSpecificGalleryPhoto, GalleryRequest, GalleryController, GalleryResponse, CloudinaryService, GalleryService, Gallery, GalleryRepository, GalleryDb, Db, GalleryResponseMapper, GalleryRequestMapper
     ViewGalleryById
 end ref
 
 opt
-
-Admin -> DashB: ModifyAGalleryPhoto()
+Admin -> DashB : ViewGalleryById()
 activate DashB
 
-DashB -> ModifyAGallery: render()
+DashB -> ModifyAGallery : Render()
 activate ModifyAGallery
 
-ModifyAGallery -> GalleryRequest: PUT api/corso/galleries/{galleryId}
+ModifyAGallery -> ViewSpecificGalleryPhoto
+activate ViewSpecificGalleryPhoto
+
+ViewSpecificGalleryPhoto -> GalleryRequest : PUT api/v1/corso/galleries/carousel/{galleryId}
 activate GalleryRequest
 
 GalleryRequest -> GalleryController
-
 activate GalleryController
 
-GalleryController -> GalleryService: updateGallery(galleryId, galleryRequest)
+GalleryController -> GalleryService: modifyGallery(galleryId, galleryRequest)
 activate GalleryService
 
-GalleryService -> GalleryRequestMapper: mapToGallery(galleryRequest)
-activate GalleryRequestMapper
+GalleryService -> GalleryRepository: findByGalleryId_GalleryId(galleryId)
+activate GalleryRepository
 
-GalleryRequestMapper -> Gallery: Gallery
+GalleryRepository -> Database: SELECT * FROM galleries WHERE gallery_id = galleryId
+activate Database
 
-deactivate GalleryRequest
-deactivate GalleryRequestMapper
+Database -> GalleryDb : galleryDb : Gallery
 
-activate Gallery
-
-Gallery -> GalleryService: gallery: Gallery
-
-GalleryService -> GalleryRepository: save(gallery)
-deactivate Gallery
-
-GalleryRepository -> Db: UPDATE gallery SET description = :description, photo = :photo, WHERE gallery_id = :galleryId
-activate Db
-
-Db -> GalleryDb: galleryDb: Gallery
-deactivate Db
+deactivate Database
 
 activate GalleryDb
+
 GalleryDb -> GalleryRepository : galleryDb : Gallery
 
 GalleryRepository -> GalleryService : galleryDb : Gallery
+
 deactivate GalleryRepository
 
-GalleryService -> GalleryResponseMapper: mapToGalleryResponse(gallery)
+alt galleryRequest.getPhoto() != null
+
+         GalleryRepository -> CloudinaryService : extractPublicIdFromCloudinaryUrl(galleryDb.getPhoto())
+         activate CloudinaryService
+
+    alt galleryRequest.getPhoto().contains("http://") && galleryRequest.getPhoto().contains("https://")
+        GalleryService -> CloudinaryService : updateCloudinaryImage(galleryRequest.getPhoto())
+        activate CloudinaryService
+
+        deactivate CloudinaryService
+
+    end
+
+end
+
+GalleryService -> GalleryRepository : save(galleryDb)
+
+activate GalleryRepository
+GalleryRepository -> Database : UPDATE galleries SET description=description, photo = galleryDb.getPhoto() WHERE gallery_id = galleryId
 deactivate GalleryDb
+activate Database
+
+Database --> GalleryDb : galleryDb : Gallery
+
+activate GalleryDb
+
+GalleryDb -> GalleryResponseMapper : toGalleryResponse(galleryDb)
+
 activate GalleryResponseMapper
 
-GalleryResponseMapper --> GalleryResponse: galleryResponse
+GalleryResponseMapper --> GalleryResponse : galleryResponse : GalleryResponse
+
 deactivate GalleryResponseMapper
+
 activate GalleryResponse
 
 GalleryResponse --> GalleryService : galleryResponse : GalleryResponse
 
-GalleryService --> GalleryController: galleryResponse : GalleryResponse
-
-GalleryController --> ModifyAGallery: galleryResponse : GalleryResponse
-
 deactivate GalleryResponse
+
+GalleryService --> GalleryController : galleryResponse : GalleryResponse
+
+deactivate GalleryService
+
+GalleryController --> ViewSpecificGalleryPhoto : galleryResponse : GalleryResponse
 
 end opt
 

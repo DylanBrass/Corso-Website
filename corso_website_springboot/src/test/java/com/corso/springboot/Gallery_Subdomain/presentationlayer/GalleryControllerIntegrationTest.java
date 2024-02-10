@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,6 +121,46 @@ class GalleryControllerIntegrationTest {
                 .expectBody().jsonPath("$.description").isEqualTo("Test Description")
                 .jsonPath("$.photo").isEqualTo("mockedImageUrl")
                 .jsonPath("$.image_position").isEqualTo(6);
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void modifyGallery_ShouldSucceed() throws Exception {
+        // Arrange
+        String galleryId = "62b068a9-ef01-4bfd-8ee4-437deb43c3f6";
+
+        // Mock the CloudinaryService behavior
+        Mockito.when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public-id");
+        Mockito.when(cloudinaryService.updateCloudinaryImage(Mockito.anyString(), Mockito.anyString())).thenReturn("mockedImageUrl");
+
+        // Prepare a valid GalleryRequest
+        String galleryRequestJson = "{ \"description\": \"Test Description\", \"photo\": \"base64ImageModified\", \"image_position\": 5 }";
+
+        mockMvc.perform(put(BASE_URI_GALLERIES + "/carousel/" + galleryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(galleryRequestJson)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description").value("Test Description"))
+                .andExpect(jsonPath("$.photo").value("mockedImageUrl"))
+                .andExpect(jsonPath("$.image_position").value(5));
+
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void modifyGallery_ShouldThrowGalleryNotFoundException() throws Exception {
+        // Arrange
+        String galleryId = "invalidId";
+
+        // Prepare a valid GalleryRequest
+        String galleryRequestJson = "{ \"description\": \"Test Description\", \"photo\": \"base64ImageModified\", \"image_position\": 5 }";
+
+        mockMvc.perform(put(BASE_URI_GALLERIES + "/carousel/" + galleryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(galleryRequestJson)
+                        .with(csrf()))
+                .andExpect(status().isNotFound());
     }
 
     @Test

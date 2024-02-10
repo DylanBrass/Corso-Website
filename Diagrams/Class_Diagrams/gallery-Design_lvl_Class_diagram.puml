@@ -10,6 +10,7 @@ package "GallerySubdomain"{
             + getGalleryCount() : ResponseEntity<Integer>
             + createGallery(galleryRequest : GalleryRequest) : ResponseEntity<GalleryResponse>
             + getGalleryById(galleryId : String) : ResponseEntity<GalleryResponse>
+            + modifyGallery(galleryId: String, galleryRequest : GalleryRequest) : ResponseEntity<GalleryResponse> throws IOException
         }
 
 
@@ -48,6 +49,7 @@ package "GallerySubdomain"{
             + getGalleryCount() : Integer
             + createGallery(galleryRequest : GalleryRequest) : GalleryResponse throws IOException
             + getGalleryById(galleryId : String) : GalleryResponse
+            + modifyGallery(galleryId: String, galleryRequest : GalleryRequest) : GalleryResponse throws IOException
         }
 
         class "<<service>>\nGalleryServiceImpl" as serviceImpl{
@@ -61,7 +63,7 @@ package "GallerySubdomain"{
             + getGalleryCount() : Integer
             + createGallery(galleryRequest : GalleryRequest) : GalleryResponse throws IOException
             + getGalleryById(galleryId : String) : GalleryResponse
-
+            + modifyGallery(galleryId: String, galleryRequest : GalleryRequest) : GalleryResponse throws IOException
         }
         class serviceImpl extends service
 
