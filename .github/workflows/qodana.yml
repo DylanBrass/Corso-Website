@@ -26,8 +26,7 @@ jobs:
         uses: JetBrains/qodana-action@v2022.2.2
         timeout-minutes: 20
         with:
-          # https://github.com/jetbrains/qodana-cli#options-1
-          args: --project-dir,backend,--baseline,qodana.sarif.json
+          args: --project-dir,corso_website_springboot,--baseline,qodana.sarif.json
           results-dir: ${{ runner.temp }}/qodana/results-corso_website_springboot
           artifact-name: qodana-report-corso_website_springboot
           cache-dir: ${{ runner.temp }}/qodana/caches-corso_website_springboot
