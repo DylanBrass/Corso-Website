@@ -206,7 +206,8 @@ public class ServiceControllerIntegrationTest {
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(4)
-                .jsonPath("$[0].results.length()").isEqualTo(5);
+                .jsonPath("$[0].length()").isEqualTo(6)
+                .jsonPath("$.length()").isEqualTo(4);
     }
 
     @Test
@@ -219,7 +220,9 @@ public class ServiceControllerIntegrationTest {
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody().jsonPath("$.length()").isEqualTo(1)
-                .jsonPath("$[0].results.length()").isEqualTo(5);
+                .jsonPath("$[0].length()").isEqualTo(6)
+                .jsonPath("$.length()").isEqualTo(1);
+
     }
 
 }

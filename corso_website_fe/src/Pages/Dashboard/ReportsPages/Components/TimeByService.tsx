@@ -3,6 +3,7 @@ import {
     Bar,
     BarChart,
     CartesianGrid,
+    Legend,
     Pie,
     PieChart,
     ResponsiveContainer,
@@ -10,9 +11,8 @@ import {
     XAxis,
     YAxis
 } from "recharts";
-import axios from "axios";
 import {useAuth} from "../../../../security/Components/AuthProvider";
-import {getOneYearAgo, stringToColour} from "../../../../Services/GenerateReportsService";
+import {fetchTimeByServiceReport, getOneYearAgo} from "../../../../Services/GenerateReportsService";
 
 
 export default function TimeByService() {
@@ -26,32 +26,21 @@ export default function TimeByService() {
     const [diagramType, setDiagramType] = React.useState(0)
 
 
+    async function fetchData() {
+        const start = (document.getElementById("start") as HTMLInputElement).value;
+        const end = (document.getElementById("end") as HTMLInputElement).value;
+        fetchTimeByServiceReport(start, end).then(
+            res => {
+                setData(res)
 
-    const fetchData = async () => {
 
-        let start = (document.getElementById("start") as HTMLInputElement).value;
-        let end = (document.getElementById("end") as HTMLInputElement).value;
+            }
+        ).catch((e: any) => {
+            console.error(e);
+            // @ts-ignore
+            auth.authError(e.response.status);
+        })
 
-        let url = `${process.env.REACT_APP_BE_HOST}api/v1/corso/services/time-by-service`;
-        if (start && end) {
-            url = `${url}?date_start=${start}&date_end=${end}`
-        }
-        axios.get(url)
-            .then(res => {
-                //add ramdom color to each service
-                res.data.forEach((service: any) => {
-                    service.fill = stringToColour(service.serviceName)
-                })
-
-                setData(res.data);
-            })
-            .catch(e => {
-                console.error(e);
-
-                // @ts-ignore
-                auth.authError(e.response.status);
-
-            })
 
     }
 
@@ -62,6 +51,9 @@ export default function TimeByService() {
     }, []);
 
 
+    const dataWithoutZero = () => {
+        return data.filter((service: any) => service.hours_worked !== 0)
+    }
 
 
     return (
@@ -87,7 +79,9 @@ export default function TimeByService() {
                     >
                         <Bar dataKey="hours_worked" name={"Hours Worked"}/>
                         <CartesianGrid stroke="#ccc"/>
-                        <XAxis dataKey="serviceName" name={"Service"} interval={0} angle={-45}
+
+                        <XAxis dataKey="serviceName" name={"Service"}
+                               interval={0} angle={-45}
                                textAnchor="end" height={200}/>
                         <YAxis name={"Hours Worked"}
                                dataKey={"hours_worked"}
@@ -102,19 +96,20 @@ export default function TimeByService() {
                 <ResponsiveContainer width="95%" height={600}>
                     <PieChart>
                         <Tooltip
-                            formatter={(value, name) => [value + " total hours",name]}
+                            formatter={(value, name) => [value + " total hours", name]}
                         />
                         <Pie
-                            data={data}
+                            data={dataWithoutZero()}
                             dataKey="hours_worked"
                             nameKey="serviceName"
                             cx="50%" cy="50%" outerRadius={200}
                             fill="#8884d8"
                             label={(entry) => {
-                               if(entry.value > 0)
-                                   return entry.name
-                               else
-                                   return
+                                return <text x={entry.x} y={entry.y} fill="black"
+                                             textAnchor={entry.x > entry.cx ? "start" : "end"}
+                                             dominantBaseline="central">
+                                    {entry.name}
+                                </text>
                             }}
                         >
                         </Pie>

@@ -1,7 +1,6 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
-import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.TotalRequestPerDate;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -96,9 +95,11 @@ public class ServiceController {
 
     @Cacheable(value = "totalRequestByService", key = "#root.methodName + #dateStart + #dateEnd")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    @GetMapping("/orders-per-service")
-    public ResponseEntity<List<TotalRequestPerDate>> getTotalOrderRequestByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
+    @GetMapping(value = "/orders-per-service",produces = "application/json")
+    public ResponseEntity<String> getTotalOrderRequestByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getTotalOrderRequestByService(dateStart, dateEnd));
     }
+
+
 }
 

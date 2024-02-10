@@ -41,6 +41,7 @@ import CustomerViewsSpecificReview from "./Pages/Profile/ManageReviews/CustomerV
 import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpecificGallery";
 import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
 import ReportsPage from "./Pages/Dashboard/ReportsPages/ReportsPage";
+import MakePdfPage from "./Pages/Dashboard/ReportsPages/MakePdfPage";
 
 
 export default function App() {
@@ -78,6 +79,9 @@ export default function App() {
                         <Route path="/create/admin" element={<CreateAdminPage/>}/>
 
                         <Route path={"/reports"} element={<ReportsPage/>}/>
+                        <Route path={"/reports/make-pdf"} element={<MakePdfPage/>}/>
+
+
 
                         <Route path="/manage/gallery/:galleryId" element={<ViewSpecificGallery/>}/>
 

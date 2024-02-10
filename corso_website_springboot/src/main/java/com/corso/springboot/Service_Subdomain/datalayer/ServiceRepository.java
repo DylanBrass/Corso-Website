@@ -36,7 +36,9 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, String> 
 
 
     @Query(value = """
-             SELECT s.service_id, s.service_name, COUNT(o.service_id) AS total_order_request, IFNULL(order_date, 'No Orders') AS date
+             SELECT s.service_id, s.service_name, 
+             COUNT(o.service_id) AS total_order_request, 
+             IFNULL(order_date, 'No Orders') AS date
              FROM services s
                       JOIN (SELECT service_id, order_status, order_date
                                  FROM orders

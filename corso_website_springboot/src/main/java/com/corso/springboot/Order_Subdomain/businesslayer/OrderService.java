@@ -3,6 +3,7 @@ package com.corso.springboot.Order_Subdomain.businesslayer;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
 import com.corso.springboot.Order_Subdomain.presentationlayer.*;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrdersPerMonth.OrdersPerMonth;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -41,4 +42,6 @@ public interface OrderService {
     OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException;
 
     Integer countAllOverdueOrders();
+
+    List<OrdersPerMonth> getTotalOrderRequestByMonth(int year);
 }
