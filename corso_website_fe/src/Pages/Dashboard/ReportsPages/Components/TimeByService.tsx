@@ -14,6 +14,10 @@ import {
 import {useAuth} from "../../../../security/Components/AuthProvider";
 import {fetchTimeByServiceReport, getOneYearAgo} from "../../../../Services/GenerateReportsService";
 
+const dataWithoutZero = (data:any) => {
+    return data.filter((service: any) => service.hours_worked !== 0)
+}
+
 
 export default function TimeByService() {
 
@@ -51,9 +55,6 @@ export default function TimeByService() {
     }, []);
 
 
-    const dataWithoutZero = () => {
-        return data.filter((service: any) => service.hours_worked !== 0)
-    }
 
 
     return (
@@ -99,7 +100,7 @@ export default function TimeByService() {
                             formatter={(value, name) => [value + " total hours", name]}
                         />
                         <Pie
-                            data={dataWithoutZero()}
+                            data={dataWithoutZero(data)}
                             dataKey="hours_worked"
                             nameKey="serviceName"
                             cx="50%" cy="50%" outerRadius={200}
@@ -119,3 +120,5 @@ export default function TimeByService() {
         </div>
     )
 }
+
+export {dataWithoutZero}

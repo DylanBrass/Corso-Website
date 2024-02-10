@@ -6,6 +6,7 @@ import com.corso.springboot.cloudinary.CloudinaryService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureWebClient
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class OrderControllerIntegrationTest {
     private final String BASE_URI_ORDERS = "/api/v1/corso/orders";
 
@@ -270,6 +272,22 @@ public class OrderControllerIntegrationTest {
                 .expectBody().jsonPath("$.length()").isEqualTo(expectedNumOrders);
     }
 
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void getOrdersPerMonth_thenReturnOrdersPerMonth() {
+        //arrange
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/orders-per-month?year=2023")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody().jsonPath("$.length()").isEqualTo(12)
+                .jsonPath("$[0].length()").isEqualTo(3)
+                .jsonPath("$[0].month").isEqualTo(1)
+                .jsonPath("$[0].year").isEqualTo(2023)
+                .jsonPath("$[0].totalOrders").isEqualTo(1);
+    }
 
 
 

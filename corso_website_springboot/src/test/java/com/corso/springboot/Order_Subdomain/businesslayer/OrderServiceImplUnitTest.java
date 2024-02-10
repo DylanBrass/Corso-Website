@@ -4,6 +4,7 @@ import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelO
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
 import com.corso.springboot.Order_Subdomain.presentationlayer.*;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrdersPerMonth.OrdersPerMonth;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
@@ -380,5 +381,52 @@ public class OrderServiceImplUnitTest {
         assertThrows(OrderNotFoundException.class, () -> orderService.updateOrderByOrderId(orderId, "userid", orderCustomerRequest));
 
 
+    }
+
+
+    @Test
+    public void ordersPerMonth_WithInvalidTupleLength_ShouldThrowIllegalArgumentException() {
+        // Arrange
+        Object[] tuple = new Object[2];
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> new OrdersPerMonth(tuple));
+    }
+
+    @Test
+    public void ordersPerMonth_WithInvalidTypeForMonth_ShouldThrowIllegalArgumentException() {
+        // Arrange
+        Object[] tuple = new Object[3];
+        tuple[0] = "1";
+        tuple[1] = 2023L;
+        tuple[2] = 1L;
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> new OrdersPerMonth(tuple));
+    }
+
+
+    @Test
+    public void ordersPerMonth_WithInvalidTypeForYear_ShouldThrowIllegalArgumentException() {
+        // Arrange
+        Object[] tuple = new Object[3];
+        tuple[0] = 1L;
+        tuple[1] = "2023";
+        tuple[2] = 1L;
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> new OrdersPerMonth(tuple));
+    }
+
+    @Test
+    public void ordersPerMonth_WithInvalidTypeForTotalOrders_ShouldThrowIllegalArgumentException() {
+        // Arrange
+        Object[] tuple = new Object[3];
+        tuple[0] = 1L;
+        tuple[1] = 2023L;
+        tuple[2] = "1";
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> new OrdersPerMonth(tuple));
     }
 }

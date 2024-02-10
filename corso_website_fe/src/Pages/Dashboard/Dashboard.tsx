@@ -81,7 +81,7 @@ function Dashboard() {
             })
             .catch(e => {
                 // @ts-ignore
-                auth.authError(e.response.status)
+                auth.authError(e.status)
             })
     }
 
@@ -119,7 +119,7 @@ function Dashboard() {
             })
             .catch(e => {
                 // @ts-ignore
-                auth.authError(e.response.status)
+                auth.authError(e.status)
             })
     }
 

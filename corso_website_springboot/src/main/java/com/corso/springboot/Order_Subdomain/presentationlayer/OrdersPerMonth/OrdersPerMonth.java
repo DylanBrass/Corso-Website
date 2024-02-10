@@ -26,24 +26,24 @@ public class OrdersPerMonth {
         if (tuple.length != 3) {
             throw new IllegalArgumentException("Invalid tuple length: " + tuple.length);
         }
-        if (tuple[0].getClass() != Long.class) {
+        if (tuple[0].getClass() != Long.class && tuple[0].getClass() != Integer.class) {
             throw new IllegalArgumentException("Invalid type for month: " + tuple[0].getClass());
         }
 
-        if (tuple[1].getClass() != Long.class) {
+        if (tuple[1].getClass() != Long.class && tuple[1].getClass() != Integer.class) {
             throw new IllegalArgumentException("Invalid type for year: " + tuple[1].getClass());
         }
 
-        if (tuple[2].getClass() != Long.class) {
+        if (tuple[2].getClass() != Long.class && tuple[2].getClass() != Integer.class) {
             throw new IllegalArgumentException("Invalid type for totalOrders: " + tuple[2].getClass());
         }
 
 
-        this.month = (Long) tuple[0];
+        this.month = Long.valueOf(tuple[0].toString());
 
-        this.year = (Long) tuple[1];
+        this.year = Long.valueOf(tuple[1].toString());
 
-        this.totalOrders = (Long) tuple[2];
+        this.totalOrders = Long.valueOf(tuple[2].toString());
 
 
     }

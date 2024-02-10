@@ -205,9 +205,9 @@ public class ServiceControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$.length()").isEqualTo(4)
+                .expectBody()
                 .jsonPath("$[0].length()").isEqualTo(6)
-                .jsonPath("$.length()").isEqualTo(4);
+                .jsonPath("$.length()").isEqualTo(60);
     }
 
     @Test
@@ -219,9 +219,24 @@ public class ServiceControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$.length()").isEqualTo(1)
+                .expectBody()
                 .jsonPath("$[0].length()").isEqualTo(6)
-                .jsonPath("$.length()").isEqualTo(1);
+                .jsonPath("$.length()").isEqualTo(13);
+
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getOrdersPerServiceWithLessThenTwoMonths_ShouldSucceed() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/orders-per-service?date_start=2024-01-25&date_end=2024-03-22")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$[0].length()").isEqualTo(6)
+                .jsonPath("$.length()").isEqualTo(58);
 
     }
 

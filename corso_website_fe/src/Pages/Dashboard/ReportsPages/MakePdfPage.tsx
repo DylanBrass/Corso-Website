@@ -13,11 +13,15 @@ import {
 import OrdersPerServicePDF from "./Components/PDF/OrdersPerServicePDF";
 import {checkIfDatesAreMoreOrEqualThanTwoMonths} from "./Components/OrdersPerService";
 import TimeByServicePDF from "./Components/PDF/TimeByServicePDF";
+import {useAuth} from "../../../security/Components/AuthProvider";
 
 const currentYear = new Date().getFullYear();
 
 
 export default function MakePdfPage() {
+
+    const auth = useAuth();
+
     const [ordersPerMonth, setOrdersPerMonth] = React.useState([])
     const [displayOrdersPerMonth, setDisplayOrdersPerMonth] = React.useState(true)
 
@@ -33,6 +37,7 @@ export default function MakePdfPage() {
     const [timeByServiceChoice, setTimeByServiceChoice] = useState<number[]>([1])
 
     async function fetchData() {
+        setTimeByService([])
         setOrdersPerMonth(await getOrdersPerMonth((document.getElementById("year") as HTMLInputElement).value)
             .catch((e: any) => {
                 console.error(e);
@@ -65,10 +70,10 @@ export default function MakePdfPage() {
                 setTimeByService(res)
             })
             .catch((e: any) => {
-            console.error(e);
-            // @ts-ignore
-            auth.authError(e.response.status);
-        })
+                console.error(e);
+                // @ts-ignore
+                auth.authError(e.response.status);
+            })
 
     }
 
@@ -179,6 +184,25 @@ export default function MakePdfPage() {
                     <input type="date" id="endTimeBy" defaultValue={new Date().toISOString().split('T')[0]}/>
                     <button onClick={fetchData}>Get Time By Service
                     </button>
+                    <h2>Choose Diagrams</h2>
+                    <button onClick={() => {
+                        if (timeByServiceChoice.includes(1)) {
+                            setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 1))
+                        } else {
+                            setTimeByServiceChoice([...timeByServiceChoice, 1])
+                        }
+                    }}>
+                        {timeByServiceChoice.includes(1) ? "Remove" : "Add"} Line Chart
+                    </button>
+                    <button onClick={() => {
+                        if (timeByServiceChoice.includes(2)) {
+                            setTimeByServiceChoice(timeByServiceChoice.filter((choice) => choice !== 2))
+                        } else {
+                            setTimeByServiceChoice([...timeByServiceChoice, 2])
+                        }
+                    }}>
+                        {timeByServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                    </button>
                 </section>
             </center>
             <PDFViewer width={"100%"} height={"1000px"}
@@ -192,37 +216,14 @@ export default function MakePdfPage() {
 
                 >
                     <Page size="A4">
-                        {displayTimeByService &&
-                            <div>
-                                <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
-                                {
-                                    timeByService.map((service: any) => {
-                                        return <Text style={{
-                                            fontSize: 12,
-                                            margin: 12,
-                                        }} key={service.serviceName}>
 
-                                            <Text style={{
-                                                color: stringToColour(service.serviceName),
-                                                backgroundColor: stringToColour(service.serviceName),
-                                                padding: 5,
-                                                margin: 5,
-                                                borderRadius: 5,
-                                            }}>
-                                                M
-                                            </Text>
-                                            {service.serviceName}: {service.hours_worked} hours
-                                        </Text>
-                                    })
-                                }
-
-
-                            </div>
-
-
-                        }
                         {displayOrdersPerMonth &&
                             <div>
+                                <Text style={{
+                                    fontSize: 20,
+                                    margin: 12
+                                }}>Orders Per Month</Text>
+
                                 <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}/>
 
                                 {
@@ -238,6 +239,10 @@ export default function MakePdfPage() {
 
                         {displayOrdersPerService &&
                             <div>
+                                <Text style={{
+                                    fontSize: 20,
+                                    margin: 12
+                                }}>Orders Per Service</Text>
                                 <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
                                                      choice={page2Choice}/>
 
@@ -271,7 +276,40 @@ export default function MakePdfPage() {
                                 }
                             </div>
                         }
+                        {displayTimeByService &&
+                            <div>
+                                <Text style={{
+                                    fontSize: 20,
+                                    margin: 12
+                                }}>Time By Service</Text>
+                                <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
+                                {
+                                    timeByService.map((service: any) => {
+                                        return <Text style={{
+                                            fontSize: 12,
+                                            margin: 12,
+                                        }} key={service.serviceName}>
 
+                                            <Text style={{
+                                                color: stringToColour(service.serviceName),
+                                                backgroundColor: stringToColour(service.serviceName),
+                                                padding: 5,
+                                                margin: 5,
+                                                borderRadius: 5,
+                                            }}>
+                                                M
+                                            </Text>
+                                            {"    "}
+                                            {service.serviceName}: {service.hours_worked} hours
+                                        </Text>
+                                    })
+                                }
+
+
+                            </div>
+
+
+                        }
                     </Page>
                 </Document>
             </PDFViewer>

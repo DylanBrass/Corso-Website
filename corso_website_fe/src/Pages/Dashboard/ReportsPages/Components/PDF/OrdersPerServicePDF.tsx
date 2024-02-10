@@ -20,7 +20,8 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
                           width={500}
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="date" tickFormatter={customTickFormatter}
+                    <XAxis dataKey="date"
+                           tickFormatter={customTickFormatter}
                     />
                     <YAxis
                         domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
@@ -49,6 +50,7 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="date" tickFormatter={customTickFormatter}
+
                     />
                     <YAxis
                         domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
@@ -76,6 +78,7 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="date" tickFormatter={customTickFormatter}
+
                     />
                     <YAxis
                         domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
