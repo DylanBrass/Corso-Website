@@ -8,33 +8,23 @@ on:
       - 'releases/*'
 
 jobs:
-  qodana-corso_website_springboot:
-    if: github.event.pull_request.draft == false
+  qodana:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-
-      - name: Skip the backend scan
-        id: skip-scan
-        uses: fkirc/skip-duplicate-actions@master
-        with:
-          paths: '["corso_website_springboot/**"]'
-
-      - name: Scan the project
-        if: steps.skip-scan.outputs.should_skip != 'true'
+      - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2023.3
+        with:
+          pr-mode: false
+          upload-result: true
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-        timeout-minutes: 20
-        with:
-          args: --source-directory,corso_website_springboot,--baseline,qodana.sarif.json
-          results-dir: ${{ runner.temp }}/qodana/results-corso_website_springboot
-          artifact-name: qodana-report-corso_website_springboot
-          cache-dir: ${{ runner.temp }}/qodana/caches-corso_website_springboot
-          additional-cache-hash: ${{ github.sha }}-corso_website_springboot
   
     
