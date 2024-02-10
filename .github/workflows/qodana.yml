@@ -23,7 +23,7 @@ jobs:
 
       - name: Scan the project
         if: steps.skip-scan.outputs.should_skip != 'true'
-        uses: JetBrains/qodana-action@v2023.3.2
+        uses: JetBrains/qodana-action@v2023.3
         timeout-minutes: 20
         with:
           args: --project-dir,corso_website_springboot,--baseline,qodana.sarif.json
