@@ -1,73 +1,135 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import {
     Bar,
     BarChart,
     CartesianGrid,
     Legend,
     Line,
-    LineChart,
+    LineChart, Pie, PieChart,
     ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis
 } from "recharts";
-import {getOneYearAgo, stringToColour} from "../../../../Services/GenerateReportsService";
+import {
+    fetchTotalOrdersPerService,
+    getOneYearAgo,
+    getOrdersPerService,
+    stringToColour
+} from "../../../../Services/GenerateReportsService";
 import {useAuth} from "../../../../security/Components/AuthProvider";
+
+
+
+const checkIfDatesAreMoreOrEqualThanTwoMonths = (start: string, end: string) => {
+    const startDate = new Date(start)
+    //remove time
+    startDate.setHours(0, 0, 0, 0)
+    const endDate = new Date(end);
+    //remove time
+    endDate.setHours(0, 0, 0, 0)
+
+
+    //remove two months from the end date
+    endDate.setMonth(endDate.getMonth() - 2)
+
+    console.log((endDate))
+    console.log(startDate)
+    console.log(endDate > startDate)
+
+
+    return endDate > startDate
+
+}
+
+
+const totalOrdersWithoutZero = (data: any) => {
+    return data.filter((service: any) => service.totalOrderRequest !== 0)
+}
+// @ts-ignore
+const CustomTooltip = ({active, payload, label}) => {
+    if (active && payload && payload.length) {
+        return (
+            <div
+                style={{
+                    backgroundColor: "white",
+                    border: "1px solid black",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    boxShadow: "0 0 10px rgba(0,0,0,0.5)"
+                }}
+            >
+                <p className="label">{`${label}`}</p>
+                {
+                    payload.map((service: any, index: number) => (
+                        <p key={index} className="label">{`${service.name}: ${service.value}`}</p>
+                    ))
+                }
+            </div>
+        );
+    }
+
+    return null;
+}
+
+const customTickFormatter = (tickItem: string) => {
+
+    if (checkIfDatesAreMoreOrEqualThanTwoMonths((document.getElementById("start") as HTMLInputElement).value, (document.getElementById("end") as HTMLInputElement).value)) {
+        return tickItem.substring(0, 7)
+    } else {
+        return tickItem
+    }
+};
 
 export default function OrderPerService() {
 
     const auth = useAuth();
 
     const [orderPerService, setOrderPerService] = useState([]);
-    const diagramTypes = ["Line Chart", "Bar Chart"]
+    const [allServices, setAllServices] = useState<any[]>([])
+
+    const diagramTypes = ["Stacked Bar Chart", "Line Chart", "Bar Chart", "Total Orders Per Service","Pie Chart"]
     const [diagramType, setDiagramType] = React.useState(0)
 
+    const [totalOrdersPerService, setTotalOrdersPerService] = useState<any[]>([])
 
-    const fetchData = async () => {
+    async function fetchData() {
         let start = (document.getElementById("start") as HTMLInputElement).value;
         let end = (document.getElementById("end") as HTMLInputElement).value;
-        let url = `${process.env.REACT_APP_BE_HOST}api/v1/corso/services/orders-per-service`;
-        if (start && end) {
-            url = `${url}?date_start=${start}&date_end=${end}`
-        }
-        axios.get(url)
-            .then(res => {
+        await getOrdersPerService(start, end, allServices).then(
+            res => {
 
-                console.log(res.data);
-                console.log(res.data[0].results[0].total);
-                setOrderPerService(res.data);
-            })
-            .catch(err => {
-                console.error(err);
+                setAllServices(res.services);
+                setOrderPerService(res.res);
 
-                // @ts-ignore
-                auth.authError(err.response.status);
-            })
+            }
+        ).catch((e: any) => {
+            console.error(e);
+            // @ts-ignore
+            auth.authError(e.response.status);
+        })
+
+
+        await fetchTotalOrdersPerService(start, end).then(
+            res => {
+                setTotalOrdersPerService(res);
+            }
+        ).catch((e: any) => {
+            console.error(e);
+            // @ts-ignore
+            auth.authError(e.response.status);
+        })
+
     }
 
     useEffect(() => {
+
+
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const checkIfDatesAreMoreThanOneYear = (start: string, end: string) => {
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        const difference = endDate.getTime() - startDate.getTime();
-        return difference > 31556952000;
-    }
 
-    const customTickFormatter = (tickItem: string | number | Date) => {
-        const date = new Date(tickItem);
-        if (checkIfDatesAreMoreThanOneYear((document.getElementById("start") as HTMLInputElement).value, (document.getElementById("end") as HTMLInputElement).value)) {
-            // If range is greater than 1, display only day and month
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-        } else {
-            // Otherwise, display day, month, and year
-            return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-        }
-    };
     return (
         <div>
             <center>
@@ -78,79 +140,166 @@ export default function OrderPerService() {
                 ))}
                 <button onClick={fetchData}>Search</button>
             </center>
+
             {diagramType === 0 &&
-
                 <ResponsiveContainer width="90%" height={600}>
-                    <LineChart data={orderPerService}>
-                        <XAxis dataKey="date" interval={0} angle={-70}
-                               tickFormatter={customTickFormatter}
-                               textAnchor="end" height={200}/>
-                        <YAxis
-                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}
-                        />
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <Tooltip/>
-                        <Legend
-                            verticalAlign="top"
-                        />
+                    <BarChart data={orderPerService}
+                              barGap={10}
+                              barCategoryGap={10}
 
-                        {
-                            // @ts-ignore
-                            orderPerService[0]?.results.map((result: any) => (
-                                <Line
-                                    key={result.serviceName}
-                                    type="monotone"
-                                    dataKey={obj => {
-                                        return obj.results.find((r: any) => r.serviceName === result.serviceName).total
-
-                                    }}
-                                    name={result.serviceName}
-                                    stroke={stringToColour(result.serviceName)}
-                                />
-                            ))}
-                    </LineChart>
-                </ResponsiveContainer>
-            }
-            {diagramType === 1 &&
-
-                <ResponsiveContainer width="90%" height={600}>
-                    <BarChart data={orderPerService} barGap={10}
                     >
-                        <XAxis dataKey="date" interval={0} angle={-70}
-                               style={{
-                                   overflow: "show",
-                                   margin: "auto",
-
-                               }}
-                               tickFormatter={customTickFormatter}
-                               textAnchor="end" height={200}/>
-                        <YAxis
-                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 5)]}
-                        />
-                        <Tooltip/>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <Legend
-                            verticalAlign="top"
+                        <XAxis dataKey="date" tickFormatter={customTickFormatter}
+                               angle={-70}
+                               textAnchor="end"
+                               height={200}
                         />
+                        <YAxis
+                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
 
-                        {
-                            // @ts-ignore
-                            orderPerService[0]?.results.map((result: any) => (
-                                <Bar
-                                    key={result.serviceName}
-                                    type="monotone"
-                                    dataKey={obj => {
-                                        return obj.results.find((r: any) => r.serviceName === result.serviceName).total
-                                    }}
-                                    fill={stringToColour(result.serviceName)}
-                                    stroke={stringToColour(result.serviceName)}
-                                    name={result.serviceName}
-                                />
-                            ))}
+                        />
+                        <Tooltip
+                            content={
+                                // @ts-ignore
+                                <CustomTooltip/>}
+                        />
+                        <Legend verticalAlign={"top"}
+                                formatter={(value, entry) => {
+                                    return <span style={{
+                                        color: "black",
+                                        fontWeight: "bold"
+                                    }}>{value}</span>
+                                }}
+                        />
+                        {allServices.map((service: any, index: number) => (
+                            <Bar key={index} dataKey={service} stackId="a" fill={stringToColour(service)}
+                                 name={service}
+                            />
+                        ))}
                     </BarChart>
                 </ResponsiveContainer>
             }
 
+            {diagramType === 1 &&
+                <ResponsiveContainer width="90%" height={600}>
+                    <LineChart data={orderPerService}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="date" tickFormatter={customTickFormatter}
+                               angle={-70}
+                               textAnchor="end"
+                               height={200}
+                        />
+                        <YAxis
+                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
+                        />
+                        <Tooltip
+                            content={
+                                // @ts-ignore
+                                <CustomTooltip/>}
+                        />
+                        <Legend verticalAlign={"top"}
+                                formatter={(value, entry) => {
+                                    return <span style={{
+                                        color: "black",
+                                        fontWeight: "bold"
+                                    }}>{value}</span>
+                                }}
+                        />
+                        {allServices.map((service: any, index: number) => (
+                            <Line key={index} type="monotone" dataKey={service}
+                                  strokeWidth={3}
+                                  stroke={stringToColour(service)}/>
+                        ))}
+                    </LineChart>
+                </ResponsiveContainer>
+
+            }
+            {diagramType === 2 &&
+
+                <ResponsiveContainer width="90%" height={600}>
+                    <BarChart data={orderPerService} barSize={5}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="date" tickFormatter={customTickFormatter}
+                               angle={-70}
+                               textAnchor="end"
+                               height={200}
+                        />
+                        <YAxis
+                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
+                        />
+                        <Tooltip
+                            content={
+                                // @ts-ignore
+                                <CustomTooltip/>}
+                        />
+                        <Legend verticalAlign={"top"}
+                                formatter={(value, entry) => {
+                                    return <span style={{
+                                        color: "black",
+                                        fontWeight: "bold"
+                                    }}>{value}</span>
+                                }}
+                        /> {allServices.map((service: any, index: number) => (
+                        <Bar key={index} dataKey={service} fill={stringToColour(service)}/>
+                    ))}
+                    </BarChart>
+                </ResponsiveContainer>
+
+            }
+            {diagramType === 3 &&
+            <ResponsiveContainer width="90%" height={600}>
+                <BarChart data={totalOrdersPerService} barSize={10}
+                >
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="serviceName"
+                           angle={-70}
+                           textAnchor="end"
+                           height={200}
+                    />
+                    <YAxis
+                        dataKey={"totalOrderRequest"}
+                        name={"Total Orders"}
+                        domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
+                    />
+                    <Tooltip
+                        content={
+                            // @ts-ignore
+                            <CustomTooltip/>}
+                    />
+                    <Bar dataKey={"totalOrderRequest"} fill={"#064bec"}
+                            name={"Total Orders"}
+                    />
+
+                </BarChart>
+            </ResponsiveContainer>
+            }
+
+            {diagramType === 4 &&
+            <ResponsiveContainer width="90%" height={600}>
+                <PieChart>
+                    <Tooltip
+                        formatter={(value, name) => [value + " total orders", name]}
+                    />
+                    <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)} nameKey={"serviceName"} cx="50%" cy="50%" outerRadius={200}
+                         fill="#8884d8"
+                         label={(entry) => {
+                             return <text x={entry.x} y={entry.y} fill="black"
+                                          textAnchor={entry.x > entry.cx ? "start" : "end"}
+                                          dominantBaseline="central">
+                                 {entry.name}
+                             </text>
+                         }}
+                    />
+                </PieChart>
+
+            </ResponsiveContainer>
+
+            }
+
         </div>
-    );
+    )
+        ;
 }
+
+
+export {customTickFormatter, checkIfDatesAreMoreOrEqualThanTwoMonths, totalOrdersWithoutZero}

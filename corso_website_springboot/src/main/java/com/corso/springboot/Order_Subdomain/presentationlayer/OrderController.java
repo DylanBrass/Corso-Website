@@ -2,10 +2,12 @@ package com.corso.springboot.Order_Subdomain.presentationlayer;
 
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Order_Subdomain.datalayer.Status;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrdersPerMonth.OrdersPerMonth;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +57,10 @@ public class OrderController {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "serviceTimeByService", allEntries = true)
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/external")
@@ -81,7 +86,9 @@ public class OrderController {
 
     @Caching(evict = {
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
-            @CacheEvict(value = "totalRequestByService", allEntries = true)
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/acceptOrder/{orderId}")
@@ -105,7 +112,9 @@ public class OrderController {
 
     @Caching(evict = {
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
-            @CacheEvict(value = "totalRequestByService", allEntries = true)
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/declineOrder/{orderId}")
@@ -117,7 +126,9 @@ public class OrderController {
 
     @Caching(evict = {
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
-            @CacheEvict(value = "totalRequestByService", allEntries = true)
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PreAuthorize("hasAuthority('Admin')")
     @PatchMapping("/manage/cancelOrder/{orderId}")
@@ -131,5 +142,13 @@ public class OrderController {
     @GetMapping("/manage/overdue/count")
     public ResponseEntity<Integer> CountAllOverdueOrders(){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.countAllOverdueOrders());
+    }
+
+
+    @Cacheable(value = "ordersPerMonth", key = "#root.methodName + #year")
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/orders-per-month")
+    public ResponseEntity<List<OrdersPerMonth>> getTotalOrderRequestByMonth(@RequestParam("year") int year) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getTotalOrderRequestByMonth(year));
     }
 }

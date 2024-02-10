@@ -6,7 +6,7 @@ import com.corso.springboot.Service_Subdomain.datalayer.ServiceRepository;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceRequestMapper;
 import com.corso.springboot.Service_Subdomain.datamapperlayer.ServiceResponseMapper;
 import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOOrdersPerService;
-import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.TotalRequestPerDate;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOTotalOrdersPerService;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceRequest;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceTimeByResponse;
@@ -15,6 +15,8 @@ import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import com.corso.springboot.utils.exceptions.services.ServiceBadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -157,7 +159,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<TotalRequestPerDate> getTotalOrderRequestByService(String dateStart, String dateEnd) {
+    public String getTotalOrderRequestByService(String dateStart, String dateEnd) {
         if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
             throw new ServiceBadRequestException("Invalid date range");
         }
@@ -169,16 +171,40 @@ public class ServiceServiceImpl implements ServiceService {
 
             List<ServiceResponse> services = getAllServices();
 
-            if (LocalDate.parse(dateEnd).minusYears(1).isBefore(LocalDate.parse(dateStart))) {
+            if (LocalDate.parse(dateEnd).minusMonths(2).isBefore(LocalDate.parse(dateStart))
+                    || LocalDate.parse(dateEnd).minusMonths(2).isEqual(LocalDate.parse(dateStart))) {
 
 
-                Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByDate = databaseDTOOrdersPerServices.stream()
-                        .collect(Collectors.groupingBy(DatabaseDTOOrdersPerService::getDate));
+                TreeMap<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByDate = databaseDTOOrdersPerServices.stream()
+                        .collect(Collectors.groupingBy(DatabaseDTOOrdersPerService::getDate, TreeMap::new, Collectors.toList()));
+
+                //add missing dates
+                LocalDate start = LocalDate.parse(dateStart);
+                LocalDate end = LocalDate.parse(dateEnd);
+                while (start.isBefore(end) || start.isEqual(end)) {
+                    if (!groupedByDate.containsKey(start)) {
+                        groupedByDate.put(start, new ArrayList<>());
+                    }
+                    start = start.plusDays(1);
+                }
 
                 return getTotalRequestPerDates(services, groupedByDate);
             } else {
-                Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByMonth = databaseDTOOrdersPerServices.stream()
-                        .collect(Collectors.groupingBy(dto -> dto.getDate().withDayOfMonth(1)));
+
+                TreeMap<LocalDate, List<DatabaseDTOOrdersPerService>> groupedByMonth = databaseDTOOrdersPerServices.stream()
+                        .collect(Collectors.groupingBy(dto -> dto.getDate().withDayOfMonth(1), TreeMap::new, Collectors.toList()));
+
+                //add missing months
+                LocalDate start = LocalDate.parse(dateStart).withDayOfMonth(1);
+                LocalDate end = LocalDate.parse(dateEnd).withDayOfMonth(1);
+
+                while (start.isBefore(end) || start.isEqual(end)) {
+                    if (!groupedByMonth.containsKey(start)) {
+                        groupedByMonth.put(start, new ArrayList<>());
+                    }
+                    start = start.plusMonths(1);
+                }
+
 
                 return getTotalRequestPerDates(services, groupedByMonth);
 
@@ -189,19 +215,45 @@ public class ServiceServiceImpl implements ServiceService {
         }
     }
 
-    private List<TotalRequestPerDate> getTotalRequestPerDates(List<ServiceResponse> services, Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedBy) {
-        for (Map.Entry<LocalDate, List<DatabaseDTOOrdersPerService>> entry : groupedBy.entrySet()) {
-            List<DatabaseDTOOrdersPerService> missingServices = services.stream()
-                    .filter(service -> entry.getValue().stream().noneMatch(dto -> dto.getServiceId().equals(service.getServiceId())))
-                    .map(service -> new DatabaseDTOOrdersPerService(service.getServiceId(), service.getServiceName(), 0L, entry.getKey()))
+    @Override
+    public List<DatabaseDTOTotalOrdersPerService> getTotalOrdersPerService(String dateStart, String dateEnd) {
+        if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
+            throw new ServiceBadRequestException("Invalid date range");
+        }
+        try {
+            return serviceRepository.getTotalOrdersPerService(dateStart, dateEnd)
+                    .stream()
+                    .map(DatabaseDTOTotalOrdersPerService::new)
+                    .sorted(Comparator.comparing(DatabaseDTOTotalOrdersPerService::getTotalOrderRequest).reversed())
                     .toList();
 
-            entry.getValue().addAll(missingServices);
+
+        } catch (Exception e) {
+            throw new ServiceBadRequestException("Failed to generate total orders per service report :" + e.getMessage());
         }
 
-        return groupedBy.entrySet().stream()
-                .map(entry -> new TotalRequestPerDate(entry.getKey(), entry.getValue()))
-                .sorted(Comparator.comparing(TotalRequestPerDate::getDate))
-                .collect(Collectors.toList());
+    }
+
+
+    private String getTotalRequestPerDates(List<ServiceResponse> services, Map<LocalDate, List<DatabaseDTOOrdersPerService>> groupedBy) {
+        JSONArray jsonArray = new JSONArray();
+
+
+        for (LocalDate date : groupedBy.keySet()) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("date", date.toString());
+            for (ServiceResponse service : services) {
+                jsonObject.put(service.getServiceName(), groupedBy.get(date).stream()
+                        .filter(dto -> dto.getServiceId().equals(service.getServiceId()))
+                        .map(DatabaseDTOOrdersPerService::getTotalOrderRequest)
+                        .findFirst()
+                        .orElse(0L));
+            }
+            jsonArray.add(jsonObject);
+        }
+
+
+        return jsonArray.toJSONString();
+
     }
 }

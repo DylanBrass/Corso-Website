@@ -1,7 +1,7 @@
 package com.corso.springboot.Service_Subdomain.presentationlayer;
 
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
-import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.TotalRequestPerDate;
+import com.corso.springboot.Service_Subdomain.presentationlayer.OrdersPerService.DatabaseDTOTotalOrdersPerService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -47,7 +47,8 @@ public class ServiceController {
             @CacheEvict(value = "services", allEntries = true),
             @CacheEvict(value = "servicesCount", allEntries = true),
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
-            @CacheEvict(value = "totalRequestByService", allEntries = true)
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin')")
@@ -67,7 +68,9 @@ public class ServiceController {
             @CacheEvict(value = "servicesCount", allEntries = true),
             @CacheEvict(value = "service", key = "#serviceId"),
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
-            @CacheEvict(value = "totalRequestByService", allEntries = true)
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
+
     })
     @PutMapping("/{serviceId}")
     @PreAuthorize("hasAnyAuthority('Admin')")
@@ -78,7 +81,10 @@ public class ServiceController {
     @Caching(evict = {
             @CacheEvict(value = "services", allEntries = true),
             @CacheEvict(value = "servicesCount", allEntries = true),
-            @CacheEvict(value = "service", key = "#serviceId")
+            @CacheEvict(value = "service", key = "#serviceId"),
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PatchMapping("/{serviceId}/visibility")
     @PreAuthorize("hasAnyAuthority('Admin')")
@@ -96,9 +102,17 @@ public class ServiceController {
 
     @Cacheable(value = "totalRequestByService", key = "#root.methodName + #dateStart + #dateEnd")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    @GetMapping("/orders-per-service")
-    public ResponseEntity<List<TotalRequestPerDate>> getTotalOrderRequestByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
+    @GetMapping(value = "/orders-per-service",produces = "application/json")
+    public ResponseEntity<String> getTotalOrderRequestByService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
         return ResponseEntity.status(HttpStatus.OK).body(serviceService.getTotalOrderRequestByService(dateStart, dateEnd));
     }
+
+    @Cacheable(value = "totalOrdersPerService", key = "#root.methodName + #dateStart + #dateEnd")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping("/total-orders-per-service")
+    public ResponseEntity<List<DatabaseDTOTotalOrdersPerService>> getTotalOrdersPerService(@RequestParam(name = "date_start") String dateStart, @RequestParam(name = "date_end") String dateEnd) {
+        return ResponseEntity.status(HttpStatus.OK).body(serviceService.getTotalOrdersPerService(dateStart, dateEnd));
+    }
+
 }
 

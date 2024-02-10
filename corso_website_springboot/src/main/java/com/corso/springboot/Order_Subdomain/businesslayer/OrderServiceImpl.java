@@ -5,6 +5,7 @@ import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
 import com.corso.springboot.Order_Subdomain.presentationlayer.*;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrdersPerMonth.OrdersPerMonth;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
 import com.corso.springboot.configuration.security.exceptions.Auth0Error;
@@ -420,6 +421,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer countAllOverdueOrders() {
         return orderRepository.countOverdueOrders();
+    }
+
+    @Override
+    public List<OrdersPerMonth> getTotalOrderRequestByMonth(int year) {
+        return orderRepository.getTotalOrderRequestByMonth(year).stream()
+                .map(OrdersPerMonth::new)
+                .toList();
     }
 
     private static Map<String, String> getStringStringMap(OrderCustomerRequest customerUpdateOrderRequest, Order order) {

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebClient
-@AutoConfigureMockMvc//(addFilters = false)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class ServiceControllerIntegrationTest {
 
@@ -205,8 +205,9 @@ public class ServiceControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$.length()").isEqualTo(4)
-                .jsonPath("$[0].results.length()").isEqualTo(5);
+                .expectBody()
+                .jsonPath("$[0].length()").isEqualTo(6)
+                .jsonPath("$.length()").isEqualTo(60);
     }
 
     @Test
@@ -218,8 +219,51 @@ public class ServiceControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange().expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().jsonPath("$.length()").isEqualTo(1)
-                .jsonPath("$[0].results.length()").isEqualTo(5);
+                .expectBody()
+                .jsonPath("$[0].length()").isEqualTo(6)
+                .jsonPath("$.length()").isEqualTo(13);
+
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getOrdersPerServiceWithLessThenTwoMonths_ShouldSucceed() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/orders-per-service?date_start=2024-01-25&date_end=2024-03-22")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$[0].length()").isEqualTo(6)
+                .jsonPath("$.length()").isEqualTo(58);
+
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getTotalOrdersPerService_ShouldSucceed() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/total-orders-per-service?date_start=2021-01-01&date_end=2025-12-31")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$[0].length()").isEqualTo(3)
+                .jsonPath("$[0].totalOrderRequest").isEqualTo(1)
+                .jsonPath("$.length()").isEqualTo(5);
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    void getTotalOrdersPerServiceWithInvalidDateRange_ShouldFail() {
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_SERVICES + "/total-orders-per-service?date_start=2026-01-01&date_end=2025-12-31")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isBadRequest();
+    }
+
 
 }

@@ -31,7 +31,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=100;DB_CLOSE_ON_EXIT=false;DATABASE_TO_UPPER=false
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=100;DB_CLOSE_ON_EXIT=false;DATABASE_TO_UPPER=false;MODE=MySQL;
     driver-class-name: org.h2.Driver
     username: sa
     password:
