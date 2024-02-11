@@ -2,6 +2,8 @@
   "to": "à",
   "delete": "Supprimer",
   "cancel": "Annuler",
+  "dueDate": "Date d'échéance",
+  "orderDate": "Date de la commande",
   "navigation": {
     "language": "English",
     "home": "Accueil",

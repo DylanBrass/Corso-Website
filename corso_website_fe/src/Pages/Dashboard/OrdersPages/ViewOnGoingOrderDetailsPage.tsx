@@ -102,7 +102,15 @@ function ViewSpecificOrder() {
             <NavigationBar/>
             <div className="container specific-order">
                 <div className="row">
-                    <h1 className="display-4 title text-center" id={"title"}>{t("order.order")} #{order.orderTrackingNumber}</h1>
+                    <h1 className="display-4 title text-center"
+                        id={"title"}>{t("order.order")} #{order.orderTrackingNumber}</h1>
+                    <h3 className={new Date(order.dueDate) < new Date() ? "error text-center" : "text-center"}>
+                        {t("orderDate")} : {order.orderDate}
+                    </h3>
+                    <h3 className={new Date(order.dueDate) < new Date() ? "error text-center" : "text-center"}>
+                        {t("dueDate")} : {order.dueDate}
+                    </h3>
+
                 </div>
                 <div className="row">
                     <div className="col-lg-6 col-md-12 info-box">
@@ -198,7 +206,8 @@ function ViewSpecificOrder() {
                                 </div>
                             </div>
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end complete-order-btn p-2"}>{t("order.completeOrder")}</button>
+                                <button
+                                    className={"m-4 float-end complete-order-btn p-2"}>{t("order.completeOrder")}</button>
                             </div>
                             <div className={"col-12"}>
                                 <button className={"m-4 float-end edit-order-btn p-2"}>{t("order.editOrder")}</button>
@@ -225,11 +234,14 @@ function ViewSpecificOrder() {
                                                       onChange={(e) => setReasonForCancellation(e.target.value)}
                                                       placeholder={t("order.reasonForCancellation")}
                                             />
-                                            <button type={"submit"} className={"decline-popup-button"}>{t("submitButton")}</button>
+                                            <button type={"submit"}
+                                                    className={"decline-popup-button"}>{t("submitButton")}</button>
                                         </form>
                                     </div>
                                 </Popup>
+
                             </div>
+
                         </div>
                     </div>
                 </div>

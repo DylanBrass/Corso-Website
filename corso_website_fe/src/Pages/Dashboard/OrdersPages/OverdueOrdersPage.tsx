@@ -74,7 +74,7 @@ function OverdueOrdersPage() {
                 {orders.map(order => (
                     <OrderTile
                         action={() => {
-                            window.location.href = "/manage/orders/" + order.orderId
+                            window.location.href = "/manage/currentOrder/" + order.orderId
                         }
                         }
                         key={order.orderTrackingNumber}

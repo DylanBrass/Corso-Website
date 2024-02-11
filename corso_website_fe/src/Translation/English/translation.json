@@ -2,6 +2,8 @@
   "to": "to",
   "delete": "Delete",
   "cancel": "Cancel",
+  "dueDate": "Due Date",
+  "orderDate": "Order Date",
   "navigation": {
     "language": "French (Français)",
     "home": "Home",
