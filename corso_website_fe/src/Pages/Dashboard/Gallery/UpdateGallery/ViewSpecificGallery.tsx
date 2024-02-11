@@ -9,14 +9,14 @@ import pen from "../../../../ressources/images/pen.svg";
 import templateImg from "../../../../ressources/images/Upload_Image_Preview.png";
 import Cloudinary from "../../../../Services/Cloudinary";
 import swal from "sweetalert";
-import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
+import {useTranslation} from "react-i18next";
 
 function ViewSpecificGallery() {
 
     const auth = useAuth();
 
-    const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const [gallery, setGallery] = useState<Gallery>(new Gallery("", "", "", 0));
 
@@ -73,12 +73,12 @@ function ViewSpecificGallery() {
             setIsLoading(false)
 
             if(response.status === 200) {
-                await swal("Gallery Updated!", "The gallery has been updated successfully!", "success");
-                navigate(-1)
+                await swal(t("alerts.gallery.galleryUpdatedTitle"), t("alerts.gallery.galleryUpdatedMessage"), "success");
+                window.location.href = "/carousel/order";
             }
         } catch (error) {
             // @ts-ignore
-            swal('Error!', error.response.data.message, 'error')
+            swal(t("alerts.error"), error.response.data.message, 'error')
             // @ts-ignore
             auth.authError(error.response.status);
         }
@@ -89,7 +89,7 @@ function ViewSpecificGallery() {
         <div>
             <NavigationBar/>
             <div className={"manage-gallery-wrapper p-5"}>
-                <h1 className={"text-center mb-4"}>Edit Gallery</h1>
+                <h1 className={"text-center mb-4"}>{t("editGalleryPage.editGallery")}</h1>
                 <form onSubmit={updateGallery} className={"w-75 m-auto"}>
                     <div className={"d-flex row"}>
                         <img src={pen} alt="Edit" className="pen-icon col-md-2 d-none d-md-block"/>
@@ -128,17 +128,27 @@ function ViewSpecificGallery() {
                         </label>
                     </div>
                     <div className={"row text-center"}>
-                        <p className={"col-12"}>Tip!: compatible image types include PNG, SVG</p>
+                        <p className={"col-12"}>{t("editGalleryPage.tip")}</p>
                     </div>
                     <div className={isLoading ? "d-block spinner-visible text-center" : "d-none"}>
                         <SyncLoader className={"spinner"} color="#054AEB"/>
                     </div>
                     <div className={"row"}>
                         <button className={"btn btn-primary m-auto w-50"} type={"submit"} value={"Update"}>
-                            Update
+                            {t("update")}
                         </button>
                     </div>
                 </form>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/carousel/order";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     );

@@ -1,8 +1,10 @@
 // This page should never be accessed directly. It is used to redirect the user to the logout page from the backend.
 import React, { useEffect} from 'react';
+import {useTranslation} from "react-i18next";
 
 function LogoutRedirect() {
 
+    const {t} = useTranslation();
 
     useEffect(() => {
 
@@ -22,7 +24,7 @@ function LogoutRedirect() {
 
                 <div className="loader">
                     <p>
-                        Creating account...
+                        {t("load.createAccount")}
                     </p>
 
                 </div>
@@ -34,7 +36,7 @@ function LogoutRedirect() {
                             visibility: "hidden"
                         }
                     }>
-                        Logout
+                        {t("navigation.logout")}
                     </button>
 
                 </form>

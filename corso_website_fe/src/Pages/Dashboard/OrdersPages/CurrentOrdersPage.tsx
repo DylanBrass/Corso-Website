@@ -4,12 +4,14 @@ import OrderTile from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
 import { Order } from "../../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
+import {useTranslation} from "react-i18next";
 
 function CurrentOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
+    const [t] = useTranslation();
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
@@ -45,7 +47,7 @@ function CurrentOrdersPage() {
         <>
             <NavigationBar />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <h1>CURRENT ORDERS</h1>
+                <h1>{t("dashboardPage.currentOrders").toUpperCase()}</h1>
                 {orders.map(order => (
                     <OrderTile
                         key={order.orderTrackingNumber}
@@ -63,6 +65,16 @@ function CurrentOrdersPage() {
                     />
                 ))}
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages} />
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/dashboard";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </>
     );

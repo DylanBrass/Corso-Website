@@ -1,5 +1,6 @@
 import React from "react";
 import swal from "sweetalert";
+import i18next from "i18next";
 
 class Cloudinary {
 
@@ -11,6 +12,7 @@ class Cloudinary {
         };
         reader.readAsDataURL(file);
     }
+
 
 
     handleImageChange(
@@ -31,7 +33,7 @@ class Cloudinary {
                 const maxHeight = maxHeightCheck;
 
                 if (image.width > maxWidth || image.height > maxHeight) {
-                    swal('Error', `Service image dimensions should be ${maxWidth}x${maxHeight} or smaller.`, 'error');
+                    swal((i18next.t("alerts.error")), i18next.t("alerts.service.imageDimensionsError", { maxWidth, maxHeight }), 'error');
                     return;
                 }
 

@@ -6,11 +6,13 @@ import Trash_light from "../../../ressources/images/Trash_light.svg";
 import swal from "sweetalert";
 import { useAuth } from "../../../security/Components/AuthProvider";
 import "./ViewSpecificFaq.css";
+import {useTranslation} from "react-i18next";
 
 function ViewFaq() {
     const auth = useAuth();
     const [faqData, setFaqData] = useState({ question: '', answer: '', preference: false });
     const { faqId } = useParams();
+    const {t} = useTranslation();
 
     useEffect(() => {
         axios
@@ -37,12 +39,12 @@ function ViewFaq() {
             });
 
             console.log("API Response:", response.data);
-            swal("FAQ Deleted Successfully", "", "success").then(() => {
+            swal((t("alerts.faq.faqDeletedTitle")), "", "success").then(() => {
                 goBack();
             });
         } catch (error) {
             console.error("API Error:", error);
-            swal("FAQ Not Deleted", "", "error");
+            swal((t("alerts.faq.faqNotDeletedTitle")), "", "error");
         }
     };
 
@@ -58,14 +60,14 @@ function ViewFaq() {
                     'X-XSRF-TOKEN': auth.getXsrfToken(),
                 },
             });
-            swal("FAQ Updated Successfully", "", "success")
+            swal((t("alerts.faq.faqUpdatedTitle")), "", "success")
                 .then((value) => {
                     window.location.href = "/manage/faqs";
                 });
 
         } catch (error) {
             console.error("API Error:", error);
-            swal("FAQ Not Updated", "", "error");
+            swal((t("alerts.faq.faqNotUpdatedTitle")), "", "error");
         }
     };
 
@@ -74,7 +76,7 @@ function ViewFaq() {
             <NavigationBar/>
             <div>
                 <div className="faq-button-container">
-                    <button className="specific-faq-back-btn" onClick={goBack}>Back</button>
+                    <button className="specific-faq-back-btn" onClick={goBack}>{t("back")}</button>
                 </div>
                 <div>
                     <div className="container view-faq-admin-container">
@@ -95,7 +97,7 @@ function ViewFaq() {
                             />
                         </div>
                         <div className={"row"}>
-                            <h3>Answer</h3>
+                            <h3>{t("answer")}</h3>
                             <textarea
                                 name="answer"
                                 value={faqData.answer}
@@ -106,7 +108,7 @@ function ViewFaq() {
                         </div>
                         <div className={"faq-button-container"}>
                             <button className={"save-faq-button"} onClick={saveFaq}>
-                                Save
+                                {t("save")}
                             </button>
                         </div>
                     </div>

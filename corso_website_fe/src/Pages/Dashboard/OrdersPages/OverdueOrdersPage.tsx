@@ -4,6 +4,7 @@ import OrderTile, {OverdueOrder} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {format, parseISO} from 'date-fns';
+import {useTranslation} from "react-i18next";
 
 
 function OverdueOrdersPage() {
@@ -11,6 +12,7 @@ function OverdueOrdersPage() {
     const [page, setPage] = useState(1);
     const [pageSize,] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
+    const {t} = useTranslation();
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
@@ -68,7 +70,7 @@ function OverdueOrdersPage() {
         <>
             <NavigationBar/>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                <h1>OVERDUE ORDERS</h1>
+                <h1>{t("dashboardPage.lateOrders")}</h1>
                 {orders.map(order => (
                     <OrderTile
                         action={() => {
@@ -79,6 +81,16 @@ function OverdueOrdersPage() {
                     />
                 ))}
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}/>
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/dashboard";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
+                </div>
             </div>
         </>
     );

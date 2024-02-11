@@ -18,6 +18,8 @@ import {
     stringToColour
 } from "../../../../Services/GenerateReportsService";
 import {useAuth} from "../../../../security/Components/AuthProvider";
+import {useTranslation} from "react-i18next";
+import "./Reports.css";
 
 
 
@@ -85,10 +87,12 @@ export default function OrderPerService() {
 
     const auth = useAuth();
 
+    const {t} = useTranslation();
+
     const [orderPerService, setOrderPerService] = useState([]);
     const [allServices, setAllServices] = useState<any[]>([])
 
-    const diagramTypes = ["Stacked Bar Chart", "Line Chart", "Bar Chart", "Total Orders Per Service","Pie Chart"]
+    const diagramTypes = [t("reports.stackedBarChart"), t("reports.lineChart"), t("reports.barChart"), t("reports.totalOrdersPerService"), t("reports.pieChart")]
     const [diagramType, setDiagramType] = React.useState(0)
 
     const [totalOrdersPerService, setTotalOrdersPerService] = useState<any[]>([])
@@ -131,14 +135,19 @@ export default function OrderPerService() {
 
 
     return (
-        <div>
+        <div className={"text-center"}>
+            <h1>{t("reports.ordersPerService")}</h1>
             <center>
-                <input type="date" id="start" defaultValue={getOneYearAgo()}/>
-                <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+                <div className={"text-center"}>
+                    <label className="diagram-label" htmlFor="start">{t("reports.startDateLabel")}</label>
+                    <input className="diagram-input" type="date" id="start" defaultValue={getOneYearAgo()}/>
+                    <label className="diagram-label" htmlFor="end">{t("reports.endDateLabel")}</label>
+                    <input className="diagram-input" type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+                </div>
                 {diagramTypes.map((type, index) => (
-                    <button key={index} onClick={() => setDiagramType(index)}>{type}</button>
+                    <button className="diagram-btn" key={index} onClick={() => setDiagramType(index)}>{type}</button>
                 ))}
-                <button onClick={fetchData}>Search</button>
+                <button className="diagram-btn" onClick={fetchData}>Search</button>
             </center>
 
             {diagramType === 0 &&
@@ -258,7 +267,7 @@ export default function OrderPerService() {
                     />
                     <YAxis
                         dataKey={"totalOrderRequest"}
-                        name={"Total Orders"}
+                        name={t("reports.ordersTotal")}
                         domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
                     />
                     <Tooltip
@@ -267,7 +276,7 @@ export default function OrderPerService() {
                             <CustomTooltip/>}
                     />
                     <Bar dataKey={"totalOrderRequest"} fill={"#064bec"}
-                            name={"Total Orders"}
+                            name={t("reports.ordersTotal")}
                     />
 
                 </BarChart>
@@ -278,7 +287,7 @@ export default function OrderPerService() {
             <ResponsiveContainer width="90%" height={600}>
                 <PieChart>
                     <Tooltip
-                        formatter={(value, name) => [value + " total orders", name]}
+                        formatter={(value, name) => [value + t("reports.totalOrders"), name]}
                     />
                     <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)} nameKey={"serviceName"} cx="50%" cy="50%" outerRadius={200}
                          fill="#8884d8"
@@ -297,8 +306,7 @@ export default function OrderPerService() {
             }
 
         </div>
-    )
-        ;
+    );
 }
 
 

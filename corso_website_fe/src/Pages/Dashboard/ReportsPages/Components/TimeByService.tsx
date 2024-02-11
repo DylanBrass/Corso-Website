@@ -12,6 +12,8 @@ import {
 } from "recharts";
 import {useAuth} from "../../../../security/Components/AuthProvider";
 import {fetchTimeByServiceReport, getOneYearAgo} from "../../../../Services/GenerateReportsService";
+import {useTranslation} from "react-i18next";
+import "./Reports.css";
 
 const dataWithoutZero = (data:any) => {
     return data.filter((service: any) => service.hours_worked !== 0)
@@ -22,9 +24,11 @@ export default function TimeByService() {
 
     const auth = useAuth();
 
+    const {t} = useTranslation();
+
     const [data, setData] = React.useState([])
 
-    const diagramTypes = ["Bar Chart", "Pie Chart"]
+    const diagramTypes = [t("reports.barChart"), t("reports.pieChart")]
 
     const [diagramType, setDiagramType] = React.useState(0)
 
@@ -58,13 +62,17 @@ export default function TimeByService() {
 
     return (
         <div className={"text-center"}>
-            <h1>Time By Service</h1>
-            <input type="date" id="start" defaultValue={getOneYearAgo()}/>
-            <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+            <h1>{t("reports.timeByService")}</h1>
+            <div className={"text-center"}>
+                <label className="diagram-label" htmlFor="start">{t("reports.startDateLabel")}</label>
+                <input className="diagram-input" type="date" id="start" defaultValue={getOneYearAgo()}/>
+                <label className="diagram-label" htmlFor="end">{t("reports.endDateLabel")}</label>
+                <input className="diagram-input" type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+            </div>
             {diagramTypes.map((type, index) => (
-                <button key={index} onClick={() => setDiagramType(index)}>{type}</button>
+                <button className="diagram-btn" key={index} onClick={() => setDiagramType(index)}>{type}</button>
             ))}
-            <button onClick={fetchData}>Submit</button>
+            <button className="diagram-btn" onClick={fetchData}>{t("submitButton")}</button>
 
             {diagramType === 0 &&
                 <ResponsiveContainer width="90%" height={600}>
@@ -77,13 +85,13 @@ export default function TimeByService() {
                         }}
 
                     >
-                        <Bar dataKey="hours_worked" name={"Hours Worked"}/>
+                        <Bar dataKey="hours_worked" name={t("reports.hoursWorked")}/>
                         <CartesianGrid stroke="#ccc"/>
 
                         <XAxis dataKey="serviceName" name={"Service"}
                                interval={0} angle={-45}
                                textAnchor="end" height={200}/>
-                        <YAxis name={"Hours Worked"}
+                        <YAxis name={t("reports.hoursWorked")}
                                dataKey={"hours_worked"}
                                domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
                         />
@@ -96,7 +104,7 @@ export default function TimeByService() {
                 <ResponsiveContainer width="95%" height={600}>
                     <PieChart>
                         <Tooltip
-                            formatter={(value, name) => [value + " total hours", name]}
+                            formatter={(value, name) => [value + t("reports.totalHours"), name]}
                         />
                         <Pie
                             data={dataWithoutZero(data)}
@@ -118,6 +126,7 @@ export default function TimeByService() {
             }
         </div>
     )
+
 }
 
 export {dataWithoutZero}

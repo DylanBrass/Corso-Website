@@ -6,6 +6,7 @@ import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import './EditGallery.css';
 import swal from "sweetalert";
 import AddGallery from "./Components/AddGallery";
+import {useTranslation} from "react-i18next";
 
 interface ImageData {
     galleryId: string;
@@ -30,7 +31,7 @@ interface DraggableImageProps {
 }
 
 function DraggableImage({image, index, moveImage}: DraggableImageProps) {
-
+    const {t} = useTranslation();
     return (
         <Draggable key={image.galleryId} draggableId={image.galleryId} index={index}>
             {(provided, snapshot) => (
@@ -106,14 +107,14 @@ function DraggableImage({image, index, moveImage}: DraggableImageProps) {
                     <p className={"mt-4"}>{image.description}</p>
                     <button onClick={() => {
                         moveImage(index, 0);
-                    }}>Move to top
+                    }}>{t("editGalleryPage.moveToTop")}
                     </button>
 
                     <button
                         className={"mt-2"}
                         onClick={() => {
                             window.location.href = `/manage/gallery/${image.galleryId}`;
-                        }}>Edit
+                        }}>{t("editGalleryPage.edit")}
                     </button>
                 </div>
             )}
@@ -126,6 +127,7 @@ function EditGallery() {
     const [isSubmitClicked, setIsSubmitClicked] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 992);
     const auth = useAuth();
+    const {t} = useTranslation();
 
     useEffect(() => {
         // @ts-ignore
@@ -192,12 +194,12 @@ function EditGallery() {
             ).then(r => {
                 if (r.status === 200) {
 
-                    swal("Carousel updated!", "The carousel has been updated successfully!", "success")
+                    swal(t("alerts.gallery.carouselUpdatedTitle"), t("alerts.gallery.carouselUpdatedMessage"), "success")
 
                 }
             })
                 .catch(e => {
-                    swal("Error!", e.response.data.message, "error")
+                    swal(t("alerts.error"), e.response.data.message, "error")
                         .then(() => {
                             // @ts-ignore
                             auth.authError(e.response.status)
@@ -232,7 +234,7 @@ function EditGallery() {
         <div>
             <NavigationBar/>
             <div className="gallery-container">
-                <h1>Edit Gallery</h1>
+                <h1>{t("editGalleryPage.editGallery")}</h1>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="gallery" direction={isSmallScreen ? 'vertical' : 'horizontal'}>
                         {(provided) => (
@@ -258,7 +260,7 @@ function EditGallery() {
                     </Droppable>
                 </DragDropContext>
                 <button onClick={handleSubmit} className="save-order-button">
-                    Save Order
+                    {t("editGalleryPage.saveOrder")}
                 </button>
             </div>
             <hr/>
@@ -266,6 +268,16 @@ function EditGallery() {
             <AddGallery
                 fetchGalleries={fetchImages}
             />
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/dashboard";
+                    }}
+                >
+                    {t("back")}
+                </button>
+            </div>
         </div>
     );
 }

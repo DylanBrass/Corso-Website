@@ -12,7 +12,7 @@ function CurrentOrdersProgress({order}: { order: Order}) {
         <div className={"p-4 w-75 m-auto order-box"} onClick={()=>{
             window.location.href = `/orders/${order.orderId}`
         }}>
-            <h4 className={`${order.estimatedDuration > 0 ? "mb-3" : "mb-0"}`}>{t("order")} #{order.orderTrackingNumber}</h4>
+            <h4 className={`${order.estimatedDuration > 0 ? "mb-3" : "mb-0"}`}>{t("order.order")} #{order.orderTrackingNumber}</h4>
 
             {order.estimatedDuration > 0 &&
 
@@ -44,7 +44,7 @@ function CurrentOrdersProgress({order}: { order: Order}) {
 
             {order.estimatedDuration <= 0 &&
                 <div className={"w-100 text-center mb-0 p-0"}>
-                    {t("noTimeline")}
+                    {t("order.noTimeline")}
                 </div>
             }
         </div>

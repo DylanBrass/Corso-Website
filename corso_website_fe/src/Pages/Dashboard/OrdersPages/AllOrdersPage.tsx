@@ -9,10 +9,15 @@ import swal from "sweetalert";
 import searchIcon from "../../../ressources/images/Search_light.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import "./AllOrdersPage.css"
+import {useTranslation} from "react-i18next";
 
 function AllOrdersPage() {
 
     const auth: {} = useAuth()
+
+    const {t, i18n} = useTranslation();
+
+    const isFrench = i18n.language === 'fr';
 
     const [orders, setOrders] = useState<Order[]>([]);
 
@@ -22,18 +27,17 @@ function AllOrdersPage() {
 
     const [totalPages, setTotalPages] = useState(1);
 
-    const [selectedStatus, setSelectedStatus] = useState("all");
+    const [selectedStatus, setSelectedStatus] = useState(t("allOrdersAdminPage.statusOptions.all"));
 
-    const [previousStatus, setPreviousStatus] = useState("all");
+    const [previousStatus, setPreviousStatus] = useState(t("allOrdersAdminPage.statusOptions.all"));
 
     const [selectedUser, setSelectedUser] = useState("");
 
     const [previousUser, setPreviousUser] = useState("");
 
-    const [selectedSearchFieldUser, setSelectedSearchFieldUser] = useState("email");
+    let [selectedSearchFieldUser, setSelectedSearchFieldUser] = useState(t("userOptions.email"));
 
     const [resetKey, setResetKey] = useState<string | null>(null);
-
 
     useEffect(() => {
         fetchOrders(page, pageSize, selectedStatus, selectedUser);
@@ -42,40 +46,87 @@ function AllOrdersPage() {
 
     const [users, setUsers] = React.useState([])
 
-    const getUsers = async (event: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        setSelectedSearchFieldUser(t("userOptions.email"));
+    }, [i18n.language, t]);
 
-        event.preventDefault()
+    const getUsers = async (event?: React.FormEvent<HTMLFormElement>) => {
 
-        if ((document.getElementById("search-value") as HTMLInputElement).value.replaceAll(/\s/g, '').length < 3) {
-            swal("Enter at least 3 characters!", "", "warning")
-            return
-        }
-        let param = "?" + selectedSearchFieldUser + "=" + (document.getElementById("search-value") as HTMLInputElement).value
+        if (event) {
+            event.preventDefault()
 
-        axios.get(process.env.REACT_APP_BE_HOST+"api/v1/corso/auth0/manage/users" + param, {
-            headers: {
-                // @ts-ignore
-                'X-XSRF-TOKEN': auth.getXsrfToken()
+            if ((document.getElementById("search-value") as HTMLInputElement).value.replaceAll(/\s/g, '').length < 3) {
+                swal((t("alerts.enter3CharMinWarning")), "", "warning")
+                return
             }
-        })
-            .then(r => {
-                if (r.status === 200) {
-                    
-                    setUsers(r.data)
+
+            if (isFrench) {
+                switch (selectedSearchFieldUser) {
+                    case "courriel":
+                        selectedSearchFieldUser = "email";
+                        break;
+                    case "nom":
+                        selectedSearchFieldUser = "name";
+                        break;
+                    case "nom d'utilisateur":
+                        selectedSearchFieldUser = "username";
+                        break;
+                    default:
+                        selectedSearchFieldUser = "email";
+                        break;
+                }
+            }
+
+            let param = "?" + selectedSearchFieldUser + "=" + (document.getElementById("search-value") as HTMLInputElement).value
+
+            axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/auth0/manage/users" + param, {
+                headers: {
+                    // @ts-ignore
+                    'X-XSRF-TOKEN': auth.getXsrfToken()
                 }
             })
-            .catch(e => {
-                // @ts-ignore
-                auth.authError(e.response.status)
-            })
+                .then(r => {
+                    if (r.status === 200) {
+
+                        setUsers(r.data)
+                    }
+                })
+                .catch(e => {
+                    // @ts-ignore
+                    auth.authError(e.response.status)
+                })
+        }
 
     }
 
-
     const fetchOrders = async (pageNumber: number, size: number, status: string | null, user: string) => {
+        if (isFrench) {
+            switch (status) {
+                case "Tous":
+                    status = "all";
+                    break;
+                case "Terminé":
+                    status = "completed";
+                    break;
+                case "En cours":
+                    status = "in_progress";
+                    break;
+                case "En attente":
+                    status = "pending";
+                    break;
+                case "Refusé":
+                    status = "declined";
+                    break;
+                case "Annulé":
+                    status = "cancelled";
+                    break;
+                default:
+                    status = "all";
+                    break;
+            }
+        }
+
         try {
-
-
             let url = process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/filter?pageSize=${size}&offset=${(pageNumber - 1) * size}`;
             if (status !== null && status.toLowerCase() !== "all") {
                 status = status.replace(" ", "_");
@@ -107,7 +158,7 @@ function AllOrdersPage() {
 
 
             if (ordersData === undefined || ordersData.length <= 0) {
-                swal("No orders found!", "", "warning")
+                swal(t("alerts.order.noOrdersFound"), "", "warning")
                 setTotalPages(1)
                 setPage(1)
                 setOrders([])
@@ -131,7 +182,7 @@ function AllOrdersPage() {
 
             // @ts-ignore
             if (error.response === undefined) {
-                await swal("Error fetching data!", "", "error")
+                await swal(t("alerts.errorFetchingData"), "", "error")
                 return
             }
 
@@ -188,16 +239,23 @@ function AllOrdersPage() {
             <NavigationBar/>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"all-orders"}>
-                <h1>ALL ORDERS</h1>
+                <h1>{t("allOrdersAdminPage.allOrders")}</h1>
                 <div
                     className={"all-orders-search w-100 row text-center"}>
                     <div className={"search-bar col-12 col-xl-4 status-box"}>
                         <div className={"row w-100"}>
-                            <h4 className={"col-12 col-xl-4"}>Filter by status</h4>
+                            <h4 className={"col-12 col-xl-4"}>{t("allOrdersAdminPage.filterByStatus")}</h4>
                             <div className={"col-12 col-xl-8 dropdown-status-box"}>
                                 <Dropdown
                                     label={selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)}
-                                    options={["All", "Completed", "Pending", "Cancelled", "In progress", "Declined"]}
+                                    options={[
+                                        t("allOrdersAdminPage.statusOptions.all"),
+                                        t("allOrdersAdminPage.statusOptions.completed"),
+                                        t("allOrdersAdminPage.statusOptions.pending"),
+                                        t("allOrdersAdminPage.statusOptions.cancelled"),
+                                        t("allOrdersAdminPage.statusOptions.inProgress"),
+                                        t("allOrdersAdminPage.statusOptions.declined")
+                                    ]}
                                     onSelect={(option: any) => {
                                         setPreviousStatus(selectedStatus)
                                         setSelectedStatus(option)
@@ -209,18 +267,22 @@ function AllOrdersPage() {
                     <div className={"user-search-order col-12 col-xl-5"}>
                         <div className={"row"}>
 
-                            <h4 className={"col-12 col-xl-2"}>Search for user</h4>
+                            <h4 className={"col-12 col-xl-2"}>{t("userOptions.searchForUser")}</h4>
                             <div className={"col-12 col-xl-6"}>
                                 <form onSubmit={getUsers} className={"w-100 "}>
                                     <Dropdown
                                         label={selectedSearchFieldUser.charAt(0).toUpperCase() + selectedSearchFieldUser.slice(1)}
-                                        options={["email", "name", "username"]}
+                                        options={[
+                                            t("userOptions.email"),
+                                            t("userOptions.name"),
+                                            t("userOptions.username"),
+                                        ]}
                                         onSelect={(option: any) => {
                                             setSelectedSearchFieldUser(option)
                                         }}
                                     />
                                     <input required name={"search-value"} id={"search-value"} type="text"
-                                           placeholder="Search for user"/>
+                                           placeholder={t("userOptions.searchForUser")}/>
                                     <button type={"submit"}>
                                         <img src={searchIcon} alt={"Search"}/>
                                     </button>
@@ -235,7 +297,7 @@ function AllOrdersPage() {
                                 }
                                         className={"btn-style m-3 m-xl-0 user-selection"}
                                 >
-                                    Clear Selection
+                                    {t("userOptions.clearSelection")}
                                 </button>
                             </div>
                         </div>
@@ -249,9 +311,9 @@ function AllOrdersPage() {
                     <table className={"overflow-scroll text-center"}>
                         <tbody>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Username</th>
+                            <th>{t("userOptions.name")}</th>
+                            <th>{t("userOptions.email")}</th>
+                            <th>{t("userOptions.username")}</th>
                         </tr>
 
                         {users.map((user: any) => (
@@ -265,9 +327,9 @@ function AllOrdersPage() {
                             }
                                 className={"user-row " + (selectedUser === user.user_id ? "selected-row" : "")}
                             >
-                                <td>{user.name || "Not Applicable"}</td>
-                                <td>{user.email || "Not Applicable"}</td>
-                                <td>{user.username || "Not Applicable"}</td>
+                                <td>{user.name ||  (t("userOptions.notApplicable"))}</td>
+                                <td>{user.email ||  (t("userOptions.notApplicable"))}</td>
+                                <td>{user.username ||  (t("userOptions.notApplicable"))}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -275,7 +337,7 @@ function AllOrdersPage() {
 
                 </div>
                 <form onSubmit={handleSubmit} className={"m-4"}>
-                    <button type={"submit"} className={"user-selection"}>Search With Applied Filters</button>
+                    <button type={"submit"} className={"user-selection"}>{t("allOrdersAdminPage.searchWithAppliedFilters")}</button>
                 </form>
                 {orders.map(order => (
                     <OrderTile
@@ -295,6 +357,16 @@ function AllOrdersPage() {
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}
                                   resetKey={resetKey}/>
 
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/dashboard";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
+                </div>
             </div>
         </>
     );

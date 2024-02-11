@@ -8,6 +8,7 @@ import {useAuth} from "../../../security/Components/AuthProvider";
 import swal from "sweetalert";
 import Edit_light from "../../../ressources/images/Edit_light.svg";
 import plus from "../../../ressources/images/plus-services.svg";
+import {useTranslation} from "react-i18next";
 
 
 interface FAQ {
@@ -21,6 +22,7 @@ function ViewAllFaqThroughDashboard() {
     const [faqs, setFaqs] = useState<FAQ[]>([]);
     const [error, setError] = useState<string | null>(null);
     const auth = useAuth();
+    const {t} = useTranslation();
 
     useEffect(() => {
         // @ts-ignore
@@ -76,10 +78,10 @@ function ViewAllFaqThroughDashboard() {
                 }
             ).then(r => {
                 if (r.status === 200) {
-                    swal("Viewable FAQs updated!", "The main page will display the newly selected viewable FAQs!", "success");
+                    swal(t("alerts.faq.viewableFAQsUpdatedTitle"), (t("alerts.faq.viewableFAQsUpdatedMessage")), "success");
                 }
             }).catch(e => {
-                swal("Error!", e.response.data.message, "error").then(() => {
+                swal(t("alerts.error"), t("alerts.faq.chooseOnly3ViewableFAQs"), "error").then(() => {
                     // @ts-ignore
                     auth.authError(e.response.status);
                 });
@@ -110,12 +112,12 @@ function ViewAllFaqThroughDashboard() {
             <NavigationBar />
             <div className="container faqs-container">
                 <div className="row faq-header">
-                    <h1 className="faq-title">All FAQs</h1>
+                    <h1 className="faq-title">{t("faqsAdminPage.allFaqs")}</h1>
                 </div>
                 {error && (
                     <div className="row">
                         <div className="col-12">
-                            <p className="error">Error: {error}</p>
+                            <p className="error">{t("alerts.error")}: {error}</p>
                         </div>
                     </div>
                 )}
@@ -127,11 +129,11 @@ function ViewAllFaqThroughDashboard() {
                     {showMoreThanThreeMessage || showLessThanThreeMessage ? (
                             <p className="error">
                                 {showMoreThanThreeMessage
-                                    ? "More than 3"
+                                    ? t("faqsAdminPage.moreThan3")
                                     : showLessThanThreeMessage
-                                        ? "Less than 3"
+                                        ? t("faqsAdminPage.lessThan3")
                                         : ""}{" "}
-                                viewable FAQs have been selected! Please ensure there are only 3 viewable FAQs selected.
+                                {t("faqsAdminPage.viewableFAQMessage")}
                             </p>
                         ) : (
                             <p className="success"></p>
@@ -198,9 +200,19 @@ function ViewAllFaqThroughDashboard() {
                 </div>
                 <div className="submission">
                     <button onClick={handleSubmitViewableFaqs} className="save-viewable-faqs-button">
-                        Save Viewable FAQs
+                        {t("faqsAdminPage.saveViewableFAQs")}
                     </button>
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/dashboard";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     );

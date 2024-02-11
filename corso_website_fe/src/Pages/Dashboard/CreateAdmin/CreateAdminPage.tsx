@@ -5,11 +5,13 @@ import {useEffect} from "react";
 import "./CreateAdmin.css"
 import swal from "sweetalert";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 
 
 function CreateAdminPage() {
     const auth = useAuth();
+    const {t} = useTranslation();
 
     useEffect(() => {
         // @ts-ignore
@@ -35,7 +37,7 @@ function CreateAdminPage() {
             .then(r => {
                 if (r.status === 201) {
 
-                    swal("Admin created!", "Admin has been created successfully!", "success")
+                    swal((t("alerts.admin.adminCreatedTitle")), (t("alerts.admin.adminCreatedMessage")), "success")
                         .then(() => {
                             window.location.href = "/dashboard"
                         })
@@ -43,7 +45,7 @@ function CreateAdminPage() {
                 }
             })
             .catch(e => {
-                swal("Error!", e.response.data.message, "error")
+                swal((t("alerts.error")), e.response.data.message, "error")
                     .then(() => {
                         // @ts-ignore
                         auth.authError(e.response.status)
@@ -68,7 +70,7 @@ function CreateAdminPage() {
                             <div className={"row"} style={{
                                 textAlign: "center"
                             }}>
-                                <h5>Create Admin Account</h5>
+                                <h5>{t("createAdmin.createAdmin")}</h5>
                             </div>
                             <div className={"row form-admin-box w-75 m-auto"}>
                                 <form id={"add-admin-form"} onSubmit={addAdmin} style={{
@@ -76,18 +78,18 @@ function CreateAdminPage() {
                                 }}>
                                     <div className="mt-4">
                                         <div className="row">
-                                                <label htmlFor="username" className="form-label">Username</label>
+                                                <label htmlFor="username" className="form-label">{t("createAdmin.username")}</label>
                                                 <input className="form-control mb-2" type="text"
-                                                       placeholder="Username"/>
+                                                       placeholder={t("createAdmin.username")}/>
                                         </div>
                                         <div className="row">
-                                            <label htmlFor="email" className="form-label">Email</label>
-                                                <input className="form-control mb-2" type="text" placeholder="Email"/>
+                                            <label htmlFor="email" className="form-label">{t("createAdmin.email")}</label>
+                                                <input className="form-control mb-2" type="text" placeholder={t("createAdmin.email")}/>
                                         </div>
                                         <div className="row">
-                                            <label htmlFor="password" className="form-label">Password</label>
+                                            <label htmlFor="password" className="form-label">{t("createAdmin.password")}</label>
                                                 <input className="form-control mb-2" type="password"
-                                                       placeholder="Password"/>
+                                                       placeholder={t("createAdmin.password")}/>
                                         </div>
                                         <div className="row" style={{
                                             margin: "auto",
@@ -102,7 +104,7 @@ function CreateAdminPage() {
                                                     fontFamily: "Nunito",
                                                     fontSize: "20px",
                                                     fontWeight: "700"
-                                                }}>Add Admin</button>
+                                                }}>{t("createAdmin.addAdmin")}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -112,6 +114,16 @@ function CreateAdminPage() {
                 </>
             }
 
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/dashboard";
+                    }}
+                >
+                    {t("back")}
+                </button>
+            </div>
         </div>
     );
 }

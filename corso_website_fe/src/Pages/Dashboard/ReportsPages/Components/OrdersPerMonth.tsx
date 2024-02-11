@@ -2,11 +2,15 @@ import React, {useEffect} from "react";
 import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import {getOrdersPerMonth} from "../../../../Services/GenerateReportsService";
 import {useAuth} from "../../../../security/Components/AuthProvider";
+import "./Reports.css";
+import {useTranslation} from "react-i18next";
+import i18n from "i18next";
 
 const currentYear = new Date().getFullYear();
 
 // @ts-ignore
 const CustomTooltip = ({active, payload, label}) => {
+    const {t} = useTranslation();
     if (active && payload && payload.length) {
         return (
             <div
@@ -19,7 +23,7 @@ const CustomTooltip = ({active, payload, label}) => {
                 }}
             >
                 <p className="label">{`${getMonthName(label)}`}</p>
-                <p className="label">{`Total Orders: ${payload[0].value}`}</p>
+                <p className="label">{`${t("reports.ordersTotal")}: ${payload[0].value}`}</p>
             </div>
         );
     }
@@ -34,6 +38,8 @@ const getMonthName = (month: string) => {
 export default function OrdersPerMonth() {
 
     const auth = useAuth();
+
+    const {t} = useTranslation();
 
     const [ordersPerMonth, setOrdersPerMonth] = React.useState([])
 
@@ -58,9 +64,12 @@ export default function OrdersPerMonth() {
     return (
         <div>
             <center>
-                <h1>Reports Page</h1>
-                <input type="number" min="1900" max={currentYear} step="1" defaultValue={currentYear} id="year"/>
-                <button onClick={fetchData}>Get Orders Per Month
+                <h1>{t("reports.ordersPerMonth")}</h1>
+                <div className={"text-center"}>
+                    <label className="diagram-label" htmlFor="start">{t("reports.year")}</label>
+                    <input type="number" min="1900" max={currentYear} step="1" defaultValue={currentYear} id="year"/>
+                </div>
+                <button className="diagram-btn" onClick={fetchData}>{t("reports.getOrdersPerMonth")}
                 </button>
             </center>
 
@@ -71,17 +80,28 @@ export default function OrdersPerMonth() {
                         content={
                             // @ts-ignore
                             <CustomTooltip/>}/>
-                    <XAxis dataKey="month"
-                           name={"Month"}
-                           tickFormatter={(tickItem: number) => {
-                               return new Date(0, tickItem - 1, 1).toLocaleString('default', {month: 'long'});
-                           }}
-
+                    <XAxis
+                        dataKey="month"
+                        name={"Month"}
+                        tickFormatter={(tickItem: number, index: number) => {
+                            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                            let language = "en";
+                            if (i18n.language === "fr") {
+                                language = "fr";
+                            }
+                            if (language === "fr") {
+                                const monthIndex = tickItem - 1;
+                                const frenchMonthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+                                return frenchMonthNames[monthIndex];
+                            } else {
+                                return monthNames[tickItem - 1];
+                            }
+                        }}
                     />
                     <YAxis
                         name={"Total Orders"}
                         label={{
-                            value: 'Total Orders',
+                            value: t("reports.orders"),
                             angle: -90,
                             position: 'insideLeft'
                         }}

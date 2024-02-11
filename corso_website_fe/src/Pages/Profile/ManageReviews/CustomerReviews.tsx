@@ -38,7 +38,7 @@ function CustomerReviews() {
         <>
             <NavigationBar/>
             <div className="customer-review-container">
-                <h1>{t("myReviews")}</h1>
+                <h1>{t("reviews.myReviews")}</h1>
                 <div className="customer-review-tiles-container w-75">
                     {reviews.length > 0 ? reviews.map((review, index) => (
                         <ReviewTile
@@ -55,9 +55,19 @@ function CustomerReviews() {
                                 window.location.href = `/profile/reviews/${review.reviewId}`
                             }}
                         />
-                    )) : <h1 className="error">{t("createReviewMessage")} <a
+                    )) : <h1 className="error">{t("reviews.createReviewMessage")} <a
                         href={"/profile/reviews/create"}>{t("here")}</a></h1>
                     }
+                </div>
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/profile";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
                 </div>
             </div>
         </>

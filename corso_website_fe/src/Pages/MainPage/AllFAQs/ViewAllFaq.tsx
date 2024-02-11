@@ -42,11 +42,6 @@ function ViewAllFaq() {
                 <div className={"row"}>
                     <span className={"faq-title "}>Faq</span>
                 </div>
-                <div className={"text-center text-md-end me-0 me-md-5"}>
-                    <a href={"/#faq"}>
-                        {t("backToMainPage")}
-                    </a>
-                </div>
                 <div className={"tiles-container"}>
                     {faqs.map((value) => (
                         <FaqTileFaqPage
@@ -61,7 +56,16 @@ function ViewAllFaq() {
                         />
                     ))}
                 </div>
-
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
+                </div>
             </div>
         </div>
     )

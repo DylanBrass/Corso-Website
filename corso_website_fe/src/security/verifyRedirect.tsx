@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import './VerifyRedirect.css';  // Import a CSS file for styling
+import './VerifyRedirect.css';
+import {useTranslation} from "react-i18next";  // Import a CSS file for styling
 
 function VerifyRedirect() {
+    const {t} = useTranslation();
 
     useEffect(() => {
         // @ts-ignore
@@ -18,8 +20,8 @@ function VerifyRedirect() {
 
             <div className="verification-message-container">
                 <div className="verification-message">
-                    <p>Your email is not verified yet. Please check your email and click on the link to login into your account.</p>
-                    <a href={process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"}>Login</a>
+                    <p>{t("alerts.email.unverifiedEmailMessage")}</p>
+                    <a href={process.env.REACT_APP_BE_HOST+"oauth2/authorization/okta"}>{t("navigation.login")}</a>
                 </div>
             </div>
 
@@ -27,7 +29,7 @@ function VerifyRedirect() {
                 <button id={'submit'} type={"submit"} style={{
                     display: "none",
                     visibility: "hidden"
-                }}>Logout</button>
+                }}>{t("navigation.logout")}</button>
             </form>
 
         </div>

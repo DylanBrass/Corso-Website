@@ -10,6 +10,7 @@ import {SyncLoader} from "react-spinners";
 import Order from "../../../ressources/Models/Order";
 import ServiceOrder from "../../../ressources/Models/ServiceOrder";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 function ViewSpecificOrderAdmin() {
 
@@ -21,6 +22,8 @@ function ViewSpecificOrderAdmin() {
 
     const [reasonForCancellation, setReasonForCancellation] = useState('');
     const [openPopup, setOpenPopup] = useState(false);
+
+    const {t} = useTranslation();
 
 
     const getOrder = async () => {
@@ -70,20 +73,20 @@ function ViewSpecificOrderAdmin() {
         })
             .then(r => {
                 if (r.status === 200) {
-                    swal("Email sent!", "Email has been sent successfully!", "success")
+                    swal((t("alerts.email.emailSentSuccessAlertTitle")), (t("alerts.email.emailSentMessage")), "success")
                         .then(() => {
                         })
                 }
             })
             .catch(e => {
                 if (e.response.data.message === "" || e.response.data.message === undefined) {
-                    swal("Error!", "Something went wrong!", "error")
+                    swal((t("alerts.error")), (t("alerts.somethingWentWrong")), "error")
                         .then(() => {
                             // @ts-ignore
                             auth.authError(e.response.status)
                         })
                 } else {
-                    swal("Error!", e.response.data.message, "error")
+                    swal((t("alerts.error")), e.response.data.message, "error")
                         .then(() => {
                             // @ts-ignore
                             auth.authError(e.response.status)
@@ -112,17 +115,17 @@ function ViewSpecificOrderAdmin() {
                 }
             });
             if (response.status === 200) {
-                swal("Accepted!", `The order with tracking number ${order.orderTrackingNumber} has been successfully accepted.`, "success")
+                swal((t("alerts.accepted")), `${t('alerts.order.orderWithTrackingNumber')} ${order.orderTrackingNumber} ${t("alerts.order.hasBeenAccepted")}`, "success")
                     .then(() => {
                         window.location.href = '/dashboard';
                     });
             } else {
-                swal("Oops!", "Something went wrong. Please try again.", "error");
+                swal("Oops!", (t("alerts.tryAgain")), "error");
             }
         } catch (error) {
 
             
-            swal("Failed!", `Failed to accept the order with tracking number ${order.orderTrackingNumber}.`, "error");
+            swal((t("alerts.failed")), `${t("alerts.order.failedToAcceptOrder")} ${order.orderTrackingNumber}.`, "error");
         }
     }
 
@@ -143,18 +146,18 @@ function ViewSpecificOrderAdmin() {
                 }
             })
             if (response.status === 200) {
-                swal("Declined!", `The order with tracking number ${order.orderTrackingNumber} has been successfully declined.`, "success")
+                swal(t("alerts.declined"), `${t("alerts.order.orderWithTrackingNumber")} ${order.orderTrackingNumber} ${t("alerts.order.hasBeenDeclined")}.`, "success")
                     .then(() => {
                         window.location.href = '/dashboard';
                     });
             } else {
-                swal("Oops!", "Something went wrong. Please try again.", "error");
+                swal("Oops!", (t("alerts.tryAgain")), "error");
             }
 
             setLoading(false)
         } catch (error) {
             
-            swal("Failed!", `Failed to decline the order with tracking number ${order.orderTrackingNumber}.`, "error");
+            swal((t("alerts.declined")), `${t("alerts.order.failedToDeclineOrder")} ${order.orderTrackingNumber}.`, "error");
         }
     }
 
@@ -169,26 +172,26 @@ function ViewSpecificOrderAdmin() {
             <NavigationBar/>
             <div className="container specific-order-admim">
                 <div className="row">
-                    <h1 className="display-4 title">Request #{order.orderTrackingNumber}</h1>
+                    <h1 className="display-4 title">{t("order.request")} #{order.orderTrackingNumber}</h1>
                 </div>
                 <div className="row">
                     <div className="col-lg-6 col-md-12 request-info-box">
                         <div className="row text-start">
-                            <h1>Client</h1>
+                            <h1>{t("customerInfo.customer")}</h1>
                             <p>{order.customerFullName}</p>
                         </div>
                         <div className="row text-start">
-                            <h1>Address</h1>
+                            <h1>{t("customerInfo.address")}</h1>
                             <p>
-                                Address
+                                {t("customerInfo.address")}
                                 : {order.customerAddress} {order.customerApartmentNumber !== null ? "Apartment " + order.customerApartmentNumber : ""}, {order.customerCity}  </p>
-                            <p>Postal code : {order.customerPostalCode}</p>
+                            <p>{t("customerInfo.postalCode")} : {order.customerPostalCode}</p>
                         </div>
                         <div className="row text-start">
-                            <h1>Client Contact Information</h1>
-                            <p>Email : {order.customerEmail}</p>
+                            <h1>{t("customerInfo.contactInformation")}</h1>
+                            <p>{t("customerInfo.email")} : {order.customerEmail}</p>
                             {(order.customerPhone !== null && order.customerPhone !== "") &&
-                                <p> Phone Number : {order.customerPhone}</p>}
+                                <p>{t("customerInfo.phoneNumber")}: {order.customerPhone}</p>}
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
@@ -201,28 +204,28 @@ function ViewSpecificOrderAdmin() {
                     </div>
                     <div className="col-lg-6 col-md-12">
                         <div className="row">
-                            <button className={"accept-button"} onClick={acceptStatus}>Accept</button>
+                            <button className={"accept-button"} onClick={acceptStatus}>{t("accept")}</button>
                         </div>
                         <div className="row">
-                            <button className={"decline-button"} onClick={() => setOpenPopup(true)}>Decline</button>
+                            <button className={"decline-button"} onClick={() => setOpenPopup(true)}>{t("decline")}</button>
                             <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
                                 <div className="popup-box">
                                 {loading &&
                                     <div className={"spinner-box text-center"}>
                                         <h3 className={""}>
-                                            Sending email...
+                                            {t("load.sendEmailLoading")}
                                         </h3>
                                         <SyncLoader className={"spinner"} color="#054AEB"/>
                                     </div>
                                 }
                                 <form onSubmit={declinedStatus} className={" decline-popup" + (loading ? " hidden " : " ")}>
-                                    <h4>Reason for Declining</h4>
+                                    <h4>{t("order.declineOrderReason")}</h4>
                                     <textarea className="view-specific-order-admin-textarea"
                                         value={reasonForCancellation}
                                         onChange={(e) => setReasonForCancellation(e.target.value)}
-                                        placeholder="Enter the reason for declining the order"
+                                        placeholder={t("order.reasonForDeclining")}
                                     />
-                                    <button type={"submit"} className={"decline-popup-button"}>Submit</button>
+                                    <button type={"submit"} className={"decline-popup-button"}>{t("submitButton")}</button>
                                 </form>
                                 </div>
                             </Popup>
@@ -230,13 +233,12 @@ function ViewSpecificOrderAdmin() {
                         </div>
                         <div className="row">
 
-                            <Popup trigger={<button className={"email-button"}>Email
-                                Client</button>} modal>
+                            <Popup trigger={<button className={"email-button"}>{t("emailClient")}</button>} modal>
                                 <div className="popup-box">
                                     {loading &&
                                         <div className={"spinner-box text-center"}>
                                             <h3 className={""}>
-                                                Sending email...
+                                                {t("load.sendEmailLoading")}
                                             </h3>
                                             <SyncLoader className={"spinner"} color="#054AEB"/>
                                         </div>
@@ -245,9 +247,9 @@ function ViewSpecificOrderAdmin() {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="form-group">
-                                                    <label htmlFor="email">Email address</label>
+                                                    <label htmlFor="email">{t("customerInfo.email")}</label>
                                                     <input type="email" className="form-control" id="email"
-                                                           placeholder="Enter email"
+                                                           placeholder={t("enterEmail")}
                                                            defaultValue={order.customerEmail}/>
                                                 </div>
                                             </div>
@@ -255,9 +257,9 @@ function ViewSpecificOrderAdmin() {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="form-group">
-                                                    <label htmlFor="subject">Subject</label>
+                                                    <label htmlFor="subject">{t("subject")}</label>
                                                     <input type="text" className="form-control" id="subject"
-                                                           placeholder="Enter subject"
+                                                           placeholder={t("enterSubject")}
                                                            defaultValue={"CORSO Order-" + order.orderTrackingNumber + ": Additional Information Required"}/>
                                                 </div>
                                             </div>
@@ -267,25 +269,33 @@ function ViewSpecificOrderAdmin() {
                                                 <div className="form-group">
                                                     <label htmlFor="message">Message</label>
                                                     <textarea className="form-control" id="message" rows={3}
-                                                              placeholder="Enter message"/>
+                                                              placeholder={t("enterMessage")}/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="row m-5">
                                             <div className="col-12 text-center">
                                                 <button type="submit" className="btn btn-primary send-email-btn">
-                                                    Submit
+                                                    {t("submitButton")}
                                                 </button>
                                             </div>
                                         </div>
                                     </form>
-
-
                                 </div>
                             </Popup>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/orders/pending";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     )

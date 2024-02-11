@@ -54,12 +54,12 @@ function OurPreviousProjects() {
         <div className="Gallery-landing-page">
             <div className="row row-carousel">
                 <div className="col-12 d-flex justify-content-center">
-                    <h1>{t("previousProjectsPart1")} <span className="blue-header">{t("previousProjectsPart2")}</span></h1>
+                    <h1>{t("mainPage.previousProjectsPart1")} <span className="blue-header">{t("mainPage.previousProjectsPart2")}</span></h1>
                 </div>
             </div>
             <div className="row row-carousel">
                 <div className="col-12 d-flex ">
-                    <p className="subtitle-carousel">{t("pastProjectsBlurb")}</p>
+                    <p className="subtitle-carousel">{t("mainPage.pastProjectsBlurb")}</p>
                 </div>
             </div>
             <Carousel
@@ -89,7 +89,7 @@ function OurPreviousProjects() {
                         transition: 'transform 0.5s ease-in-out'
                     }}>
                         <div className="overlay">
-                            <h2 className="title-z-stack">Project</h2>
+                            <h2 className="title-z-stack">{t("mainPage.project")}</h2>
                             <p className="description-z-stack">{image.description}</p>
                         </div>
                     </div>

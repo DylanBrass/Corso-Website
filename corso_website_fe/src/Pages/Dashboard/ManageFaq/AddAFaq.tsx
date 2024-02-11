@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import pen from "../../../ressources/images/pen.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
+import {useTranslation} from "react-i18next";
 
 
 function AddAFaq() {
@@ -16,6 +17,7 @@ function AddAFaq() {
     //const [faqid, setFaqid] = useState<FAQ>('');
     const auth = useAuth();
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const addAFaq = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,7 +38,7 @@ function AddAFaq() {
                 }
             );
             console.log('API Response:', response.data);
-            swal('FAQ Added Successfully', '', 'success');
+            swal(t("alerts.faq.faqAddedTitle"), '', 'success');
             setQuestion('');
             setAnswer('');
             navigate('/manage/faqs');
@@ -59,7 +61,7 @@ function AddAFaq() {
                 console.error('Error during request setup:', error.message);
             }
 
-            swal('FAQ Not Added', '', 'error');
+            swal(t("alerts.faq.faqNotAddedTitle"), '', 'error');
         }
     };
 
@@ -67,7 +69,7 @@ function AddAFaq() {
         <div>
             <NavigationBar />
             <div className="add-a-faq">
-                <div className="add-a-faq-title">Add a FAQ</div>
+                <div className="add-a-faq-title">{t("faqsAdminPage.addFAQ")}</div>
                 <form onSubmit={addAFaq}>
                     <div className="add-a-faq-form">
                         <div className="add-a-faq-form-question">
@@ -86,7 +88,7 @@ function AddAFaq() {
                                 />
                             </div>
                             <div className="grid-item input-container">
-                                <div className="add-a-faq-form-answer-title">Answer</div>
+                                <div className="add-a-faq-form-answer-title">{t("answer")}</div>
                                 <img className="answer-faq-pen-icon" src={pen} alt="Pen Icon"
                                      style={{marginBottom:"100px"}}
                                 />
@@ -95,7 +97,7 @@ function AddAFaq() {
                                     className="answer-faq-input"
                                     id="answer"
                                     name="answer"
-                                    placeholder="Answer"
+                                    placeholder={t("answer")}
                                     required
                                     value={answer}
                                     onChange={(e) => setAnswer(e.target.value)}
@@ -105,7 +107,7 @@ function AddAFaq() {
                     </div>
                     <div className="submit-button-container">
                         <button type="submit" className="submit-button">
-                            Add FAQ
+                            {t("faqsAdminPage.addFAQ")}
                         </button>
                     </div>
                 </form>

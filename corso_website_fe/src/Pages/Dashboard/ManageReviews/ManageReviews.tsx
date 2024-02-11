@@ -11,6 +11,7 @@ import {useAuth} from "../../../security/Components/AuthProvider";
 import CustomPagination from "../../../Components/Pagination";
 import {PuffLoader} from 'react-spinners';
 import {Bounce, toast, ToastContainer} from "react-toastify";
+import {useTranslation} from "react-i18next";
 
 
 class Reviews {
@@ -36,6 +37,7 @@ class Reviews {
 
 function ManageReviews() {
     const auth: {} = useAuth()
+    const {t} = useTranslation();
 
 
     const [previousNameSearch, setPreviousNameSearch] = useState<string>('');
@@ -96,7 +98,7 @@ function ManageReviews() {
                     }
                     if (error.response.status === 409) {
                         // @ts-ignore
-                        swal("Warning!", error.response.data.message, "warning")
+                        swal(t("alerts.warningAlertTitle"), error.response.data.message, "warning")
                     }
                 }).finally(() => {
                     
@@ -126,7 +128,7 @@ function ManageReviews() {
 
             if (reviewResponse.data.length <= 0) {
                 // @ts-ignore
-                swal("Warning!", "No reviews found!", "warning")
+                swal((t("alerts.warningAlertTitle")), (t("alerts.review.noReviewsFound")), "warning")
 
                 setReviews([])
                 setTotalPages(0)
@@ -143,7 +145,7 @@ function ManageReviews() {
             setTotalPages(Math.ceil(totalCount / size))
         } catch (error) {
             
-            setError('Error fetching reviews.');
+            setError(t("reviewsAdminPage.errorFetchingReviews"));
             // @ts-ignore
             auth.authError(error.response.status);
         }
@@ -182,14 +184,14 @@ function ManageReviews() {
             <NavigationBar/>
             <div className="container review-container">
                 <div className="row review-header">
-                    <h1 className="review-title">Reviews</h1>
+                    <h1 className="review-title">{t("reviewsAdminPage.allReviews")}</h1>
                 </div>
 
                 <form className="manage-review-form" onSubmit={handleSearch}>
                     <div className={"form-container w-100"}>
 
                         <input className="manage-review-input" type="text" name="search"
-                               placeholder="Search Client Name" value={searchTerm} onChange={handleChange}/>
+                               placeholder={t("reviewsAdminPage.searchClientName")} value={searchTerm} onChange={handleChange}/>
                         <button className="manage-review-submit-button" type="submit">
                             <img src={Search_light} alt={"searchBtn"}/>
                         </button>
@@ -199,7 +201,7 @@ function ManageReviews() {
 
                 {
                     error && <div className="row">
-                        <div className="col-12"><p className="error">Error: {error}</p></div>
+                        <div className="col-12"><p className="error">{t("alerts.error")}: {error}</p></div>
                     </div>
                 }
                 <div className="row">
@@ -233,7 +235,7 @@ function ManageReviews() {
                                                     className={review.pinned ? " review-eye review-pinned" : "review-eye review-not-pinned"}
                                                     onClick={() => {
                                                         if (isLoading) {
-                                                            toast.warn('Your previous request is still ongoing!', {
+                                                            toast.warn(t("reviewsAdminPage.ongoingPreviousRequest"), {
                                                                 position: "top-right",
                                                                 autoClose: 5000,
                                                                 hideProgressBar: false,
@@ -305,6 +307,17 @@ function ManageReviews() {
                 pauseOnHover
                 theme="dark"
             />
+
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/dashboard";
+                    }}
+                >
+                    {t("back")}
+                </button>
+            </div>
         </div>
     );
 

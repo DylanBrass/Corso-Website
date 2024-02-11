@@ -48,7 +48,7 @@ function NavigationBar() {
                                 // @ts-ignore
                                 auth.userRoles().includes("Admin") &&
                                 <Nav.Item className={"item"}>
-                                    <Nav.Link href="/dashboard" className={"m-auto item-nav-text"}>{t("dashboard").toUpperCase()}</Nav.Link>
+                                    <Nav.Link href="/dashboard" className={"m-auto item-nav-text"}>{t("navigation.dashboard").toUpperCase()}</Nav.Link>
                                 </Nav.Item>
                             }
                             {
@@ -62,7 +62,7 @@ function NavigationBar() {
                             <Nav.Item className={"item"}>
 
                                 <Nav.Link href="/" active className={"m-auto item-nav-text"}>
-                                    {t("home")}
+                                    {t("navigation.home")}
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item className={"item"}>
@@ -74,7 +74,7 @@ function NavigationBar() {
                                         changeLanguage(languages[nextLanguageIndex]);
                                     }}
                                 >
-                                    {t("language")}
+                                    {t("navigation.language")}
                                 </Nav.Link>
                             </Nav.Item>
 
@@ -86,7 +86,7 @@ function NavigationBar() {
                                     <Nav.Link
                                         href={process.env.REACT_APP_BE_HOST + `oauth2/authorization/okta`}
                                         className={"m-auto item-nav-text"}>
-                                        {t("login")}
+                                        {t("navigation.login")}
                                     </Nav.Link>
                                 </Nav.Item>
                             }
@@ -104,7 +104,7 @@ function NavigationBar() {
                                             }
                                         }>
                                             <span className={"logout-btn-text"}>
-                                                {t("logout")}
+                                                {t("navigation.logout")}
                                             </span>
                                         </button>
                                     </form>
@@ -122,7 +122,7 @@ function NavigationBar() {
                                                  className={"d-none d-lg-block"}/>
                                         </Link>
                                         <Nav.Link href={"/profile"} id={"profile-text"}
-                                                  className={"d-block d-lg-none item item-nav-text"}>{t("profile")}</Nav.Link>
+                                                  className={"d-block d-lg-none item item-nav-text"}>{t("navigation.profile")}</Nav.Link>
                                     </div>
                                 }
                             </Nav.Item>

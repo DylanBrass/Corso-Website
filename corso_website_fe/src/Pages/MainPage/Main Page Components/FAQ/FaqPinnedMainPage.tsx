@@ -41,10 +41,10 @@ function FaqPinnedMainPage() {
             <div className="row">
                 <div className="col-md-5">
                     <h1 className="faq-title-mainPage">{t("faq")}</h1>
-                    <p className="faq-blurb">{t("faqBlurb")}</p>
+                    <p className="faq-blurb">{t("mainPage.faqBlurb")}</p>
                     <div className="row flex-row">
                         <div className="col-8">
-                            <a href="/faq" className="view-more-faq">{t("viewMoreFaq")}</a>
+                            <a href="/faq" className="view-more-faq">{t("mainPage.viewMoreFaq")}</a>
                         </div>
                         <div className="col-4 align-items-left">
                             <img src={arrowImg} alt="arrow" className="arrow"/>

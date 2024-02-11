@@ -3,6 +3,7 @@ import axios from 'axios';
 import OrderTile, {Order} from "../../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import CustomPagination from "../../../Components/Pagination";
+import {useTranslation} from "react-i18next";
 
 
 
@@ -11,6 +12,7 @@ function PendingOrdersPage() {
     const [page, setPage] = useState(1);
     const [pageSize,] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
+    const {t} = useTranslation();
 
     const fetchOrders = async (pageNumber: number, size: number) => {
         try {
@@ -53,7 +55,7 @@ function PendingOrdersPage() {
             <NavigationBar/>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"mb-5"}>
-                <h1>CLIENT REQUESTS</h1>
+                <h1>{t("dashboardPage.pendingOrders").toUpperCase()}</h1>
                 {
                     orders.map((order: Order) => (
                         <OrderTile order={order}
@@ -65,7 +67,16 @@ function PendingOrdersPage() {
                     ))
                 }
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}/>
-
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/dashboard";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
+                </div>
             </div>
         </>
     );

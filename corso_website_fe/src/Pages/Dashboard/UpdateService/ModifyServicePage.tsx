@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
 import Cloudinary from "../../../Services/Cloudinary";
+import {useTranslation} from "react-i18next";
 
 function ModifyServicePage() {
   const { serviceId } = useParams();
@@ -22,6 +23,7 @@ function ModifyServicePage() {
   const auth = useAuth();
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     // @ts-ignore
@@ -89,12 +91,12 @@ function ModifyServicePage() {
       setIsLoading(false)
 
       if (response.status === 200) {
-        await swal('Service modified!', 'Service has been modified successfully!', 'success');
+        await swal((t("alerts.service.serviceModifiedTitle")), (t("alerts.service.serviceModifiedMessage")), 'success');
         navigate(-2);
       }
     } catch (error) {
       // @ts-ignore
-      swal('Error!', error.response.data.message, 'error').then(() => {
+      swal((t("alerts.error")), error.response.data.message, 'error').then(() => {
         // @ts-ignore
         auth.authError(error.response.status);
       });
@@ -105,7 +107,7 @@ function ModifyServicePage() {
       <>
         <NavigationBar />
         <div className="modify-service-page">
-          <h1 className="modify-service">Edit Service</h1>
+          <h1 className="modify-service">{t("servicesAdminPage.editService")}</h1>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="container modify-service-container">
               <div className="grid-container">
@@ -116,7 +118,7 @@ function ModifyServicePage() {
                         type="text"
                         id="serviceName"
                         name="serviceName"
-                        placeholder="Service Name"
+                        placeholder={t("servicesAdminPage.serviceName")}
                         required
                         value={serviceName}
                         onChange={(e) => setServiceName(e.target.value)}
@@ -199,9 +201,19 @@ function ModifyServicePage() {
             </div>
 
             <div className="submit-button-container">
-              <input type="submit" value="Save Changes" className="submit-button"/>
+              <input type="submit" value={t("save")} className="submit-button"/>
             </div>
           </form>
+          <div className="custom-row text-center">
+            <button
+                className="back-btn"
+                onClick={() => {
+                  window.location.href = "/adminServices/" + serviceId;
+                }}
+            >
+              {t("back")}
+            </button>
+          </div>
         </div>
       </>
   );

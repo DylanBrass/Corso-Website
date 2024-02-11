@@ -8,6 +8,7 @@ import pen from '../../../ressources/images/pen.svg';
 import {SyncLoader} from "react-spinners";
 import {useNavigate} from "react-router";
 import Cloudinary from "../../../Services/Cloudinary";
+import {useTranslation} from "react-i18next";
 
 function AddServicePage() {
     const [serviceName, setServiceName] = useState('');
@@ -21,6 +22,8 @@ function AddServicePage() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate()
+
+    const {t} = useTranslation();
 
     useEffect(() => {
         // @ts-ignore
@@ -56,12 +59,12 @@ function AddServicePage() {
             })
             .then((r) => {
                 if (r.status === 201) {
-                    swal('Service created!', 'Service has been created successfully!', 'success');
+                    swal(t("alerts.service.serviceCreatedTitle"), (t("alerts.service.serviceCreatedMessage")), 'success');
                     navigate(-1)
                 }
             })
             .catch((e) => {
-                swal('Error!', e.response.data.message, 'error').then(() => {
+                swal(t("alerts.error"), e.response.data.message, 'error').then(() => {
                     // @ts-ignore
                     auth.authError(e.response.status);
                 });
@@ -73,7 +76,7 @@ function AddServicePage() {
         <>
             <NavigationBar />
             <div className="add-service-page">
-            <h1 className="add-service">Add A Service</h1>
+            <h1 className="add-service">{t("servicesAdminPage.addService")}</h1>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="container add-service-container">
                     <div className="grid-container">
@@ -84,7 +87,7 @@ function AddServicePage() {
                                     type="text"
                                     id="serviceName"
                                     name="serviceName"
-                                    placeholder="Service Name"
+                                    placeholder={t("servicesAdminPage.serviceName")}
                                     required
                                     value={serviceName}
                                     onChange={(e) => setServiceName(e.target.value)}
@@ -167,7 +170,7 @@ function AddServicePage() {
                 </div>
 
                 <div className="submit-button-container">
-                    <input type="submit" value="Submit" className="submit-button"/>
+                    <input type="submit" value={t("submitButton")} className="submit-button"/>
                 </div>
             </form>
             </div>

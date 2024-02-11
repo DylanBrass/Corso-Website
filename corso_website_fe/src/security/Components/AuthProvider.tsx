@@ -2,6 +2,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import Cookies from "js-cookie";
 import axios from "axios";
 import {Bounce, toast, ToastContainer} from "react-toastify";
+import {useTranslation} from "react-i18next";
 
 // @ts-ignore
 const AuthContext = createContext();
@@ -16,6 +17,8 @@ const userRoles = () => {
 }
 // @ts-ignore
 const AuthProvider = ({children}) => {
+    const { t } = useTranslation();
+
     const [isAuthenticated, setIsAuthenticated] =
         useState(() => {
             return Boolean(Cookies.get("isAuthenticated")) || false
@@ -109,7 +112,7 @@ const AuthProvider = ({children}) => {
     const authError = (status: number) => {
         if (status === 401) {
             if (document.getElementById("auth-error") === null) {
-                toast.info('Your session expired, we are login you back in!', {
+                toast.info((t("session.sessionExpired")), {
                     position: "top-center",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -163,9 +166,10 @@ const AuthProvider = ({children}) => {
 }
 
 const useAuth = () => {
+    const { t } = useTranslation();
     const context = useContext(AuthContext);
     if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
+        throw new Error(t("session.useAuthMessage"));
     }
     return context
 };

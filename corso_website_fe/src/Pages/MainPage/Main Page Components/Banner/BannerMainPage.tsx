@@ -45,23 +45,23 @@ function BannerMainPage({image}) {
             backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0)), url(${image})`
         }}>
             <div className={"row row-banner m-4 m-s-0"}>
-            <h1 id={"greeting"} className={"mt-5 anonymous-banner-title"}>{t("greetingCustomer")} {name}!</h1>
+            <h1 id={"greeting"} className={"mt-5 anonymous-banner-title"}>{t("banner.greetingCustomer")} {name}!</h1>
 
                 <div className={"col-12 d-flex flex-column flex-md-row"}>
                         <button className={"banner-btn mb-4"}
                                 onClick={() => {
                                     window.location.href = "/profile/orders"
-                                }}>{t("pastOrders")}
+                                }}>{t("banner.pastOrders")}
                         </button>
                         <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
 
-                                }}>{t("viewCurrentOrders")}
+                                }}>{t("banner.viewCurrentOrders")}
                         </button>
                         <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
 
-                                }}>{t("requestAnOrderNow")}
+                                }}>{t("banner.requestAnOrderNow")}
                         </button>
                     </div>
 

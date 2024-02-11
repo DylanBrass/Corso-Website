@@ -39,7 +39,7 @@ function ViewServiceDetails() {
     }
 
     if (!serviceDetails) {
-        return <div>Loading...</div>;
+        return <div>{t("load.loading")}</div>;
     }
 
     return (
@@ -55,11 +55,16 @@ function ViewServiceDetails() {
                     <div className="col-lg-6 col-md-12 service-details">
                         <p className="lead">{serviceDetails.serviceDescription}</p>
                     </div>
-                <div className="row custom-row">
-                    <a href="/" className="home-hyperlink">
-                        {t("backToMainPage")}
-                    </a>
-                </div>
+                    <div className="custom-row text-center">
+                        <button
+                            className="back-btn"
+                            onClick={() => {
+                                window.location.href = "/";
+                            }}
+                        >
+                            {t("back")}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

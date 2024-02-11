@@ -15,8 +15,8 @@ function BannerMainPageAnonymous({image}) {
             <div className={"row row-banner m-4 m-s-0"}>
                 <div className={"row d-lg-flex"}>
                     <div className={" d-lg-block"}>
-                        <h1 className={"mt-5 anonymous-banner-title"}>{t("anonymousBannerWelcome")}</h1>
-                        <p className={"anonymous-banner-subtitle"}>{t("anonymousBannerRegisterPrompt")}</p>
+                        <h1 className={"mt-5 anonymous-banner-title"}>{t("banner.anonymousBannerWelcome")}</h1>
+                        <p className={"anonymous-banner-subtitle"}>{t("banner.anonymousBannerRegisterPrompt")}</p>
                     </div>
                 </div>
 
@@ -26,7 +26,7 @@ function BannerMainPageAnonymous({image}) {
                                 onClick={() => {
                                     window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
                                 }}>
-                            {t("registerNow")}
+                            {t("banner.registerNow")}
                         </button>
                         <button className={"banner-btn mb-4"}
                                 style={{marginLeft: "10px"}}
@@ -34,7 +34,7 @@ function BannerMainPageAnonymous({image}) {
                                     //like to request an order
                                     //window.location.href = process.env.REACT_APP_BE_HOST + ""
                                 }}>
-                            {t("requestNow")}
+                            {t("banner.requestNow")}
                         </button>
                     </div>
 

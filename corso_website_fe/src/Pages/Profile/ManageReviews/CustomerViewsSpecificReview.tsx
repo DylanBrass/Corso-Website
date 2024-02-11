@@ -90,7 +90,7 @@ function CustomerViewsSpecificReview() {
         })
             .then(res => {
                 // @ts-ignore
-                swal(t("deleteReviewAlertTitle"), t("deleteReviewAlertMessage"), "success").then(
+                swal(t("alerts.review.deleteReviewAlertTitle"), t("alerts.review.deleteReviewAlertMessage"), "success").then(
                     () =>  window.location.href = '/profile/reviews'
 
                 )
@@ -144,7 +144,7 @@ function CustomerViewsSpecificReview() {
         )
             .then(res => {
                 // @ts-ignore
-                swal(t("updateReviewAlertTitle"), t("updateReviewAlertMessage"), "success")
+                swal(t("alerts.review.updateReviewAlertTitle"), t("alerts.review.updateReviewAlertMessage"), "success")
                     .then(() => {
                         getReview()
                         setIsEdit(!isEdit)
@@ -165,7 +165,7 @@ function CustomerViewsSpecificReview() {
     return (
         <>
             <NavigationBar />
-            <h1 className="review-title-view-specific-customer">Your Review</h1>
+            <h1 className="review-title-view-specific-customer">{t("reviews.review")}</h1>
             <div className="container review-tile-view-specific-container">
                 <div className="row">
                     <div className="col-2 review-box-stars">
@@ -214,7 +214,7 @@ function CustomerViewsSpecificReview() {
                                 }}
                             >
                                 <div className="text-center">
-                                    <div style={{ marginBottom: '15px' }}>{t("deletingReview")}</div>
+                                    <div style={{ marginBottom: '15px' }}>{t("load.deletingReview")}</div>
                                     <SyncLoader className="spinner" color="#054AEB" />
                                 </div>
                             </Popup>
@@ -222,11 +222,21 @@ function CustomerViewsSpecificReview() {
                     </div>
                 </div>
                 <div className="row">
-                    {review.pinned && <p className="review-message">{t("reviewPinnedMessage")}</p>}
+                    {review.pinned && <p className="review-message">{t("reviews.reviewPinnedMessage")}</p>}
                     <input className="review-message" id={"message-edit"} onChange={(event) => {
                         setMessage(event.target.value)
                     }} defaultValue={message} disabled={isEdit}/>
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/profile/reviews";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </>
     );
