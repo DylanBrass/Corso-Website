@@ -19,8 +19,6 @@ function ViewSpecificGallery() {
 
     const {t} = useTranslation();
 
-    const navigate = useNavigate();
-
     const [gallery, setGallery] = useState<Gallery>(new Gallery("", "", "", 0));
 
     const {galleryId} = useParams();

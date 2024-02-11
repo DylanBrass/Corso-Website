@@ -30,7 +30,7 @@ function CreateExternalOrderPage() {
 
     useEffect(() => {
         setSelectedSearchField(t("userOptions.email"));
-    }, [i18n.language]);
+    }, [i18n.language, t]);
 
     const {ref} = usePlacesWidget({
         apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
