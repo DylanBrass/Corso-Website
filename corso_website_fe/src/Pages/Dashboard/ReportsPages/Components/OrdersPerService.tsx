@@ -62,7 +62,7 @@ const CustomTooltip = ({active, payload, label}) => {
                     boxShadow: "0 0 10px rgba(0,0,0,0.5)"
                 }}
             >
-                <p className="label">{`${label}`}</p>
+                <p className="label">{`${checkIfDatesAreMoreOrEqualThanTwoMonths((document.getElementById("start") as HTMLInputElement).value, (document.getElementById("end") as HTMLInputElement).value) ? label.substring(0, 7) : label}`}</p>
                 {
                     payload.map((service: any, index: number) => (
                         <p key={index} className="label">{`${service.name}: ${service.value}`}</p>
