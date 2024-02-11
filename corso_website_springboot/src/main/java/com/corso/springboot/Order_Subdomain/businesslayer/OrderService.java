@@ -41,9 +41,16 @@ public interface OrderService {
 
     OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException;
 
+    OrderResponse updateOrderProgressionByOrderId(String orderId, OrderProgressionRequest orderProgressionRequest) throws MessagingException;
+
+
     Integer countAllOverdueOrders();
 
     List<OrdersPerMonth> getTotalOrderRequestByMonth(int year);
 
     void deleteOrderByOrderId(String orderId);
+
+
+
+    OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws  MessagingException;
 }

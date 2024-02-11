@@ -1,0 +1,122 @@
+.updateAndCancel-orderProgression-divClass {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5%;
+}
+
+.label-progression-divClass{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 3%;
+
+}
+
+.updateOrderBtn-divClass {
+    display: flex;
+    margin-right: 10%;
+    margin-left: 20%;
+    margin-top:3.5%;
+}
+
+.cancelOrderBtn-divClass{
+    display: flex;
+    margin-left: 10%;
+    margin-top:3.5%;
+}
+
+.update-orderProgression-btn,
+.cancel-orderProgression-btn {
+    flex: 1;
+    border-radius: 15px;
+    background: #C1EBB7;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    margin-top: 5%;
+}
+
+.cancel-orderProgression-btn {
+    background: #D9D9D9;
+}
+
+.hours-worked-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10%;
+}
+
+.hours-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin-left: 82%;
+}
+
+.hours-worked-title {
+    font-size: 16px;
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hours-numbers-container {
+    display: flex;
+    align-items: center;
+}
+
+.hours-button {
+    width: 100px;
+    height: 30px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+}
+
+.display-hours-worked {
+    font-size: 16px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+.progression-divClass {
+    display: flex;
+    align-items: center;
+    margin-left: 8%;
+
+}
+
+.progression-editOrderPage-title {
+    font-size: 24px;
+    margin-top: 2%;
+}
+
+@media only screen and (max-width: 768px) {
+    .hours-container {
+        margin-left: 12%;
+    }
+
+    .updateAndCancel-orderProgression-divClass {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .update-orderProgression-btn,
+    .cancel-orderProgression-btn {
+        margin-top: 5%;
+        width: 100%;
+    }
+
+    .progression-divClass {
+        margin-right: 0;
+    }
+}

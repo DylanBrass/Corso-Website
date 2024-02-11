@@ -33,6 +33,11 @@ export default function ViewSpecificInactiveOrder() {
         )
             .then(res => {
                 const order = res.data;
+                if (order.orderStatus.toLowerCase() === "pending") {
+                    window.location.href = `/manage/orders/${orderId}`;
+                }else if (order.orderStatus.toLowerCase() === "in_progress") {
+                    window.location.href = `/manage/currentOrder/${orderId}`;
+                }
                 setOrder(order);
             })
             .catch(err => {

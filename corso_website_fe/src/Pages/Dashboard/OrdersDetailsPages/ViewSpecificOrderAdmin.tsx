@@ -37,6 +37,11 @@ function ViewSpecificOrderAdmin() {
         )
             .then(res => {
                 const order = res.data;
+                if(order.orderStatus.toUpperCase() === "COMPLETED" || order.orderStatus.toUpperCase() === "CANCELLED" || order.orderStatus.toUpperCase() === "DECLINED") {
+                    window.location.href = `/manage/orders/inactive/${orderId}`;
+                }else if(order.orderStatus.toUpperCase() === "IN_PROGRESS") {
+                    window.location.href = `/manage/currentOrder/${orderId}`;
+                }
                 setOrder(order);
             })
             .catch(err => {
@@ -167,6 +172,12 @@ function ViewSpecificOrderAdmin() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [order, setOrder] = useState(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
+
+
+
+
+
+
     return (
         <div>
             <NavigationBar/>

@@ -8,6 +8,7 @@ import com.corso.springboot.Order_Subdomain.presentationlayer.*;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrdersPerMonth.OrdersPerMonth;
 import com.corso.springboot.Service_Subdomain.businesslayer.ServiceService;
 import com.corso.springboot.Service_Subdomain.datalayer.ServiceIdentifier;
+import com.corso.springboot.Service_Subdomain.presentationlayer.ServiceResponse;
 import com.corso.springboot.configuration.security.exceptions.Auth0Error;
 import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
@@ -388,6 +389,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
+
     @Override
     public OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderIdAndUserId(orderId, userId);
@@ -417,6 +419,95 @@ public class OrderServiceImpl implements OrderService {
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
     }
+
+    @Override
+    public OrderResponse updateOrderProgressionByOrderId(String orderId, OrderProgressionRequest orderProgressionRequest) throws MessagingException {
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        if (order.getOrderStatus() != Status.IN_PROGRESS) {
+            throw new InvalidRequestException("Order cannot be updated, it is not in in progress status, meaning it was accepted or cancelled already : " + order.getOrderStatus());
+        }
+
+        Map<String, String> parameters = getStringStringMapForOrderProgression(orderProgressionRequest, order);
+
+        emailService.sendEmail(order.getCustomerEmail(), "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been updated", "UpdateOrder", parameters);
+
+
+        order.setProgressInformation(orderProgressionRequest.getProgression());
+
+        order.setHoursWorked(orderProgressionRequest.getHoursWorked());
+
+        order.setEstimatedDuration(orderProgressionRequest.getEstimatedDuration());
+
+        order.setServiceId(new ServiceIdentifier(orderProgressionRequest.getServiceId()));
+
+        OrderResponse orderResponse = orderResponseMapper.toOrderResponse(orderRepository.save(order));
+
+        ServiceResponse service = serviceService.getServiceByServiceId(orderProgressionRequest.getServiceId());
+
+        if (service == null)
+            throw new ServiceNotFoundException("Service not found with id: " + orderProgressionRequest.getServiceId());
+
+
+
+        orderResponse.setService(service);
+
+        return orderResponse;
+
+    }
+
+    private static Map<String, String> getStringStringMapForOrderProgression(OrderProgressionRequest orderProgressionRequest, Order order) {
+        Map<String, String> parameters = new HashMap<>();
+
+        //Previous order details
+        parameters.put("name", order.getCustomerFullName());
+
+        parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
+
+        parameters.put("previousAddress", order.getCustomerAddress());
+
+        parameters.put("previousCity", order.getCustomerCity());
+
+        parameters.put("previousPostalCode", order.getCustomerPostalCode());
+
+        parameters.put("previousApartmentNumber", order.getCustomerApartmentNumber());
+
+        parameters.put("previousProgressionOrder", order.getProgressInformation());
+
+        parameters.put("previousHoursWorked", String.valueOf(order.getHoursWorked()));
+
+        parameters.put("previousEstimatedDuration", String.valueOf(order.getEstimatedDuration()));
+
+
+
+
+        //New order details
+
+        parameters.put("name", order.getCustomerFullName());
+
+        parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
+
+        parameters.put("newAddress", order.getCustomerAddress());
+
+        parameters.put("newCity", order.getCustomerCity());
+
+        parameters.put("newPostalCode", order.getCustomerPostalCode());
+
+        parameters.put("newApartmentNumber", order.getCustomerApartmentNumber());
+
+        parameters.put("newProgressionOrder", orderProgressionRequest.getProgression());
+
+        parameters.put("newHoursWorked", String.valueOf(orderProgressionRequest.getHoursWorked()));
+
+        parameters.put("newEstimatedDuration", String.valueOf(orderProgressionRequest.getEstimatedDuration()));
+
+        return parameters;
+    }
+
 
     @Override
     public Integer countAllOverdueOrders() {
@@ -451,6 +542,59 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(order);
 
     }
+
+
+    @Override
+    public OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws MessagingException {
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+
+
+        Status newcompletedStatus = Status.COMPLETED;
+
+
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        if (order.getOrderStatus() != Status.IN_PROGRESS) {
+            throw new InvalidRequestException("Order cannot be updated, it is not in in progress status, meaning it was accepted or cancelled already.");
+        }
+
+        String recipient = order.getCustomerEmail();
+        String subject = "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been completed";
+        String text = "Dear " + order.getCustomerFullName() + ",\n\n" +
+                "We are pleased to inform you that your order with ID " + orderId + " has been completed.\n\n" +
+                "Thank you for choosing us.\n\n" +
+                "Sincerely,\n" +
+                "Your Company Name";
+
+        emailService.sendEmail(recipient, subject, text);
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("name", order.getCustomerFullName());
+        parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
+        parameters.put("previousAddress", order.getCustomerAddress());
+        parameters.put("previousPhone", order.getCustomerPhone());
+        parameters.put("previousCity", order.getCustomerCity());
+        parameters.put("previousPostalCode", order.getCustomerPostalCode());
+        parameters.put("previousApartmentNumber", order.getCustomerApartmentNumber());
+        parameters.put("newAddress", order.getCustomerAddress());
+        parameters.put("newPhone", order.getCustomerPhone());
+        parameters.put("newCity", order.getCustomerCity());
+        parameters.put("newPostalCode", order.getCustomerPostalCode());
+        parameters.put("newApartmentNumber", order.getCustomerApartmentNumber());
+        parameters.put("progression", order.getProgressInformation());
+        parameters.put("hoursWorked", String.valueOf(order.getHoursWorked()));
+        parameters.put("estimatedDuration", String.valueOf(order.getEstimatedDuration()));
+        parameters.put("serviceId", order.getServiceId().getServiceId());
+        parameters.put("reasonForCancellation", "Order has been completed");
+
+        order.setOrderStatus(newcompletedStatus);
+
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
+
 
     private static Map<String, String> getStringStringMap(OrderCustomerRequest customerUpdateOrderRequest, Order order) {
         Map<String, String> parameters = new HashMap<>();
@@ -509,7 +653,6 @@ public class OrderServiceImpl implements OrderService {
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
 
     }
-
 
 
 }
