@@ -1,15 +1,9 @@
 package com.corso.springboot.Customer_Subdomain.presentationlayer;
 
 
-import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestCustomer;
-import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
-import com.corso.springboot.configuration.security.models.UserInfoResponse;
-import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.email.datalayer.VerificationToken;
 import com.corso.springboot.email.datalayer.VerificationTokenRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
@@ -53,8 +44,6 @@ class CustomerControllerIntegrationTest {
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
 
-    @MockBean
-    private OrderService orderService;
 /*
     // needed for the creat test via customer
     //intentionally commented out
