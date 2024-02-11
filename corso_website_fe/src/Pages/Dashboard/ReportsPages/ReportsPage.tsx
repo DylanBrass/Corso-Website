@@ -21,6 +21,7 @@ export default function ReportsPage() {
             window.location.href = "/"
         }
 
+        // eslint-disable-next-line
     }, []);
 
     return (

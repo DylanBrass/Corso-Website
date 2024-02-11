@@ -88,13 +88,10 @@ function ViewSpecificOrder() {
             setLoading(false)
         } catch (error) {
 
-            swal((t("alerts.failed")), `${t("alerts.order.failedToCancelOrder")} ${order.orderTrackingNumber}.`, "error");
+            await swal((t("alerts.failed")), `${t("alerts.order.failedToCancelOrder")} ${order.orderTrackingNumber}.`, "error");
         }
     }
 
-    useEffect(() => {
-
-    }, [loading]);
 
 
     return (
