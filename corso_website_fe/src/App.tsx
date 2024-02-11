@@ -42,6 +42,7 @@ import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpe
 import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
 import ReportsPage from "./Pages/Dashboard/ReportsPages/ReportsPage";
 import MakePdfPage from "./Pages/Dashboard/ReportsPages/MakePdfPage";
+import RequestOrder from "./Pages/Profile/RequestAnOrder/RequestOrderCustomer";
 import ViewSpecificInactiveOrder from "./Pages/Dashboard/OrdersDetailsPages/ViewSpecificInactiveOrder";
 import RequestOrder from "./Pages/Profile/RequestAnOrder/RequestOrderCustomer";
 import OrderProgressionPage from "./Pages/Dashboard/OrdersPages/OrderProgressionPage";

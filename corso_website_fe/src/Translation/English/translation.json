@@ -450,4 +450,9 @@
   "orderDescription": "Order Description",
   "serviceType": "Service Type",
   "requestOrderTitle": "Request An Order"
+  "itemsPerPage": "Items per page",
+
+  "orderDescription": "Order Description",
+  "serviceType": "Service Type",
+  "requestOrderTitle": "Request An Order"
 }
