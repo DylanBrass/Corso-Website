@@ -68,6 +68,7 @@ public class SpringSecurityConfigBean {
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/faqs/preferred")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/reviews/pinned")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/corso/auth0/manage/users")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/corso/customers/orders/request")).hasAuthority("Customer")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()))

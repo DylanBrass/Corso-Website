@@ -2,6 +2,7 @@ package com.corso.springboot.Order_Subdomain.businesslayer;
 
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.*;
+import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderResponseMapper;
 import com.corso.springboot.Order_Subdomain.presentationlayer.*;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrdersPerMonth.OrdersPerMonth;
@@ -53,6 +54,9 @@ public class OrderServiceImplUnitTest {
 
     @Mock
     ServiceService serviceService;
+
+    @MockBean
+    private OrderRequestMapper orderRequestMapper;
 
     @Test
     void getAllOrders_ShouldSucceed() {
@@ -549,4 +553,28 @@ public class OrderServiceImplUnitTest {
     }
 
 
+
+    @Test
+    void customerRequestOrder_WhenServiceNotFound_ShouldThrowServiceNotFoundException() {
+        // Arrange
+        String userId = "userId123";
+        String userEmail = "user@example.com";
+
+        when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(null);
+
+        OrderRequestCustomer orderRequestCustomer = OrderRequestCustomer.builder()
+                .customerPhone("1234567890")
+                .customerAddress("123 Main St")
+                .customerCity("Montreal")
+                .customerPostalCode("J5R 5J4")
+                .customerApartmentNumber("")
+                .build();
+
+        try {
+            orderService.CustomerRequestOrder(userId, userEmail, orderRequestCustomer);
+        } catch (Exception e) {
+            assertEquals("Service not found", e.getMessage());
+        }
+
+    }
 }

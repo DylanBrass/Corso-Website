@@ -3,6 +3,7 @@ package com.corso.springboot.Customer_Subdomain.presentationlayer;
 import com.corso.springboot.Customer_Subdomain.businesslayer.CustomerService;
 import com.corso.springboot.Order_Subdomain.businesslayer.OrderService;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderCustomerRequest;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestCustomer;
 import com.corso.springboot.Order_Subdomain.presentationlayer.OrderResponse;
 import com.corso.springboot.Review_Subdomain.businesslayer.ReviewService;
 import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewRequest;
@@ -10,6 +11,8 @@ import com.corso.springboot.Review_Subdomain.presentationlayer.ReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -156,4 +159,19 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
 
     }
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
+    })
+    @PostMapping("/orders/request")
+    @PreAuthorize("hasAnyAuthority('Customer')")
+    public ResponseEntity<OrderResponse> CustomerRequestOrder(@AuthenticationPrincipal OidcUser principal, @Valid @RequestBody OrderRequestCustomer orderRequestCustomer) throws MessagingException {
+        String userId = principal.getSubject();
+        String userEmail = principal.getEmail();
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.CustomerRequestOrder(userId, userEmail, orderRequestCustomer));
+    }
+
 }
