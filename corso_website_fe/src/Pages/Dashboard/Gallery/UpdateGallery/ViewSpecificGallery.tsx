@@ -9,7 +9,6 @@ import pen from "../../../../ressources/images/pen.svg";
 import templateImg from "../../../../ressources/images/Upload_Image_Preview.png";
 import Cloudinary from "../../../../Services/Cloudinary";
 import swal from "sweetalert";
-import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
 
