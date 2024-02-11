@@ -147,6 +147,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceTimeByResponse> getServiceTimeByService(String dateStart, String dateEnd) {
+        if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
+            throw new ServiceBadRequestException("Invalid date range : " + dateStart + " - " + dateEnd);
+        }
         try {
 
             return serviceRepository.getHoursWorkedByServiceFromOrdersInRange(dateStart, dateEnd)
@@ -161,7 +164,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public String getTotalOrderRequestByService(String dateStart, String dateEnd) {
         if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
-            throw new ServiceBadRequestException("Invalid date range");
+            throw new ServiceBadRequestException("Invalid date range : " + dateStart + " - " + dateEnd);
         }
         try {
             List<DatabaseDTOOrdersPerService> databaseDTOOrdersPerServices = serviceRepository.getTotalOrderRequestByService(dateStart, dateEnd)
@@ -218,7 +221,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public List<DatabaseDTOTotalOrdersPerService> getTotalOrdersPerService(String dateStart, String dateEnd) {
         if (LocalDate.parse(dateStart).isAfter(LocalDate.parse(dateEnd))) {
-            throw new ServiceBadRequestException("Invalid date range");
+            throw new ServiceBadRequestException("Invalid date range : " + dateStart + " - " + dateEnd);
         }
         try {
             return serviceRepository.getTotalOrdersPerService(dateStart, dateEnd)

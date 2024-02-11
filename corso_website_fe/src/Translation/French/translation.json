@@ -1,4 +1,9 @@
 {
+  "to": "à",
+  "delete": "Supprimer",
+  "cancel": "Annuler",
+  "dueDate": "Date d'échéance",
+  "orderDate": "Date de la commande",
   "navigation": {
     "language": "English",
     "home": "Accueil",
@@ -362,6 +367,9 @@
 
   "reports": {
     "reports": "Rapports",
+    "totalOrdersIn": "Commandes totales en",
+    "totalOrdersFrom": "commandes entre le",
+    "totalHoursWorked": "heures totales travaillées entre le",
     "makePDF": "Créer un PDF",
     "reportTypes": {
       "timeByService": "Temps par service",
@@ -408,5 +416,9 @@
   "here": "ici",
   "save": "Sauvegarder",
   "backToMainPage": "Retour à la page principale",
-  "itemsPerPage": "Éléments par page"
+  "itemsPerPage": "Éléments par page",
+  "inactiveOrders": {
+    "warning": "Etes-vous sûr de vouloir supprimer cette commande, cette commande ne sera plus suivie dans les archives de Corso ?",
+    "irreversible": "Cette action est irréversible."
+  }
 }

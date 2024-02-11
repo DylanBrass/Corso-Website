@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import OrderTile, {OverdueOrder} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
@@ -20,7 +20,7 @@ function OverdueOrdersPage() {
 
             await axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/overdue?pageSize=${size}&offset=${(pageNumber - 1) * size}`)
                 .then(res => {
-                    
+
                     const newOrders = res.data.map((order: any) => {
                         const dueDate = parseISO(order.dueDate);
 
@@ -41,7 +41,7 @@ function OverdueOrdersPage() {
                         )
                     })
 
-                    
+
                     setOrders(newOrders);
 
                     const newTotalPages = Math.ceil(res.data[0].totalOrdersMatchingRequest / size);
@@ -53,7 +53,7 @@ function OverdueOrdersPage() {
 
 
         } catch (error) {
-            
+
         }
     };
 
@@ -74,6 +74,7 @@ function OverdueOrdersPage() {
                 {orders.map(order => (
                     <OrderTile
                         action={() => {
+                            window.location.href = "/manage/currentOrder/" + order.orderId
                         }
                         }
                         key={order.orderTrackingNumber}

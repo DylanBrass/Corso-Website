@@ -290,5 +290,49 @@ public class OrderControllerIntegrationTest {
     }
 
 
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void deleteOrderById_thenReturnStatusOk() {
+        //arrange
+        String orderId = "0a44b38b-08af-4321-8117-9a5c32ff3a29";
+        //act
+        webTestClient.delete()
+                .uri(BASE_URI_ORDERS + "/manage/" + orderId + "/permanent")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isNoContent();
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void deleteNoneExistingOrder_thenReturnStatusNotFound() {
+        //arrange
+        String orderId = "order1";
+        //act
+        webTestClient.delete()
+                .uri(BASE_URI_ORDERS + "/manage/" + orderId + "/permanent")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isNotFound();
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void deleteOrderNotCancelledCompletedDeclined_thenReturnStatusBadRequest() {
+        //arrange
+        String orderId = "a0119367-4963-4019-b433-ba639fdf6b41";
+        //act
+        webTestClient.delete()
+                .uri(BASE_URI_ORDERS + "/manage/" + orderId + "/permanent")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isEqualTo(422)
+                .expectBody().jsonPath("$.message").isEqualTo("Order cannot be deleted, it is not in cancelled, declined or completed status! : PENDING");
+
+        orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+        webTestClient.delete()
+                .uri(BASE_URI_ORDERS + "/manage/" + orderId + "/permanent")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isEqualTo(422)
+                .expectBody().jsonPath("$.message").isEqualTo("Order cannot be deleted, it is not in cancelled, declined or completed status! : IN_PROGRESS");
+    }
 
 }
+

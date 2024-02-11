@@ -28,10 +28,14 @@ export default function MakePdfPage() {
 
     const [ordersPerMonth, setOrdersPerMonth] = React.useState([])
     const [displayOrdersPerMonth, setDisplayOrdersPerMonth] = React.useState(true)
+    const [displayOrdersPerMonthChoice, setDisplayOrdersPerMonthChoice] = React.useState<number[]>([1])
+    const [showTextForOrdersPerMonth, setShowTextForOrdersPerMonth] = useState(true)
+
 
     const [orderPerService, setOrderPerService] = useState([]);
     const [allServices, setAllServices] = useState<any[]>([])
     const [displayOrdersPerService, setDisplayOrdersPerService] = useState(true)
+    const [showTextForOrdersPerService, setShowTextForOrdersPerService] = useState(true)
 
     const [page2Choice, setPage2Choice] = useState<number[]>([1])
 
@@ -53,7 +57,9 @@ export default function MakePdfPage() {
             .catch((e: any) => {
                 console.error(e);
                 // @ts-ignore
-                auth.authError(e.response.status);
+                swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+                // @ts-ignore
+                auth.authError(e.response.status)
             }))
 
         let start = (document.getElementById("start") as HTMLInputElement)?.value;
@@ -70,6 +76,8 @@ export default function MakePdfPage() {
         ).catch((e: any) => {
             console.error(e);
             // @ts-ignore
+            swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+            // @ts-ignore
             auth.authError(e.response.status);
         })
 
@@ -84,6 +92,8 @@ export default function MakePdfPage() {
         ).catch((e: any) => {
             console.error(e);
             // @ts-ignore
+            swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+            // @ts-ignore
             auth.authError(e.response.status);
         })
 
@@ -96,6 +106,9 @@ export default function MakePdfPage() {
             })
             .catch((e: any) => {
                 console.error(e);
+                // @ts-ignore
+                swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+
                 // @ts-ignore
                 auth.authError(e.response.status);
             })
@@ -120,6 +133,13 @@ export default function MakePdfPage() {
         setDisplayTotalOrdersPerService(!displayTotalOrdersPerService)
     }
 
+    const addOrRemoveTextForOrdersPerMonth = () => {
+        setShowTextForOrdersPerMonth(!showTextForOrdersPerMonth)
+    }
+
+    const addOrRemoveTextForOrdersPerService = () => {
+        setShowTextForOrdersPerService(!showTextForOrdersPerService)
+    }
 
     React.useEffect(() => {
 
@@ -148,10 +168,29 @@ export default function MakePdfPage() {
                                     {displayOrdersPerMonth ? "Remove" : "Add"} Orders Per Month
                                 </button>
                                 <div>
+
+                                    <h2>Choose Diagrams</h2>
+                                    <button onClick={() => {
+                                        if (displayOrdersPerMonthChoice.includes(1)) {
+                                            setDisplayOrdersPerMonthChoice(displayOrdersPerMonthChoice.filter((choice) => choice !== 1))
+                                        } else {
+                                            setDisplayOrdersPerMonthChoice([...displayOrdersPerMonthChoice, 1])
+                                        }
+                                    }}
+                                            className={displayOrdersPerMonthChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    >
+                                        {displayOrdersPerMonthChoice.includes(1) ? "Remove" : "Add"} Bar Chart
+                                    </button>
                                     <h2>Choose Year</h2>
                                     <input type="number" min="1900" max={currentYear} step="1"
                                            defaultValue={currentYear}
                                            id="year"/>
+                                    <h2>Display Text</h2>
+                                    <button onClick={addOrRemoveTextForOrdersPerMonth}
+                                            className={showTextForOrdersPerMonth ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    >
+                                        {showTextForOrdersPerMonth ? "Remove" : "Add"} Text
+                                    </button>
                                 </div>
                             </div>
                         </section>
@@ -169,6 +208,7 @@ export default function MakePdfPage() {
 
                                     <h2>Choose Dates</h2>
                                     <input type="date" id="start" defaultValue={getOneYearAgo()}/>
+                                    {" "}to{" "}
                                     <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
 
                                     <h2>Choose Diagrams</h2>
@@ -208,7 +248,14 @@ export default function MakePdfPage() {
                                     >
                                         {page2Choice.includes(3) ? "Remove" : "Add"} Bar Chart
                                     </button>
+                                    <h2>Display Text</h2>
+                                    <button onClick={addOrRemoveTextForOrdersPerService}
+                                            className={showTextForOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    >
+                                        {showTextForOrdersPerService ? "Remove" : "Add"} Text
+                                    </button>
                                 </div>
+
                             </div>
                         </section>
                     </div>
@@ -227,6 +274,7 @@ export default function MakePdfPage() {
                                 </button>
                                 <br/>
                                 <input type="date" id="startTotal" defaultValue={getOneYearAgo()}/>
+                                {" "}to{" "}
                                 <input type="date" id="endTotal" defaultValue={new Date().toISOString().split('T')[0]}/>
 
                                 <h3>Choose Diagrams</h3>
@@ -267,6 +315,7 @@ export default function MakePdfPage() {
                                 </button>
                                 <h2>Choose Dates</h2>
                                 <input type="date" id="startTimeBy" defaultValue={getOneYearAgo()}/>
+                                {" "}to{" "}
                                 <input type="date" id="endTimeBy"
                                        defaultValue={new Date().toISOString().split('T')[0]}/>
                                 <h2>Choose Diagrams</h2>
@@ -297,7 +346,7 @@ export default function MakePdfPage() {
                         </section>
                     </div>
                 </div>
-                <button onClick={fetchData} className={"m-5"}>
+                <button onClick={fetchData} className={"m-5 btn btn-primary"}>
                     Refresh PDF
                 </button>
             </center>
@@ -324,15 +373,18 @@ export default function MakePdfPage() {
                                     (In {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
                                 </Text>
 
-                                <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}/>
+                                <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}
+                                                   choice={displayOrdersPerMonthChoice}/>
 
-                                {
+                                {showTextForOrdersPerMonth &&
+
                                     ordersPerMonth.map((month: any) => {
                                         return <Text style={{
                                             fontSize: 12,
                                             margin: 12
                                         }} key={month.month}>{getMonthName(month.month)}: {month.totalOrders}</Text>
                                     })
+
                                 }
                             </div>
                         </Page>
@@ -353,39 +405,41 @@ export default function MakePdfPage() {
                                 <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
                                                      choice={page2Choice}/>
 
-                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                                    {orderPerService.map((service: any) => {
-                                        console.log("service", service);
-                                        return (
-                                            <Text
-                                                wrap={false}
-                                                style={{
-                                                    fontSize: 12,
-                                                    margin: 12,
-                                                }} key={service.date}>
-                                                <Text style={{
-                                                    fontSize: 20,
-                                                    margin: 12,
-                                                }}>
-                                                    {checkIfDatesAreMoreOrEqualThanTwoMonths(
-                                                        (document.getElementById("start") as HTMLInputElement)?.value || new Date().toISOString(),
-                                                        (document.getElementById("end") as HTMLInputElement)?.value || new Date().toISOString()
-                                                    ) ? service.date.substring(0, 7) : service.date}
-                                                </Text>
-                                                {"\n"}
-                                                {Object.keys(service)
-                                                    .filter((key) => key !== "date")
-                                                    .map((key) => (
-                                                        <Text key={key}>
-                                                            {key}: {service[key]}
-                                                            {"\n"}
-                                                        </Text>
-                                                    ))}
-                                            </Text>
-                                        );
-                                    })}
-                                </View>
+                                {showTextForOrdersPerService &&
 
+                                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                                        {orderPerService.map((service: any) => {
+                                            console.log("service", service);
+                                            return (
+                                                <Text
+                                                    wrap={false}
+                                                    style={{
+                                                        fontSize: 12,
+                                                        margin: 12,
+                                                    }} key={service.date}>
+                                                    <Text style={{
+                                                        fontSize: 20,
+                                                        margin: 12,
+                                                    }}>
+                                                        {checkIfDatesAreMoreOrEqualThanTwoMonths(
+                                                            (document.getElementById("start") as HTMLInputElement)?.value || new Date().toISOString(),
+                                                            (document.getElementById("end") as HTMLInputElement)?.value || new Date().toISOString()
+                                                        ) ? service.date.substring(0, 7) : service.date}
+                                                    </Text>
+                                                    {"\n"}
+                                                    {Object.keys(service)
+                                                        .filter((key) => key !== "date")
+                                                        .map((key) => (
+                                                            <Text key={key}>
+                                                                {key}: {service[key]}
+                                                                {"\n"}
+                                                            </Text>
+                                                        ))}
+                                                </Text>
+                                            );
+                                        })}
+                                    </View>
+                                }
                             </div>
                         </Page>
 

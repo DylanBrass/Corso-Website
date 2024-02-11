@@ -1,4 +1,9 @@
 {
+  "to": "to",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "dueDate": "Due Date",
+  "orderDate": "Order Date",
   "navigation": {
     "language": "French (Français)",
     "home": "Home",
@@ -369,7 +374,9 @@
       "ordersPerMonth": "Orders Per Month"
     },
     "selectReport": "Select a Report",
-
+    "totalOrdersIn": "Total Orders in",
+    "totalOrdersFrom": "orders from",
+    "totalHoursWorked": "hours worked from",
     "timeByService": "Time By Service",
     "ordersPerService": "Orders Per Service",
     "ordersPerMonth": "Orders Per Month",
@@ -408,5 +415,9 @@
   "here": "here",
   "save": "Save",
   "backToMainPage": "Back to main page",
-  "itemsPerPage": "Items per page"
+  "itemsPerPage": "Items per page",
+  "inactiveOrders": {
+    "warning": "Are you sure you want to delete this order, this order will no longer be tracked in Corso's records?",
+    "irreversible": "This action is irreversible"
+  }
 }

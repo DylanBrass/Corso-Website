@@ -44,4 +44,6 @@ public interface OrderService {
     Integer countAllOverdueOrders();
 
     List<OrdersPerMonth> getTotalOrderRequestByMonth(int year);
+
+    void deleteOrderByOrderId(String orderId);
 }

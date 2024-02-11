@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import TimeByService from "./Components/TimeByService";
 import OrderPerService from "./Components/OrdersPerService";
@@ -6,11 +6,23 @@ import Dropdown from "../../../Components/Dropdown/droptown";
 import OrdersPerMonth from "./Components/OrdersPerMonth";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {useAuth} from "../../../security/Components/AuthProvider";
 
 export default function ReportsPage() {
 
+    const auth = useAuth()
+    ;
     const [selectedReport, setSelectedReport] = React.useState("select");
     const {t} = useTranslation();
+
+    useEffect(() => {
+        // @ts-ignore
+        if (!auth.isAuthenticated || !auth.userRoles().includes("Admin")) {
+            window.location.href = "/"
+        }
+
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <div>
