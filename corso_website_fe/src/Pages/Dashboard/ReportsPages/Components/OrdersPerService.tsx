@@ -5,7 +5,9 @@ import {
     CartesianGrid,
     Legend,
     Line,
-    LineChart, Pie, PieChart,
+    LineChart,
+    Pie,
+    PieChart,
     ResponsiveContainer,
     Tooltip,
     XAxis,
@@ -20,7 +22,6 @@ import {
 import {useAuth} from "../../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
 import "./Reports.css";
-
 
 
 const checkIfDatesAreMoreOrEqualThanTwoMonths = (start: string, end: string) => {
@@ -93,6 +94,7 @@ export default function OrderPerService() {
     const [allServices, setAllServices] = useState<any[]>([])
 
     const diagramTypes = [t("reports.stackedBarChart"), t("reports.lineChart"), t("reports.barChart"), t("reports.totalOrdersPerService"), t("reports.pieChart")]
+
     const [diagramType, setDiagramType] = React.useState(0)
 
     const [totalOrdersPerService, setTotalOrdersPerService] = useState<any[]>([])
@@ -110,9 +112,10 @@ export default function OrderPerService() {
         ).catch((e: any) => {
             console.error(e);
             // @ts-ignore
+            swal("Error", "Error fetching data: " + e.response.data.message, "error");
+            // @ts-ignore
             auth.authError(e.response.status);
         })
-
 
         await fetchTotalOrdersPerService(start, end).then(
             res => {
@@ -120,6 +123,8 @@ export default function OrderPerService() {
             }
         ).catch((e: any) => {
             console.error(e);
+            // @ts-ignore
+            swal("Error", "Error fetching data: " + e.response.data.message, "error");
             // @ts-ignore
             auth.authError(e.response.status);
         })
@@ -142,12 +147,19 @@ export default function OrderPerService() {
                     <label className="diagram-label" htmlFor="start">{t("reports.startDateLabel")}</label>
                     <input className="diagram-input" type="date" id="start" defaultValue={getOneYearAgo()}/>
                     <label className="diagram-label" htmlFor="end">{t("reports.endDateLabel")}</label>
-                    <input className="diagram-input" type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
+                    <input className="diagram-input" type="date" id="end"
+                           defaultValue={new Date().toISOString().split('T')[0]}/>
                 </div>
                 {diagramTypes.map((type, index) => (
                     <button className="diagram-btn" key={index} onClick={() => setDiagramType(index)}>{type}</button>
                 ))}
-                <button className="diagram-btn" onClick={fetchData}>Search</button>
+                <button className="diagram-btn" onClick={fetchData}>
+                    {t("submitButton")}
+                </button>
+
+                <h3>{totalOrdersPerService.reduce((a: any, b: any) => a + b.totalOrderRequest, 0)}
+                {" " + t("reports.totalOrdersFrom") + " "}
+                     {(document.getElementById("start") as HTMLInputElement)?.value} {t("to")} {(document.getElementById("end") as HTMLInputElement)?.value}</h3>
             </center>
 
             {diagramType === 0 &&
@@ -256,52 +268,55 @@ export default function OrderPerService() {
 
             }
             {diagramType === 3 &&
-            <ResponsiveContainer width="90%" height={600}>
-                <BarChart data={totalOrdersPerService} barSize={10}
-                >
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="serviceName"
-                           angle={-70}
-                           textAnchor="end"
-                           height={200}
-                    />
-                    <YAxis
-                        dataKey={"totalOrderRequest"}
-                        name={t("reports.ordersTotal")}
-                        domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
-                    />
-                    <Tooltip
-                        content={
-                            // @ts-ignore
-                            <CustomTooltip/>}
-                    />
-                    <Bar dataKey={"totalOrderRequest"} fill={"#064bec"}
+                <ResponsiveContainer width="90%" height={600}>
+                    <BarChart data={totalOrdersPerService} barSize={10}
+                    >
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="serviceName"
+                               angle={-70}
+                               textAnchor="end"
+                               height={200}
+                        />
+                        <YAxis
+                            dataKey={"totalOrderRequest"}
                             name={t("reports.ordersTotal")}
-                    />
+                            domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
+                        />
+                        <Tooltip
+                            content={
+                                // @ts-ignore
+                                <CustomTooltip/>}
+                        />
+                        <Bar dataKey={"totalOrderRequest"} fill={"#064bec"}
+                             name={t("reports.ordersTotal")}
+                        />
 
-                </BarChart>
-            </ResponsiveContainer>
+
+                    </BarChart>
+                </ResponsiveContainer>
             }
 
             {diagramType === 4 &&
-            <ResponsiveContainer width="90%" height={600}>
-                <PieChart>
-                    <Tooltip
-                        formatter={(value, name) => [value + t("reports.totalOrders"), name]}
-                    />
-                    <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)} nameKey={"serviceName"} cx="50%" cy="50%" outerRadius={200}
-                         fill="#8884d8"
-                         label={(entry) => {
-                             return <text x={entry.x} y={entry.y} fill="black"
-                                          textAnchor={entry.x > entry.cx ? "start" : "end"}
-                                          dominantBaseline="central">
-                                 {entry.name}
-                             </text>
-                         }}
-                    />
-                </PieChart>
+                <ResponsiveContainer width="90%" height={600}>
+                    <PieChart>
+                        <Tooltip
+                            formatter={(value, name) => [value + t("reports.totalOrders"), name]}
+                        />
+                        <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)}
+                             nameKey={"serviceName"} cx="50%" cy="50%" outerRadius={200}
+                             fill="#8884d8"
+                             label={(entry) => {
+                                 return <text x={entry.x} y={entry.y} fill="black"
+                                              textAnchor={entry.x > entry.cx ? "start" : "end"}
+                                              dominantBaseline="central">
+                                     {entry.name}
+                                 </text>
+                             }}
+                        />
+                    </PieChart>
 
-            </ResponsiveContainer>
+
+                </ResponsiveContainer>
 
             }
 

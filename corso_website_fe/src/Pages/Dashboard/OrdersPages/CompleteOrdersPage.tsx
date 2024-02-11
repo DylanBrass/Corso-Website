@@ -52,6 +52,7 @@ function CompletedOrdersPage() {
                 {orders.map(order => (
                     <OrderTile
                         action={() => {
+                            window.location.href = `/manage/orders/inactive/${order.orderId}`
                         }
                         }
                         key={order.orderTrackingNumber}

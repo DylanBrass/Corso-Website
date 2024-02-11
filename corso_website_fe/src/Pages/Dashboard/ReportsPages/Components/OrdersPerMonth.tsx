@@ -71,6 +71,10 @@ export default function OrdersPerMonth() {
                 </div>
                 <button className="diagram-btn" onClick={fetchData}>{t("reports.getOrdersPerMonth")}
                 </button>
+                <h3>{t("reports.totalOrdersIn")} {
+                    (document.getElementById("year") as HTMLInputElement)?.value
+                
+                }: {ordersPerMonth.reduce((acc: number, month: any) => acc + month.totalOrders, 0)}</h3>
             </center>
 
             <ResponsiveContainer width="90%" height={300}>

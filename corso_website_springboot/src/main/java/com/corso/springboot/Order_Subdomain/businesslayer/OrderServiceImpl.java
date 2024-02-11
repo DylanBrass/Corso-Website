@@ -430,6 +430,28 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
+    @Override
+    public void deleteOrderByOrderId(String orderId) {
+
+        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        if (order == null) {
+            throw new OrderNotFoundException("Order not found with id: " + orderId);
+        }
+
+        if (order.getOrderStatus() != Status.CANCELLED
+                && order.getOrderStatus() != Status.DECLINED
+                && order.getOrderStatus() != Status.COMPLETED
+        ) {
+            throw new InvalidRequestException("Order cannot be deleted, it is not in cancelled, declined or completed status! : " + order.getOrderStatus().toString());
+        }
+
+
+
+
+        orderRepository.delete(order);
+
+    }
+
     private static Map<String, String> getStringStringMap(OrderCustomerRequest customerUpdateOrderRequest, Order order) {
         Map<String, String> parameters = new HashMap<>();
 

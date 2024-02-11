@@ -151,4 +151,23 @@ public class OrderController {
     public ResponseEntity<List<OrdersPerMonth>> getTotalOrderRequestByMonth(@RequestParam("year") int year) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getTotalOrderRequestByMonth(year));
     }
+
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true),
+            @CacheEvict(value = "orders", allEntries = true),
+            @CacheEvict(value = "ordersCount", allEntries = true),
+            @CacheEvict(value = "overdueOrders", allEntries = true),
+            @CacheEvict(value = "totalOrders", allEntries = true),
+            @CacheEvict(value = "totalOrdersByStatus", allEntries = true),
+            @CacheEvict(value = "totalOrdersByStatusCount", allEntries = true)
+    })
+    @PreAuthorize("hasAuthority('Admin')")
+    @DeleteMapping("/manage/{orderId}/permanent")
+    public ResponseEntity<Void> DeleteOrderByOrderId(@PathVariable String orderId){
+        orderService.deleteOrderByOrderId(orderId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

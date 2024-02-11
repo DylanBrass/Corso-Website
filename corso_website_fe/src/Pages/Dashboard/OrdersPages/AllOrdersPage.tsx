@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import OrderTile from "../../../Components/OrderTile/OrderTile";
+import OrderTile, {Order} from "../../../Components/OrderTile/OrderTile";
 import CustomPagination from "../../../Components/Pagination";
-import {Order} from "../../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import Dropdown from "../../../Components/Dropdown/droptown";
 import swal from "sweetalert";
@@ -148,7 +147,7 @@ function AllOrdersPage() {
                 }
             ).catch(
                 (error) => {
-                    
+
                     // @ts-ignore
                     auth.authError(error.response.status)
                 }
@@ -175,10 +174,10 @@ function AllOrdersPage() {
                     setPage(newTotalPages);
                 }
             } else {
-                
+
             }
         } catch (error) {
-            
+
 
             // @ts-ignore
             if (error.response === undefined) {
@@ -195,7 +194,7 @@ function AllOrdersPage() {
             }
 
         }
-        
+
     }
 
     const handleSubmit = (event: any) => {
@@ -214,7 +213,7 @@ function AllOrdersPage() {
     const handlePageChange = (pageNumber: number, size: number) => {
 
         if (previousStatus !== selectedStatus || previousUser !== selectedUser) {
-            
+
             setPage(1);
 
             setPreviousStatus(selectedStatus)
@@ -231,7 +230,6 @@ function AllOrdersPage() {
         fetchOrders(pageNumber, size, selectedStatus, selectedUser)
 
 
-        
     }
 
     return (
@@ -319,7 +317,7 @@ function AllOrdersPage() {
                         {users.map((user: any) => (
                             <tr key={user.user_id} onClick={
                                 () => {
-                                    
+
                                     setPreviousUser(selectedUser)
 
                                     setSelectedUser(user.user_id)
@@ -327,9 +325,9 @@ function AllOrdersPage() {
                             }
                                 className={"user-row " + (selectedUser === user.user_id ? "selected-row" : "")}
                             >
-                                <td>{user.name ||  (t("userOptions.notApplicable"))}</td>
-                                <td>{user.email ||  (t("userOptions.notApplicable"))}</td>
-                                <td>{user.username ||  (t("userOptions.notApplicable"))}</td>
+                                <td>{user.name || (t("userOptions.notApplicable"))}</td>
+                                <td>{user.email || (t("userOptions.notApplicable"))}</td>
+                                <td>{user.username || (t("userOptions.notApplicable"))}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -337,7 +335,8 @@ function AllOrdersPage() {
 
                 </div>
                 <form onSubmit={handleSubmit} className={"m-4"}>
-                    <button type={"submit"} className={"user-selection"}>{t("allOrdersAdminPage.searchWithAppliedFilters")}</button>
+                    <button type={"submit"}
+                            className={"user-selection"}>{t("allOrdersAdminPage.searchWithAppliedFilters")}</button>
                 </form>
                 {orders.map(order => (
                     <OrderTile
@@ -350,7 +349,16 @@ function AllOrdersPage() {
                             orderStatus: order.orderStatus,
                         }}
                         action={() => {
-
+                            if (order.orderStatus.toLowerCase() === "pending") {
+                                window.location.href = "/manage/orders/" + order.orderId
+                            } else if (order.orderStatus.toLowerCase() === "in_progress") {
+                                window.location.href = "/manage/currentOrder/" + order.orderId
+                            } else if (order.orderStatus.toLowerCase() === "declined"
+                                || order.orderStatus.toLowerCase() === "cancelled"
+                                || order.orderStatus.toLowerCase() === "completed"
+                            ) {
+                                window.location.href = "/manage/orders/inactive/" + order.orderId
+                            }
                         }}
                     />
                 ))}

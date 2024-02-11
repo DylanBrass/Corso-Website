@@ -45,6 +45,8 @@ export default function TimeByService() {
         ).catch((e: any) => {
             console.error(e);
             // @ts-ignore
+            swal("Error", "Error fetching data: " + e.response.data.message, "error");
+            // @ts-ignore
             auth.authError(e.response.status);
         })
 
@@ -74,6 +76,9 @@ export default function TimeByService() {
             ))}
             <button className="diagram-btn" onClick={fetchData}>{t("submitButton")}</button>
 
+            <h3>{data.reduce((acc: number, service: any) => acc + service.hours_worked, 0)}
+            {" " + t("reports.totalHoursWorked") + " "}
+                {(document.getElementById("start") as HTMLInputElement)?.value} {t("to")} {(document.getElementById("end") as HTMLInputElement)?.value}</h3>
             {diagramType === 0 &&
                 <ResponsiveContainer width="90%" height={600}>
                     <BarChart barGap={10}
@@ -101,7 +106,13 @@ export default function TimeByService() {
             }
 
             {diagramType === 1 &&
-                <ResponsiveContainer width="95%" height={600}>
+                <div>
+                    {dataWithoutZero(data).length === 0 &&
+                        <div>
+                            <h2>No data to display</h2>
+                        </div>
+                    }
+                    <ResponsiveContainer width="95%" height={600}>
                     <PieChart>
                         <Tooltip
                             formatter={(value, name) => [value + t("reports.totalHours"), name]}
@@ -123,7 +134,11 @@ export default function TimeByService() {
                         </Pie>
                     </PieChart>
                 </ResponsiveContainer>
+
+                </div>
+
             }
+
         </div>
     )
 
