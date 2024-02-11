@@ -283,11 +283,8 @@ export default function OrderPerService() {
                             domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
                         />
                         <Tooltip
-                            content={
-                                // @ts-ignore
-                                <CustomTooltip/>}
                         />
-                        <Bar dataKey={"totalOrderRequest"} fill={"#064bec"}
+                        <Bar dataKey={"totalOrderRequest"} fill={"#000000"}
                              name={t("reports.ordersTotal")}
                         />
 
