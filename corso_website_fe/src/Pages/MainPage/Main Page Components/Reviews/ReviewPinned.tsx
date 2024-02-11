@@ -79,9 +79,9 @@ function ReviewPinned() {
                 {/* Title and Description */}
                 <div className="col-lg-6">
                     <div className="border-review mb-5">
-                        <h1 className="title-reviews">{t("testimonials")}</h1>
+                        <h1 className="title-reviews">{t("mainPage.testimonials")}</h1>
                         <p className="subtitle-reviews">
-                            {t("testimonialsBlurb")}
+                            {t("mainPage.testimonialsBlurb")}
                         </p>
                     </div>
                 </div>

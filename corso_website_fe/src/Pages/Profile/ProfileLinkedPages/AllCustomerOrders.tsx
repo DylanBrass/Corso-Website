@@ -70,7 +70,7 @@ function AllCustomerOrders() {
                     {orders.length <= 0 &&
                         <div className="row text-center">
                             <div className="col-12">
-                                <h1 className="error">{t("noOrdersForCustomer")} <a
+                                <h1 className="error">{t("order.noOrdersForCustomer")} <a
                                     href={"/create/orders"}>{t("here")}</a></h1>
                             </div>
                         </div>
@@ -91,6 +91,16 @@ function AllCustomerOrders() {
                         </div>
                     }
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/profile";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     )

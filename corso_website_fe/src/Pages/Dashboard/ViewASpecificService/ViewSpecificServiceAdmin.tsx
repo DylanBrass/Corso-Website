@@ -6,11 +6,12 @@ import NavigationBar from '../../../Components/NavBar/NavigationBar';
 import {useParams} from "react-router-dom";
 import Service from "../../../ressources/Models/Service";
 import engine from '../../../ressources/images/engine.png';
+import {useTranslation} from "react-i18next";
 
 function ViewSpecificServiceAdmin() {
 
     let {serviceId} = useParams();
-
+    const { t } = useTranslation();
 
     const auth = useAuth();
 
@@ -79,6 +80,16 @@ function ViewSpecificServiceAdmin() {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/services";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
                 </div>
             </div>
         </>

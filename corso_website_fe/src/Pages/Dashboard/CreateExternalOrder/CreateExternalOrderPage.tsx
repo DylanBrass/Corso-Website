@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import axios from "axios";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
@@ -7,8 +7,13 @@ import Dropdown from "../../../Components/Dropdown/droptown";
 import swal from "sweetalert";
 import searchIcon from "../../../ressources/images/Search_light.svg"
 import {usePlacesWidget} from "react-google-autocomplete";
+import {useTranslation} from "react-i18next";
 
 function CreateExternalOrderPage() {
+
+    const {t, i18n} = useTranslation();
+
+    const isFrench = i18n.language === 'fr';
 
     const [users, setUsers] = React.useState([])
 
@@ -19,10 +24,13 @@ function CreateExternalOrderPage() {
 
     const [allServices, setAllServices] = React.useState([])
 
-    const [selectedSearchField, setSelectedSearchField] = React.useState("email")
+    let [selectedSearchField, setSelectedSearchField] = useState(t("userOptions.email"));
 
     const auth = useAuth()
 
+    useEffect(() => {
+        setSelectedSearchField(t("userOptions.email"));
+    }, [i18n.language]);
 
     const {ref} = usePlacesWidget({
         apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
@@ -47,9 +55,27 @@ function CreateExternalOrderPage() {
         event.preventDefault()
 
         if ((document.getElementById("search-value") as HTMLInputElement).value.replaceAll(/\s/g, '').length < 3) {
-            swal("Enter at least 3 characters!", "", "warning")
+            swal((t("alerts.enter3CharMinWarning")), "", "warning")
             return
         }
+
+        if (isFrench) {
+            switch (selectedSearchField) {
+                case "courriel":
+                    selectedSearchField = "email";
+                    break;
+                case "nom":
+                    selectedSearchField = "name";
+                    break;
+                case "nom d'utilisateur":
+                    selectedSearchField = "username";
+                    break;
+                default:
+                    selectedSearchField = "email";
+                    break;
+            }
+        }
+
         let param = "?" + selectedSearchField + "=" + (document.getElementById("search-value") as HTMLInputElement).value
 
         axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/auth0/manage/users" + param, {
@@ -112,7 +138,7 @@ function CreateExternalOrderPage() {
         }
 
         if (data.hoursWorked > data.estimatedDuration) {
-            swal("Error!", "Hours worked cannot be greater than estimated duration!", "error")
+            swal((t("alerts.error")),(t("alerts.hoursWorkedConstraint")), "error")
             return
         }
 
@@ -124,7 +150,7 @@ function CreateExternalOrderPage() {
         })
             .then(r => {
                 if (r.status === 201) {
-                    swal("Success!", "Order created successfully!", "success")
+                    swal((t("alerts.success")), (t("alerts.order.orderCreatedMessage")), "success")
                         .then(() => {
                             window.location.href = "/dashboard"
                         })
@@ -139,7 +165,7 @@ function CreateExternalOrderPage() {
                     })
                 }
 
-                swal("Error!", "An error occurred while creating the order! \n " + errors, "error").then(() => {
+                swal((t("alerts.error")), (t("alerts.order.orderCreationFailedMessage")) + errors, "error").then(() => {
                     // @ts-ignore
                     auth.authError(e.response.status)
                 })
@@ -162,19 +188,23 @@ function CreateExternalOrderPage() {
         <div className={"text-center"}>
             <NavigationBar/>
             <div className={"search-banner w-100 mt-3"}>
-                <h2 className={"text-white"}>Search for user</h2>
+                <h2 className={"text-white"}>{t("userOptions.searchForUser")}</h2>
                 <div className={"search-bar m-auto"}>
 
                     <form onSubmit={getUsers}>
                         <Dropdown
                             label={selectedSearchField.charAt(0).toUpperCase() + selectedSearchField.slice(1)}
-                            options={["name", "email", "username"]}
+                            options={[
+                                t("userOptions.email"),
+                                t("userOptions.name"),
+                                t("userOptions.username"),
+                            ]}
                             onSelect={(option: any) => {
                                 setSelectedSearchField(option)
                             }}
                         />
                         <input required name={"search-value"} id={"search-value"} type="text"
-                               placeholder="Search for user"/>
+                               placeholder={t("userOptions.searchForUser")}/>
                         <button type={"submit"}>
                             <img src={searchIcon} alt={"Search"}/>
                         </button>
@@ -191,14 +221,14 @@ function CreateExternalOrderPage() {
                         <table className={"w-100"}>
                             <tbody className={"users-list user-list-box"}>
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Username</th>
+                                <th>{t("userOptions.name")}</th>
+                                <th>{t("userOptions.email")}</th>
+                                <th>{t("userOptions.username")}</th>
                             </tr>
                             {
                                 users.length === 0 &&
                                 <tr>
-                                    <td colSpan={3}>No users found</td>
+                                    <td colSpan={3}>{t("userOptions.noUsersFound")}</td>
                                 </tr>
                             }
 
@@ -223,9 +253,9 @@ function CreateExternalOrderPage() {
                                             }
                                             className={"user-row " && selectedRowIndex === index ? "selected-row" : ""}
                                         >
-                                            <td>{user.name || "Not Applicable"}</td>
-                                            <td>{user.email || "Not Applicable"}</td>
-                                            <td>{user.username || "Not Applicable"}</td>
+                                            <td>{user.name ||  (t("userOptions.notApplicable"))}</td>
+                                            <td>{user.email ||  (t("userOptions.notApplicable"))}</td>
+                                            <td>{user.username ||  (t("userOptions.notApplicable"))}</td>
                                         </tr>
                                     )
                                 })
@@ -253,7 +283,7 @@ function CreateExternalOrderPage() {
             }
                     className={"mt-1 mb-5 btn-style"}
             >
-                Clear User Selection
+                {t("userOptions.clearSelection")}
             </button>
             <div className={"container w-100 text-center"}>
                 <div className="order-creation-form w-75 text-start text-md-end m-auto">
@@ -264,7 +294,7 @@ function CreateExternalOrderPage() {
                             </label>
                             <div className="col-sm-6">
                                 <span>
-                                    Select the service that is the most appropriate for the order.
+                                    {t("createExternalOrder.selectService")}
                                 </span>
                             </div>
                             <div className="col-sm-3">
@@ -284,7 +314,7 @@ function CreateExternalOrderPage() {
                         </div>
                         <div className="row mb-3">
                             <label htmlFor={"dueDate"} className="col-sm-3 col-form-label">
-                                Due Date
+                                {t("createExternalOrder.dueDate")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -292,28 +322,28 @@ function CreateExternalOrderPage() {
                                     id={"dueDate"}
                                     type="date"
                                     className="form-control"
-                                    placeholder="Due Date"
+                                    placeholder={t("createExternalOrder.dueDate")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"orderDescription"} className="col-sm-3 col-form-label">
-                                Order Description
+                                {t("createExternalOrder.orderDescription")}
                             </label>
                             <div className="col-sm-9">
                                 <textarea
                                     name={"orderDescription"}
                                     id={"orderDescription"}
                                     className="form-control"
-                                    placeholder="Order Description"
+                                    placeholder={t("createExternalOrder.orderDescription")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"customerFullName"} className="col-sm-3 col-form-label">
-                                Customers Full Name
+                                {t("createExternalOrder.customerFullName")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -322,14 +352,14 @@ function CreateExternalOrderPage() {
                                     id={"customerFullName"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Customer Full Name"
+                                    placeholder={t("createExternalOrder.customerFullName")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"customerEmail"} className="col-sm-3 col-form-label">
-                                Customer Email
+                                {t("createExternalOrder.customerEmail")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -338,14 +368,14 @@ function CreateExternalOrderPage() {
                                     id={"customerEmail"}
                                     type="email"
                                     className="form-control"
-                                    placeholder="Customer Email"
+                                    placeholder={t("createExternalOrder.customerEmail")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"customerPhone"} className="col-sm-3 col-form-label">
-                                Customer Phone
+                                {t("createExternalOrder.customerPhone")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -353,14 +383,14 @@ function CreateExternalOrderPage() {
                                     id={"customerPhone"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Customer Phone"
+                                    placeholder={t("createExternalOrder.customerPhone")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"customerAddress"} className="col-sm-3 col-form-label">
-                                Customer Address
+                                {t("createExternalOrder.customerAddress")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -371,7 +401,7 @@ function CreateExternalOrderPage() {
                                     id={"customerAddress"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Customer Address"
+                                    placeholder={t("createExternalOrder.customerAddress")}
                                 >
 
                                 </input>
@@ -380,7 +410,7 @@ function CreateExternalOrderPage() {
 
                         <div className="row mb-3">
                             <label htmlFor={"customerPostalCode"} className="col-sm-3 col-form-label">
-                                Customer Postal Code
+                                {t("createExternalOrder.customerPostalCode")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -389,7 +419,7 @@ function CreateExternalOrderPage() {
                                     id={"customerPostalCode"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Customer Postal Code"
+                                    placeholder={t("createExternalOrder.customerPostalCode")}
                                 />
                             </div>
 
@@ -397,7 +427,7 @@ function CreateExternalOrderPage() {
 
                         <div className="row mb-3">
                             <label htmlFor={"customerCity"} className="col-sm-3 col-form-label">
-                                Customer City
+                                {t("createExternalOrder.customerCity")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -405,7 +435,7 @@ function CreateExternalOrderPage() {
                                     id={"customerCity"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Customer City"
+                                    placeholder={t("createExternalOrder.customerCity")}
                                 />
                             </div>
 
@@ -413,7 +443,7 @@ function CreateExternalOrderPage() {
 
                         <div className="row mb-3">
                             <label htmlFor={"customerApartment"} className="col-sm-3 col-form-label">
-                                Customer Apartment Number
+                                {t("createExternalOrder.customerApartmentNumber")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -421,14 +451,14 @@ function CreateExternalOrderPage() {
                                     id={"customerApartment"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Customer Apartment Number"
+                                    placeholder={t("createExternalOrder.customerApartmentNumber")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"estimatedDuration"} className="col-sm-3 col-form-label">
-                                Estimated Duration
+                                {t("createExternalOrder.estimatedDuration")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -436,20 +466,20 @@ function CreateExternalOrderPage() {
                                     id={"estimatedDuration"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Estimated Duration"
+                                    placeholder={t("createExternalOrder.estimatedDuration")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3 text-start">
                         <span className="col-sm-9 offset-sm-3 fs-6">
-                            If the job was started before this form was filled, enter how many hours of work was done, otherwise leave blank.
+                            {t("createExternalOrder.jobStartedBeforeMessage")}
                         </span>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"hoursWorked"} className="col-sm-3 col-form-label">
-                                Hours Worked
+                                {t("createExternalOrder.hoursWorked")}
                             </label>
                             <div className="col-sm-9">
                                 <input
@@ -457,21 +487,21 @@ function CreateExternalOrderPage() {
                                     id={"hoursWorked"}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Hours Worked"
+                                    placeholder={t("createExternalOrder.hoursWorked")}
                                 />
                             </div>
                         </div>
 
                         <div className="row mb-3">
                             <label htmlFor={"progressText"} className="col-sm-3 col-form-label">
-                                Progress Description
+                                {t("createExternalOrder.progressDescription")}
                             </label>
                             <div className="col-sm-9">
                                     <textarea
                                         name={"progressText"}
                                         id={"progressText"}
                                         className="form-control"
-                                        placeholder="Describe what was done"
+                                        placeholder={t("createExternalOrder.progressDescription")}
                                     />
                             </div>
                         </div>
@@ -479,12 +509,22 @@ function CreateExternalOrderPage() {
                         <div className="row mb-3">
                             <div className="col-sm-9 offset-sm-3">
                                 <button id={"submit-order"} type={"submit"} className="btn-style">
-                                    Create Order
+                                    {t("createExternalOrder.createOrder")}
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/dashboard";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     );

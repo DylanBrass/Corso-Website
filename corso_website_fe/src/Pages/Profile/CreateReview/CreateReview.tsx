@@ -19,13 +19,13 @@ function CreateReview() {
 
         if (event.target.review.value.length < 10) {
             // @ts-ignore
-            swal(t("warningAlertTitle"), t("reviewConstraintMessage"), "warning");
+            swal(t("alerts.warningAlertTitle"), t("reviews.reviewConstraintMessage"), "warning");
             return;
         }
 
         if (rating === 0) {
             // @ts-ignore
-            swal(t("warningAlertTitle"), t("selectRatingMessage"), "warning");
+            swal(t("alerts.warningAlertTitle"), t("reviews.selectRatingMessage"), "warning");
             return;
         }
 
@@ -42,7 +42,7 @@ function CreateReview() {
             .then(res => {
                 if (res.status === 201) {
                     // @ts-ignore
-                    swal(t("success"), t("submitReviewSuccessMessage"), "success").then(
+                    swal(t("alerts.success"), t("alerts.review.submitReviewSuccessMessage"), "success").then(
                         () => window.location.href = '/profile/reviews'
 
                     )
@@ -76,8 +76,8 @@ function CreateReview() {
             <NavigationBar/>
             <div className={"create-review-page-content"}>
                 <div className={"create-review-page-header"}>
-                    <h1>{t("leavePrivateReviewTitle")}</h1>
-                    <h3>{t("leavePrivateReviewBlurb")}</h3>
+                    <h1>{t("reviews.leavePrivateReviewTitle")}</h1>
+                    <h3>{t("reviews.leavePrivateReviewBlurb")}</h3>
                 </div>
                 <div className={"add-review-box"}>
                     <div className={"row create-box"}>
@@ -91,18 +91,18 @@ function CreateReview() {
                             </div>
                             <div className={"row form-box w-100"}>
                                 <div className={"col-12 m-auto"}>
-                                    <h3>{t("leaveAReview")}</h3>
+                                    <h3>{t("reviews.leaveAReview")}</h3>
                                     <form onSubmit={leaveReview} className={"m-auto w-100"}>
 
 
                                         <div className="form-group">
-                                            <label className={"review-label"} htmlFor="review">{t("review")}</label>
+                                            <label className={"review-label"} htmlFor="review">{t("reviews.review")}</label>
                                             <textarea className="form-control" id="review" rows={3}
-                                                      placeholder={t("enterReview")} required
+                                                      placeholder={t("reviews.enterReview")} required
                                                       minLength={10}/>
                                         </div>
                                         <div className="form-group">
-                                            <label className={"review-label"} htmlFor="review">{t("fullName")}</label>
+                                            <label className={"review-label"} htmlFor="review">{t("customerInfo.fullName")}</label>
                                             <input type="text" className="form-control" id="customerFullName"
                                                    placeholder={t("enterFullName")} required minLength={3}/>
                                         </div>

@@ -116,7 +116,7 @@ function AddCustomerInformation() {
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
         if (phoneValue !== "" && !phonePattern.test(phoneValue)) {
-            swal(t("invalidPhoneNumberAlertTitle"), t("invalidPhoneNumberAlertMessage") +
+            swal(t("alerts.customerInfo.invalidPhoneNumberAlertTitle"), t("alerts.customerInfo.invalidPhoneNumberAlertMessage") +
                 "(123) 456-7890\n" +
                 "(123)456-7890\n" +
                 "123-456-7890\n" +
@@ -132,7 +132,7 @@ function AddCustomerInformation() {
         const canadianPostalCodePattern = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i
 
         if (!canadianPostalCodePattern.test(postalCodeValue)) {
-            swal(t("invalidPostalCodeAlertTitle"), t("invalidPostalCodeAlertMessage"), "error");
+            swal(t("alerts.customerInfo.invalidPostalCodeAlertTitle"), t("alerts.customerInfo.invalidPostalCodeAlertMessage"), "error");
             return;
         }
 
@@ -157,10 +157,10 @@ function AddCustomerInformation() {
             }).then(r => {
                 if (r.status === 200) {
                     if (Cookies.get("email") !== r.data.email)
-                        swal(t("profileUpdatedSuccessAlertTitle"), t("profileSuccessAlertMessage"), "success").then(r => {
+                        swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success").then(r => {
                             navigate(-1)
                         })
-                    else swal(t("profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
+                    else swal(t("profilePage.alerts.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
                         navigate(-1)
                     })
 
@@ -179,7 +179,7 @@ function AddCustomerInformation() {
                     }
 
 
-                    swal(t("errorAlertTitle"), t("errorAlertMessage") + errors, "error").then(r => {
+                    swal(t("alerts.error"), t("alerts.errorAlertMessage") + errors, "error").then(r => {
                         // @ts-ignore
                         auth.authError(e.response.status)
                     })
@@ -199,7 +199,7 @@ function AddCustomerInformation() {
 
                         Cookies.set("username", r.data.name);
                         Cookies.set("email", r.data.email);
-                        swal(t("profileCreatedSuccessAlertTitle"), t("profileSuccessAlertMessage"), "success")
+                        swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
                                 navigate(-1)
                             })
@@ -217,7 +217,7 @@ function AddCustomerInformation() {
                 }
 
 
-                swal(t("errorAlertTitle"), t("errorAlertMessage") + errors, "error").then(r => {
+                swal(t("alerts.error"), t("alerts.errorAlertMessage") + errors, "error").then(r => {
                     // @ts-ignore
                     auth.authError(e.response.status)
                 })
@@ -245,7 +245,7 @@ function AddCustomerInformation() {
                 Cookies.remove("username");
                 Cookies.remove("email");
 
-                await swal(t("profileDeletedSuccessAlertTitle"), t("profileDeletedSuccessAlertMessage"), "success");
+                await swal(t("alerts.profile.profileDeletedSuccessAlertTitle"), t("alerts.profile.profileDeletedSuccessAlertMessage"), "success");
 
                 axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/security/user-info", {
 
@@ -271,9 +271,9 @@ function AddCustomerInformation() {
                             // @ts-ignore
                             auth.authError(e.response.status);
                         } else if (e.response.status === 404) {
-                            swal(t("noProfileFoundAlertTitle"), t("noProfileFoundAlertMessage"), "warning")
+                            swal(t("alerts.profile.noProfileFoundAlertTitle"), t("alerts.profile.noProfileFoundAlertMessage"), "warning")
                         } else {
-                            swal(t("errorAlertTitle"), e.response.data.message, "error")
+                            swal(t("alerts.error"), e.response.data.message, "error")
                         }
                     }
                 )
@@ -281,16 +281,16 @@ function AddCustomerInformation() {
 
                 setIsVerified(true)
             } else {
-                swal(t("errorAlertTitle"), t("errorAlertMessageSomethingWentWrong"), "error");
+                swal(t("alerts.error"), t("alerts.somethingWentWrong"), "error");
             }
         } catch (e: any) {
             if (e.response.status === 401 || e.response.status === 403) {
                 // @ts-ignore
                 auth.authError(e.response.status);
             } else if (e.response.status === 404) {
-                swal(t("noProfileFoundAlertTitle"), t("errorNoInformationSaved"), "warning")
+                swal(t("alerts.profile.noProfileFoundAlertTitle"), t("alerts.errorNoInformationSaved"), "warning")
             } else {
-                swal(t("errorAlertTitle"), e.response.data.message, "error")
+                swal(t("alerts.error"), e.response.data.message, "error")
             }
         }
     };
@@ -304,28 +304,28 @@ function AddCustomerInformation() {
             <NavigationBar/>
             <div className="profile-page">
                 <div className="profile-box mt-5 mb-5">
-                    <h1>{t("profile")}</h1>
+                    <h1>{t("profilePage.profile")}</h1>
 
                     <p className={"text-center fs-4 m-3"}>
-                        {t("profileInformationBlurb")}
+                        {t("profilePage.profileInformationBlurb")}
                     </p>
 
                     <form onSubmit={handleSubmit} className="container">
                         <div className="row w-75 m-auto">
                             <label>
-                                {t("name")}:
+                                {t("customerInfo.name")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="username" className="form-control mb-2 " placeholder={t("name")}
+                                }} type="text" name="username" className="form-control mb-2 " placeholder={t("customerInfo.name")}
                                        id={"name"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label className={"mt-2"}>
-                                {t("email")} {isVerified ? <span className={"col-1 m-auto"}
-                                                          style={{color: "green"}}>({t("verifiedEmail")})</span> :
+                                {t("customerInfo.email")} {isVerified ? <span className={"col-1 m-auto"}
+                                                          style={{color: "green"}}>({t("email.verifiedEmail")})</span> :
                                 <span className={"mt-auto mb-auto text-end"}
-                                      style={{color: "red"}}>({t("unverifiedEmail")})</span>}:
+                                      style={{color: "red"}}>({t("email.unverifiedEmail")})</span>}:
                                 <div className={"d-flex flex-row"}>
                                     <div className={"col-10"}>
                                     <input
@@ -339,7 +339,7 @@ function AddCustomerInformation() {
                                             onKeyDown={(e) => {
                                                 e.key === 'Enter' && e.preventDefault()
                                             }} type="text" name="email" className="form-control mb-2 col-10"
-                                            placeholder={t("email")}
+                                            placeholder={t("customerInfo.email")}
                                             id={"email"}
                                             required={true}/>
                                     </div>
@@ -361,52 +361,52 @@ function AddCustomerInformation() {
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                {t("address")}:
+                                {t("customerInfo.address")}:
                                 {/*// @ts-ignore*/}
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
 
                                     // @ts-ignore
                                 }} ref={ref} type="text" name="address" className="form-control mb-2"
-                                       placeholder={t("address")}
+                                       placeholder={t("customerInfo.address")}
                                        id={"address"}
                                        required={true}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                {t("postalCode")}:
+                                {t("customerInfo.postalCode")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
                                 }} type="text" name="postalCode" className="form-control mb-2"
-                                       placeholder={t("postalCode")} required={true}
+                                       placeholder={t("customerInfo.postalCode")} required={true}
                                        id={"postalCode"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                {t("city")}:
+                                {t("customerInfo.city")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="city" className="form-control mb-2" placeholder={t("city")}
+                                }} type="text" name="city" className="form-control mb-2" placeholder={t("customerInfo.city")}
                                        required={true} id={"city"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                {t("apartmentNumber")}:
+                                {t("customerInfo.apartmentNumber")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
                                 }} type="text" name="apartmentNumber" className="form-control mb-2"
-                                       placeholder={t("apartmentNumber")} id={"apartmentNumber"}/>
+                                       placeholder={t("customerInfo.apartmentNumber")} id={"apartmentNumber"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label>
-                                {t("phoneNumber")}:
+                                {t("customerInfo.phoneNumber")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="phone" className="form-control mb-2" placeholder={t("phoneNumber")}
+                                }} type="text" name="phone" className="form-control mb-2" placeholder={t("customerInfo.phoneNumber")}
                                        id={"phone"}/>
                             </label>
                         </div>
@@ -441,13 +441,22 @@ function AddCustomerInformation() {
                                 id={"delete-btn"}
                                 disabled={!hasProfile}
                             >
-                                {t("deleteInformationButton")}
+                                {t("profilePage.deleteInformationButton")}
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/profile";
+                    }}
+                >
+                    {t("back")}
+                </button>
+            </div>
         </div>
     )
 }

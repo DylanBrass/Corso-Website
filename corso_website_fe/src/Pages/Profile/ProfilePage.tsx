@@ -21,7 +21,7 @@ function ProfilePage() {
     const auth = useAuth()
     const [t,] = useTranslation("translation");
 
-    const [phone, setPhone] = useState(() => t("noneGiven"));
+    const [phone, setPhone] = useState(() => t("profilePage.noneGiven"));
     const [email, setEmail] = useState(Cookies.get("email"))
     const [name, setName] = useState("")
 
@@ -45,7 +45,7 @@ function ProfilePage() {
             }
         }).then(r => {
             if (r.status === 200) {
-                swal(t("emailSentSuccessAlertTitle"), t("emailSentSuccessAlertMessage"), "success")
+                swal(t("alerts.email.emailSentSuccessAlertTitle"), t("alerts.email.emailSentSuccessAlertMessage"), "success")
                     .then(r => {
                         document.getElementById("send-verification-btn")!.setAttribute("disabled", "true")
                     })
@@ -56,10 +56,10 @@ function ProfilePage() {
                 auth.authError(e.response.status);
             } else {
                 if (e.response.status === 422) {
-                    swal(t("warningAlertTitle"), e.response.data.message, "warning")
+                    swal(t("alerts.warningAlertTitle"), (t("alerts.email.emailAlreadySent")), "warning")
                     return
                 }
-                swal(t("errorAlertTitle"), e.response.data.message, "error")
+                swal(t("alerts.error"), e.response.data.message, "error")
             }
         })
 
@@ -187,16 +187,16 @@ function ProfilePage() {
                                     // @ts-ignore
                                     auth.logout()
                                 }
-                            }>{t("logout").toUpperCase()}
+                            }>{t("navigation.logout").toUpperCase()}
                             </button>
                         </form>
                     </div>
                     <div className={"col-12 col-lg-6 d-block mt-4 mt-lg-0"}>
                         <div className={"w-100 d-block px-lg-5"}>
                             <div className={"col-12 col-lg-6 contact-box w-100 p-2"}>
-                                <h1 className={"contact-title"}>{t("contactInformation")}</h1>
-                                <p className={"profile-text"}>{t("phoneNumber")}: {phone}</p>
-                                <p className={"profile-text"}>{t("email")}: {email}
+                                <h1 className={"contact-title"}>{t("customerInfo.contactInformation")}</h1>
+                                <p className={"profile-text"}>{t("customerInfo.phoneNumber")}: {phone}</p>
+                                <p className={"profile-text"}>{t("customerInfo.email")}: {email}
                                     <span className={"mx-5"}>
                                         {verified ?
                                             <span style={{color: "green", fontSize: "2.125rem"}}>✓</span>
@@ -206,7 +206,7 @@ function ProfilePage() {
                                                 <button id={"send-verification-btn"}
                                                         style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}
                                                         onClick={sendVerificationEmail}>
-                                                    {t("resendEmail")}
+                                                    {t("email.resendEmail")}
                                                 </button>
                                                     </span>
 
@@ -269,7 +269,7 @@ function ProfilePage() {
                             </div>
                             <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/edit"}>
-                                    <h3 className={"option edit-profile-option m-auto text-center text-xl-start"}>{t("editProfile")}</h3>
+                                    <h3 className={"option edit-profile-option m-auto text-center text-xl-start"}>{t("profilePage.editProfile")}</h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>
@@ -282,7 +282,7 @@ function ProfilePage() {
                             </div>
                             <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/orders"}>
-                                    <h3 className={"option past-orders-option m-auto text-center text-xl-start"}>{t("viewYourOrders")}</h3>
+                                    <h3 className={"option past-orders-option m-auto text-center text-xl-start"}>{t("profilePage.viewYourOrders")}</h3>
                                 </Link>
                             </div>
                             <div className={"col-2 text-end d-none d-xl-block m-auto"}>
@@ -296,7 +296,7 @@ function ProfilePage() {
                             <div className={"col-12 col-xl-8 option-text"}>
                                 <Link className={"redirect-option"} to={"/profile/reviews"}>
                                     <h3 className={"past-reviews-option option text-center text-xl-start m-auto"}>
-                                        {t("viewYourReviews")}
+                                        {t("profilePage.viewYourReviews")}
                                     </h3>
                                 </Link>
                             </div>
@@ -308,15 +308,25 @@ function ProfilePage() {
                     <div className={"col-12 col-md-6"}>
                         <div className={"row w-100 px-0 px-md-5 request-order-box-profile"}>
                             <div className={"col-12 col-lg-8"}>
-                                <p>{t("gotAProblemNeedingFixing")}</p>
-                                <p>{t("getStartedWithYourNextOrderHere")}</p>
+                                <p>{t("profilePage.gotAProblemNeedingFixing")}</p>
+                                <p>{t("profilePage.getStartedWithYourNextOrderHere")}</p>
                             </div>
                             <div className={"col-12 col-lg-4"}>
-                                <button className={"request-order-btn-profile p-2"}>{t("requestOrderButton")}</button>
+                                <button className={"request-order-btn-profile p-2"}>{t("profilePage.requestOrderButton")}</button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/";
+                    }}
+                >
+                    {t("backToMainPage")}
+                </button>
             </div>
         </div>
 

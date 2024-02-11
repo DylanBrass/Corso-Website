@@ -6,6 +6,7 @@ import ServiceTile from "../../../Components/ServiceTile/ServiceTile";
 import plus from "../../../ressources/images/plus-services.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import swal from "sweetalert";
+import {useTranslation} from "react-i18next";
 
 interface Service {
     serviceId: string;
@@ -18,6 +19,7 @@ function ServicesThroughDashboard(){
     const [services, setServices] = useState<Service[]>([]);
     const [error, setError] = useState<string | null>(null);
     const auth = useAuth();
+    const {t} = useTranslation();
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -52,11 +54,11 @@ function ServicesThroughDashboard(){
                 }
             ).then(r => {
                 if (r.status === 200) {
-                    swal("Service visibility is updated!", "The change will be reflected on the main page!", "success")
+                    swal(t("alerts.service.serviceVisibilityUpdatedTitle"), (t("alerts.service.serviceVisibilityUpdatedMessage")), "success")
                 }
             })
                 .catch(e => {
-                    swal("Error!", e.response.data.message, "error")
+                    swal(t("alerts.error"), e.response.data.message, "error")
                         .then(() => {
                             // @ts-ignore
                             auth.authError(e.response.status)
@@ -86,9 +88,9 @@ function ServicesThroughDashboard(){
     return(
         <>
             <NavigationBar/>
-            {error && <div className="row"><div className="col-12"><p className="error">Error: {error}</p></div></div>}
+            {error && <div className="row"><div className="col-12"><p className="error">{t("alerts.error")}: {error}</p></div></div>}
             <div className="service-container">
-                <h1>All Services</h1>
+                <h1>{t("servicesAdminPage.allServices")}</h1>
                 <img src={plus} alt={"Add Service"} className={"add-service-icon"} onClick={addService}/>
                 <div className="service-tiles-container">
                     {services.map(service => (
@@ -106,6 +108,16 @@ function ServicesThroughDashboard(){
                             updateServiceStatus={updateServiceStatus}
                         />
                     ))}
+                </div>
+                <div className="custom-row text-center">
+                    <button
+                        className="back-btn"
+                        onClick={() => {
+                            window.location.href = "/dashboard";
+                        }}
+                    >
+                        {t("back")}
+                    </button>
                 </div>
             </div>
         </>

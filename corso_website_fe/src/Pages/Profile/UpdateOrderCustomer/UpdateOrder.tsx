@@ -94,7 +94,7 @@ function UpdateOrder() {
         const phoneValue = phoneInput.value;
         const phonePattern = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
         if (phoneValue !== "" && !phonePattern.test(phoneValue)) {
-            swal(t("invalidPhoneNumberAlertTitle"), t("invalidPhoneNumberAlertMessage") +
+            swal(t("alerts.customerInfo.invalidPhoneNumberAlertTitle"), t("alerts.customerInfo.invalidPhoneNumberAlertMessage") +
                 "(123) 456-7890\n" +
                 "(123)456-7890\n" +
                 "123-456-7890\n" +
@@ -125,7 +125,7 @@ function UpdateOrder() {
                 if (res.status === 200) {
                     setOrder(order);
 
-                    swal(t("orderUpdatedTitle"), t("orderUpdatedMessage"), "success")
+                    swal(t("alerts.order.orderUpdatedTitle"), t("alerts.order.orderUpdatedMessage"), "success")
                         .then(() => {
                             navigate(-1)
                         })
@@ -149,12 +149,12 @@ function UpdateOrder() {
         <div>
             <NavigationBar/>
             <div className={"update-order-customer-box px-5"}>
-                <h1>{t("updateOrder")}</h1>
-                <h2>{t("orderId")}: #{order.orderTrackingNumber}</h2>
+                <h1>{t("order.updateOrder")}</h1>
+                <h2>{t("order.orderId")}: #{order.orderTrackingNumber}</h2>
                 <form onSubmit={updateOrder} className={"w-100"}>
                     <div className="row mb-3">
                         <label htmlFor={"customerAddress"} className="col-sm-2 col-form-label">
-                            {t("address")}
+                            {t("customerInfo.address")}
                         </label>
                         <div className="col-sm-10">
                             <input
@@ -174,7 +174,7 @@ function UpdateOrder() {
                     </div>
                     <div className="row mb-3">
                         <label htmlFor={"customerApartment"} className="col-sm-3 col-form-label">
-                            {t("apartmentNumber")}
+                            {t("customerInfo.apartmentNumber")}
                         </label>
                         <div className="col-sm-4">
                             <input
@@ -182,13 +182,13 @@ function UpdateOrder() {
                                 id={"customerApartment"}
                                 type="text"
                                 className="form-control"
-                                placeholder={t("apartmentNumberCustomer")}
+                                placeholder={t("customerInfo.apartmentNumber")}
                                 defaultValue={order.customerApartmentNumber}
                             />
                         </div>
 
                         <label htmlFor={"customerPostalCode"} className="col-sm-2 col-form-label">
-                            {t("postalCode")}
+                            {t("customerInfo.postalCode")}
                         </label>
                         <div className="col-sm-3">
                             <input
@@ -197,7 +197,7 @@ function UpdateOrder() {
                                 id={"customerPostalCode"}
                                 type="text"
                                 className="form-control"
-                                placeholder={t("postalCodeCustomer")}
+                                placeholder={t("customerInfo.postalCodeCustomer")}
                                 defaultValue={order.customerPostalCode}
                             />
                         </div>
@@ -205,7 +205,7 @@ function UpdateOrder() {
 
                     <div className="row">
                         <label htmlFor={"customerPhone"} className="col-sm-2 col-form-label">
-                            {t("phoneNumber")}
+                            {t("customerInfo.phoneNumber")}
                         </label>
                         <div className="col-sm-5">
                             <input
@@ -213,13 +213,13 @@ function UpdateOrder() {
                                 id={"customerPhone"}
                                 type="text"
                                 className="form-control"
-                                placeholder={t("phoneNumberCustomer")}
+                                placeholder={t("customerInfo.phoneNumberCustomer")}
                                 defaultValue={order.customerPhone}
                             />
                         </div>
 
                         <label htmlFor={"customerCity"} className="col-sm-2 col-form-label">
-                            {t("city")}
+                            {t("customerInfo.city")}
                         </label>
                         <div className="col-sm-3">
                             <input
@@ -227,7 +227,7 @@ function UpdateOrder() {
                                 id={"customerCity"}
                                 type="text"
                                 className="form-control"
-                                placeholder={t("cityCustomer")}
+                                placeholder={t("customerInfo.cityCustomer")}
                                 defaultValue={order.customerCity}
                             />
                         </div>
@@ -252,7 +252,7 @@ function UpdateOrder() {
                             fontSize: "20px",
                             padding: "10px 30px",
                         }}>
-                            {t("updateOrder")}
+                            {t("order.updateOrder")}
                         </button>
                     </div>
                 </form>

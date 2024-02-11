@@ -1,147 +1,412 @@
 {
-  "language": "French (Français)",
-  "home": "Home",
-  "login": "Login",
-  "logout": "Logout",
-  "dashboard": "Dashboard",
-  "services": "All Services",
-  "previousProjectsPart1": "Our Previous ",
-  "previousProjectsPart2": "Projects",
-  "testimonials": "Testimonials",
+  "navigation": {
+    "language": "French (Français)",
+    "home": "Home",
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
+  },
+
+  "banner": {
+    "anonymousBannerWelcome": "Welcome to Corso",
+    "greetingCustomer": "Hello",
+    "anonymousBannerRegisterPrompt": "Register today to have us as your trusted electrician",
+    "registerNow": "Register Now",
+    "requestNow": "Request An Order Now",
+    "pastOrders": "Past Orders",
+    "viewCurrentOrders": "View Current Orders",
+    "requestAnOrderNow": "Request An Order Now"
+  },
+
+  "mainPage" : {
+    "previousProjectsPart1": "Our Previous ",
+    "previousProjectsPart2": "Projects",
+    "pastProjectsBlurb": "We specialize in diverse electrical projects, from smart home installations to modernizing historic buildings, with a focus on sustainable energy solutions like solar panels. Our passion is ensuring safety, efficiency, and sustainability in our ever-evolving world.",
+    "project": "Project",
+
+    "services": "All Services",
+    "servicesBlurb": "We offer a wide range of electrical services, from simple repairs to complex installations. Our team of experts is dedicated to providing the best solutions for your electrical needs. We are committed to delivering high-quality work and exceptional customer service. Our goal is to exceed your expectations and ensure your satisfaction.",
+    "learnMore": "Learn More",
+    "noServicesFound": "No services found",
+
+    "testimonials": "Testimonials",
+    "testimonialsBlurb": "Explore genuine testimonials from our valued customers, showcasing their real experiences and satisfaction with our exceptional service.",
+
+    "faqBlurb": "Discover answers to our most frequently asked questions about our business. For more detailed information, feel free to click the link below to explore our comprehensive FAQ section.",
+    "viewMoreFaq": "View More FAQs"
+  },
+
+  "footer": {
+    "ourMission": "Our Mission",
+    "ourMissionBlurb": "Elevating Spaces to New Heights of Luxury through Unparalleled Electrical Expertise and Craftsmanship.",
+    "valueStatement": "Value Statement",
+    "valueStatements": [
+      "Excellence: We strive for nothing less than excellence in all we do.",
+      "Innovation: We embrace cutting-edge technology and ideas to lead in luxury electrical solutions.",
+      "Integrity: We operate with the utmost integrity, honesty, and transparency.",
+      "Quality: We are committed to delivering the highest quality work and services.",
+      "Customer-Centric: We prioritize our clients' needs and satisfaction in every project.",
+      "Sustainability: We consider the environmental impact and promote sustainable electrical solutions."
+    ],
+    "visionStatement": "Vision Statement",
+    "visionStatementText": "To become the foremost authority in high-end electrical craftsmanship, setting the standard for luxury, innovation, and excellence in every project we undertake.",
+    "contactUs": "Contact Us",
+    "takeMeThere": "Take Me There!"
+  },
+
+  "customerInfo": {
+    "customer": "Customer",
+    "name": "Name",
+    "fullName": "Full Name",
+    "email": "Email",
+    "address": "Address",
+    "postalCode": "Postal Code",
+    "postalCodeCustomer": "Customer Postal Code",
+    "city": "City",
+    "cityCustomer": "Customer City",
+    "apartmentNumber": "Apartment Number",
+    "phoneNumber": "Phone",
+    "phoneNumberCustomer": "Customer Phone",
+    "contactInformation": "Contact Information"
+  },
+
+  "profilePage": {
+    "profile": "Profile",
+    "profileInformationBlurb": "Please enter your information below. This information will be used to fill in the order form automatically. This information will be saved and can be modified at any time. If your email is invalid, we will use the email you used to signup.",
+    "noneGiven": "None Given",
+    "editProfile": "Edit Profile",
+    "viewYourOrders": "View Your Orders",
+    "viewYourReviews": "View Your Reviews",
+    "gotAProblemNeedingFixing": "Got a problem needing fixing?",
+    "getStartedWithYourNextOrderHere": "Get started with your next order here!",
+    "requestOrderButton": "Request Order",
+    "deleteInformationButton": "Delete Information"
+  },
+
+  "email": {
+    "verifiedEmail": "Verified",
+    "unverifiedEmail": "Not Verified",
+    "resendEmail": "Resend Email"
+  },
+
+  "order": {
+    "request": "Request",
+    "order": "Order",
+    "orderId": "Order ID",
+    "orderNumber": "Order Number",
+    "orderStatus": "Order Status",
+    "overdueBy": "Overdue by",
+    "orderNotStartedMessage": "We haven't started to work on your order, but we will soon !",
+    "declineOrderReason": "Reason for Declining",
+    "reasonForDeclining": "Enter the reason for declining",
+    "cancelRequestReason": "Reason for cancellation",
+    "reasonForCancellation": "Enter the reason for cancellation",
+    "updateOrder": "Update Order",
+    "noTimeline": "No Timeline",
+    "noOrdersForCustomer": "No orders found, you can request one",
+    "hours": "hours",
+    "days": "days",
+    "electricianNotesTitle": "Electrician Notes",
+    "noNotesYetMessage": "No notes yet, but when we want to inform you about something, it will appear here !",
+    "noEstimatedDuration": "No estimated duration set",
+    "noDaysLeft": "No days left count was set.",
+    "completeOrder": "Complete Order",
+    "editOrder": "Edit Order",
+    "editRequestButton": "Edit Request",
+    "cancelOrderButton": "Cancel Order",
+    "cancelRequestText": "Cancel Request"
+  },
+
+  "reviews": {
+    "review": "Review",
+    "myReviews": "My Reviews",
+    "leaveAReview": "Leave A Review",
+    "createReviewMessage": "No reviews found, create one",
+    "reviewConstraintMessage": "Review must be at least 10 characters long!",
+    "selectRatingMessage": "Please select a rating!",
+    "leavePrivateReviewTitle": "Leave a private review to Corso",
+    "leavePrivateReviewBlurb": "This review will be visible by you and Corso, but we retain the right to display your review on the main page, you will be informed when your review is added or removed from the main page.",
+    "enterReview": "Enter Review",
+    "reviewPinnedMessage": "Your review is pinned to the landing page"
+  },
+
+  "dashboardPage" : {
+    "welcomeBack": "Welcome back",
+    "completedOrders": "Completed Orders",
+    "currentOrders": "Current Orders",
+    "pendingOrders": "Pending Orders",
+    "clientRequests": "Client Requests",
+    "allOrders": "All Orders",
+    "lateOrders": "Late Orders",
+    "viewMainPage": "View Main Page",
+    "uniqueVisitorsNumber": "Unique Visitors in the last 30 days",
+    "galleryImages": "Gallery Images",
+    "reports": "Reports",
+    "currentFAQs": "Current FAQs",
+    "createTrackingNumber": "Create Tracking Number",
+    "forExternalOrders": "for External Orders",
+    "servicesOffered": "Services Offered",
+    "adminAccounts": "Admin Accounts",
+    "totalTestimonies": "Total Testimonies",
+    "pinnedTestimonies": "Pinned Testimonies"
+  },
+
+  "alerts": {
+    "success": "Success!",
+    "error": "Error",
+    "accepted": "Accepted!",
+    "failed": "Failed!",
+    "declined": "Declined!",
+    "enter3CharMinWarning": "Enter at least 3 characters!",
+    "hoursWorkedConstraint": "Hours worked cannot be greater than estimated duration!",
+
+    "warningAlertTitle": "Warning!",
+    "errorAlertMessage": "A or multiple errors present !\n",
+    "somethingWentWrong": "Something went wrong",
+    "tryAgain": "Something went wrong. Please try again later",
+    "errorNoInformationSaved": "You don't have any information saved !",
+    "errorFetchingData": "Error fetching data!",
+
+    "admin": {
+      "adminCreatedTitle": "Admin Created!",
+      "adminCreatedMessage": "The admin has been created successfully!"
+    },
+
+    "email": {
+      "emailSentSuccessAlertTitle": "Email Sent Successfully",
+      "emailSentSuccessAlertMessage": "Please check your email for a verification link",
+      "emailSentMessage": "The email has been sent successfully!",
+      "verifiedEmailMessage": "Your email has been verified!",
+      "emailAlreadySent": "Email already sent, please check your inbox, otherwise try again in 15 minutes",
+      "unverifiedEmailMessage": "Your email is not verified yet. Please check your email and click on the link to login into your account."
+    },
+
+    "gallery": {
+      "galleryCreatedTitle": "Gallery created!",
+      "galleryCreatedMessage": "The gallery has been created successfully!",
+      "carouselUpdatedTitle": "Carousel updated!",
+      "carouselUpdatedMessage": "The carousel has been updated successfully!",
+      "galleryUpdatedTitle": "Gallery updated!",
+      "galleryUpdatedMessage": "The gallery has been updated successfully!"
+    },
+
+    "service": {
+      "serviceVisibilityUpdatedTitle": "Service Visibility Updated!",
+      "serviceVisibilityUpdatedMessage": "The change will be reflected on the main page!",
+      "serviceCreatedTitle": "Service Created!",
+      "serviceCreatedMessage": "The service has been created successfully!",
+      "serviceModifiedTitle": "Service Modified!",
+      "serviceModifiedMessage": "The service has been modified successfully!",
+      "imageDimensionsError": "Service image dimensions should be {{maxWidth}}x{{maxHeight}} or smaller."
+    },
+
+    "review": {
+      "submitReviewSuccessMessage": "Your review has been submitted!",
+      "deleteReviewAlertTitle": "Review deleted successfully!",
+      "deleteReviewAlertMessage": "Your review has been successfully deleted!",
+      "updateReviewAlertTitle": "Review saved successfully!",
+      "updateReviewAlertMessage": "Your review has been successfully saved!",
+      "noReviewsFound": "No reviews found"
+    },
+
+    "faq" : {
+      "chooseOnly3ViewableFAQs": "Please choose only 3 viewable FAQs!",
+      "viewableFAQsUpdatedTitle": "Viewable FAQs updated!",
+      "viewableFAQsUpdatedMessage": "The main page will display the newly selected viewable FAQs!",
+      "faqDeletedTitle": "FAQ Deleted Successfully",
+      "faqNotDeletedTitle": "FAQ Not Deleted",
+      "faqUpdatedTitle": "FAQ Updated Successfully",
+      "faqNotUpdatedTitle": "FAQ Not Updated",
+      "faqAddedTitle": "FAQ Added Successfully",
+      "faqNotAddedTitle": "FAQ Not Added"
+    },
+
+    "order": {
+      "orderCreatedMessage": "Order created successfully!",
+      "orderCreationFailedMessage": "An error occurred while creating the order! \n ",
+      "cancelledOrderTitle": "Order Cancelled",
+      "cancelledOrderMessage": "Your order has been cancelled",
+      "orderUpdatedTitle": "Order Updated",
+      "orderUpdatedMessage": "Your order has been updated successfully",
+      "orderWithTrackingNumber": "Order with tracking number",
+      "hasBeenAccepted": "has been successfully accepted.",
+      "hasBeenDeclined": "has been declined.",
+      "hasBeenCancelled": "Order has been cancelled",
+      "failedToAcceptOrder": "Failed to accept the order with tracking number",
+      "failedToDeclineOrder": "Failed to decline the order with tracking number",
+      "failedToCancelOrder": "Failed to cancel the order with tracking number",
+      "noOrdersFound": "No orders found"
+    },
+
+    "profile": {
+      "profileCreatedSuccessAlertTitle": "Profile Created Successfully",
+      "profileUpdatedSuccessAlertTitle": "Profile Updated Successfully",
+      "profileDeletedSuccessAlertTitle": "Profile Deleted Successfully",
+      "profileSuccessAlertMessage": "Please verify your new email address, otherwise we will use your verified one!",
+      "profileDeletedSuccessAlertMessage": "Only your default profile was kept (username and email)!",
+      "noProfileFoundAlertTitle": "No Profile Found",
+      "noProfileFoundAlertMessage": "You don't have a profile yet!"
+    },
+
+    "customerInfo": {
+      "invalidPhoneNumberAlertTitle": "Invalid Phone Number",
+      "invalidPhoneNumberAlertMessage": "Please enter a valid phone number\n\nValid formats:\n",
+      "invalidPostalCodeAlertTitle": "Invalid Postal Code",
+      "invalidPostalCodeAlertMessage": "Please enter a valid Canadian postal code (e.g., A1A 1A1)"
+    }
+  },
+
+  "load": {
+    "loading": "Loading...",
+    "sendEmailLoading": "Sending Email...",
+    "deletingReview": "Deleting review...",
+    "createAccount": "Creating Account...",
+    "loadingMessage1": "This may take a few seconds",
+    "loadingMessage2": "Please wait a moment",
+    "loadingMessage3": "We are notifying our electricians"
+  },
+
+  "editGalleryPage": {
+    "editGallery": "Edit Gallery",
+    "saveOrder": "Save Order",
+    "moveToTop": "Move to top",
+    "edit": "Edit",
+    "tip": "Tip!: compatible image types include PNG, SVG",
+    "editImagePage": {
+      "editImage": "Edit Image"
+    },
+
+    "addGallerySection": {
+      "addGallery": "Add Gallery",
+      "step": "Step"
+    }
+  },
+
+  "faqsAdminPage": {
+    "allFaqs": "All FAQs",
+    "moreThan3": "More than 3",
+    "lessThan3": "Less than 3",
+    "viewableFAQMessage": "viewable FAQs have been selected! Please ensure there are only 3 viewable FAQs selected.",
+    "saveViewableFAQs": "Save Viewable FAQs",
+    "addFAQ": "Add FAQ"
+  },
+
+  "servicesAdminPage": {
+    "allServices": "All Services",
+    "addService": "Add Service",
+    "serviceName": "Service Name",
+    "editService": "Edit Service"
+  },
+
+  "reviewsAdminPage": {
+    "errorFetchingReviews": "Error fetching reviews",
+    "allReviews": "All Reviews",
+    "searchClientName": "Search Client Name",
+    "ongoingPreviousRequest": "Your previous request is still ongoing!"
+  },
+
+  "allOrdersAdminPage" : {
+    "allOrders": "All Orders",
+    "filterByStatus": "Filter by Status",
+    "searchWithAppliedFilters": "Search with applied filters",
+    "statusOptions": {
+      "all": "All",
+      "completed": "Completed",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "inProgress": "In Progress",
+      "declined": "Declined"
+    }
+  },
+
+  "userOptions": {
+    "searchForUser": "Search for User",
+    "email": "email",
+    "name": "name",
+    "username": "username",
+    "noUsersFound": "No users found",
+    "notApplicable": "Not Applicable",
+    "clearSelection": "Clear Selection"
+  },
+
+  "createExternalOrder": {
+    "selectService": "Select the service that is the most appropriate for the order.",
+    "dueDate": "Due Date",
+    "orderDescription": "Order Description",
+    "customerFullName": "Customer Full Name",
+    "customerEmail": "Customer Email",
+    "customerPhone": "Customer Phone",
+    "customerAddress": "Customer Address",
+    "customerPostalCode": "Customer Postal Code",
+    "customerCity": "Customer City",
+    "customerApartmentNumber": "Customer Apartment Number",
+    "estimatedDuration": "Estimated Duration",
+    "jobStartedBeforeMessage": "If the job was started before this form was filled, enter how many hours of work was done, otherwise leave blank.",
+    "hoursWorked": "Hours Worked",
+    "progressDescription": "Progress Description",
+    "createOrder": "Create Order"
+  },
+
+  "createAdmin": {
+    "createAdmin": "Create Admin",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "addAdmin": "Add Admin"
+  },
+
+  "session" : {
+    "sessionExpired": "Your session expired, we are login you back in!",
+    "useAuthMessage": "useAuth must be used within an AuthProvider"
+  },
+
+  "reports": {
+    "reports": "Reports",
+    "makePDF": "Make PDF",
+    "reportTypes": {
+      "timeByService": "Time By Service",
+      "ordersPerService": "Orders Per Service",
+      "ordersPerMonth": "Orders Per Month"
+    },
+    "selectReport": "Select a Report",
+
+    "timeByService": "Time By Service",
+    "ordersPerService": "Orders Per Service",
+    "ordersPerMonth": "Orders Per Month",
+    "getOrdersPerMonth": "Get Orders Per Month",
+
+    "barChart": "Bar Chart",
+    "pieChart": "Pie Chart",
+    "stackedBarChart": "Stacked Bar Chart",
+    "lineChart": "Line Chart",
+
+    "hoursWorked": "Hours Worked",
+    "totalHours": " total hours",
+    "totalOrders": " total orders",
+    "orders": "Orders",
+    "totalOrdersPerService": "Total Orders Per Service",
+    "ordersTotal": "Total orders",
+
+    "startDateLabel": "Start Date",
+    "endDateLabel": "End Date",
+    "year": "Year"
+  },
+
+  "update": "Update",
+  "enterDescription": "Enter Description",
+  "back": "Back",
+  "accept": "Accept",
+  "decline": "Decline",
+  "emailClient": "Email Client",
+  "enterEmail": "Enter Email",
+  "subject": "Subject",
+  "enterSubject": "Enter Subject",
+  "enterMessage": "Enter Message",
   "answer": "Answer",
-  "anonymousBannerWelcome": "Welcome to Corso",
-  "anonymousBannerRegisterPrompt": "Register today to have us as your trusted electrician",
-  "registerNow": "Register Now",
-  "requestNow": "Request An Order Now",
-  "pastProjectsBlurb": "We specialize in diverse electrical projects, from smart home installations to modernizing historic buildings, with a focus on sustainable energy solutions like solar panels. Our passion is ensuring safety, efficiency, and sustainability in our ever-evolving world.",
-  "learnMore": "Learn More",
-  "servicesBlurb": "We offer a wide range of electrical services, from simple repairs to complex installations. Our team of experts is dedicated to providing the best solutions for your electrical needs. We are committed to delivering high-quality work and exceptional customer service. Our goal is to exceed your expectations and ensure your satisfaction.",
-  "faqBlurb": "Discover answers to our most frequently asked questions about our business. For more detailed information, feel free to click the link below to explore our comprehensive FAQ section.",
-  "testimonialsBlurb": "Explore genuine testimonials from our valued customers, showcasing their real experiences and satisfaction with our exceptional service.",
-  "viewMoreFaq": "View More FAQs",
-
-  "ourMission": "Our Mission",
-  "ourMissionBlurb": "Elevating Spaces to New Heights of Luxury through Unparalleled Electrical Expertise and Craftsmanship.",
-  "valueStatement": "Value Statement",
-  "valueStatements": [
-    "Excellence: We strive for nothing less than excellence in all we do.",
-    "Innovation: We embrace cutting-edge technology and ideas to lead in luxury electrical solutions.",
-    "Integrity: We operate with the utmost integrity, honesty, and transparency.",
-    "Quality: We are committed to delivering the highest quality work and services.",
-    "Customer-Centric: We prioritize our clients' needs and satisfaction in every project.",
-    "Sustainability: We consider the environmental impact and promote sustainable electrical solutions."
-  ],
-  "visionStatement": "Vision Statement",
-  "visionStatementText": "To become the foremost authority in high-end electrical craftsmanship, setting the standard for luxury, innovation, and excellence in every project we undertake.",
-  "contactUs": "Contact Us",
-  "takeMeThere": "Take Me There!",
-
-  "customer": "Customer",
-  "greetingCustomer": "Hello",
-  "pastOrders": "Past Orders",
-  "viewCurrentOrders": "View Current Orders",
-  "requestAnOrderNow": "Request An Order Now",
-
-  "contactInformation": "Contact Information",
-  "noneGiven": "None Given",
-  "editProfile": "Edit Profile",
-  "viewYourOrders": "View Your Orders",
-  "viewYourReviews": "View Your Reviews",
-  "gotAProblemNeedingFixing": "Got a problem needing fixing?",
-  "getStartedWithYourNextOrderHere": "Get started with your next order here!",
-  "requestOrderButton": "Request Order",
-
-  "profile": "Profile",
-  "profileInformationBlurb": "Please enter your information below. This information will be used to fill in the order form automatically. This information will be saved and can be modified at any time. If your email is invalid, we will use the email you used to signup.",
-
-  "name": "Name",
-  "email": "Email",
-  "address": "Address",
-  "postalCode": "Postal Code",
-  "postalCodeCustomer": "Customer Postal Code",
-  "city": "City",
-  "cityCustomer": "Customer City",
-  "apartmentNumber": "Apartment Number",
-  "apartmentNumberCustomer": "Customer Apartment Number",
-  "phoneNumber": "Phone",
-  "phoneNumberCustomer": "Customer Phone",
-
-  "fullName": "Full Name",
   "enterFullName": "Enter your full name",
-  "verifiedEmail": "Verified",
-  "unverifiedEmail": "Not Verified",
-  "resendEmail": "Resend Email",
   "submitButton": "Submit",
-  "deleteInformationButton": "Delete Information",
-
-  "emailSentSuccessAlertTitle": "Email Sent Successfully",
-  "emailSentSuccessAlertMessage": "Please check your email for a verification link",
-
-  "invalidPhoneNumberAlertTitle": "Invalid Phone Number",
-  "invalidPhoneNumberAlertMessage": "Please enter a valid phone number\n\nValid formats:\n",
-  "invalidPostalCodeAlertTitle": "Invalid Postal Code",
-  "invalidPostalCodeAlertMessage": "Please enter a valid Canadian postal code (e.g., A1A 1A1)",
-  "profileCreatedSuccessAlertTitle": "Profile Created Successfully",
-  "profileUpdatedSuccessAlertTitle": "Profile Updated Successfully",
-  "profileDeletedSuccessAlertTitle": "Profile Deleted Successfully",
-  "profileSuccessAlertMessage": "Please verify your new email address, otherwise we will use your verified one!",
-  "profileDeletedSuccessAlertMessage": "Only your default profile was kept (username and email)!",
-  "noProfileFoundAlertTitle": "No Profile Found",
-  "noProfileFoundAlertMessage": "You don't have a profile yet!",
-  "errorAlertTitle": "Error!",
-  "warningAlertTitle": "Warning!",
-  "errorAlertMessage": "A or multiple errors present !\n",
-  "errorAlertMessageSomethingWentWrong": "Something went wrong",
-  "errorNoInformationSaved": "You don't have any information saved !",
-
-  "order": "Order",
-  "orderId": "Order ID",
-  "order Number": "Order Number",
-  "orderStatus": "Order Status",
-  "overdueBy": "Overdue by",
-  "orderNotStartedMessage": "We haven't started to work on your order, but we will soon !",
-  "cancelledOrderTitle": "Order Cancelled",
-  "cancelledOrderMessage": "Your order has been cancelled",
-  "updateOrder": "Update Order",
-  "orderUpdatedTitle": "Order Updated",
-  "orderUpdatedMessage": "Your order has been updated successfully",
-  "noTimeline": "No Timeline",
-  "noOrdersForCustomer": "No orders found, you can request one",
-
-  "hours": "hours",
-  "days": "days",
-  "electricianNotesTitle": "Electrician Notes",
-  "noNotesYetMessage": "No notes yet, but when we want to inform you about something, it will appear here !",
-
-  "loadingMessage1": "This may take a few seconds",
-  "loadingMessage2": "Please wait a moment",
-  "loadingMessage3": "We are notifying our electricians",
-
-  "leaveAReview": "Leave A Review",
-  "editRequestButton": "Edit Request",
-  "cancelOrderButton": "Cancel Order",
-  "cancelRequestText": "Cancel Request",
-  "cancelRequestReason": "Reason for cancellation",
-
-  "review": "Review",
-  "myReviews": "My Reviews",
-  "createReviewMessage": "No reviews found, create one",
   "here": "here",
-  "reviewConstraintMessage": "Review must be at least 10 characters long!",
-  "selectRatingMessage": "Please select a rating!",
-  "success": "Success",
-  "submitReviewSuccessMessage": "Your review has been submitted!",
-  "leavePrivateReviewTitle": "Leave a private review to Corso",
-  "leavePrivateReviewBlurb": "This review will be visible by you and Corso, but we retain the right to display your review on the main page, you will be informed when your review is added or removed from the main page.",
-  "enterReview": "Enter Review",
-  "deleteReviewAlertTitle": "Review deleted successfully!",
-  "deleteReviewAlertMessage": "Your review has been successfully deleted!",
-  "updateReviewAlertTitle": "Review saved successfully!",
-  "updateReviewAlertMessage": "Your review has been successfully saved!",
   "save": "Save",
-  "reviewPinnedMessage": "Your review is pinned to the landing page",
-  "deletingReview": "Deleting review...",
-
   "backToMainPage": "Back to main page",
   "itemsPerPage": "Items per page"
 }

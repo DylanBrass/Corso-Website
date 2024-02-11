@@ -50,18 +50,18 @@ function AllServices() {
         <div className="container services-container">
             <div className={"border-service mb-5"}>
                 <div className="row service-header">
-                    <h1 className="title-services">{t("services")}</h1>
+                    <h1 className="title-services">{t("mainPage.services")}</h1>
                 </div>
                 <div className={"row"}>
                     <div className={"col-12 d-flex"}>
-                        <p className={"subtitle-services"}>{t("servicesBlurb")}</p>
+                        <p className={"subtitle-services"}>{t("mainPage.servicesBlurb")}</p>
                     </div>
                 </div>
             </div>
             {error && (
                 <div className="row">
                     <div className="col-12">
-                        <p className="error">Error: {error}</p>
+                        <p className="error">{t("alerts.error")}: {error}</p>
                     </div>
                 </div>
             )}
@@ -80,7 +80,7 @@ function AllServices() {
                                     </p>
                                     <div className="row align-items-end justify-content-end mt-5">
                                         <div className="col-6 d-flex justify-content-start align-items-center">
-                                            <p className="learn-more-text">{t("learnMore")}</p>
+                                            <p className="learn-more-text">{t("mainPage.learnMore")}</p>
                                         </div>
                                         <div className="col-6 d-flex justify-content-end align-items-center">
                                             <img
@@ -99,7 +99,7 @@ function AllServices() {
             ) : (
                 <div className="row">
                     <div className="col-12">
-                        <p>No services available.</p>
+                        <p>{t("mainPage.noServicesFound")}</p>
                     </div>
                 </div>
             )}

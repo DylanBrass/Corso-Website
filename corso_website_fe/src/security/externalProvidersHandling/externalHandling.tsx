@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react';
+import {useTranslation} from "react-i18next";
 
 function ExternalHandling() {
+    const {t} = useTranslation();
 
     useEffect(() => {
 
@@ -24,7 +26,7 @@ function ExternalHandling() {
                 <button id={'submit'} type={"submit"} style={{
                     display: "none",
                     visibility: "hidden"
-                }}>Logout
+                }}>{t("navigation.logout")}
                 </button>
             </form>
 

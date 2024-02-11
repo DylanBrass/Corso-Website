@@ -5,28 +5,32 @@ import "./Dashboard.css"
 import Cookies from "js-cookie";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 function Dashboard() {
 
-    const [totalAdmins, setTotalAdmins] = useState("loading...")
+    const [t] = useTranslation();
 
-    const [visitors, setVisitors] = useState("loading...")
+    const [totalAdmins, setTotalAdmins] = useState(t("load.loading"))
 
-    const [inProgressCount, setInProgressCount] = useState("loading...");
-    const [pendingCount, setPendingCount] = useState("loading...");
-    const [completedCount, setCompletedCount] = useState("loading...");
-    const [serviceCount, setServiceCount] = useState("loading...");
-    const [faqCount, setFaqCount] = useState("loading...");
+    const [visitors, setVisitors] = useState(t("load.loading"))
 
-    const [totalOrders, setTotalOrders] = useState("loading...")
+    const [inProgressCount, setInProgressCount] = useState(t("load.loading"))
+    const [pendingCount, setPendingCount] = useState(t("load.loading"))
+    const [completedCount, setCompletedCount] = useState(t("load.loading"))
+    const [serviceCount, setServiceCount] = useState(t("load.loading"))
+    const [faqCount, setFaqCount] = useState(t("load.loading"))
 
-    const [totalReviews, setTotalReviews] = useState("loading...")
+    const [totalOrders, setTotalOrders] = useState(t("load.loading"))
 
-    const [totalPinnedReviews, setTotalPinnedReviews] = useState("loading...")
+    const [totalReviews, setTotalReviews] = useState(t("load.loading"))
 
-    const [totalOverdueOrders, setTotalOverdueOrders] = useState("loading...")
+    const [totalPinnedReviews, setTotalPinnedReviews] = useState(t("load.loading"))
 
-    const [totalGalleryImages, setTotalGalleryImages] = useState("loading...")
+    const [totalOverdueOrders, setTotalOverdueOrders] = useState(t("load.loading"))
+
+    const [totalGalleryImages, setTotalGalleryImages] = useState(t("load.loading"))
 
     const getTotalReviews = async () => {
         axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/reviews/count", {
@@ -326,7 +330,7 @@ function Dashboard() {
             textAlign: "center"
         }}>
             <NavigationBar/>
-            <h1 className={"w-100"}>Welcome Back {Cookies.get("username")}</h1>
+            <h1 className={"w-100"}>{t("dashboardPage.welcomeBack")} {Cookies.get("username")}</h1>
 
             <div className={"admin-dashboard container"} style={{}}>
                 <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>
@@ -334,7 +338,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={completedCount.toString()}
                             title2={""}
-                            text1={"Completed Orders"}
+                            text1={t("dashboardPage.completedOrders")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon1_arlmbi.png"}
                             action={() => {
@@ -348,7 +352,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={inProgressCount.toString()}
                             title2={""}
-                            text1={"Current Orders"}
+                            text1={t("dashboardPage.currentOrders")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon2_upzhcv.png"}
                             action={() => {
@@ -362,7 +366,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={pendingCount.toString()}
                             title2={""}
-                            text1={"Client Requests"}
+                            text1={t("dashboardPage.clientRequests")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267714/icon3_fv4ddv.png"}
                             action={() => {
@@ -377,7 +381,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={totalOrders.toString()}
                             title2={""}
-                            text1={"All Orders"}
+                            text1={t("dashboardPage.allOrders")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267713/icon4_v5phq3.png"}
                             action={() => {
@@ -391,7 +395,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={totalOverdueOrders.toString()}
                             title2={""}
-                            text1={"Late Orders"}
+                            text1={t("dashboardPage.lateOrders")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon5_tgqojw.png"}
                             action={() => {
@@ -406,8 +410,8 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={""}
                             title2={visitors.toString()}
-                            text1={"View Main Page"}
-                            text2={"Unique Visitors in the last 30 days"}
+                            text1={t("dashboardPage.viewMainPage")}
+                            text2={t("dashboardPage.uniqueVisitorsNumber")}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon9_ehmde3.png"}
                             action={() => {
                                 window.location.href = "/"
@@ -420,7 +424,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={totalGalleryImages.toString()}
                             title2={""}
-                            text1={"Gallery Images"}
+                            text1={t("dashboardPage.galleryImages")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon7_vftm9q.png"}
                             action={() => {
@@ -430,9 +434,7 @@ function Dashboard() {
                         />
                     </div>
                     <div className={"col-12 mt-3 col-lg-4 mt-lg-0"}>
-
-                        <AdminDashboardTile title1={"Reports"} text1={""} title2={""} text2={""}
-                                            icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon13_pxn61t.png"}
+                        <AdminDashboardTile title1={t("dashboardPage.reports")} text1={""} title2={""} text2={""} icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon13_pxn61t.png"}
                                             action={() => {
                                                 window.location.href = "/reports"
                                             }}/>
@@ -442,7 +444,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={faqCount.toString()}
                             title2={""}
-                            text1={"Current FAQs"}
+                            text1={t("dashboardPage.currentFAQs")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon6_wbpr29.png"}
                             action={() => {
@@ -456,8 +458,8 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={""}
                             title2={""}
-                            text1={"Create Tracking Number"}
-                            text2={"for External Orders"}
+                            text1={t("dashboardPage.createTrackingNumber")}
+                            text2={t("dashboardPage.forExternalOrders")}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon10_c7xbqz.png"}
                             action={() => {
                                 window.location.href = "/create/orders/external"
@@ -469,7 +471,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={serviceCount.toString()}
                             title2={""}
-                            text1={"Services Offered"}
+                            text1={t("dashboardPage.servicesOffered")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon11_pprfnf.png"}
                             action={() => {
@@ -482,7 +484,7 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={totalAdmins.toString()}
                             title2={""}
-                            text1={"Admin Accounts"}
+                            text1={t("dashboardPage.adminAccounts")}
                             text2={""}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon12_fpyhus.png"}
                             action={() => {
@@ -499,8 +501,8 @@ function Dashboard() {
                         <AdminDashboardTile
                             title1={totalReviews.toString()}
                             title2={totalPinnedReviews + "/6"}
-                            text1={"Total Testimonies"}
-                            text2={"Pinned Testimonies"}
+                            text1={t("dashboardPage.totalTestimonies")}
+                            text2={t("dashboardPage.pinnedTestimonies")}
                             icon={"https://res.cloudinary.com/dszhbawv7/image/upload/v1702267712/icon8_jbbxv9.png"}
                             action={() => {
 

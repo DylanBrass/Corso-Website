@@ -13,9 +13,11 @@ import swal from "sweetalert";
 import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import checkToDo from "../../../ressources/images/check_notDone.png";
+import {useTranslation} from "react-i18next";
 
 function ViewSpecificOrder() {
 
+    const {t} = useTranslation();
     const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     let {orderId} = useParams();
 
@@ -75,18 +77,18 @@ function ViewSpecificOrder() {
                 }
             })
             if (response.status === 200) {
-                swal("Cancelled!", `The order with tracking number ${order.orderTrackingNumber} has been successfully cancelled.`, "success")
+                swal((t("alerts.order.cancelledOrderTitle")), `${t("alerts.order.orderWithTrackingNumber")} ${order.orderTrackingNumber} ${t("alerts.order.hasBeenCancelled")}.`, "success")
                     .then(() => {
                         window.location.href = '/dashboard';
                     });
             } else {
-                swal("Oops!", "Something went wrong. Please try again.", "error");
+                swal("Oops!", (t("alerts.tryAgain")), "error");
             }
 
             setLoading(false)
         } catch (error) {
 
-            swal("Failed!", `Failed to cancel the order with tracking number ${order.orderTrackingNumber}.`, "error");
+            swal((t("alerts.failed")), `${t("alerts.order.failedToCancelOrder")} ${order.orderTrackingNumber}.`, "error");
         }
     }
 
@@ -100,26 +102,26 @@ function ViewSpecificOrder() {
             <NavigationBar/>
             <div className="container specific-order">
                 <div className="row">
-                    <h1 className="display-4 title text-center" id={"title"}>Order #{order.orderTrackingNumber}</h1>
+                    <h1 className="display-4 title text-center" id={"title"}>{t("order.order")} #{order.orderTrackingNumber}</h1>
                 </div>
                 <div className="row">
                     <div className="col-lg-6 col-md-12 info-box">
                         <div className="row text-start">
-                            <h1>Client</h1>
+                            <h1>{t("customerInfo.customer")}</h1>
                             <p>{order.customerFullName}</p>
                         </div>
                         <div className="row text-start overflow-scroll">
-                            <h1>Address</h1>
+                            <h1>{t("customerInfo.address")}</h1>
                             <p>
-                                Address
+                                {t("customerInfo.address")}
                                 : {order.customerAddress} {order.customerApartmentNumber !== null ? "Apartment " + order.customerApartmentNumber : ""}, {order.customerCity}  </p>
-                            <p>Postal code : {order.customerPostalCode}</p>
+                            <p>{t("customerInfo.postalCode")} : {order.customerPostalCode}</p>
                         </div>
                         <div className="row text-start">
-                            <h1>Contact Information</h1>
-                            <p>Email : {order.customerEmail}</p>
+                            <h1>{t("customerInfo.contactInformation")}</h1>
+                            <p>{t("customerInfo.email")} : {order.customerEmail}</p>
                             {(order.customerPhone !== null && order.customerPhone !== "") &&
-                                <p> Phone Number : {order.customerPhone}</p>}
+                                <p> {t("customerInfo.phoneNumber")} : {order.customerPhone}</p>}
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
@@ -132,7 +134,7 @@ function ViewSpecificOrder() {
                             </div>
                         }
                         <div className="row text-start">
-                            <h1>Order Status</h1>
+                            <h1>{t("order.orderStatus")}</h1>
                             <p className={"text-capitalize"}>{
                                 order.orderStatus.replace("_", " ").toLowerCase()
                             }</p>
@@ -176,8 +178,8 @@ function ViewSpecificOrder() {
                                 ) : (
                                     <p className="error-message">
                                         {order.estimatedDuration <= 0 ?
-                                            "No estimated duration set." :
-                                            "No days left count was set."}
+                                            (t("order.noEstimatedDuration")) :
+                                            (t("order.noDaysLeft"))}
                                     </p>
                                 )}
                             </div>
@@ -190,40 +192,40 @@ function ViewSpecificOrder() {
                                     }
                                     {
                                         (order.progressInformation === null || order.progressInformation.length < 0) &&
-                                        <p>No notes are currently recorded</p>
+                                        <p>{t("order.noNotesYetMessage")}</p>
 
                                     }
                                 </div>
                             </div>
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end complete-order-btn p-2"}>Complete This Order</button>
+                                <button className={"m-4 float-end complete-order-btn p-2"}>{t("order.completeOrder")}</button>
                             </div>
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end edit-order-btn p-2"}>Edit This Order</button>
+                                <button className={"m-4 float-end edit-order-btn p-2"}>{t("order.editOrder")}</button>
                             </div>
                             <div className={"col-12"}>
                                 <button className={"m-4 float-end cancel-order-btn p-2"}
-                                        onClick={() => setOpenPopup(true)}>Cancel This Order
+                                        onClick={() => setOpenPopup(true)}>{t("order.cancelOrderButton")}
                                 </button>
                                 <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
                                     <div className="popup-box">
                                         {loading &&
                                             <div className={"spinner-box text-center"}>
                                                 <h3 className={""}>
-                                                    Sending email...
+                                                    {t("load.sendEmailLoading")}
                                                 </h3>
                                                 <SyncLoader className={"spinner"} color="#054AEB"/>
                                             </div>
                                         }
                                         <form onSubmit={cancelStatus}
                                               className={" decline-popup" + (loading ? " hidden " : " ")}>
-                                            <h4>Reason for Canceling</h4>
+                                            <h4>{t("order.cancelRequestReason")}</h4>
                                             <textarea className="view-specific-order-admin-textarea"
                                                       value={reasonForCancellation}
                                                       onChange={(e) => setReasonForCancellation(e.target.value)}
-                                                      placeholder="Enter the reason for cancelling this order"
+                                                      placeholder={t("order.reasonForCancellation")}
                                             />
-                                            <button type={"submit"} className={"decline-popup-button"}>Submit</button>
+                                            <button type={"submit"} className={"decline-popup-button"}>{t("submitButton")}</button>
                                         </form>
                                     </div>
                                 </Popup>
@@ -231,6 +233,16 @@ function ViewSpecificOrder() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="custom-row text-center">
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/orders/current";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     )
