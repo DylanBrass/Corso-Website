@@ -21,10 +21,10 @@
     "anonymousBannerRegisterPrompt": "Register today to have us as your trusted electrician",
     "registerNow": "Register Now",
     "requestNow": "Request An Order Now",
-    "pastOrders": "Past Orders",
-    "viewCurrentOrders": "View Current Orders",
-    "requestAnOrderNow": "Request An Order Now"
+    "pastOrders": "Past Orders"
   },
+  "requestAnOrderNow": "Request An Order Now",
+  "viewCurrentOrders": "View Current Orders",
 
   "mainPage" : {
     "previousProjectsPart1": "Our Previous ",

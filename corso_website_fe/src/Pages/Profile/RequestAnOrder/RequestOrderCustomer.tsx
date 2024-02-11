@@ -15,8 +15,8 @@ function RequestOrder() {
     const [allServices, setAllServices] = useState([]);
     const [selectedServiceId, setSelectedServiceId] = useState('');
 
-    const [hasProfile, setHasProfile] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
+    const [,setHasProfile] = useState(false);
+    const [, setIsVerified] = useState(false);
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -32,20 +32,6 @@ function RequestOrder() {
         };
         fetchServices();
     }, []);
-
-    useEffect(() => {
-        // @ts-ignore
-        if (!auth.isAuthenticated || !auth.userRoles().includes('Customer')) {
-            window.location.href = '/';
-            return
-        }
-
-        checkIfProfileExists().then(r => {
-
-        })
-
-    }, []);
-
 
     const checkIfProfileExists = async () => {
         await axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers?simpleCheck=true", {
@@ -93,6 +79,19 @@ function RequestOrder() {
         )
 
     }
+
+    useEffect(() => {
+        // @ts-ignore
+        if (!auth.isAuthenticated || !auth.userRoles().includes('Customer')) {
+            window.location.href = '/';
+            return
+        }
+
+        checkIfProfileExists().then(r => {
+
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const {ref} = usePlacesWidget({
         apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
@@ -184,6 +183,7 @@ function RequestOrder() {
                     <div className="row">
                         <div className="col-lg-6 d-none d-lg-flex align-items-stretch justify-content-center">
                             <div className="image-container">
+                                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                                 <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1701099346/test-image-carousel-1_xd1nwu.jpg" alt="Service Image" className="img-fluid stretch-image" />
                             </div>
                         </div>
