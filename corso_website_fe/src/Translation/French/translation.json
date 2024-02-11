@@ -78,6 +78,13 @@
     "contactInformation": "Informations personnelles"
   },
 
+  "address": "Adresse",
+  "postalCode": "Code postal",
+  "apartmentNumber": "Numéro d'appartement",
+  "phoneNumber": "Numéro de téléphone",
+  "city": "Ville",
+  "fullName": "Nom complet",
+
   "profilePage": {
     "profile": "Profil",
     "profileInformationBlurb": "S'il vous plaît entrer vos informations ci-dessous. Ces informations seront utilisées pour remplir automatiquement le formulaire de commande. Ces informations seront enregistrées et pourront être modifiées à tout moment. Si votre e-mail n'est pas valide, nous utiliserons l'e-mail que vous avez utilisé pour vous inscrire.",

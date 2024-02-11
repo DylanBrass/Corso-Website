@@ -77,6 +77,12 @@
     "phoneNumberCustomer": "Customer Phone",
     "contactInformation": "Contact Information"
   },
+  "city": "City",
+  "fullName": "Full Name",
+  "address": "Address",
+  "postalCode": "Postal Code",
+  "apartmentNumber": "Apartment Number",
+  "phoneNumber": "Phone",
 
   "profilePage": {
     "profile": "Profile",
