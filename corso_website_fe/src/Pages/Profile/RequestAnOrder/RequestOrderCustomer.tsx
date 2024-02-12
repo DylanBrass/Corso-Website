@@ -17,9 +17,8 @@ function RequestOrder() {
 
     const [minDate, setMinDate] = useState("");
     const [email, setEmail] = useState(Cookies.get("email"))
-    const [hasEmail, setHasEmail] = useState(false);
-    const [hasProfile,setHasProfile] = useState(false);
-    const [isVerified , setIsVerified] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+    const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
     useEffect(() => {
         const today = new Date();
@@ -54,8 +53,6 @@ function RequestOrder() {
         }).then(r => {
 
             if (r.status === 200) {
-                setHasProfile(true);
-
                 axios.get(process.env.REACT_APP_BE_HOST + "api/v1/corso/customers", {
                     headers: {
                         // @ts-ignore
@@ -64,10 +61,9 @@ function RequestOrder() {
                 }).then(r => {
                     if (r.status === 200) {
 
-                        if (r.data.email.length > 0) {
-                            setEmail(r.data.email)
+                        if (r.data.verified === false) {
+                            setUnverifiedEmail(r.data.email);
                         }
-                        setIsVerified(r.data.verified)
 
                         document.getElementById("customerFullName")!.setAttribute("value", r.data.name);
                         document.getElementById("customerAddress")!.setAttribute("value", r.data.address);
@@ -82,18 +78,37 @@ function RequestOrder() {
                     }
                 )
             } else {
-                setHasProfile(false);
+                swal({
+                    title: "Profile Information",
+                    text: `You do not have a profile information. For quicker submission, please fill in your profile information before requesting an order.`,
+                    icon: "warning",
+                    // @ts-ignore
+                    buttons: ["Proceed anyway", "Go to profile"]
+                }).then((willProceed) => {
+                    if (willProceed) {
+                        window.location.href = "/profile/edit";
+                    }
+                });
                 document.getElementById("customerFullName")!.setAttribute("value", Cookies.get("username")!);
             }
         }).catch(e => {
-
-                setHasProfile(false);
-                setIsVerified(true)
+             swal({
+                    title: "Profile Information",
+                    text: `You do not have a profile information. For quicker submission, please fill in your profile information before requesting an order.`,
+                    icon: "warning",
+                    // @ts-ignore
+                    buttons: ["Proceed anyway", "Go to profile"]
+                }).then((willProceed) => {
+                    if (willProceed) {
+                        window.location.href = "/profile/edit";
+                    }
+                });
                 document.getElementById("customerFullName")!.setAttribute("value", Cookies.get("username")!);
             }
         )
 
     }
+
 
     useEffect(() => {
         // @ts-ignore
@@ -102,9 +117,16 @@ function RequestOrder() {
             return
         }
 
-        checkIfProfileExists().then(r => {
+        //@ts-ignore
+        auth.getUserInfo().then(() => {
+            setEmail(Cookies.get("email"))
+            setIsVerified(Cookies.get("isVerified") === "true")
+        })
+
+        checkIfProfileExists().then(() => {
 
         })
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -130,14 +152,13 @@ function RequestOrder() {
             swal({
                 title: "Confirm Email",
                 text: `This email ${email} will be attached to your order. This will be the email that receives update emails. If you wish to proceed with this email, click OK, else click Cancel. If you wish to change this email, please update your profile information.`,
-                icon: "warning",
+                icon: "info",
                 // @ts-ignore
                 buttons: true,
-                dangerMode: true,
             })
                 .then((willProceed) => {
                     if (willProceed) {
-                        submitOrderRequest(); // Proceed to submit the order
+                        submitOrderRequest();
                     } else {
                         swal("Cancelled", "Your order request has been cancelled.", "error");
                     }
@@ -145,7 +166,7 @@ function RequestOrder() {
         } else {
             swal({
                 title: "Unverified Email Found",
-                text: `There is no email attached to your profile. If you wish to proceed without a verified email click OK, else click Cancel. If you wish to change to change the email that receives updates, please update your profile information. We will still send you updates though the email you signed up with. `,
+                text: `This email, ${unverifiedEmail} is not verified. Please verify your email before proceeding. If you wish to proceed anyways, the order will be linked with this email: ${email}.`,
                 icon: "warning",
                 // @ts-ignore
                 buttons: true,
@@ -238,7 +259,9 @@ function RequestOrder() {
                         <div className="col-lg-6 d-none d-lg-flex align-items-stretch justify-content-center">
                             <div className="image-container">
                                 {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-                                <img src="https://res.cloudinary.com/dszhbawv7/image/upload/v1701099346/test-image-carousel-1_xd1nwu.jpg" alt="Service Image" className="img-fluid stretch-image" />
+                                <img
+                                    src="https://res.cloudinary.com/dszhbawv7/image/upload/v1701099346/test-image-carousel-1_xd1nwu.jpg"
+                                    alt="Service Image" className="img-fluid stretch-image"/>
                             </div>
                         </div>
 
