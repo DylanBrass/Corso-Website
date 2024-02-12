@@ -210,7 +210,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor="serviceId" className="col-sm-3 col-form-label">
-                                            {t("customerInfo.serviceType")}
+                                            {t("customerInfo.serviceType")}*
                                         </label>
                                         <div className="col-sm-9">
                                             <select
@@ -242,7 +242,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"orderDescription"} className="col-sm-3 col-form-label">
-                                            {t("customerInfo.orderDescription")}
+                                            {t("customerInfo.orderDescription")}*
                                         </label>
                                         <div className="col-sm-9">
                                             <textarea
@@ -259,7 +259,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerFullName"} className="col-sm-3 col-form-label">
-                                            {t("customerInfo.fullName")}
+                                            {t("customerInfo.fullName")}*
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -290,7 +290,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerAddress"} className="col-sm-3 col-form-label">
-                                            {t("customerInfo.address")}
+                                            {t("customerInfo.address")}*
                                         </label>
                                         {/*// @ts-ignore*/}
                                         <div className="col-sm-9">
@@ -310,7 +310,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerPostalCode"} className="col-sm-3 col-form-label">
-                                            {t("customerInfo.postalCode")}
+                                            {t("customerInfo.postalCode")}*
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -327,7 +327,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerCity"} className="col-sm-3 col-form-label">
-                                            {t("customerInfo.city")}
+                                            {t("customerInfo.city")}*
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -359,7 +359,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerDueDate"} className="col-sm-3 col-form-label">
-                                            {t("customerInfo.DueDate")}
+                                            {t("customerInfo.DueDate")}*
                                         </label>
                                         <div className="col-sm-9">
                                             <input
