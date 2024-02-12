@@ -470,6 +470,8 @@ public class OrderServiceImpl implements OrderService {
 
         parameters.put("previousAddress", order.getCustomerAddress());
 
+        parameters.put("previousPhoneNumber", order.getCustomerPhone());
+
         parameters.put("previousCity", order.getCustomerCity());
 
         parameters.put("previousPostalCode", order.getCustomerPostalCode());
@@ -492,6 +494,8 @@ public class OrderServiceImpl implements OrderService {
         parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
 
         parameters.put("newAddress", order.getCustomerAddress());
+
+        parameters.put("newPhoneNumber", order.getCustomerPhone());
 
         parameters.put("newCity", order.getCustomerCity());
 
@@ -556,17 +560,29 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
 
-        if (order.getOrderStatus() != Status.IN_PROGRESS) {
+        if (order.getOrderStatus() != Status.IN_PROGRESS || order.getHoursWorked() == 0) {
             throw new InvalidRequestException("Order cannot be updated, it is not in in progress status, meaning it was accepted or cancelled already.");
         }
 
         String recipient = order.getCustomerEmail();
         String subject = "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been completed";
         String text = "Dear " + order.getCustomerFullName() + ",\n\n" +
-                "We are pleased to inform you that your order with ID " + orderId + " has been completed.\n\n" +
+                "We are pleased to inform you that your order with ID: " + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been completed.\n\n" +
                 "Thank you for choosing us.\n\n" +
                 "Sincerely,\n" +
-                "Your Company Name";
+                "Corso Electric Inc.  " +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n"+
+                "Cher(e) " + order.getCustomerFullName() + ",\n\n" +
+                "Nous sommes heureux de vous informer que votre commande avec l'ID: " + order.getOrderTrackingNumber().getOrderTrackingNumber()  + " a été complétée.\n\n" +
+                "Merci de nous avoir choisi.\n\n" +
+                "Sincèrement,\n" +
+                "Corso Electric Inc.";
+
+
+
 
         emailService.sendEmail(recipient, subject, text);
 

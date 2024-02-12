@@ -86,7 +86,7 @@ export default function App() {
 
 
                         <Route path="/manage/gallery/:galleryId" element={<ViewSpecificGallery/>}/>
-                        <Route path="/manage/completedOrder/:orderId" element={<OrderProgressionPage/>}/>
+                        {/*<Route path="/manage/completedOrder/:orderId" element={<OrderProgressionPage/>}/>*/}
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
                         <Route path="/manage/orders/inactive/:orderId" element={<ViewSpecificInactiveOrder/>}/>
 

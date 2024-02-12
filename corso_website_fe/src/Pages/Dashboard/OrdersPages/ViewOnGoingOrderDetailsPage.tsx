@@ -110,7 +110,7 @@ function ViewSpecificOrder() {
     const loadingCompleteOrder = () => {
         toast((t("order.orderFinalCompleted")), {
             position: "top-right",
-            autoClose: false,
+            autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: false,
             pauseOnHover: true,
@@ -164,7 +164,7 @@ function ViewSpecificOrder() {
                         console.log(orderId);
                         console.log(error);
                         console.log(order.orderStatus);
-                        swal(`${t("order.CompletedErrorMessage2")} ${order.orderTrackingNumber}.`, "error");
+                        swal(`${t("order.orderCompletedErrorMessage2")} ${order.orderTrackingNumber}.`, `${t("order.orderNoProgression")}`, "error");
                     } finally {
                         setLoading(false);
                     }

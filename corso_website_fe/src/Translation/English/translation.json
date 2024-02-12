@@ -6,7 +6,7 @@
   "dueDate": "Due Date",
   "orderDate": "Order Date",
   "navigation": {
-    "language": "French (Français)",
+    "language": "Français",
     "home": "Home",
     "login": "Login",
     "logout": "Logout",
@@ -141,6 +141,7 @@
     "orderUpdateLoadingProgression": "Updating Order Progression, Sending Email to Client..",
     "orderCompletedErrorMessage": "\"Oops!\", \"Something went wrong. Please try again.\"",
     "orderCompletedErrorMessage2": "Failed!\", `Failed to complete the order with tracking number",
+    "orderNoProgression": "An error occured. Please verify that the order is not already completed or that the hours work are set before completing .",
     "orderFinalCompleted": "Completing Order...",
     "orderCompletedLoading": "Completing Order..."
 

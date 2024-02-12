@@ -142,8 +142,8 @@
     "orderFinalCompleted": "Commande complétée...",
     "orderCompletedOrderQuestion1": "Voulez-vous compléter cette commande ?",
     "orderCompletedLoading": "Commande complétée...",
-    "orderUpdateLoadingProgression": "Mise à jour de la commande..."
-
+    "orderUpdateLoadingProgression": "Mise à jour de la commande...",
+    "orderNoProgression": "Une erreure s'est produite. S'il-vous-plaît vérifier si la commande n'est pas déja completée ou que vous n'avez entré les heures travaillée avant de completée."
   },
 
   "reviews": {
