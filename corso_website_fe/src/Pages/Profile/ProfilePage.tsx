@@ -319,7 +319,15 @@ function ProfilePage() {
                                 <p>{t("profilePage.getStartedWithYourNextOrderHere")}</p>
                             </div>
                             <div className={"col-12 col-lg-4"}>
-                                <button className={"request-order-btn-profile p-2"}>{t("profilePage.requestOrderButton")}</button>
+                                <button
+                                    className="request-order-btn-profile p-2"
+                                    onClick={() => {
+                                        window.location.href = "/requestOrder";
+                                    }}
+                                >
+                                    {t("banner.requestAnOrderNow")}
+                                </button>
+
                             </div>
                         </div>
                     </div>

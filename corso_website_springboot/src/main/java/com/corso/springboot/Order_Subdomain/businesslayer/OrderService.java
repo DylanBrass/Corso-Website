@@ -48,6 +48,8 @@ public interface OrderService {
 
     List<OrdersPerMonth> getTotalOrderRequestByMonth(int year);
 
+    OrderResponse CustomerRequestOrder(String userId, String userEmail, OrderRequestCustomer orderRequestCustomer) throws MessagingException;
+
     void deleteOrderByOrderId(String orderId);
 
 

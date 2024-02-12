@@ -1,5 +1,7 @@
 package com.corso.springboot.Order_Subdomain.businesslayer;
 
+import com.corso.springboot.Customer_Subdomain.datalayer.Customer;
+import com.corso.springboot.Customer_Subdomain.datalayer.CustomerRepository;
 import com.corso.springboot.Customer_Subdomain.presentationlayer.CustomerCancelOrderRequest;
 import com.corso.springboot.Order_Subdomain.datalayer.*;
 import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
@@ -46,6 +48,8 @@ public class OrderServiceImpl implements OrderService {
     private final EmailService emailService;
 
     private final BasicTools basicTools;
+
+    private final CustomerRepository customerRepository;
 
     @Override
     public List<OrderResponse> getAllOrders(Map<String, String> queryParams, int pageSize, int offset) {
@@ -317,7 +321,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderStatus(Status.valueOf(newStatus.toString()));
         order.setOrderDate(String.valueOf(LocalDate.now()));
-        order.setDueDate(String.valueOf(LocalDate.now().plusDays(order.getHoursWorked())));
+        order.setDueDate(order.getDueDate());
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
     }
@@ -388,7 +392,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(order);
     }
-
 
     @Override
     public OrderResponse updateOrderByOrderId(String orderId, String userId, OrderCustomerRequest customerUpdateOrderRequest) throws MessagingException {
@@ -669,5 +672,47 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public OrderResponse CustomerRequestOrder(String userId, String userEmail, OrderRequestCustomer orderRequestCustomer) throws MessagingException{
+
+        if (serviceService.getServiceByServiceId(orderRequestCustomer.getServiceId()) == null) {
+            throw new ServiceNotFoundException("Service not found");
+        }
+
+        Order order = orderRequestMapper.requestModelToOrderCustomer(orderRequestCustomer);
+
+        // Check if customer exists in our db -> if not, use email from token
+        Customer customer = customerRepository.getCustomerByUserId(userId);
+
+        if (customer == null || !customer.isVerified())
+            order.setCustomerEmail(userEmail);
+        else {
+            order.setCustomerEmail(customer.getEmail());
+        }
+
+        order.setUserId(userId);
+        order.setOrderId(new OrderIdentifier());
+        order.setOrderTrackingNumber(new OrderTrackingNumber());
+        order.setOrderStatus(Status.PENDING);
+        order.setServiceId(new ServiceIdentifier(orderRequestCustomer.getServiceId()));
+        order.setOrderDate(String.valueOf(LocalDate.now()));
+
+        // sending email to the user
+        String subject = "Order Request Confirmation";
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("name", order.getCustomerFullName());
+        parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
+        int status = emailService.sendEmail(order.getCustomerEmail(), subject, "OrderRequestConfirmation", parameters);
+
+        if (status != 200) {
+            throw new MessagingException("Failed to send email <3");
+        }
+
+        //sending email to admins
+        basicTools.sendEmailToAdmins("An Order Has Been Requested", "OrderRequestConfirmationAdmins", parameters);
+
+        return orderResponseMapper.toOrderResponse(orderRepository.save(order));
+    }
 
 }

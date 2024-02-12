@@ -188,6 +188,10 @@ function ViewSpecificOrderAdmin() {
                 <div className="row">
                     <div className="col-lg-6 col-md-12 request-info-box">
                         <div className="row text-start">
+                            <h1>{t("customerInfo.DueDate")}</h1>
+                            <p>{order.dueDate}</p>
+                        </div>
+                        <div className="row text-start">
                             <h1>{t("customerInfo.customer")}</h1>
                             <p>{order.customerFullName}</p>
                         </div>

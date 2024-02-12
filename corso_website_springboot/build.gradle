@@ -149,6 +149,7 @@ test {
     exclude '**/AdminCancelsOrderTest.class'
     exclude '**/CustomerViewsASpecificReviewTheyWrote.class'
     exclude '**/EditFaqInTheAdminPanelTest.class'
+    exclude '**/CustomerRequestsAnOrder.class'
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

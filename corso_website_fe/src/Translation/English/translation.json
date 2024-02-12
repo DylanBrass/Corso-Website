@@ -22,8 +22,8 @@
     "registerNow": "Register Now",
     "requestNow": "Request An Order Now",
     "pastOrders": "Past Orders",
-    "viewCurrentOrders": "View Current Orders",
-    "requestAnOrderNow": "Request An Order Now"
+    "requestAnOrderNow": "Request An Order Now",
+    "viewCurrentOrders": "View Current Orders"
   },
 
   "mainPage" : {
@@ -75,7 +75,11 @@
     "apartmentNumber": "Apartment Number",
     "phoneNumber": "Phone",
     "phoneNumberCustomer": "Customer Phone",
-    "contactInformation": "Contact Information"
+    "contactInformation": "Contact Information",
+    "DueDate": "Due Date",
+    "orderDescription": "Order Description",
+    "serviceType": "Service Type",
+    "requestOrderTitle": "Request An Order"
   },
 
   "profilePage": {

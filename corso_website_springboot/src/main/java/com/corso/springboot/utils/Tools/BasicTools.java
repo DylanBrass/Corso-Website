@@ -40,21 +40,24 @@ public class BasicTools {
 
         StringBuilder recipients = new StringBuilder();
 
-        for(UserInfoResponse admin : admins){
+        for (UserInfoResponse admin : admins) {
             recipients.append(admin.getEmail()).append(",");
-
         }
 
-        log.info("Sending email to {}", recipients);
+        if (recipients.length() > 0) {
+            log.info("Sending email to {}", recipients);
 
-        recipients.deleteCharAt(recipients.length() - 1);
+            recipients.deleteCharAt(recipients.length() - 1);
 
-        int status = emailService.sendEmail(recipients.toString(), subject, template, parameters);
+            int status = emailService.sendEmail(recipients.toString(), subject, template, parameters);
 
-        if (status != 200) {
-            throw new MessagingException("Failed to send email");
+            if (status != 200) {
+                throw new MessagingException("Failed to send email");
+            }
+        } else {
+            log.warn("No admin recipients found. Email not sent.");
         }
-
     }
+
 }
 

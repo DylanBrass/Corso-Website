@@ -42,6 +42,7 @@ import ViewSpecificGallery from "./Pages/Dashboard/Gallery/UpdateGallery/ViewSpe
 import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
 import ReportsPage from "./Pages/Dashboard/ReportsPages/ReportsPage";
 import MakePdfPage from "./Pages/Dashboard/ReportsPages/MakePdfPage";
+import RequestOrder from "./Pages/Profile/RequestAnOrder/RequestOrderCustomer";
 import ViewSpecificInactiveOrder from "./Pages/Dashboard/OrdersDetailsPages/ViewSpecificInactiveOrder";
 import OrderProgressionPage from "./Pages/Dashboard/OrdersPages/OrderProgressionPage";
 
@@ -68,6 +69,7 @@ export default function App() {
                         <Route path="/orders/pending" element={<PendingOrdersPage/>}/>
                         <Route path="/orders/overdue" element={<OverdueOrdersPage/>}/>
                         <Route path="/profile/manage/orders/:orderId" element={<UpdateOrder/>}/>
+                        <Route path="/requestOrder" element={<RequestOrder/>}/>
                         <Route path="/manage/testimonies" element={<ManageReviews/>}/>
                         <Route path="/carousel/order" element={<EditGallery/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>
