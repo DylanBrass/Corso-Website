@@ -31,6 +31,8 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                 if (r.status === 201) {
                     // @ts-ignore
                     swal(t("alerts.gallery.galleryCreatedTitle"), (t("alerts.gallery.galleryCreatedMessage")), 'success').then(() => {
+                        (document.getElementById("description") as HTMLInputElement).value = "";
+                            (document.getElementById("image") as HTMLInputElement).value = "";
                         fetchGalleries();
                     })
 

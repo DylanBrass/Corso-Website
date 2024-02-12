@@ -77,6 +77,13 @@ function AddCustomerInformation() {
 
                         setIsVerified(r.data.verified)
 
+                        if(r.data.verified){
+                            Cookies.set("email", r.data.email);
+                        }else {
+                            // @ts-ignore
+                            auth.getUserInfo()
+                        }
+
                         document.getElementById("name")!.setAttribute("value", r.data.name);
                         document.getElementById("email")!.setAttribute("value", r.data.email);
                         document.getElementById("address")!.setAttribute("value", r.data.address);
@@ -106,7 +113,6 @@ function AddCustomerInformation() {
 
 
     }
-
 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -163,9 +169,11 @@ function AddCustomerInformation() {
                     else swal(t("profilePage.alerts.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
                         navigate(-1)
                     })
-
                     Cookies.set("username", r.data.name);
-                    Cookies.set("email", r.data.email);
+
+                    if (r.data.verified) {
+                        Cookies.set("email", r.data.email);
+                    }
                 }
             })
                 .catch(e => {
@@ -185,6 +193,8 @@ function AddCustomerInformation() {
                     })
                 }).finally(() => {
                 setIsLoading(false);
+                // @ts-ignore
+                auth.getUserInfo();
             })
         } else {
             axios
@@ -198,7 +208,9 @@ function AddCustomerInformation() {
                     if (r.status === 201) {
 
                         Cookies.set("username", r.data.name);
-                        Cookies.set("email", r.data.email);
+                        if (r.data.verified) {
+                            Cookies.set("email", r.data.email);
+                        }
                         swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
                                 navigate(-1)
@@ -223,8 +235,12 @@ function AddCustomerInformation() {
                 })
             }).finally(() => {
                 setIsLoading(false);
+                // @ts-ignore
+                auth.getUserInfo();
             })
         }
+
+
     };
 
 
@@ -316,19 +332,20 @@ function AddCustomerInformation() {
                                 {t("customerInfo.name")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="username" className="form-control mb-2 " placeholder={t("customerInfo.name")}
+                                }} type="text" name="username" className="form-control mb-2 "
+                                       placeholder={t("customerInfo.name")}
                                        id={"name"}/>
                             </label>
                         </div>
                         <div className="row w-75 m-auto">
                             <label className={"mt-2"}>
                                 {t("customerInfo.email")} {isVerified ? <span className={"col-1 m-auto"}
-                                                          style={{color: "green"}}>({t("email.verifiedEmail")})</span> :
+                                                                              style={{color: "green"}}>({t("email.verifiedEmail")})</span> :
                                 <span className={"mt-auto mb-auto text-end"}
                                       style={{color: "red"}}>({t("email.unverifiedEmail")})</span>}:
                                 <div className={"d-flex flex-row"}>
                                     <div className={"col-10"}>
-                                    <input
+                                        <input
                                             onChange={
                                                 (e) => {
                                                     if (e.target.value !== Cookies.get("email"))
@@ -388,7 +405,8 @@ function AddCustomerInformation() {
                                 {t("customerInfo.city")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="city" className="form-control mb-2" placeholder={t("customerInfo.city")}
+                                }} type="text" name="city" className="form-control mb-2"
+                                       placeholder={t("customerInfo.city")}
                                        required={true} id={"city"}/>
                             </label>
                         </div>
@@ -406,7 +424,8 @@ function AddCustomerInformation() {
                                 {t("customerInfo.phoneNumber")}:
                                 <input onKeyDown={(e) => {
                                     e.key === 'Enter' && e.preventDefault()
-                                }} type="text" name="phone" className="form-control mb-2" placeholder={t("customerInfo.phoneNumber")}
+                                }} type="text" name="phone" className="form-control mb-2"
+                                       placeholder={t("customerInfo.phoneNumber")}
                                        id={"phone"}/>
                             </label>
                         </div>
