@@ -54,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponse createCustomer(CustomerRequest customerRequest, String userId) throws MessagingException {
+    public CustomerResponse createCustomer(CustomerRequest customerRequest, String userId, String email) throws MessagingException {
 
         if (customerRepository.existsByUserId(userId))
             throw new InvalidRequestException("Customer already exists");
@@ -62,17 +62,22 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRequestMapper.toCustomer(customerRequest);
 
         customer.setUserId(userId);
+
+        if (!email.equals(customer.getEmail()))
+            sendVerificationEmail(userId, customer.getEmail());
+        else
+            customer.setVerified(true);
+        
         customerRepository.save(customer);
 
 
-        // Send verification email
-        sendVerificationEmail(userId, customer.getEmail());
+
 
         return customerResponseMapper.toCustomerResponse(customer);
     }
 
     @Override
-    public CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId) throws MessagingException {
+    public CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId, String email) throws MessagingException {
         Customer customer = customerRepository.getCustomerByUserId(userId);
 
         if (customer == null)
@@ -93,6 +98,9 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPostalCode(customerRequest.getPostalCode() != null ? customerRequest.getPostalCode() : customer.getPostalCode());
         customer.setCity(customerRequest.getCity() != null ? customerRequest.getCity() : customer.getCity());
         customer.setApartmentNumber(customerRequest.getApartmentNumber() != null ? customerRequest.getApartmentNumber() : customer.getApartmentNumber());
+
+        if (email.equals(customer.getEmail()))
+            customer.setVerified(true);
 
         customerRepository.save(customer);
 

@@ -61,6 +61,7 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
 
                             <label htmlFor="description">Description</label>
                             <textarea className={"form-control"} id="description" rows={3}
+                                      maxLength={120}
                                       placeholder={t("enterDescription")}/>
                         </div>
                         <div className={"form-group col-12 col-md-6 add-image-box-right"}
