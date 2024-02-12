@@ -27,5 +27,6 @@ public interface OrderRequestMapper {
     @Mapping(ignore = true, target = "userId")
     @Mapping(ignore = true, target = "orderDate")
     @Mapping(ignore = true, target = "customerEmail")
+    @Mapping(ignore = true, target = "progressInformation")
     Order requestModelToOrderCustomer(OrderRequestCustomer orderRequestCustomer);
 }

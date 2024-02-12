@@ -16,9 +16,10 @@ function RequestOrder() {
     const [selectedServiceId, setSelectedServiceId] = useState('');
 
     const [minDate, setMinDate] = useState("");
-
-    const [,setHasProfile] = useState(false);
-    const [, setIsVerified] = useState(false);
+    const [email, setEmail] = useState(Cookies.get("email"))
+    const [hasEmail, setHasEmail] = useState(false);
+    const [hasProfile,setHasProfile] = useState(false);
+    const [isVerified , setIsVerified] = useState(false);
 
     useEffect(() => {
         const today = new Date();
@@ -63,6 +64,9 @@ function RequestOrder() {
                 }).then(r => {
                     if (r.status === 200) {
 
+                        if (r.data.email.length > 0) {
+                            setEmail(r.data.email)
+                        }
                         setIsVerified(r.data.verified)
 
                         document.getElementById("customerFullName")!.setAttribute("value", r.data.name);
@@ -121,8 +125,42 @@ function RequestOrder() {
         }
     })
 
-
     const requestOrder = () => {
+        if (isVerified) {
+            swal({
+                title: "Confirm Email",
+                text: `This email ${email} will be attached to your order. This will be the email that receives update emails. If you wish to proceed with this email, click OK, else click Cancel. If you wish to change this email, please update your profile information.`,
+                icon: "warning",
+                // @ts-ignore
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willProceed) => {
+                    if (willProceed) {
+                        submitOrderRequest(); // Proceed to submit the order
+                    } else {
+                        swal("Cancelled", "Your order request has been cancelled.", "error");
+                    }
+                });
+        } else {
+            swal({
+                title: "Unverified Email Found",
+                text: `There is no email attached to your profile. If you wish to proceed without a verified email click OK, else click Cancel. If you wish to change to change the email that receives updates, please update your profile information. We will still send you updates though the email you signed up with. `,
+                icon: "warning",
+                // @ts-ignore
+                buttons: true,
+                dangerMode: true,
+            }).then((willProceed) => {
+                if (willProceed) {
+                    submitOrderRequest();
+                } else {
+                    swal("Cancelled", "Your order request has been cancelled.", "error");
+                }
+            });
+        }
+    };
+
+    const submitOrderRequest = () => {
         // Show a loading message
         swal({
             className: "", content: undefined, dangerMode: false,

@@ -38,12 +38,8 @@ public class OrderRequestCustomer {
 
     String customerApartmentNumber;
 
-    private String progressInformation;
-
+    @NotBlank(message = "Due Date is required.")
     private String dueDate;
-
-    private String orderDate;
-
 
 
 }
