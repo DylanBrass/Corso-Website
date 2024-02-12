@@ -158,7 +158,10 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Alice Doe"));
 
         mockMvc.perform(put(BASE_URI_CUSTOMERS)
-                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .with(SecurityMockMvcRequestPostProcessors.oidcLogin().idToken(i -> {
+                            i.subject("google|123456789");
+                            i.claim("email", "test@email.com");
+                        }).authorities(new SimpleGrantedAuthority("Customer")))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
