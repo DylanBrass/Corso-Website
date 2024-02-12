@@ -73,8 +73,9 @@ public class CustomerController {
                                                            @Valid @RequestBody CustomerRequest customerRequest) throws MessagingException {
         String userId = principal.getSubject();
         log.info("Create customer with userId: {}", userId);
+        String email = principal.getEmail();
 
-        CustomerResponse customerResponse = customerService.createCustomer(customerRequest, userId);
+        CustomerResponse customerResponse = customerService.createCustomer(customerRequest, userId, email);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(customerResponse);
 
@@ -86,8 +87,9 @@ public class CustomerController {
                                                            @Valid @RequestBody CustomerRequest customerRequest) throws MessagingException {
         String userId = principal.getSubject();
         log.info("Update customer with userId: {}", userId);
+        String email = principal.getEmail();
 
-        CustomerResponse customerResponse = customerService.updateCustomer(customerRequest, userId);
+        CustomerResponse customerResponse = customerService.updateCustomer(customerRequest, userId, email);
 
         return ResponseEntity.ok(customerResponse);
 
@@ -114,7 +116,7 @@ public class CustomerController {
 
     @PreAuthorize("hasAuthority('Customer')")
     @DeleteMapping(value = "/orders/{orderId}", consumes = "application/json")
-    public ResponseEntity<Void> DeleteOrderByOrderId(@PathVariable String orderId,@RequestBody CustomerCancelOrderRequest cancelOrderRequest, @AuthenticationPrincipal OidcUser principal) throws MessagingException {
+    public ResponseEntity<Void> DeleteOrderByOrderId(@PathVariable String orderId, @RequestBody CustomerCancelOrderRequest cancelOrderRequest, @AuthenticationPrincipal OidcUser principal) throws MessagingException {
         String userId = principal.getSubject();
         log.info("Delete customer order with userId: {}", userId);
 
@@ -122,7 +124,6 @@ public class CustomerController {
 
         return ResponseEntity.noContent().build();
     }
-
 
 
     @PreAuthorize("hasAuthority('Customer')")

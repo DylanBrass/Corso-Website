@@ -60,7 +60,8 @@ const AuthProvider = ({children}) => {
                 }
             })
                 .then(r => {
-                    if (r.status === 200) {
+                    if (r.status === 200 && r.data.verified === true) {
+                        console.log("User is verified")
                         Cookies.set("username", r.data.name)
                         Cookies.set("email", r.data.email)
                     } else {

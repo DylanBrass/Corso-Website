@@ -31,6 +31,8 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                 if (r.status === 201) {
                     // @ts-ignore
                     swal(t("alerts.gallery.galleryCreatedTitle"), (t("alerts.gallery.galleryCreatedMessage")), 'success').then(() => {
+                        (document.getElementById("description") as HTMLInputElement).value = "";
+                            (document.getElementById("image") as HTMLInputElement).value = "";
                         fetchGalleries();
                     })
 
@@ -59,6 +61,7 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
 
                             <label htmlFor="description">Description</label>
                             <textarea className={"form-control"} id="description" rows={3}
+                                      maxLength={120}
                                       placeholder={t("enterDescription")}/>
                         </div>
                         <div className={"form-group col-12 col-md-6 add-image-box-right"}

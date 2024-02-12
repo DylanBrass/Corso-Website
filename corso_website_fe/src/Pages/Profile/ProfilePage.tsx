@@ -131,6 +131,13 @@ function ProfilePage() {
                             setEmail(r.data.email)
                         }
 
+                        if(r.data.verified){
+                            Cookies.set("email", r.data.email);
+                        }else {
+                            // @ts-ignore
+                            auth.getUserInfo()
+                        }
+
                         setVerified(r.data.verified)
                     }
                 }).catch(e => {

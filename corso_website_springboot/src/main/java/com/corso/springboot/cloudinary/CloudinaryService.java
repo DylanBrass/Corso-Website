@@ -77,5 +77,8 @@ public class CloudinaryService {
             throw new IOException("Error while updating the image in Cloudinary.", e);
         }
     }
+
+
+
 }
 

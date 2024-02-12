@@ -10,9 +10,9 @@ import java.util.Map;
 public interface CustomerService {
     CustomerResponse getCustomerByUserId(String userId);
 
-    CustomerResponse createCustomer(CustomerRequest customerRequest, String userId) throws MessagingException;
+    CustomerResponse createCustomer(CustomerRequest customerRequest, String userId, String email) throws MessagingException;
 
-    CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId) throws MessagingException;
+    CustomerResponse updateCustomer(CustomerRequest customerRequest, String userId, String email) throws MessagingException;
 
     void deleteCustomer(String userId);
 

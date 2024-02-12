@@ -42,7 +42,7 @@ function DraggableImage({image, index, moveImage}: DraggableImageProps) {
                     {...provided.dragHandleProps}
                     style={getItemStyle(
                         snapshot.isDragging,
-                        provided.draggableProps.style
+                        provided.draggableProps.style,
                     )
                     }
                 >
@@ -104,7 +104,11 @@ function DraggableImage({image, index, moveImage}: DraggableImageProps) {
                         backgroundColor: 'black',
                         opacity: snapshot.isDragging ? 0.4 : 1,
                     }}/>
-                    <p className={"mt-4"}>{image.description}</p>
+                    <p className={"mt-4 w-100 overflow-scroll"}
+                    style={{
+                        maxWidth: '150px',
+                    }}
+                    >{image.description}</p>
                     <button onClick={() => {
                         moveImage(index, 0);
                     }}>{t("editGalleryPage.moveToTop")}
@@ -306,6 +310,7 @@ const getListStyleHorizontal = () => ({
 const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
         userSelect: 'none',
         padding: 20,
+        minWidth: '200px',
         background: isDragging ? 'rgba(115,115,115,0.4)' : 'white',
         borderRadius: '10px',
         border: isDragging ? '2px dashed white' : '',
