@@ -12,7 +12,9 @@ import com.corso.springboot.configuration.security.models.UserInfoResponse;
 import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.utils.Tools.BasicTools;
+import com.corso.springboot.utils.exceptions.InvalidRequestException;
 import com.corso.springboot.utils.exceptions.Orders.OrderNotFoundException;
+import com.corso.springboot.utils.exceptions.ServiceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -429,4 +431,122 @@ public class OrderServiceImplUnitTest {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> new OrdersPerMonth(tuple));
     }
+
+    @Test
+    void updateOrderProgressionByOrderId_ShouldSucceed() throws MessagingException {
+        // Arrange
+        Order mockOrder = new Order();
+        mockOrder.setOrderId(new OrderIdentifier());
+        mockOrder.setOrderStatus(Status.IN_PROGRESS);
+        mockOrder.setOrderTrackingNumber(new OrderTrackingNumber());
+
+        OrderResponse mockOrderResponse = new OrderResponse(mockOrder.getOrderId().getOrderId(),
+                "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null,
+                "auth0|65702e81e9661e14ab3aac89", "", "2023-01-01",
+                "2023-02-01", Status.IN_PROGRESS, "Custom web development project",
+                "John Doe", "JohnDoes@gmail.com", "1234567890",
+                "123 Main St", "Montreal", "J5R 5J4",
+                "123", 1, 2, 1);
+
+        Mockito.when(orderRepository.findByOrderId_OrderId(mockOrder.getOrderId().getOrderId())).thenReturn(mockOrder);
+        Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
+        Mockito.when(orderResponseMapper.toOrderResponse(any(Order.class))).thenReturn(mockOrderResponse);
+    }
+
+    @Test
+    void updateOrderProgressionByOrderId_throwOrderNotFoundException() {
+        // Arrange
+        String orderId = "fake-af";
+        OrderProgressionRequest orderProgressionRequest = new OrderProgressionRequest("test", 2, 10, "12319i");
+
+        when(orderRepository.findById(orderId)).thenReturn(null);
+
+        when(orderRepository.findById(orderId)).thenReturn(null);
+
+        assertThrows(OrderNotFoundException.class, () -> orderService.updateOrderProgressionByOrderId(orderId, orderProgressionRequest));
+    }
+
+    @Test
+    void updateOrderProgressionByOrderId_throwInvalidRequestException() {
+        // Arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+        String serviceId = "fake-af";
+
+        OrderProgressionRequest orderProgressionRequest = new OrderProgressionRequest("test", 2, 10, serviceId);
+
+        when(orderRepository.findByOrderId_OrderId(orderId)).thenReturn(new Order());
+        when(serviceService.getServiceByServiceId(serviceId)).thenReturn(null);
+
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> orderService.updateOrderProgressionByOrderId(orderId, orderProgressionRequest));
+    }
+
+
+    @Test
+    void updateOrderProgressionByOrderId_throwServiceNotFoundException() {
+        // Arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+        String serviceId = "fake-af";
+
+        OrderProgressionRequest orderProgressionRequest = new OrderProgressionRequest("test", 2, 10, serviceId);
+
+        when(orderRepository.findByOrderId_OrderId(orderId)).thenReturn(Order.builder()
+                .orderId(new OrderIdentifier())
+                .orderStatus(Status.IN_PROGRESS)
+                .orderTrackingNumber(new OrderTrackingNumber())
+                .serviceId(new ServiceIdentifier(serviceId))
+                .build());
+        when(serviceService.getServiceByServiceId(serviceId)).thenReturn(null);
+
+        assertThrows(ServiceNotFoundException.class, () -> orderService.updateOrderProgressionByOrderId(orderId, orderProgressionRequest));
+    }
+
+
+
+
+
+    @Test
+    void setCustomerOrderIdToCompletedStatus_ShouldThrowOrderNotFoundException() {
+        // Arrange
+        String orderId = "fake-af";
+        when(orderRepository.findByOrderId_OrderId(orderId)).thenReturn(null);
+
+        assertThrows(OrderNotFoundException.class, () -> orderService.setCustomerOrderIdToCompletedStatus(orderId));
+    }
+
+    @Test
+    void setCustomerOrderIdToCompletedStatus_ShouldSucceed() throws MessagingException {
+        // Arrange
+        Order mockOrder = new Order();
+        mockOrder.setOrderId(new OrderIdentifier());
+        mockOrder.setOrderStatus(Status.IN_PROGRESS);
+        mockOrder.setOrderTrackingNumber(new OrderTrackingNumber());
+
+        OrderResponse mockOrderResponse = new OrderResponse(mockOrder.getOrderId().getOrderId(),
+                "T1YX4S", "982577e6-1909-46b8-8583-e08c9daa4e9b", null,
+                "auth0|65702e81e9661e14ab3aac89", "", "2023-01-01",
+                "2023-02-01", Status.IN_PROGRESS, "Custom web development project",
+                "John Doe", "", "1234567890", "123 Main St", "Montreal", "J5R 5J4", "", 1, 2, 1);
+
+        Mockito.when(orderRepository.findByOrderId_OrderId(mockOrder.getOrderId().getOrderId())).thenReturn(mockOrder);
+        Mockito.when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
+        Mockito.when(orderResponseMapper.toOrderResponse(any(Order.class))).thenReturn(mockOrderResponse);
+    }
+
+
+    @Test
+    void setCustomerOrderIdToCompletedStatusWithInvalidStatus_throwInvalidRequestException() {
+        // Arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+        Order mockOrder = new Order();
+        mockOrder.setOrderId(new OrderIdentifier());
+        mockOrder.setOrderStatus(Status.PENDING);
+        mockOrder.setOrderTrackingNumber(new OrderTrackingNumber());
+
+        when(orderRepository.findByOrderId_OrderId(orderId)).thenReturn(mockOrder);
+
+        assertThrows(InvalidRequestException.class, () -> orderService.setCustomerOrderIdToCompletedStatus(orderId));
+    }
+
+
 }

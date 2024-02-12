@@ -170,4 +170,31 @@ public class OrderController {
         orderService.deleteOrderByOrderId(orderId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
+    })
+    @PreAuthorize("hasAuthority('Admin')")
+    @PatchMapping("/manage/updateProgression/{orderId}")
+    public ResponseEntity<OrderResponse> UpdateOrderProgressionByOrderId(@PathVariable String orderId,@RequestBody OrderProgressionRequest orderProgressionRequest) throws MessagingException {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderProgressionByOrderId(orderId, orderProgressionRequest));
+    }
+
+
+    @Caching(evict = {
+            @CacheEvict(value = "serviceTimeByService", allEntries = true),
+            @CacheEvict(value = "totalRequestByService", allEntries = true),
+            @CacheEvict(value = "ordersPerMonth", allEntries = true),
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
+    })
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @PatchMapping("/manage/completedOrder/{orderId}")
+    public ResponseEntity<OrderResponse> getCompletedOrdersWithCompletedProgression(@PathVariable String orderId) throws MessagingException {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.setCustomerOrderIdToCompletedStatus(orderId));
+    }
+
 }

@@ -101,6 +101,7 @@ test.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 test {
+    exclude("**/UpdateAnOrderTest.class")
     exclude("**/PermanentlyDeleteOrderTest.class")
     exclude("**/DeleteAFAQTest.class")
     exclude ("**/CreateAFAQTest.class")

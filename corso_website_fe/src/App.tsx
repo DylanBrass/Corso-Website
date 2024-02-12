@@ -43,6 +43,7 @@ import VerifyEmail from "./security/VerifyEmail/VerifyEmail";
 import ReportsPage from "./Pages/Dashboard/ReportsPages/ReportsPage";
 import MakePdfPage from "./Pages/Dashboard/ReportsPages/MakePdfPage";
 import ViewSpecificInactiveOrder from "./Pages/Dashboard/OrdersDetailsPages/ViewSpecificInactiveOrder";
+import OrderProgressionPage from "./Pages/Dashboard/OrdersPages/OrderProgressionPage";
 
 
 export default function App() {
@@ -85,11 +86,11 @@ export default function App() {
 
 
                         <Route path="/manage/gallery/:galleryId" element={<ViewSpecificGallery/>}/>
-
                         <Route path="/manage/orders/:orderId" element={<ViewSpecificOrderAdmin/>}/>
                         <Route path="/manage/orders/inactive/:orderId" element={<ViewSpecificInactiveOrder/>}/>
 
                         <Route path="/orders/:orderId" element={<ViewSpecificOrder/>}/>
+                        <Route path="/manage/updateProgression/:orderId" element={<OrderProgressionPage/>}/>
                         <Route path="/logout" element={<LogoutRedirect/>}/>
                         <Route path="/verify" element={<VerifyRedirect/>}/>
 

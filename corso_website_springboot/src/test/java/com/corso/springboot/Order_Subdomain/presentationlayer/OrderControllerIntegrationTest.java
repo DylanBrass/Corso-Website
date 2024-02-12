@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -20,6 +21,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -288,6 +290,77 @@ public class OrderControllerIntegrationTest {
                 .jsonPath("$[0].year").isEqualTo(2023)
                 .jsonPath("$[0].totalOrders").isEqualTo(1);
     }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void updateOrderProgressionByOrderId_thenReturnOrder() {
+    // Arrange
+    String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+    String serviceId = "982577e6-1909-46b8-8583-e08c9daa4e9b";
+    OrderProgressionRequest orderProgressionRequest = new OrderProgressionRequest("test", 1, 2, serviceId);
+
+
+    webTestClient.patch()
+            .uri(BASE_URI_ORDERS + "/manage/updateProgression/" + orderId)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(orderProgressionRequest)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$.orderId").isEqualTo(orderId)
+            .jsonPath("$.progressInformation").isEqualTo("test")
+            .jsonPath("$.hoursWorked").isEqualTo(1)
+            .jsonPath("$.estimatedDuration").isEqualTo(2)
+            .jsonPath("$.serviceId").isEqualTo(serviceId);
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void updateOrderProgressionByOrderIdWithInvalidOrderId_thenReturnNotFound() {
+        String orderId = "wkbhd s";
+        String serviceId = "982577e6-1909-46b8-8583-e08c9daa4e9b";
+        OrderProgressionRequest orderProgressionRequest = new OrderProgressionRequest("test", 1, 2, serviceId);
+
+
+        webTestClient.patch()
+                .uri(BASE_URI_ORDERS + "/manage/updateProgression/" + orderId)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(orderProgressionRequest)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void setCustomerOrderIdToCompletedStatusWithInvalidOrderId_thenReturnNotFound() {
+        String orderId = "wkbhd s";
+
+
+        webTestClient.patch()
+                .uri(BASE_URI_ORDERS + "/manage/completedOrder/" + orderId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void setCustomerOrderIdToCompletedStatus_thenReturnOrder() {
+        // Arrange
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+
+        // Act & Assert
+        webTestClient.patch()
+                .uri(BASE_URI_ORDERS + "/manage/completedOrder/" + orderId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.orderStatus").isEqualTo("COMPLETED")
+                .jsonPath("$.orderId").isEqualTo(orderId);
+    }
+
 
 
     @Test

@@ -212,17 +212,20 @@ function ViewSpecificOrder() {
                                 </div>
                                 {order.orderStatus.toLowerCase() === "pending" &&
                                     <div className={"col-12"}>
+
+
                                         <button id={"edit-request"}
                                                 className={"m-4 float-end customer-interactions-btn p-2"}
                                                 onClick={() => {
                                                     window.location.href = `/profile/manage/orders/${orderId}`;
-
                                                 }
                                                 }
                                         >
                                             {t("order.editRequestButton")}
                                         </button>
                                     </div>
+
+
                                 }
                                 {order.orderStatus.toLowerCase() === "pending" &&
 

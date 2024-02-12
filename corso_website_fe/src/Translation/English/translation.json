@@ -2,14 +2,17 @@
   "to": "to",
   "delete": "Delete",
   "cancel": "Cancel",
+  "error": "Error",
   "dueDate": "Due Date",
   "orderDate": "Order Date",
   "navigation": {
-    "language": "French (Français)",
+    "language": "Français",
     "home": "Home",
     "login": "Login",
     "logout": "Logout",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "yes": "Yes",
+    "no": "No"
   },
 
   "banner": {
@@ -115,11 +118,33 @@
     "noNotesYetMessage": "No notes yet, but when we want to inform you about something, it will appear here !",
     "noEstimatedDuration": "No estimated duration set",
     "noDaysLeft": "No days left count was set.",
+    "hourWorkedEstimation": "Hour worked estimation",
+    "hoursWorked": "Hours Worked",
+    "enterNotes": "Enter your notes here...",
+    "cancelUpdateOrder": "Cancel",
+    "updateOrderBtn": "Update Order",
     "completeOrder": "Complete Order",
     "editOrder": "Edit Order",
     "editRequestButton": "Edit Request",
     "cancelOrderButton": "Cancel Order",
-    "cancelRequestText": "Cancel Request"
+    "cancelRequestText": "Cancel Request",
+    "updateSuccessMessage": "Your order has been updated successfully!",
+    "updateErrorMessage": "An error occurred while updating the order!",
+    "errorHoursGreaterEstimatedDuration": "Hours worked cannot be greater than estimated duration!",
+    "completeMessageQuestion": "Are you sure you want to complete this order?",
+    "completeMessageQuestion2": "Once completed, you will not be able to undo this action!",
+    "completeQuestionButtonsCancel":"Cancel",
+    "completeQuestionButtonsConfirm":"Confirm",
+    "orderCompletedMessage": "\"Order Completed!\", \"`The order with tracking number\"",
+    "orderCompletedMessage2": "has been completed.",
+    "orderCompletedOrderQuestion1": "Do you want to complete this order ?",
+    "orderUpdateLoadingProgression": "Updating Order Progression, Sending Email to Client..",
+    "orderCompletedErrorMessage": "\"Oops!\", \"Something went wrong. Please try again.\"",
+    "orderCompletedErrorMessage2": "Failed!\", `Failed to complete the order with tracking number",
+    "orderNoProgression": "An error occured. Please verify that the order is not already completed or that the hours work are set before completing .",
+    "orderFinalCompleted": "Completing Order...",
+    "orderCompletedLoading": "Completing Order..."
+
   },
 
   "reviews": {
@@ -351,6 +376,7 @@
     "progressDescription": "Progress Description",
     "createOrder": "Create Order"
   },
+
 
   "createAdmin": {
     "createAdmin": "Create Admin",

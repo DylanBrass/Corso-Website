@@ -14,13 +14,14 @@ import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import checkToDo from "../../../ressources/images/check_notDone.png";
 import {useTranslation} from "react-i18next";
+import {toast} from "react-toastify";
 
 function ViewSpecificOrder() {
 
     const {t} = useTranslation();
     const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     let {orderId} = useParams();
-
+    const [orderCompleted, setOrderCompleted] = useState(false);
     const auth = useAuth()
 
     const [loading, setLoading] = useState(false);
@@ -40,6 +41,11 @@ function ViewSpecificOrder() {
         )
             .then(res => {
                 const order = res.data;
+                if(order.orderStatus.toUpperCase() === "COMPLETED" || order.orderStatus.toUpperCase() === "CANCELLED" || order.orderStatus.toUpperCase() === "DECLINED") {
+                    window.location.href = `/manage/orders/inactive/${orderId}`;
+                }else if (order.orderStatus.toUpperCase() === "PENDING") {
+                    window.location.href = `/manage/orders/${orderId}`;
+                }
                 setOrder(order);
             })
             .catch(err => {
@@ -92,6 +98,86 @@ function ViewSpecificOrder() {
         }
     }
 
+    useEffect(() => {
+
+    }, [loading]);
+
+
+    const goToEditOrder = () => {
+        window.location.href = `/manage/updateProgression/${orderId}`
+    }
+
+    const loadingCompleteOrder = () => {
+        toast((t("order.orderFinalCompleted")), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: false,
+            bodyClassName: "toast-body",
+        });
+    };
+
+
+    const completeOrder = async () => {
+        if (!orderCompleted && !loading) {
+            swal({
+                title: (t("order.completeMessageQuestion")),
+                text: (t("order.completeMessageQuestion2")),
+                icon: "warning",
+                buttons: [(t("order.completeQuestionButtonsCancel")), (t("order.completeQuestionButtonsConfirm"))],
+                dangerMode: true,
+            }).then(async (willComplete) => {
+                if (willComplete) {
+                    setLoading(true);
+                    let data = {
+                        orderId: orderId,
+                        orderStatus: "COMPLETED",
+                    };
+
+                    try {
+                        loadingCompleteOrder();
+                        // @ts-ignore
+                        const response = await axios.patch(
+                            `${process.env.REACT_APP_BE_HOST}api/v1/corso/orders/manage/completedOrder/${orderId}`,
+                            data,
+                            {
+                                headers: {
+                                    // @ts-ignore
+                                    "X-XSRF-TOKEN": auth.getXsrfToken(),
+                                },
+                            }
+                        );
+                        if (response.status === 200) {
+                            swal({
+                                title: `${t("order.orderCompletedMessage")} ${order.orderTrackingNumber} ${t("order.orderCompletedMessage2")}`,
+                                icon: "success"
+                            }).then(() => {
+                                setOrderCompleted(true);
+                                goBack();
+                            });
+                        } else {
+                            swal((t("order.orderCompletedErrorMessage")), "error");
+                        }
+                    } catch (error) {
+                        console.log(orderId);
+                        console.log(error);
+                        console.log(order.orderStatus);
+                        swal(`${t("order.orderCompletedErrorMessage2")} ${order.orderTrackingNumber}.`, `${t("order.orderNoProgression")}`, "error");
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            });
+        }
+    };
+
+
+
+    const goBack = () => {
+        window.location.href = '/orders/current';
+    }
 
 
     return (
@@ -132,6 +218,7 @@ function ViewSpecificOrder() {
                             <h1>Service</h1>
                             <p>{order.service.serviceName}</p>
                         </div>
+
                         {(order.orderDescription !== null && order.orderDescription !== "") &&
                             <div className="row text-start">
                                 <h1>Description</h1>
@@ -177,7 +264,9 @@ function ViewSpecificOrder() {
 
                                         </ProgressBar>
                                         <h4 className={"text-center mt-3"}>
-                                            {order.hoursWorked} / {order.estimatedDuration} hours
+                                            {order.hoursWorked} / {order.estimatedDuration}
+                                            {" "}
+                                            {t("order.hours")}
                                         </h4>
                                     </div>
                                 ) : (
@@ -202,13 +291,30 @@ function ViewSpecificOrder() {
                                     }
                                 </div>
                             </div>
+
+
+
                             <div className={"col-12"}>
-                                <button
-                                    className={"m-4 float-end complete-order-btn p-2"}>{t("order.completeOrder")}</button>
+
+                                {!loading && (
+                                    <button className={"m-4 float-end complete-order-btn p-2"} onClick={completeOrder}
+                                            id="completeOrderBtn"
+                                            disabled={orderCompleted}>{t("order.completeOrder")}</button>
+                                )}
+                                {loading &&
+                                    <SyncLoader color="#36d7b7" className={"m-4 float-end p-2"}/>
+                                }
+
                             </div>
+
+
+
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end edit-order-btn p-2"}>{t("order.editOrder")}</button>
+                                <button className={"m-4 float-end edit-order-btn p-2"} onClick={goToEditOrder}>{t("order.editOrder")}</button>
                             </div>
+
+
+
                             <div className={"col-12"}>
                                 <button className={"m-4 float-end cancel-order-btn p-2"}
                                         onClick={() => setOpenPopup(true)}>{t("order.cancelOrderButton")}
@@ -255,6 +361,8 @@ function ViewSpecificOrder() {
             </div>
         </div>
     )
+
+
 }
 
 export default ViewSpecificOrder;

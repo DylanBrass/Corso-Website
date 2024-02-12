@@ -82,6 +82,7 @@
 <body>
 <div class="mt-4 p-5 container">
     <div class="text-center">
+        <p>**Français dessous**</p>
         <h1>Updated Order</h1>
 
         <h2>Changes Order ID: #<span th:text="${orderId}"></span></h2>
@@ -96,10 +97,13 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td><b>Phone :</b><span th:text="${previousPhone}"></span></td>
+                    <td><b>Name :</b><span th:text="${name}"></span></td>
                 </tr>
                 <tr>
                     <td><b>Address :</b><span th:text="${previousAddress}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Phone :</b><span th:text="${previousPhoneNumber}"></span></td>
                 </tr>
                 <tr>
                     <td><b>City :</b><span th:text="${previousCity}"></span></td>
@@ -109,6 +113,14 @@
                 </tr>
                 <tr>
                     <td><b>Apartment Number :</b><span th:text="${previousApartmentNumber}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Progression Description :</b><span th:text="${previousProgressionOrder}"></span></td>
+                </tr>
+                <td><b> Estimated Duration :</b><span th:text="${previousEstimatedDuration}"></span></td>
+                </tr>
+                <tr>
+                <td><b> Hours Worked :</b><span th:text="${previousHoursWorked}"></span></td>
                 </tr>
                 </tbody>
             </table>
@@ -122,10 +134,13 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td><b>Phone :</b><span th:text="${newPhone}"></span></td>
+                    <td><b>Name :</b><span th:text="${name}"></span></td>
                 </tr>
                 <tr>
                     <td><b>Address :</b><span th:text="${newAddress}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Phone :</b><span th:text="${newPhoneNumber}"></span></td>
                 </tr>
                 <tr>
                     <td><b>City :</b><span th:text="${newCity}"></span></td>
@@ -136,11 +151,107 @@
                 <tr>
                     <td><b>Apartment Number :</b><span th:text="${newApartmentNumber}"></span></td>
                 </tr>
+                <tr>
+                    <td><b>Progression Description :</b><span th:text="${newProgressionOrder}"></span></td>
+                </tr>
+                <td><b> Estimated Duration :</b><span th:text="${newEstimatedDuration}"></span></td>
+                </tr>
+                <tr>
+                <td><b> Hours Worked :</b><span th:text="${newHoursWorked}"></span></td>
+                </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<tr>
+
+<div class="mt-4 p-5 container">
+    <div class="text-center">
+        <h1>Commande mise à jour</h1>
+        <h2>Changements ID de commande : #<span th:text="${orderId}"></span></h2>
+    </div>
+    <div class="row w-100">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Ancienne Commande</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><b>Nom :</b><span th:text="${name}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Adresse :</b><span th:text="${previousAddress}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Téléphone :</b><span th:text="${previousPhoneNumber}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Ville :</b><span th:text="${previousCity}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Code Postal :</b><span th:text="${previousPostalCode}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Numéro d'appartement :</b><span th:text="${previousApartmentNumber}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Description de progression :</b><span th:text="${previousProgressionOrder}"></span></td>
+                </tr>
+                <tr>
+                <td><b>Durée estimée :</b><span th:text="${previousEstimatedDuration}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Heures travaillées :</b><span th:text="${previousHoursWorked}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Nouvelle Commande</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><b>Nom :</b><span th:text="${name}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Adresse :</b><span th:text="${newAddress}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Téléphone :</b><span th:text="${newPhoneNumber}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Ville :</b><span th:text="${newCity}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Code Postal :</b><span th:text="${newPostalCode}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Numéro d'appartement :</b><span th:text="${newApartmentNumber}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Description de progression :</b><span th:text="${newProgressionOrder}"></span></td>
+                </tr>
+                <tr>
+                <td><b>Durée estimée :</b><span th:text="${newEstimatedDuration}"></span></td>
+                </tr>
+                <tr>
+                    <td><b>Heures travaillées :</b><span th:text="${newHoursWorked}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 
 </body>
 
