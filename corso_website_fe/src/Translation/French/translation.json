@@ -75,15 +75,12 @@
     "apartmentNumber": "Numéro d'appartement",
     "phoneNumber": "Numéro de téléphone",
     "phoneNumberCustomer": "Numéro de téléphone du client",
-    "contactInformation": "Informations personnelles"
+    "contactInformation": "Informations personnelles",
+    "DueDate": "Date d'échéance",
+    "orderDescription": "Description de la commande",
+    "serviceType": "Type de service",
+    "requestOrderTitle": "Faire une commande"
   },
-
-  "address": "Adresse",
-  "postalCode": "Code postal",
-  "apartmentNumber": "Numéro d'appartement",
-  "phoneNumber": "Numéro de téléphone",
-  "city": "Ville",
-  "fullName": "Nom complet",
 
   "profilePage": {
     "profile": "Profil",
@@ -456,9 +453,5 @@
   "inactiveOrders": {
     "warning": "Etes-vous sûr de vouloir supprimer cette commande, cette commande ne sera plus suivie dans les archives de Corso ?",
     "irreversible": "Cette action est irréversible."
-  },
-
-  "orderDescription": "Description de la commande",
-  "serviceType": "Type de service",
-  "requestOrderTitle": "Faire une commande"
+  }
 }

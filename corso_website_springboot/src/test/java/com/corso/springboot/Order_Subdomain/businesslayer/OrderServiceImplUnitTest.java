@@ -592,6 +592,7 @@ public class OrderServiceImplUnitTest {
                 .customerCity("Montreal")
                 .customerPostalCode("J5R 5J4")
                 .customerApartmentNumber("")
+                .dueDate("2023-01-01")
                 .build();
 
         try {

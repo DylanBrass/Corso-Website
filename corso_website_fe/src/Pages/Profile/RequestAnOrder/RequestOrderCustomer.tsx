@@ -15,8 +15,19 @@ function RequestOrder() {
     const [allServices, setAllServices] = useState([]);
     const [selectedServiceId, setSelectedServiceId] = useState('');
 
+    const [minDate, setMinDate] = useState("");
+
     const [,setHasProfile] = useState(false);
     const [, setIsVerified] = useState(false);
+
+    useEffect(() => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const minDateValue = tomorrow.toISOString().split('T')[0];
+        setMinDate(minDateValue);
+    }, []);
+
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -132,8 +143,12 @@ function RequestOrder() {
         const customerPostalCode = (document.getElementById("customerPostalCode") as HTMLInputElement).value;
         const customerCity = (document.getElementById("customerCity") as HTMLInputElement).value;
         const customerApartment = (document.getElementById("customerApartment") as HTMLInputElement).value;
+        const customerDueDate = (document.getElementById("customerDueDate") as HTMLInputElement).value;
 
-        if (!selectedServiceId || !orderDescription.trim() || !customerFullName.trim() || !customerPhone.trim() || !customerAddress.trim() || !customerPostalCode.trim() || !customerCity.trim()) {
+        if (!selectedServiceId || !orderDescription.trim() || !customerFullName.trim() || !customerPhone.trim()
+            || !customerAddress.trim() || !customerPostalCode.trim() || !customerCity.trim()
+            || !customerDueDate.trim()
+        ) {
             swal("Missing Information", "Please fill in all required fields before submitting your order.", "warning");
             return;
         }
@@ -147,6 +162,7 @@ function RequestOrder() {
             "customerPostalCode": customerPostalCode,
             "customerCity": customerCity,
             "customerApartment": customerApartment,
+            "dueDate": customerDueDate,
         };
 
 
@@ -176,7 +192,7 @@ function RequestOrder() {
                 <div className="container text-center mt-4 mb-4">
                     <div className="row">
                         <div className="col-12 d-flex justify-content-center">
-                            <h1>{t("requestOrderTitle")}</h1>
+                            <h1>{t("customerInfo.requestOrderTitle")}</h1>
                         </div>
                     </div>
 
@@ -194,7 +210,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor="serviceId" className="col-sm-3 col-form-label">
-                                            {t("serviceType")}
+                                            {t("customerInfo.serviceType")}
                                         </label>
                                         <div className="col-sm-9">
                                             <select
@@ -210,7 +226,7 @@ function RequestOrder() {
                                                 }}
                                                 required
                                             >
-                                                <option value="">{t("serviceType")}</option>
+                                                <option value="">{t("customerInfo.serviceType")}</option>
                                                 {allServices.map((service) => (
                                                     // @ts-ignore
                                                     <option key={service.serviceId} value={service.serviceId}>
@@ -226,21 +242,24 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"orderDescription"} className="col-sm-3 col-form-label">
-                                            {t("orderDescription")}
+                                            {t("customerInfo.orderDescription")}
                                         </label>
                                         <div className="col-sm-9">
                                             <textarea
+                                                required
                                                 name={"orderDescription"}
                                                 id={"orderDescription"}
                                                 className="form-control"
-                                                placeholder={t("orderDescription")}
+                                                placeholder={t("customerInfo.orderDescription")}
+                                                minLength={10}
+                                                maxLength={500}
                                             />
                                         </div>
                                     </div>
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerFullName"} className="col-sm-3 col-form-label">
-                                            {t("fullName")}
+                                            {t("customerInfo.fullName")}
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -249,14 +268,14 @@ function RequestOrder() {
                                                 id={"customerFullName"}
                                                 type="text"
                                                 className="form-control"
-                                                placeholder={t("fullName")}
+                                                placeholder={t("customerInfo.fullName")}
                                             />
                                         </div>
                                     </div>
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerPhone"} className="col-sm-3 col-form-label">
-                                            {t("phoneNumber")}
+                                            {t("customerInfo.phoneNumber")}
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -264,14 +283,14 @@ function RequestOrder() {
                                                 id={"customerPhone"}
                                                 type="text"
                                                 className="form-control"
-                                                placeholder={t("phoneNumber")}
+                                                placeholder={t("customerInfo.phoneNumber")}
                                             />
                                         </div>
                                     </div>
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerAddress"} className="col-sm-3 col-form-label">
-                                            {t("address")}
+                                            {t("customerInfo.address")}
                                         </label>
                                         {/*// @ts-ignore*/}
                                         <div className="col-sm-9">
@@ -280,7 +299,7 @@ function RequestOrder() {
 
                                                 // @ts-ignore
                                             }} ref={ref} type="text"
-                                                   placeholder={t("address")}
+                                                   placeholder={t("customerInfo.address")}
                                                    required={true}
                                                    name={"customerAddress"}
                                                    id={"customerAddress"}
@@ -291,7 +310,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerPostalCode"} className="col-sm-3 col-form-label">
-                                            {t("postalCode")}
+                                            {t("customerInfo.postalCode")}
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -300,7 +319,7 @@ function RequestOrder() {
                                                 id={"customerPostalCode"}
                                                 type="text"
                                                 className="form-control"
-                                                placeholder={t("postalCode")}
+                                                placeholder={t("customerInfo.postalCode")}
                                             />
                                         </div>
 
@@ -308,7 +327,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerCity"} className="col-sm-3 col-form-label">
-                                            {t("city")}
+                                            {t("customerInfo.city")}
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -317,7 +336,7 @@ function RequestOrder() {
                                                 id={"customerCity"}
                                                 type="text"
                                                 className="form-control"
-                                                placeholder={t("city")}
+                                                placeholder={t("customerInfo.city")}
                                             />
                                         </div>
 
@@ -325,7 +344,7 @@ function RequestOrder() {
 
                                     <div className="row mb-3">
                                         <label htmlFor={"customerApartment"} className="col-sm-3 col-form-label">
-                                            {t("apartmentNumber")}
+                                            {t("customerInfo.apartmentNumber")}
                                         </label>
                                         <div className="col-sm-9">
                                             <input
@@ -333,7 +352,24 @@ function RequestOrder() {
                                                 id={"customerApartment"}
                                                 type="text"
                                                 className="form-control"
-                                                placeholder={t("apartmentNumber")}
+                                                placeholder={t("customerInfo.apartmentNumber")}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="row mb-3">
+                                        <label htmlFor={"customerDueDate"} className="col-sm-3 col-form-label">
+                                            {t("customerInfo.DueDate")}
+                                        </label>
+                                        <div className="col-sm-9">
+                                            <input
+                                                required
+                                                name={"customerDueDate"}
+                                                id={"customerDueDate"}
+                                                min={minDate}
+                                                type="date"
+                                                className="form-control"
+                                                placeholder={t("customerInfo.DueDate")}
                                             />
                                         </div>
                                     </div>

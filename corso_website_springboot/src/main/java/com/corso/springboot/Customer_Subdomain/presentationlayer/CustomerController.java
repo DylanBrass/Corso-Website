@@ -163,7 +163,6 @@ public class CustomerController {
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
             @CacheEvict(value = "totalRequestByService", allEntries = true),
             @CacheEvict(value = "ordersPerMonth", allEntries = true),
-            @CacheEvict(value = "totalOrdersPerService", allEntries = true),
             @CacheEvict(value = "totalOrdersPerService", allEntries = true)
     })
     @PostMapping("/orders/request")

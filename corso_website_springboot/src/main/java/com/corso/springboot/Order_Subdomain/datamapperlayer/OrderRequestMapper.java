@@ -19,10 +19,13 @@ public interface OrderRequestMapper {
 
     @Mapping(ignore = true, target = "id")
     @Mapping(ignore = true, target = "orderId")
+    @Mapping(ignore = true, target = "serviceId")
     @Mapping(ignore = true, target = "orderTrackingNumber")
     @Mapping(ignore = true, target = "orderStatus")
-    @Mapping(ignore = true, target = "serviceId")
+    @Mapping(ignore = true, target = "estimatedDuration")
+    @Mapping(ignore = true, target = "hoursWorked")
     @Mapping(ignore = true, target = "userId")
     @Mapping(ignore = true, target = "orderDate")
+    @Mapping(ignore = true, target = "customerEmail")
     Order requestModelToOrderCustomer(OrderRequestCustomer orderRequestCustomer);
 }

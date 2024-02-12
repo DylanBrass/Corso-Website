@@ -75,14 +75,12 @@
     "apartmentNumber": "Apartment Number",
     "phoneNumber": "Phone",
     "phoneNumberCustomer": "Customer Phone",
-    "contactInformation": "Contact Information"
+    "contactInformation": "Contact Information",
+    "DueDate": "Due Date",
+    "orderDescription": "Order Description",
+    "serviceType": "Service Type",
+    "requestOrderTitle": "Request An Order"
   },
-  "city": "City",
-  "fullName": "Full Name",
-  "address": "Address",
-  "postalCode": "Postal Code",
-  "apartmentNumber": "Apartment Number",
-  "phoneNumber": "Phone",
 
   "profilePage": {
     "profile": "Profile",
@@ -452,11 +450,6 @@
     "warning": "Are you sure you want to delete this order, this order will no longer be tracked in Corso's records?",
     "irreversible": "This action is irreversible"
   },
-
-  "orderDescription": "Order Description",
-  "serviceType": "Service Type",
-  "requestOrderTitle": "Request An Order"
-  "itemsPerPage": "Items per page",
 
   "orderDescription": "Order Description",
   "serviceType": "Service Type",

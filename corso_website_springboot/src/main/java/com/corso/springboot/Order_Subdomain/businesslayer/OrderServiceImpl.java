@@ -321,7 +321,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderStatus(Status.valueOf(newStatus.toString()));
         order.setOrderDate(String.valueOf(LocalDate.now()));
-        order.setDueDate(String.valueOf(LocalDate.now().plusDays(order.getHoursWorked())));
+        order.setDueDate(order.getDueDate());
 
         return orderResponseMapper.toOrderResponse(orderRepository.save(order));
     }
@@ -683,7 +683,8 @@ public class OrderServiceImpl implements OrderService {
 
         // Check if customer exists in our db -> if not, use email from token
         Customer customer = customerRepository.getCustomerByUserId(userId);
-        if (customer == null)
+
+        if (customer == null || !customer.isVerified())
             order.setCustomerEmail(userEmail);
         else {
             order.setCustomerEmail(customer.getEmail());
@@ -693,7 +694,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderId(new OrderIdentifier());
         order.setOrderTrackingNumber(new OrderTrackingNumber());
         order.setOrderStatus(Status.PENDING);
-        order.setOrderDescription(orderRequestCustomer.getOrderDescription());
         order.setServiceId(new ServiceIdentifier(orderRequestCustomer.getServiceId()));
         order.setOrderDate(String.valueOf(LocalDate.now()));
 
@@ -701,11 +701,12 @@ public class OrderServiceImpl implements OrderService {
         String subject = "Order Request Confirmation";
 
         Map<String, String> parameters = new HashMap<>();
-
-        int status = emailService.sendEmail(userEmail, subject, "OrderRequestConfirmation", parameters);
+        parameters.put("name", order.getCustomerFullName());
+        parameters.put("orderId", order.getOrderTrackingNumber().getOrderTrackingNumber());
+        int status = emailService.sendEmail(order.getCustomerEmail(), subject, "OrderRequestConfirmation", parameters);
 
         if (status != 200) {
-            throw new MessagingException("Failed to send email");
+            throw new MessagingException("Failed to send email <3");
         }
 
         //sending email to admins

@@ -1,10 +1,18 @@
 package com.corso.springboot.Customer_Subdomain.presentationlayer;
 
 
+import com.corso.springboot.Order_Subdomain.datalayer.Order;
+import com.corso.springboot.Order_Subdomain.datalayer.OrderTrackingNumber;
+import com.corso.springboot.Order_Subdomain.datamapperlayer.OrderRequestMapper;
+import com.corso.springboot.Order_Subdomain.presentationlayer.OrderRequestCustomer;
+import com.corso.springboot.configuration.security.models.UserInfoResponse;
+import com.corso.springboot.configuration.security.service.Auth0ManagementService;
 import com.corso.springboot.email.businessLayer.EmailService;
 import com.corso.springboot.email.datalayer.VerificationToken;
 import com.corso.springboot.email.datalayer.VerificationTokenRepository;
+import com.corso.springboot.utils.Tools.BasicTools;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
@@ -44,13 +53,17 @@ class CustomerControllerIntegrationTest {
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
 
-/*
-    // needed for the creat test via customer
-    //intentionally commented out
+
     @MockBean
     private Auth0ManagementService auth0ManagementService;
 
- */
+    @MockBean
+    private BasicTools basicTools;
+
+    @Mock
+    OrderRequestMapper orderRequestMapper;
+
+
 
 
     @Test
@@ -406,6 +419,7 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Review rating must be between 1 and 5"));
 
 
+
     }
 
 
@@ -473,6 +487,7 @@ class CustomerControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Email already sent, please check your inbox, otherwise try again in 15 minutes"));
 
 
+
     }
 
 
@@ -496,6 +511,7 @@ class CustomerControllerIntegrationTest {
                                 .authorities(new SimpleGrantedAuthority("Customer"))))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("Email already sent, please check your inbox, otherwise try again in 15 minutes"));
+
 
 
     }
@@ -525,9 +541,7 @@ class CustomerControllerIntegrationTest {
 
     }
 
-    /*
-    //Currently a bug with these test
-    //intentionally commented out
+
     @Test
     public void whenCreatingOrderWithValidValues_thenReturnCreatedOrder() throws Exception {
         UserInfoResponse userInfoResponse = UserInfoResponse.builder()
@@ -536,13 +550,28 @@ class CustomerControllerIntegrationTest {
                 .picture("https://external_client.com/picture.jpg")
                 .build();
 
+        Order order = Order.builder()
+                .orderTrackingNumber(new OrderTrackingNumber())
+                .orderDescription("Test order")
+                .customerFullName("Test User")
+                .customerPhone("1234567890")
+                .customerAddress("Test Address")
+                .customerCity("Test City")
+                .customerPostalCode("A1A 1A1")
+                .customerApartmentNumber("1")
+                .dueDate("2022-12-12")
+                .build();
+
+        when(orderRequestMapper.requestModelToOrderCustomer(any(OrderRequestCustomer.class))).thenReturn(order);
+
         when(auth0ManagementService.getUserInfo("google|123456789")).thenReturn(userInfoResponse);
 
-        Mockito.when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
+        when(emailService.sendEmail(anyString(),anyString(),anyString(),anyMap())).thenReturn(200);
 
         mockMvc.perform(post(BASE_URI_CUSTOMERS + "/orders/request")
                         .with(csrf())
-                        .with(oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Customer")))
+                        .with(oidcLogin().idToken(i -> i.subject("google|123456789"))
+                                .authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -553,7 +582,8 @@ class CustomerControllerIntegrationTest {
                                     "customerAddress": "Test Address",
                                     "customerCity": "Test City",
                                     "customerPostalCode": "A1A 1A1",
-                                    "customerApartmentNumber": "1"
+                                    "customerApartmentNumber": "1",
+                                    "dueDate": "2022-12-12"
                                     }
                                 """))
                 .andExpect(status().isCreated());
@@ -569,12 +599,15 @@ class CustomerControllerIntegrationTest {
 
         when(auth0ManagementService.getUserInfo("google|123456789")).thenReturn(userInfoResponse);
 
-        Mockito.when(emailService.sendEmail(anyString(), anyString(), anyString(), anyMap())).thenReturn(200);
+        when(emailService.sendEmail(anyString(), anyString(), anyString(), anyMap())).thenReturn(200);
 
         mockMvc.perform(post(BASE_URI_CUSTOMERS + "/orders/request")
                 .with(csrf())
-                .with(oidcLogin().idToken(i -> i.subject("google|123456789")).authorities(new SimpleGrantedAuthority("Customer")))
-                .contentType(MediaType.APPLICATION_JSON)
+                        .with(oidcLogin().idToken(i -> {
+                            i.subject("google|123456789");
+                            i.claim("email", "email@email.com");
+                        }).authorities(new SimpleGrantedAuthority("Customer")))
+                        .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                                 {
                                     "serviceId": null,
@@ -590,5 +623,4 @@ class CustomerControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
-     */
 }

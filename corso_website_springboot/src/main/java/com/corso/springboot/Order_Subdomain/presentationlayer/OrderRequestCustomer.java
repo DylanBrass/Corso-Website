@@ -23,9 +23,6 @@ public class OrderRequestCustomer {
     @NotBlank(message = "Full Name is required.")
     private String customerFullName;
 
-    @Email
-    private String customerEmail;
-
     @ValidPhoneNumber
     private String customerPhone;
 
@@ -40,10 +37,6 @@ public class OrderRequestCustomer {
     String customerPostalCode;
 
     String customerApartmentNumber;
-
-    int estimatedDuration;
-
-    int hoursWorked;
 
     private String progressInformation;
 

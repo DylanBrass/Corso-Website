@@ -11,13 +11,13 @@
 </head>
 <body>
 <div class="container">
-  <h1>Un client a demandé une commande</h1>
-  <p>Veuillez vous rendre dans la section Demandes des clients de votre tableau de bord administrateur pour examiner, accepter ou refuser la demande</p>
+  <h1><span th:text="${name}"></span> a demandé une commande</h1>
+  <p>Veuillez vous rendre dans la section Demandes des clients de votre tableau de bord administrateur pour examiner, accepter ou refuser la demande avec le code <span th:text="${orderId}"></span></p>
   <br>
   <hr>
   <br>
-  <h1>A client has requested an order</h1>
-  <p>Please head to the Client Requests section of your admin dashboard to review, accept or decline the request</p>
+  <h1><span th:text="${name}"></span> has requested an order</h1>
+  <p>Please head to the Client Requests section of your admin dashboard to review, accept or decline the request with the tracking code <span th:text="${orderId}"></span> </p>
   <br>
 </div>
 </body>
