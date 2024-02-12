@@ -144,7 +144,7 @@ class CustomerServiceUnitTest {
 
         when(customerResponseMapper.toCustomerResponse(mockCustomer)).thenReturn(mockCustomerResponse);
 
-        CustomerResponse result = customerService.createCustomer(mockCustomerRequest, userId, email);
+        CustomerResponse result = customerService.createCustomer(mockCustomerRequest, userId, "email");
 
         assertEquals(mockCustomer.getAddress(), result.getAddress());
 
@@ -207,7 +207,7 @@ class CustomerServiceUnitTest {
 
         when(customerResponseMapper.toCustomerResponse(mockCustomerExisting)).thenReturn(mockCustomerResponse);
 
-        CustomerResponse result = customerService.updateCustomer(mockCustomerRequest, userId, email);
+        CustomerResponse result = customerService.updateCustomer(mockCustomerRequest, userId, "email");
 
         log.info("Phone: " + result.getPhone());
 
@@ -274,7 +274,7 @@ class CustomerServiceUnitTest {
 
         when(customerResponseMapper.toCustomerResponse(mockCustomerExisting)).thenReturn(mockCustomerResponse);
 
-        CustomerResponse result = customerService.updateCustomer(mockCustomerRequest, userId, email);
+        CustomerResponse result = customerService.updateCustomer(mockCustomerRequest, userId, "email");
 
         assertEquals(mockCustomerExisting.getAddress(), result.getAddress());
 

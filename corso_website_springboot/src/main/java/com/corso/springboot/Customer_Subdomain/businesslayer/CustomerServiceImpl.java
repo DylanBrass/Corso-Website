@@ -67,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
             sendVerificationEmail(userId, customer.getEmail());
         else
             customer.setVerified(true);
-        
+
         customerRepository.save(customer);
 
 
