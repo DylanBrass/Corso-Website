@@ -325,7 +325,7 @@ function ProfilePage() {
                                         window.location.href = "/requestOrder";
                                     }}
                                 >
-                                    {t("requestAnOrderNow")}
+                                    {t("banner.requestAnOrderNow")}
                                 </button>
 
                             </div>

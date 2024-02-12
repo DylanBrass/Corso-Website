@@ -50,8 +50,6 @@ public interface OrderService {
 
     OrderResponse CustomerRequestOrder(String userId, String userEmail, OrderRequestCustomer orderRequestCustomer) throws MessagingException;
 
-    OrderResponse CustomerRequestOrder(String userId, String userEmail, OrderRequestCustomer orderRequestCustomer) throws MessagingException;
-
     void deleteOrderByOrderId(String orderId);
 
 

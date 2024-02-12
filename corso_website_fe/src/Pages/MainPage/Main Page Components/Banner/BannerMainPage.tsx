@@ -56,12 +56,12 @@ function BannerMainPage({image}) {
                         <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
                                     window.location.href = "/profile/orders"
-                                }}>{t("viewCurrentOrders")}
+                                }}>{t("banner.viewCurrentOrders")}
                         </button>
                         <button className={"banner-btn ms-lg-3 mb-4"}
                                 onClick={() => {
                                     window.location.href = "/requestOrder"
-                                }}>{t("requestAnOrderNow")}
+                                }}>{t("banner.requestAnOrderNow")}
                         </button>
                     </div>
 

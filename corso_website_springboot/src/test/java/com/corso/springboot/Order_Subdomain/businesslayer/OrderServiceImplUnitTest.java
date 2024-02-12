@@ -552,8 +552,6 @@ public class OrderServiceImplUnitTest {
         assertThrows(InvalidRequestException.class, () -> orderService.setCustomerOrderIdToCompletedStatus(orderId));
     }
 
-
-
     @Test
     void customerRequestOrder_WhenServiceNotFound_ShouldThrowServiceNotFoundException() {
         // Arrange
@@ -578,28 +576,4 @@ public class OrderServiceImplUnitTest {
 
     }
 
-    @Test
-    void customerRequestOrder_WhenServiceNotFound_ShouldThrowServiceNotFoundException() {
-        // Arrange
-        String userId = "userId123";
-        String userEmail = "user@example.com";
-
-        when(serviceService.getServiceByServiceId("982577e6-1909-46b8-8583-e08c9daa4e9b")).thenReturn(null);
-
-        OrderRequestCustomer orderRequestCustomer = OrderRequestCustomer.builder()
-                .customerPhone("1234567890")
-                .customerAddress("123 Main St")
-                .customerCity("Montreal")
-                .customerPostalCode("J5R 5J4")
-                .customerApartmentNumber("")
-                .dueDate("2023-01-01")
-                .build();
-
-        try {
-            orderService.CustomerRequestOrder(userId, userEmail, orderRequestCustomer);
-        } catch (Exception e) {
-            assertEquals("Service not found", e.getMessage());
-        }
-
-    }
 }
