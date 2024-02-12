@@ -552,10 +552,6 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
 
-
-        Status newcompletedStatus = Status.COMPLETED;
-
-
         if (order == null) {
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
@@ -563,6 +559,9 @@ public class OrderServiceImpl implements OrderService {
         if (order.getOrderStatus() != Status.IN_PROGRESS || order.getHoursWorked() == 0) {
             throw new InvalidRequestException("Order cannot be updated, it is not in in progress status, meaning it was accepted or cancelled already.");
         }
+
+
+        Status newcompletedStatus = Status.COMPLETED;
 
         String recipient = order.getCustomerEmail();
         String subject = "Order #" + order.getOrderTrackingNumber().getOrderTrackingNumber() + " has been completed";
