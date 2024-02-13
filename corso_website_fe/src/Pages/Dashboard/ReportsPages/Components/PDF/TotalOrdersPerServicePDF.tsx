@@ -2,6 +2,8 @@ import ReactPDFChart from "react-pdf-charts";
 import {Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis, YAxis} from "recharts";
 import React from "react";
 import {totalOrdersWithoutZero} from "../OrdersPerService";
+import {getValuesFromJSON} from "../../../../../Services/TranlationTools";
+import i18n from "i18next";
 
 export default function TotalOrdersPerServicePDF({totalOrdersPerService, choice}: any) {
 
@@ -17,7 +19,9 @@ export default function TotalOrdersPerServicePDF({totalOrdersPerService, choice}
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="serviceName"
-                           angle={-90}
+                           tickFormatter={(value) => {
+                                 return ""
+                           }}
                     />
                     <YAxis
                         dataKey={"totalOrderRequest"}
@@ -38,7 +42,7 @@ export default function TotalOrdersPerServicePDF({totalOrdersPerService, choice}
             }
             {choice.includes(2) &&
                 <PieChart
-                    width={500}
+                    width={550}
                     height={300}
                 >
                     <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)}
@@ -47,10 +51,10 @@ export default function TotalOrdersPerServicePDF({totalOrdersPerService, choice}
                          isAnimationActive={false}
                          label={(entry) => {
                              return <text x={entry.x} y={entry.y} fill="black"
-                                          style={{fontSize: "10px"}}
+                                          style={{fontSize: "10px",overflow: "wrap"}}
                                           textAnchor={entry.x > entry.cx ? "start" : "end"}
                                           dominantBaseline="central">
-                                 {entry.name}
+                                 {getValuesFromJSON(i18n.language,entry.name)}
                              </text>
                          }}
                     />

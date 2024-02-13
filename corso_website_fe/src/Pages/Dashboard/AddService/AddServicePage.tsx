@@ -9,6 +9,7 @@ import {SyncLoader} from "react-spinners";
 import {useNavigate} from "react-router";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
+import {createJSONForLanguages} from "../../../Services/TranlationTools";
 
 function AddServicePage() {
     const [serviceName, setServiceName] = useState('');
@@ -42,14 +43,21 @@ function AddServicePage() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const englishServiceName = (document.getElementById("serviceName_en") as HTMLInputElement)?.value
+        const englishServiceDescription = (document.getElementById("serviceDescription_en") as HTMLInputElement)?.value
+
+        const frenchServiceName = (document.getElementById("serviceName_fr") as HTMLInputElement)?.value
+        const frenchServiceDescription = (document.getElementById("serviceDescription_fr") as HTMLInputElement)?.value
+
+        setIsLoading(true)
+
         const data = {
-            serviceName,
-            serviceDescription,
+            serviceName: createJSONForLanguages(["fr","en"], [frenchServiceName, englishServiceName]),
+            serviceDescription: createJSONForLanguages(["fr","en"], [frenchServiceDescription, englishServiceDescription]),
             serviceIcon: serviceIconPreview,
             serviceImage: serviceImagePreview,
         };
 
-        setIsLoading(true)
         await axios
             .post(process.env.REACT_APP_BE_HOST + 'api/v1/corso/services', data, {
                 headers: {
@@ -85,23 +93,41 @@ function AddServicePage() {
                                 <img src={pen} alt="Edit" className="pen-icon" />
                                 <input
                                     type="text"
-                                    id="serviceName"
+                                    id="serviceName_en"
                                     name="serviceName"
-                                    placeholder={t("servicesAdminPage.serviceName")}
+                                    placeholder={"Service Name in English"}
                                     required
-                                    value={serviceName}
-                                    onChange={(e) => setServiceName(e.target.value)}
                                 />
                             </div>
                             <div className="grid-item input-container">
                                 <img src={pen} alt="Edit" className="pen-icon" />
                                 <textarea
-                                    id="serviceDescription"
+                                    id="serviceDescription_en"
                                     name="serviceDescription"
-                                    placeholder="Description"
+                                    placeholder="Description in English"
                                     required
-                                    value={serviceDescription}
-                                    onChange={(e) => setServiceDescription(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid-item-full">
+                            <div className="grid-item input-container">
+                                <img src={pen} alt="Edit" className="pen-icon" />
+                                <input
+                                    type="text"
+                                    id="serviceName_fr"
+                                    name="serviceName"
+                                    placeholder={"Nom du Service en français"}
+                                    required
+                                />
+                            </div>
+                            <div className="grid-item input-container">
+                                <img src={pen} alt="Edit" className="pen-icon" />
+                                <textarea
+                                    id="serviceDescription_fr"
+                                    name="serviceDescription"
+                                    placeholder="Description en français"
+                                    required
                                 />
                             </div>
                         </div>
@@ -169,9 +195,10 @@ function AddServicePage() {
                     <SyncLoader className={"spinner"} color="#054AEB"/>
                 </div>
 
+                {isLoading ? "" :
                 <div className="submit-button-container">
                     <input type="submit" value={t("submitButton")} className="submit-button"/>
-                </div>
+                </div>}
             </form>
             </div>
         </>

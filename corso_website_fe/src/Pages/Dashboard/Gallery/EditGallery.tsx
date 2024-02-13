@@ -7,6 +7,8 @@ import './EditGallery.css';
 import swal from "sweetalert";
 import AddGallery from "./Components/AddGallery";
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import i18n from "i18next";
 
 interface ImageData {
     galleryId: string;
@@ -105,10 +107,12 @@ function DraggableImage({image, index, moveImage}: DraggableImageProps) {
                         opacity: snapshot.isDragging ? 0.4 : 1,
                     }}/>
                     <p className={"mt-4 w-100 overflow-scroll"}
-                    style={{
-                        maxWidth: '150px',
-                    }}
-                    >{image.description}</p>
+                       style={{
+                           maxWidth: '150px',
+                       }}
+                    >
+                        {getValuesFromJSON(i18n.language, image.description)}
+                    </p>
                     <button onClick={() => {
                         moveImage(index, 0);
                     }}>{t("editGalleryPage.moveToTop")}
@@ -155,6 +159,10 @@ function EditGallery() {
     const fetchImages = async () => {
         try {
             const response = await axios.get(process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel');
+            if (response.status !== 200) {
+                // @ts-ignore
+                auth.authError(response.status);
+            }
             const sortedImages = response.data.sort((a: ImageData, b: ImageData) => a.image_position - b.image_position);
             setImages(sortedImages);
         } catch (error) {
@@ -165,6 +173,7 @@ function EditGallery() {
     useEffect(() => {
 
         fetchImages();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const moveImage = (fromIndex: number, toIndex: number) => {
@@ -239,30 +248,32 @@ function EditGallery() {
             <NavigationBar/>
             <div className="gallery-container">
                 <h1>{t("editGalleryPage.editGallery")}</h1>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="gallery" direction={isSmallScreen ? 'vertical' : 'horizontal'}>
-                        {(provided) => (
-                            <div
-                                className={"gallery-wrapper"}
-                                ref={provided.innerRef}
-                                style={isSmallScreen ? getListStyleVertical() : getListStyleHorizontal()}
-                                {...provided.droppableProps}
-                            >
-                                {images.map((image, index) => (
-                                    <DraggableImage
-                                        key={index}
-                                        image={image}
-                                        index={index}
-                                        moveImage={moveImage}
-                                    />
-                                ))}
-                                {provided.placeholder}
+                <div className={"overflow-scroll w-100"}>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="gallery" direction={isSmallScreen ? 'vertical' : 'horizontal'}>
+                            {(provided) => (
+                                <div
+                                    className={"gallery-wrapper"}
+                                    ref={provided.innerRef}
+                                    style={isSmallScreen ? getListStyleVertical() : getListStyleHorizontal()}
+                                    {...provided.droppableProps}
+                                >
+                                    {images.map((image, index) => (
+                                        <DraggableImage
+                                            key={index}
+                                            image={image}
+                                            index={index}
+                                            moveImage={moveImage}
+                                        />
+                                    ))}
+                                    {provided.placeholder}
 
-                            </div>
-                        )}
+                                </div>
+                            )}
 
-                    </Droppable>
-                </DragDropContext>
+                        </Droppable>
+                    </DragDropContext>
+                </div>
                 <button onClick={handleSubmit} className="save-order-button">
                     {t("editGalleryPage.saveOrder")}
                 </button>
@@ -299,7 +310,6 @@ const getListStyleVertical = () => ({
 const getListStyleHorizontal = () => ({
     background: 'white',
     display: 'flex',
-    overflow: 'auto',
     padding: 20,
     height: "100%",
     width: "100% !important",

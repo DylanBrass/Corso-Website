@@ -7,14 +7,11 @@ import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import pen from "../../../ressources/images/pen.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
+import {createJSONForLanguages} from "../../../Services/TranlationTools";
 
 
 function AddAFaq() {
-    const [question, setQuestion] =  useState('');
-    const [answer, setAnswer] =  useState('');
-    // const [preference] =  useState('');
 
-    //const [faqid, setFaqid] = useState<FAQ>('');
     const auth = useAuth();
     const navigate = useNavigate();
     const {t} = useTranslation();
@@ -23,12 +20,19 @@ function AddAFaq() {
         e.preventDefault();
 
         try {
+
+            const englishQ = (document.getElementById("question_en") as HTMLInputElement)?.value
+            const frenchQ = (document.getElementById("question_fr") as HTMLInputElement)?.value
+
+            const englishA = (document.getElementById("answer_en") as HTMLInputElement)?.value
+            const frenchA = (document.getElementById("answer_fr") as HTMLInputElement)?.value
+
             const response = await axios.post(
                 `${process.env.REACT_APP_BE_HOST}api/v1/corso/faqs`,
                 {
-                    question: question,
-                    answer: answer,
-                     preference: false,
+                    question: createJSONForLanguages(["fr","en"], [frenchQ,englishQ]),
+                    answer: createJSONForLanguages(["fr","en"], [frenchA,englishA]),
+                    preference: false,
                 },
                 {
                     headers: {
@@ -39,8 +43,7 @@ function AddAFaq() {
             );
             console.log('API Response:', response.data);
             swal(t("alerts.faq.faqAddedTitle"), '', 'success');
-            setQuestion('');
-            setAnswer('');
+
             navigate('/manage/faqs');
         } catch (error) {
             console.error('API Error:', error);
@@ -73,34 +76,58 @@ function AddAFaq() {
                 <form onSubmit={addAFaq}>
                     <div className="add-a-faq-form">
                         <div className="add-a-faq-form-question">
-                            <div className="add-a-faq-form-question-title">Question</div>
+                            <div className="add-a-faq-form-question-title">Question in English</div>
                             <div className="grid-item input-container">
                                 <img className="question-faq-pen-icon" src={pen} alt="Pen Icon" />
                                 <input
                                     className="question-faq-input"
                                     type="text"
-                                    id="question"
+                                    id="question_en"
                                     name="question"
-                                    placeholder="Question"
+                                    placeholder="Question in English"
                                     required
-                                    value={question}
-                                    onChange={(e) => setQuestion(e.target.value)}
                                 />
                             </div>
                             <div className="grid-item input-container">
-                                <div className="add-a-faq-form-answer-title">{t("answer")}</div>
+                                <div className="add-a-faq-form-answer-title">Answer</div>
                                 <img className="answer-faq-pen-icon" src={pen} alt="Pen Icon"
                                      style={{marginBottom:"100px"}}
                                 />
 
                                 <textarea
                                     className="answer-faq-input"
-                                    id="answer"
+                                    id="answer_en"
                                     name="answer"
-                                    placeholder={t("answer")}
+                                    placeholder="Answer"
                                     required
-                                    value={answer}
-                                    onChange={(e) => setAnswer(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="add-a-faq-form-question">
+                            <div className="add-a-faq-form-question-title">Question en français</div>
+                            <div className="grid-item input-container">
+                                <img className="question-faq-pen-icon" src={pen} alt="Pen Icon" />
+                                <input
+                                    className="question-faq-input"
+                                    type="text"
+                                    id="question_fr"
+                                    name="question"
+                                    placeholder="Question en français"
+                                    required
+                                />
+                            </div>
+                            <div className="grid-item input-container">
+                                <div className="add-a-faq-form-answer-title">Réponse</div>
+                                <img className="answer-faq-pen-icon" src={pen} alt="Pen Icon"
+                                     style={{marginBottom:"100px"}}
+                                />
+
+                                <textarea
+                                    className="answer-faq-input"
+                                    id="answer_fr"
+                                    name="answer"
+                                    placeholder="Réponse"
+                                    required
                                 />
                             </div>
                         </div>
@@ -111,6 +138,17 @@ function AddAFaq() {
                         </button>
                     </div>
                 </form>
+            </div>
+            <br />
+            <div className={"text-center"}>
+                <button
+                    className="back-btn"
+                    onClick={() => {
+                        window.location.href = "/manage/faqs";
+                    }}
+                >
+                    {t("back")}
+                </button>
             </div>
         </div>
     );

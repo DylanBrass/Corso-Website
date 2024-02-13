@@ -26,6 +26,13 @@
 
 }
 
+
+.spinner-visible{
+    .spinner {
+        margin-top: 25px;
+    }
+}
+
 .add-image-box-right{
     border-left: 1px solid black;
 

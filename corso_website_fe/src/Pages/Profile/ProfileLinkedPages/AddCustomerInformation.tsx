@@ -166,7 +166,7 @@ function AddCustomerInformation() {
                         swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success").then(r => {
                             navigate(-1)
                         })
-                    else swal(t("profilePage.alerts.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
+                    else swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
                         navigate(-1)
                     })
                     Cookies.set("username", r.data.name);

@@ -2,6 +2,8 @@ import ReactPDFChart from "react-pdf-charts";
 import React from "react";
 import {Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis, YAxis} from "recharts";
 import {dataWithoutZero} from "../TimeByService";
+import {getValuesFromJSON} from "../../../../../Services/TranlationTools";
+import i18n from "i18next";
 
 
 export default function TimeByServicePDF({data, choice}: any) {
@@ -49,7 +51,7 @@ export default function TimeByServicePDF({data, choice}: any) {
                                          style={{fontSize: "10px"}}
                                          textAnchor={entry.x > entry.cx ? "start" : "end"}
                                          dominantBaseline="central">
-                                {entry.name}
+                                {getValuesFromJSON(i18n.language,entry.name)}
                             </text>
                         }}
                     >

@@ -4,7 +4,6 @@ import TimeByService from "./Components/TimeByService";
 import OrderPerService from "./Components/OrdersPerService";
 import Dropdown from "../../../Components/Dropdown/droptown";
 import OrdersPerMonth from "./Components/OrdersPerMonth";
-import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "../../../security/Components/AuthProvider";
 
@@ -30,8 +29,9 @@ export default function ReportsPage() {
             <h1 className={"text-center"}>{t("reports.reports")}</h1>
             <div>
                 <center>
-                    <Link to={"/reports/make-pdf"}>{t("reports.makePDF")}</Link>
-
+                    <button className="diagram-btn" onClick={() => {
+                        window.location.href = "/reports/make-pdf";
+                    }}>{t("reports.makePDF")}</button>
                     <Dropdown
                         label={t("reports.reports")}
                         options={[

@@ -7,6 +7,8 @@ import plus from "../../../ressources/images/plus-services.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import swal from "sweetalert";
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import i18n from "i18next";
 
 interface Service {
     serviceId: string;
@@ -98,8 +100,8 @@ function ServicesThroughDashboard(){
                             key={service.serviceId}
                             service = {{
                                 serviceId: service.serviceId,
-                                serviceName: service.serviceName,
-                                serviceDescription: service.serviceDescription,
+                                serviceName: getValuesFromJSON(i18n.language,service.serviceName),
+                                serviceDescription: getValuesFromJSON(i18n.language,service.serviceDescription),
                                 active: service.active,
                                 action: () => {
                                     window.location.href = `/adminServices/${service.serviceId}`;

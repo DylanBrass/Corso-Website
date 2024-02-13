@@ -399,10 +399,11 @@
     "totalOrdersFrom": "commandes entre le",
     "totalHoursWorked": "heures totales travaillées entre le",
     "makePDF": "Créer un PDF",
+    "refreshPDF": "Rafraîchir le PDF",
     "reportTypes": {
-      "timeByService": "Temps par service",
-      "ordersPerService": "Commandes par service",
-      "ordersPerMonth": "Commandes par mois"
+      "timeByService": "Temps par Service",
+      "ordersPerService": "Commandes par Service",
+      "ordersPerMonth": "Commandes par Mois"
     },
     "selectReport": "Sélectionner un rapport",
 
@@ -425,7 +426,37 @@
 
     "startDateLabel": "Date de début",
     "endDateLabel": "Date de fin",
-    "year": "Année"
+    "year": "Année",
+
+    "chooseYear": "Choisissez une Année",
+    "chooseDates": "Choisissez des Dates",
+    "chooseDiagrams": "Choisissez des Diagrammes",
+
+    "reportsForOrdersPerMonth": "Rapports pour les commandes par mois",
+    "reportsForOrdersPerService": "Rapports pour les commandes par service",
+    "reportsForTotalOrdersPerService": "Rapports pour les commandes totales par service",
+    "reportsForTimeByService": "Rapports pour le temps par service",
+
+    "displayOrdersPerService": "Afficher les commandes par service",
+    "displayTotalOrdersPerService": "Afficher les commandes totales par service",
+    "displayTimeByService": "Afficher le temps par service",
+    "displayOrdersPerMonth": "Afficher les commandes par mois",
+    "displayText": "Afficher le texte",
+    "text": "Texte",
+
+    "backToReports": "Retour aux rapports",
+    "remove": "Retirer",
+    "add": "Ajouter",
+    "in": "En",
+    "between": "Entre",
+    "and": "et",
+
+    "pdfPages": {
+      "insightsReport": "Rapport d'analyse",
+      "reportsGeneratedBy": "Généré par le site Corso Electrique",
+      "reportHighlights": "Explorez les points saillants du parcours et des exploits de notre entreprise dans ce rapport complet.",
+      "producedOn": "Produit le"
+    }
   },
 
   "update": "Mettre à jour",

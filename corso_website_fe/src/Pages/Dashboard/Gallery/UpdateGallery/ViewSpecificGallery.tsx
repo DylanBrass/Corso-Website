@@ -11,6 +11,7 @@ import Cloudinary from "../../../../Services/Cloudinary";
 import swal from "sweetalert";
 import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
+import {createJSONForLanguages, getValuesFromJSON} from "../../../../Services/TranlationTools";
 
 function ViewSpecificGallery() {
 
@@ -50,8 +51,12 @@ function ViewSpecificGallery() {
     const updateGallery = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+
+        let englishDesc = (document.getElementById("description_en") as HTMLInputElement)?.value
+        let frenchDesc = (document.getElementById("description_fr") as HTMLInputElement)?.value
+
         const data = {
-            description: gallery.description,
+            description: createJSONForLanguages(["fr","en"],[frenchDesc,englishDesc]),
             photo: imagePreview,
             image_position: gallery.image_position
         };
@@ -84,7 +89,6 @@ function ViewSpecificGallery() {
         }
 
     }
-
     return (
         <div>
             <NavigationBar/>
@@ -94,13 +98,23 @@ function ViewSpecificGallery() {
                     <div className={"d-flex row"}>
                         <img src={pen} alt="Edit" className="pen-icon col-md-2 d-none d-md-block"/>
                         <textarea
-                            id="description"
+                            id="description_en"
                             name="description"
-                            placeholder="Description"
+                            placeholder="Description in English"
                             required
                             className={"col-12 col-md-10"}
-                            value={gallery.description}
-                            onChange={(event) => setGallery({...gallery, description: event.target.value})}
+                            defaultValue={getValuesFromJSON("en",gallery.description)}
+                        />
+                    </div>
+                    <div className={"d-flex row"}>
+                        <img src={pen} alt="Edit" className="pen-icon col-md-2 d-none d-md-block"/>
+                        <textarea
+                            id="description_fr"
+                            name="description"
+                            placeholder="Description en français"
+                            required
+                            className={"col-12 col-md-10"}
+                            defaultValue={getValuesFromJSON("fr",gallery.description)}
                         />
                     </div>
                     <div className={"row mt-4"}>
@@ -134,9 +148,10 @@ function ViewSpecificGallery() {
                         <SyncLoader className={"spinner"} color="#054AEB"/>
                     </div>
                     <div className={"row"}>
+                        {isLoading ? "" :
                         <button className={"btn btn-primary m-auto w-50"} type={"submit"} value={"Update"}>
                             {t("update")}
-                        </button>
+                        </button>}
                     </div>
                 </form>
             </div>

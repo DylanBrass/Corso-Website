@@ -47,6 +47,7 @@ function AllOrdersPage() {
 
     useEffect(() => {
         setSelectedSearchFieldUser(t("userOptions.email"));
+        setSelectedStatus(t("allOrdersAdminPage.statusOptions.all"));
     }, [i18n.language, t]);
 
     const getUsers = async (event?: React.FormEvent<HTMLFormElement>) => {

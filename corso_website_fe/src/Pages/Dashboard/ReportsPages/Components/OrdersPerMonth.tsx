@@ -32,8 +32,10 @@ const CustomTooltip = ({active, payload, label}) => {
 }
 
 const getMonthName = (month: string) => {
-    return new Date(0, parseInt(month) - 1, 1).toLocaleString('default', {month: 'long'});
-}
+    const monthIndex = parseInt(month);
+    const monthName = new Date(Date.UTC(2000, monthIndex, 1)).toLocaleString(i18n.language, { month: 'long' });
+    return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+};
 
 export default function OrdersPerMonth() {
 
@@ -42,7 +44,6 @@ export default function OrdersPerMonth() {
     const {t} = useTranslation();
 
     const [ordersPerMonth, setOrdersPerMonth] = React.useState([])
-
 
     async function fetchData() {
         setOrdersPerMonth(await getOrdersPerMonth((document.getElementById("year") as HTMLInputElement).value)
@@ -87,20 +88,7 @@ export default function OrdersPerMonth() {
                     <XAxis
                         dataKey="month"
                         name={"Month"}
-                        tickFormatter={(tickItem: number, index: number) => {
-                            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                            let language = "en";
-                            if (i18n.language === "fr") {
-                                language = "fr";
-                            }
-                            if (language === "fr") {
-                                const monthIndex = tickItem - 1;
-                                const frenchMonthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-                                return frenchMonthNames[monthIndex];
-                            } else {
-                                return monthNames[tickItem - 1];
-                            }
-                        }}
+                        tickFormatter={(tickItem: string, index: number) => getMonthName(tickItem)}
                     />
                     <YAxis
                         name={"Total Orders"}

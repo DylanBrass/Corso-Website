@@ -1,10 +1,12 @@
 import React from "react";
 import {Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts";
 import ReactPDFChart from "react-pdf-charts";
+import {getMonthName} from "../OrdersPerMonth";
 
 export default function OrdersPerMonthPDF({ordersPerMonth, choice}: any) {
 
     console.log(ordersPerMonth);
+
     return <ReactPDFChart>
         <div>
             {choice.includes(1) &&
@@ -12,12 +14,10 @@ export default function OrdersPerMonthPDF({ordersPerMonth, choice}: any) {
                           height={300}
                           width={500}
                 >
-                    <XAxis dataKey="month"
-                           name={"Month"}
-                           tickFormatter={(tickItem: number) => {
-                               return new Date(0, tickItem - 1, 1).toLocaleString('default', {month: 'long'});
-                           }}
-
+                    <XAxis
+                        dataKey="month"
+                        name={"Month"}
+                        tickFormatter={(tickItem: string, index: number) => getMonthName(tickItem)}
                     />
                     <YAxis
                         name={"Total Orders"}

@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {Document, Page, PDFViewer, Text, View} from '@react-pdf/renderer';
 import OrdersPerMonthPDF from "./Components/PDF/OrdersPerMonthPDF";
-import {getMonthName} from "./Components/OrdersPerMonth";
 import {
     fetchTimeByServiceReport,
     fetchTotalOrdersPerService,
@@ -17,7 +16,9 @@ import TimeByServicePDF from "./Components/PDF/TimeByServicePDF";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import PresentationPage from "./Components/PDF/PresentationPage";
 import TotalOrdersPerServicePDF from "./Components/PDF/TotalOrdersPerServicePDF";
-import {Link} from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import i18n from "i18next";
+import {getValuesFromJSON} from "../../../Services/TranlationTools";
 
 const currentYear = new Date().getFullYear();
 
@@ -25,6 +26,7 @@ const currentYear = new Date().getFullYear();
 export default function MakePdfPage() {
 
     const auth = useAuth();
+    const {t} = useTranslation();
 
     const [ordersPerMonth, setOrdersPerMonth] = React.useState([])
     const [displayOrdersPerMonth, setDisplayOrdersPerMonth] = React.useState(true)
@@ -57,7 +59,7 @@ export default function MakePdfPage() {
             .catch((e: any) => {
                 console.error(e);
                 // @ts-ignore
-                swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+                swal(t("alerts.error"), t("alerts.errorFetchingData")  + e.response.data.message, "error");
                 // @ts-ignore
                 auth.authError(e.response.status)
             }))
@@ -76,7 +78,7 @@ export default function MakePdfPage() {
         ).catch((e: any) => {
             console.error(e);
             // @ts-ignore
-            swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+            swal(t("alerts.error"), t("alerts.errorFetchingData") + e.response.data.message, "error");
             // @ts-ignore
             auth.authError(e.response.status);
         })
@@ -92,7 +94,7 @@ export default function MakePdfPage() {
         ).catch((e: any) => {
             console.error(e);
             // @ts-ignore
-            swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+            swal(t("alerts.error"), t("alerts.errorFetchingData") + e.response.data.message, "error");
             // @ts-ignore
             auth.authError(e.response.status);
         })
@@ -107,7 +109,7 @@ export default function MakePdfPage() {
             .catch((e: any) => {
                 console.error(e);
                 // @ts-ignore
-                swal("Error", "Error while fetching data : " + e.response.data.message, "error");
+                swal(t("alerts.error"), t("alerts.errorFetchingData") + e.response.data.message, "error");
 
                 // @ts-ignore
                 auth.authError(e.response.status);
@@ -149,27 +151,35 @@ export default function MakePdfPage() {
     }, []);
 
 
+    const getMonthName = (month: string) => {
+        const monthIndex = parseInt(month);
+        const monthName = new Date(Date.UTC(2000, monthIndex, 1)).toLocaleString(i18n.language, { month: 'long' });
+        return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+    };
+
     return (
         <div>
             <NavigationBar/>
             <center className={"mt-4"}>
-                <Link to={"/reports"}>Back to Reports</Link>
+                <button className="diagram-btn" onClick={() => {
+                    window.location.href = "/reports";
+                }}>{t("reports.backToReports")}</button>
 
                 <div className={"text-center container"}>
                     <div className={"row"}>
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
                             <div className={"w-100"}>
 
-                                <h1>Reports for Orders per Month</h1>
-                                <h2>Display Orders Per Month</h2>
+                                <h1>{t("reports.reportsForOrdersPerMonth")}</h1>
+                                <h2>{t("reports.displayOrdersPerMonth")}</h2>
                                 <button onClick={addOrRemoveOrdersPerMonth}
                                         className={displayOrdersPerMonth ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {displayOrdersPerMonth ? "Remove" : "Add"} Orders Per Month
+                                    {displayOrdersPerMonth ? t("reports.remove") : t("reports.add")} {t("reports.ordersPerMonth")}
                                 </button>
                                 <div>
 
-                                    <h2>Choose Diagrams</h2>
+                                    <h2>{t("reports.chooseDiagrams")}</h2>
                                     <button onClick={() => {
                                         if (displayOrdersPerMonthChoice.includes(1)) {
                                             setDisplayOrdersPerMonthChoice(displayOrdersPerMonthChoice.filter((choice) => choice !== 1))
@@ -179,17 +189,17 @@ export default function MakePdfPage() {
                                     }}
                                             className={displayOrdersPerMonthChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                     >
-                                        {displayOrdersPerMonthChoice.includes(1) ? "Remove" : "Add"} Bar Chart
+                                        {displayOrdersPerMonthChoice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                     </button>
-                                    <h2>Choose Year</h2>
+                                    <h2>{t("reports.chooseYear")}</h2>
                                     <input type="number" min="1900" max={currentYear} step="1"
                                            defaultValue={currentYear}
                                            id="year"/>
-                                    <h2>Display Text</h2>
+                                    <h2>{t("reports.displayText")}</h2>
                                     <button onClick={addOrRemoveTextForOrdersPerMonth}
                                             className={showTextForOrdersPerMonth ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                     >
-                                        {showTextForOrdersPerMonth ? "Remove" : "Add"} Text
+                                        {showTextForOrdersPerMonth ? t("reports.remove") : t("reports.add")} {t("reports.text")}
                                     </button>
                                 </div>
                             </div>
@@ -197,21 +207,21 @@ export default function MakePdfPage() {
                         <div className={"col-2"}></div>
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
                             <div className={"w-100"}>
-                                <h1>Reports for Orders per Service</h1>
-                                <h2>Display Orders Per Service</h2>
+                                <h1>{t("reports.reportsForOrdersPerService")}</h1>
+                                <h2>{t("reports.displayOrdersPerService")}</h2>
                                 <button onClick={addOrRemoveOrdersPerService}
                                         className={displayOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {displayOrdersPerService ? "Remove" : "Add"} Orders Per Service
+                                    {displayOrdersPerService ? t("reports.remove") : t("reports.add")} {t("reports.ordersPerService")}
                                 </button>
                                 <div>
 
-                                    <h2>Choose Dates</h2>
+                                    <h2>{t("reports.chooseDates")}</h2>
                                     <input type="date" id="start" defaultValue={getOneYearAgo()}/>
                                     {" "}to{" "}
                                     <input type="date" id="end" defaultValue={new Date().toISOString().split('T')[0]}/>
 
-                                    <h2>Choose Diagrams</h2>
+                                    <h2>{t("reports.chooseDiagrams")}</h2>
 
                                     <button onClick={() => {
                                         if (page2Choice.includes(1)) {
@@ -222,7 +232,7 @@ export default function MakePdfPage() {
                                     }}
                                             className={page2Choice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                     >
-                                        {page2Choice.includes(1) ? "Remove" : "Add"} Line Chart
+                                        {page2Choice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.stackedBarChart")}
                                     </button>
                                     <button onClick={() => {
                                         if (page2Choice.includes(2)) {
@@ -233,7 +243,7 @@ export default function MakePdfPage() {
                                     }}
                                             className={page2Choice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                     >
-                                        {page2Choice.includes(2) ? "Remove" : "Add"} Line Chart
+                                        {page2Choice.includes(2) ? t("reports.remove") : t("reports.add")} {t("reports.lineChart")}
                                     </button>
 
                                     <button onClick={() => {
@@ -246,13 +256,13 @@ export default function MakePdfPage() {
                                     }
                                             className={page2Choice.includes(3) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                     >
-                                        {page2Choice.includes(3) ? "Remove" : "Add"} Bar Chart
+                                        {page2Choice.includes(3) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                     </button>
-                                    <h2>Display Text</h2>
+                                    <h2>{t("reports.displayText")}</h2>
                                     <button onClick={addOrRemoveTextForOrdersPerService}
                                             className={showTextForOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                     >
-                                        {showTextForOrdersPerService ? "Remove" : "Add"} Text
+                                        {showTextForOrdersPerService ? t("reports.remove") : t("reports.add")} {t("reports.text")}
                                     </button>
                                 </div>
 
@@ -264,20 +274,20 @@ export default function MakePdfPage() {
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5"}>
 
                             <div className={"w-100"}>
-                                <h3>Reports for Total Orders Per Service</h3>
-                                <h4>Display Total Orders Per Service</h4>
-                                <h4>Choose Dates</h4>
+                                <h3>{t("reports.reportsForTotalOrdersPerService")}</h3>
+                                <h4>{t("reports.displayTotalOrdersPerService")}</h4>
+                                <h4>{t("reports.chooseDates")}</h4>
                                 <button onClick={addOrRemoveTotalOrdersPerService}
                                         className={displayTotalOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {displayTotalOrdersPerService ? "Remove" : "Add"} Total Orders Per Service
+                                    {displayTotalOrdersPerService ? t("reports.remove") : t("reports.add")} {t("reports.totalOrdersPerService")}
                                 </button>
                                 <br/>
                                 <input type="date" id="startTotal" defaultValue={getOneYearAgo()}/>
                                 {" "}to{" "}
                                 <input type="date" id="endTotal" defaultValue={new Date().toISOString().split('T')[0]}/>
 
-                                <h3>Choose Diagrams</h3>
+                                <h3>{t("reports.chooseDiagrams")}</h3>
                                 <button onClick={() => {
                                     if (totalOrdersPerServiceChoice.includes(1)) {
                                         setTotalOrdersPerServiceChoice(totalOrdersPerServiceChoice.filter((choice) => choice !== 1))
@@ -287,7 +297,7 @@ export default function MakePdfPage() {
                                 }}
                                         className={totalOrdersPerServiceChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {totalOrdersPerServiceChoice.includes(1) ? "Remove" : "Add"} Bar Chart
+                                    {totalOrdersPerServiceChoice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                 </button>
                                 <button onClick={() => {
                                     if (totalOrdersPerServiceChoice.includes(2)) {
@@ -298,7 +308,7 @@ export default function MakePdfPage() {
                                 }}
                                         className={totalOrdersPerServiceChoice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {totalOrdersPerServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                                    {totalOrdersPerServiceChoice.includes(2) ? t("reports.remove") : t("reports.add")} {t("reports.pieChart")}
                                 </button>
                             </div>
                         </section>
@@ -306,19 +316,19 @@ export default function MakePdfPage() {
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
                             <div className={"w-100"}>
 
-                                <h1>Reports for Time by Service</h1>
-                                <h2>Display Time By Service</h2>
+                                <h1>{t("reports.reportsForTimeByService")}</h1>
+                                <h2>{t("reports.displayTimeByService")}</h2>
                                 <button onClick={addOrRemoveTimeByService}
                                         className={displayTimeByService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {displayTimeByService ? "Remove" : "Add"} Time By Service
+                                    {displayTimeByService ? t("reports.remove") : t("reports.add")} {t("reports.timeByService")}
                                 </button>
-                                <h2>Choose Dates</h2>
+                                <h2>{t("reports.chooseDates")}</h2>
                                 <input type="date" id="startTimeBy" defaultValue={getOneYearAgo()}/>
                                 {" "}to{" "}
                                 <input type="date" id="endTimeBy"
                                        defaultValue={new Date().toISOString().split('T')[0]}/>
-                                <h2>Choose Diagrams</h2>
+                                <h2>{t("reports.chooseDiagrams")}</h2>
                                 <button
                                     onClick={() => {
                                         if (timeByServiceChoice.includes(1)) {
@@ -329,7 +339,7 @@ export default function MakePdfPage() {
                                     }}
                                     className={timeByServiceChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {timeByServiceChoice.includes(1) ? "Remove" : "Add"} Line Chart
+                                    {timeByServiceChoice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                 </button>
                                 <button onClick={() => {
                                     if (timeByServiceChoice.includes(2)) {
@@ -340,14 +350,14 @@ export default function MakePdfPage() {
                                 }}
                                         className={timeByServiceChoice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
                                 >
-                                    {timeByServiceChoice.includes(2) ? "Remove" : "Add"} Pie Chart
+                                    {timeByServiceChoice.includes(2) ? t("reports.remove") : t("reports.add")} {t("reports.pieChart")}
                                 </button>
                             </div>
                         </section>
                     </div>
                 </div>
                 <button onClick={fetchData} className={"m-5 btn btn-primary"}>
-                    Refresh PDF
+                    {t("reports.refreshPDF")}
                 </button>
             </center>
             <PDFViewer width={"100%"} height={"900px"}>
@@ -362,30 +372,19 @@ export default function MakePdfPage() {
                     <PresentationPage/>
                     {displayOrdersPerMonth &&
                         <Page size="A4">
-
                             <div>
-
-                                <Text style={{
-                                    fontSize: 20,
-                                    margin: 12
-                                }}>
-                                    Orders Per Month
-                                    (In {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
+                                <Text style={{ fontSize: 20, margin: 12 }}>
+                                    {t("reports.ordersPerMonth") + " "}
+                                    ({t("reports.in")} {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
                                 </Text>
 
-                                <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}
-                                                   choice={displayOrdersPerMonthChoice}/>
+                                <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth} choice={displayOrdersPerMonthChoice} />
 
-                                {showTextForOrdersPerMonth &&
-
-                                    ordersPerMonth.map((month: any) => {
-                                        return <Text style={{
-                                            fontSize: 12,
-                                            margin: 12
-                                        }} key={month.month}>{getMonthName(month.month)}: {month.totalOrders}</Text>
-                                    })
-
-                                }
+                                {showTextForOrdersPerMonth && ordersPerMonth.map((month: any) => (
+                                    <Text style={{ fontSize: 12, margin: 12 }} key={month.month}>
+                                        {getMonthName(month.month)}: {month.totalOrders}
+                                    </Text>
+                                ))}
                             </div>
                         </Page>
 
@@ -399,8 +398,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Orders Per Service
-                                    (Between {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} and {(document.getElementById("end") as HTMLInputElement)?.value})
+                                    {t("reports.ordersPerService") + " "}
+                                    ({t("reports.between")} {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} {t("reports.and")} {(document.getElementById("end") as HTMLInputElement)?.value})
                                 </Text>
                                 <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
                                                      choice={page2Choice}/>
@@ -431,7 +430,7 @@ export default function MakePdfPage() {
                                                         .filter((key) => key !== "date")
                                                         .map((key) => (
                                                             <Text key={key}>
-                                                                {key}: {service[key]}
+                                                                {getValuesFromJSON(i18n.language,key)}: {service[key]}
                                                                 {"\n"}
                                                             </Text>
                                                         ))}
@@ -452,8 +451,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Total Orders Per Service
-                                    (Between {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
+                                    {t("reports.totalOrdersPerService") + " "}
+                                    ({t("reports.between")} {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} {t("reports.and")} {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
                                 </Text>
                                 <TotalOrdersPerServicePDF totalOrdersPerService={totalOrdersPerService}
                                                           choice={totalOrdersPerServiceChoice}/>
@@ -477,7 +476,7 @@ export default function MakePdfPage() {
                                                 M
                                             </Text>
                                             {"    "}
-                                            {service.serviceName}: {service.totalOrderRequest} Orders
+                                            {getValuesFromJSON(i18n.language,service.serviceName)}: {service.totalOrderRequest} {t("reports.orders")}
                                         </Text>
                                     ))}
                                 </View>
@@ -493,8 +492,8 @@ export default function MakePdfPage() {
                                     fontSize: 20,
                                     margin: 12
                                 }}>
-                                    Time By Service
-                                    (Between {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} and {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
+                                    {t("reports.timeByService") + " "}
+                                    ({t("reports.between")} {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} {t("reports.and")} {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
                                 </Text>
                                 <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
                                 <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
@@ -516,7 +515,7 @@ export default function MakePdfPage() {
                                                 M
                                             </Text>
                                             {"    "}
-                                            {service.serviceName}: {service.hours_worked} hours
+                                            {getValuesFromJSON(i18n.language,service.serviceName)}: {service.hours_worked} {t("order.hours")}
                                         </Text>
                                     ))}
                                 </View>

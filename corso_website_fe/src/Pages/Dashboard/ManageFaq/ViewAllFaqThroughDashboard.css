@@ -133,7 +133,8 @@
         background-color: white;
         margin-left: 90%;
     &:hover {
-    cursor: pointer;
+        cursor: pointer;
+        transform: scale(1.2);
        }
     }
 

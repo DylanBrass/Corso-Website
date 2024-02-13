@@ -7,6 +7,7 @@ import swal from "sweetalert";
 import { useAuth } from "../../../security/Components/AuthProvider";
 import "./ViewSpecificFaq.css";
 import {useTranslation} from "react-i18next";
+import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranlationTools";
 
 function ViewFaq() {
     const auth = useAuth();
@@ -48,11 +49,18 @@ function ViewFaq() {
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFaqData({ ...faqData, [e.target.name]: e.target.value });
-    };
-
     const saveFaq = async () => {
+        let englishQuestion = (document.getElementById("question_en") as HTMLInputElement)?.value
+        let englishAnswer = (document.getElementById("answer_en") as HTMLInputElement)?.value
+
+        let frenchQuestion = (document.getElementById("question_fr") as HTMLInputElement)?.value
+        let frenchAnswer = (document.getElementById("answer_fr") as HTMLInputElement)?.value
+
+        const faqData = {
+            question: createJSONForLanguages(["fr","en"], [frenchQuestion, englishQuestion]),
+            answer: createJSONForLanguages(["fr","en"], [frenchAnswer, englishAnswer])
+        };
+
         try {
             await axios.put(`${process.env.REACT_APP_BE_HOST}api/v1/corso/faqs/${faqId}`, faqData, {
                 headers: {
@@ -87,23 +95,39 @@ function ViewFaq() {
                         </div>
 
                         <div className={"row"}>
-                            <h3>Question</h3>
+                            <h3>Question in English</h3>
                             <input
+                                id={"question_en"}
                                 type="text"
                                 name="question"
-                                value={faqData.question}
-                                onChange={handleInputChange}
+                                defaultValue={getValuesFromJSON("en",faqData.question)}
                                 className={"input-faq-styling"}
                             />
-                        </div>
-                        <div className={"row"}>
-                            <h3>{t("answer")}</h3>
+                            <h3>Answer in English</h3>
                             <textarea
+                                id={"answer_en"}
                                 name="answer"
-                                value={faqData.answer}
-                                onChange={handleInputChange}
+                                defaultValue={getValuesFromJSON("en",faqData.answer)}
                                 className={"input-faq-styling"}
 
+                            />
+                        </div>
+                        <br />
+                        <div className={"row"}>
+                            <h3>Question en français</h3>
+                            <input
+                                id={"question_fr"}
+                                type="text"
+                                name="question"
+                                defaultValue={getValuesFromJSON("fr",faqData.question)}
+                                className={"input-faq-styling"}
+                            />
+                            <h3>Réponse en français</h3>
+                            <textarea
+                                id={"answer_fr"}
+                                name="answer"
+                                defaultValue={getValuesFromJSON("fr",faqData.answer)}
+                                className={"input-faq-styling"}
                             />
                         </div>
                         <div className={"faq-button-container"}>

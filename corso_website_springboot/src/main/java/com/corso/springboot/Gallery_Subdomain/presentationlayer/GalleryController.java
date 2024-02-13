@@ -3,6 +3,7 @@ package com.corso.springboot.Gallery_Subdomain.presentationlayer;
 import com.corso.springboot.Gallery_Subdomain.businesslayer.GalleryService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +30,8 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGallery());
     }
 
-    @CacheEvict(value = "gallery", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "gallery", allEntries = true)})
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PatchMapping("/carousel/order")
     public ResponseEntity<List<GalleryResponse>> updateGalleryOrder(@RequestBody List<GalleryOrderUpdateRequest> galleryOrderUpdateRequest){
