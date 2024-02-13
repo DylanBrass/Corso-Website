@@ -11,12 +11,15 @@ import {useParams} from "react-router-dom";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import './ViewSpecificInactiveOrder.css';
 import axios from "axios";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 export default function ViewSpecificInactiveOrder() {
     const {t} = useTranslation();
 
     const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
     let {orderId} = useParams();
+    const [orderStatus, setOrderStatus] = React.useState<string>(order.orderStatus);
 
     const auth = useAuth()
 
@@ -33,6 +36,7 @@ export default function ViewSpecificInactiveOrder() {
         )
             .then(res => {
                 const order = res.data;
+                setOrderStatus(order.orderStatus);
                 if (order.orderStatus.toLowerCase() === "pending") {
                     window.location.href = `/manage/orders/${orderId}`;
                 }else if (order.orderStatus.toLowerCase() === "in_progress") {
@@ -79,6 +83,27 @@ export default function ViewSpecificInactiveOrder() {
         getOrder();
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if(i18n.language === "fr") {
+            switch (order.orderStatus.toLowerCase()) {
+                case "completed":
+                    setOrderStatus("terminée");
+                    break;
+                case "cancelled":
+                    setOrderStatus("annulée");
+                    break;
+                case "declined":
+                    setOrderStatus("refusée");
+                    break;
+            }
+        }
+        else {
+            setOrderStatus(order.orderStatus)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language, orderStatus]);
+
     return (
         <div>
             <NavigationBar/>
@@ -108,7 +133,7 @@ export default function ViewSpecificInactiveOrder() {
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
-                            <p>{order.service.serviceName}</p>
+                            <p>{`${getValuesFromJSON(i18n.language, order.service.serviceName)}`}</p>
                         </div>
                         {(order.orderDescription !== null && order.orderDescription !== "") &&
                             <div className="row text-start">
@@ -119,7 +144,7 @@ export default function ViewSpecificInactiveOrder() {
                         <div className="row text-start">
                             <h1>{t("order.orderStatus")}</h1>
                             <p className={"text-capitalize"}>{
-                                order.orderStatus.replace("_", " ").toLowerCase()
+                                orderStatus.replace("_", " ").toLowerCase()
                             }</p>
                         </div>
                     </div>

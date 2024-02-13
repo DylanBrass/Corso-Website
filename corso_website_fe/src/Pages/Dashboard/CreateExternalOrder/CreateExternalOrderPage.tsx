@@ -8,6 +8,7 @@ import swal from "sweetalert";
 import searchIcon from "../../../ressources/images/Search_light.svg"
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function CreateExternalOrderPage() {
 
@@ -304,7 +305,7 @@ function CreateExternalOrderPage() {
                                         allServices.map((service: any) => {
                                             return (
                                                 <option key={service.serviceId}
-                                                        value={service.serviceId}>{service.serviceName}</option>
+                                                        value={service.serviceId}>{getValuesFromJSON(i18n.language, service.serviceName)}</option>
                                             )
                                         })
                                     }

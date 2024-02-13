@@ -9,6 +9,8 @@ import swal from "sweetalert";
 import Edit_light from "../../../ressources/images/Edit_light.svg";
 import plus from "../../../ressources/images/plus-services.svg";
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 
 interface FAQ {
@@ -148,7 +150,9 @@ function ViewAllFaqThroughDashboard() {
                                 <div className="faq-info">
                                     <div className="faq-box-question row w-100 h-100">
                                         <div className="col-6">
-                                            <p className="faq-question">{faq.question}</p>
+                                            <p className="faq-question">
+                                                {getValuesFromJSON(i18n.language, faq.question)}
+                                            </p>
                                         </div>
                                         <div className={"col-2"}/>
                                         <div className={"col-4 text-end"}>
@@ -192,7 +196,9 @@ function ViewAllFaqThroughDashboard() {
                                 </div>
 
                                 <div className="faq-content">
-                                    <p className="faq-message">{faq.answer}</p>
+                                    <p className="faq-message">
+                                        {getValuesFromJSON(i18n.language, faq.answer)}
+                                    </p>
                                 </div>
                             </div>
                         </div>

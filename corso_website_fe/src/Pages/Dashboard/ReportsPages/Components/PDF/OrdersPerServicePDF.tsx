@@ -3,6 +3,8 @@ import ReactPDFChart from "react-pdf-charts";
 import React from "react";
 import {stringToColour} from "../../../../../Services/GenerateReportsService";
 import {customTickFormatter} from "../OrdersPerService";
+import {getValuesFromJSON} from "../../../../../Services/TranslationTools";
+import i18n from "i18next";
 
 export default function OrdersPerServicePDF({ordersPerService, allServices, choice}: any) {
 
@@ -12,7 +14,9 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
 
     console.log(allServices);
 
-    return <ReactPDFChart>
+    return <ReactPDFChart
+        style={{width: "100%", height: "100%"}}
+    >
         <div>
             {choice.includes(1) &&
                 <BarChart data={ordersPerService}
@@ -32,7 +36,7 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
                             return <span style={{
                                 color: "black",
                                 fontWeight: "bold"
-                            }}>{value}</span>
+                            }}>{getValuesFromJSON(i18n.language,value)}</span>
                         }}
                     />
                     {allServices.map((service: any, index: number) => (
@@ -60,7 +64,7 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
                             return <span style={{
                                 color: "black",
                                 fontWeight: "bold"
-                            }}>{value}</span>
+                            }}>{getValuesFromJSON(i18n.language,value)}</span>
                         }}
                     />
                     {allServices.map((service: any, index: number) => (
@@ -88,7 +92,7 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
                                 return <span style={{
                                     color: "black",
                                     fontWeight: "bold"
-                                }}>{value}</span>
+                                }}>{getValuesFromJSON(i18n.language,value)}</span>
                             }}
                     /> {allServices.map((service: any, index: number) => (
                     <Bar key={index} dataKey={service} fill={stringToColour(service)}

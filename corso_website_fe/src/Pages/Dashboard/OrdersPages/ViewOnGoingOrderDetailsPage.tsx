@@ -15,6 +15,8 @@ import {SyncLoader} from "react-spinners";
 import checkToDo from "../../../ressources/images/check_notDone.png";
 import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 function ViewSpecificOrder() {
 
@@ -28,6 +30,7 @@ function ViewSpecificOrder() {
 
     const [reasonForCancellation, setReasonForCancellation] = useState('');
     const [openPopup, setOpenPopup] = useState(false);
+    const [orderStatus, setOrderStatus] = React.useState<string>(order.orderStatus);
 
 
     const getOrder = async () => {
@@ -41,6 +44,7 @@ function ViewSpecificOrder() {
         )
             .then(res => {
                 const order = res.data;
+                setOrderStatus(order.orderStatus);
                 if(order.orderStatus.toUpperCase() === "COMPLETED" || order.orderStatus.toUpperCase() === "CANCELLED" || order.orderStatus.toUpperCase() === "DECLINED") {
                     window.location.href = `/manage/orders/inactive/${orderId}`;
                 }else if (order.orderStatus.toUpperCase() === "PENDING") {
@@ -161,9 +165,6 @@ function ViewSpecificOrder() {
                             swal((t("order.orderCompletedErrorMessage")), "error");
                         }
                     } catch (error) {
-                        console.log(orderId);
-                        console.log(error);
-                        console.log(order.orderStatus);
                         swal(`${t("order.orderCompletedErrorMessage2")} ${order.orderTrackingNumber}.`, `${t("order.orderNoProgression")}`, "error");
                     } finally {
                         setLoading(false);
@@ -179,6 +180,17 @@ function ViewSpecificOrder() {
         window.location.href = '/orders/current';
     }
 
+    useEffect(() => {
+        if(i18n.language === "fr") {
+            if(order.orderStatus.toLowerCase() === "in_progress"){
+                setOrderStatus("en cours");
+            }
+        }
+        else {
+            setOrderStatus(order.orderStatus)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language, orderStatus]);
 
     return (
         <div>
@@ -216,7 +228,7 @@ function ViewSpecificOrder() {
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
-                            <p>{order.service.serviceName}</p>
+                            <p>{`${getValuesFromJSON(i18n.language, order.service.serviceName)}`}</p>
                         </div>
 
                         {(order.orderDescription !== null && order.orderDescription !== "") &&
@@ -228,7 +240,7 @@ function ViewSpecificOrder() {
                         <div className="row text-start">
                             <h1>{t("order.orderStatus")}</h1>
                             <p className={"text-capitalize"}>{
-                                order.orderStatus.replace("_", " ").toLowerCase()
+                                orderStatus.replace("_", " ").toLowerCase()
                             }</p>
                         </div>
                     </div>

@@ -7,6 +7,8 @@ import {useParams} from "react-router-dom";
 import Service from "../../../ressources/Models/Service";
 import engine from '../../../ressources/images/engine.png';
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 function ViewSpecificServiceAdmin() {
 
@@ -70,9 +72,9 @@ function ViewSpecificServiceAdmin() {
                         <div className="view-service-admin-container">
                             <div className="view-service-admin-container-content">
                                 <div className="view-service-admin-container-content-description">
-                                    <h1>{service.serviceName}</h1>
+                                    <h1>{getValuesFromJSON(i18n.language,service.serviceName)}</h1>
                                     <hr></hr>
-                                    <p>{service.serviceDescription}</p>
+                                    <p>{getValuesFromJSON(i18n.language,service.serviceDescription)}</p>
                                 </div>
                                 <div className="view-service-admin-container-content-image">
                                     <img src={service.serviceImage} alt={service.serviceName} className="img-fluid" />

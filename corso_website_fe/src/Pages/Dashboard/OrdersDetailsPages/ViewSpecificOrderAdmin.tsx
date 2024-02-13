@@ -11,6 +11,8 @@ import Order from "../../../ressources/Models/Order";
 import ServiceOrder from "../../../ressources/Models/ServiceOrder";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 function ViewSpecificOrderAdmin() {
 
@@ -175,9 +177,6 @@ function ViewSpecificOrderAdmin() {
 
 
 
-
-
-
     return (
         <div>
             <NavigationBar/>
@@ -210,7 +209,7 @@ function ViewSpecificOrderAdmin() {
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
-                            <p>{order.service.serviceName}</p>
+                            <p>{`${getValuesFromJSON(i18n.language, order.service.serviceName)}`}</p>
                         </div>
                         <div className="row text-start">
                             <h1>Description</h1>

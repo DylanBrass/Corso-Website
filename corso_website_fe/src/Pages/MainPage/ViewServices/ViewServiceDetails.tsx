@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ViewServiceDetails.css';
 import {useTranslation} from "react-i18next";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 
 interface ServiceDetails {
@@ -46,14 +48,16 @@ function ViewServiceDetails() {
         <div className="service-details-container">
             <div className="container">
                 <div className="row">
-                    <h1 className="display-4 title">{serviceDetails.serviceName}</h1>
+                    <h1 className="display-4 title">{
+                        getValuesFromJSON(i18n.language,serviceDetails.serviceName)
+                    }</h1>
                 </div>
                 <div className="row">
                     <div className="col-lg-6 col-md-12">
                         <img src={serviceDetails.serviceImage} alt={`${serviceDetails.serviceName}`} className="img-fluid img" />
                     </div>
                     <div className="col-lg-6 col-md-12 service-details">
-                        <p className="lead">{serviceDetails.serviceDescription}</p>
+                        <p className="lead">{getValuesFromJSON(i18n.language,serviceDetails.serviceDescription)}</p>
                     </div>
                     <div className="custom-row text-center">
                         <button

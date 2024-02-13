@@ -14,6 +14,8 @@ import {useAuth} from "../../../../security/Components/AuthProvider";
 import {fetchTimeByServiceReport, getOneYearAgo} from "../../../../Services/GenerateReportsService";
 import {useTranslation} from "react-i18next";
 import "./Reports.css";
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
+import i18n from "i18next";
 
 const dataWithoutZero = (data:any) => {
     return data.filter((service: any) => service.hours_worked !== 0)
@@ -80,7 +82,7 @@ export default function TimeByService() {
             {" " + t("reports.totalHoursWorked") + " "}
                 {(document.getElementById("start") as HTMLInputElement)?.value} {t("to")} {(document.getElementById("end") as HTMLInputElement)?.value}</h3>
             {diagramType === 0 &&
-                <ResponsiveContainer width="90%" height={600}>
+                <ResponsiveContainer width="90%" height={1000}>
                     <BarChart barGap={10}
                               barSize={20}
                               data={data} style={
@@ -94,13 +96,19 @@ export default function TimeByService() {
                         <CartesianGrid stroke="#ccc"/>
 
                         <XAxis dataKey="serviceName" name={"Service"}
-                               interval={0} angle={-45}
-                               textAnchor="end" height={200}/>
+                               interval={0} angle={-70}
+                               tickFormatter={value => {
+                                   return getValuesFromJSON(i18n.language,value)
+                               }}
+                               textAnchor="end" height={400}/>
                         <YAxis name={t("reports.hoursWorked")}
                                dataKey={"hours_worked"}
                                domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
                         />
-                        <Tooltip cursor={{fill: 'transparent'}}/>
+                        <Tooltip
+                            labelFormatter={(value) => getValuesFromJSON(i18n.language,value)}
+                            formatter={(value, name) => [value + t("reports.totalHours"), name]}
+                            cursor={{fill: 'transparent'}}/>
                     </BarChart>
                 </ResponsiveContainer>
             }
@@ -115,7 +123,7 @@ export default function TimeByService() {
                     <ResponsiveContainer width="95%" height={600}>
                     <PieChart>
                         <Tooltip
-                            formatter={(value, name) => [value + t("reports.totalHours"), name]}
+                            formatter={(value, name) => [value + t("reports.totalHours"), getValuesFromJSON(i18n.language,name)]}
                         />
                         <Pie
                             data={dataWithoutZero(data)}
@@ -127,7 +135,7 @@ export default function TimeByService() {
                                 return <text x={entry.x} y={entry.y} fill="black"
                                              textAnchor={entry.x > entry.cx ? "start" : "end"}
                                              dominantBaseline="central">
-                                    {entry.name}
+                                    {getValuesFromJSON(i18n.language,entry.name)}
                                 </text>
                             }}
                         >

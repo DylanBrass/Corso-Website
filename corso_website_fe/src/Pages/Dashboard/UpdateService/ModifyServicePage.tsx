@@ -6,10 +6,10 @@ import { useAuth } from '../../../security/Components/AuthProvider';
 import NavigationBar from '../../../Components/NavBar/NavigationBar';
 import pen from '../../../ressources/images/pen.svg';
 import { useParams } from 'react-router-dom';
-import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
+import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function ModifyServicePage() {
   const { serviceId } = useParams();
@@ -21,7 +21,6 @@ function ModifyServicePage() {
   const imageFileInputRef = useRef<HTMLInputElement>(null);
 
   const auth = useAuth();
-  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {t} = useTranslation();
 
@@ -67,9 +66,14 @@ function ModifyServicePage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    let serviceNameEnglish = (document.getElementById("serviceName_en") as HTMLInputElement)?.value
+    let serviceNameFrench = (document.getElementById("serviceName_fr") as HTMLInputElement)?.value
+    let serviceDescriptionEnglish = (document.getElementById("serviceDescription_en") as HTMLInputElement)?.value
+    let serviceDescriptionFrench = (document.getElementById("serviceDescription_fr") as HTMLInputElement)?.value
+
     const data = {
-      serviceName,
-      serviceDescription,
+      serviceName: createJSONForLanguages(["fr", "en"], [serviceNameFrench, serviceNameEnglish]),
+      serviceDescription: createJSONForLanguages(["fr", "en"], [serviceDescriptionFrench, serviceDescriptionEnglish]),
       serviceIcon: serviceIconPreview,
       serviceImage: serviceImagePreview,
     };
@@ -92,7 +96,7 @@ function ModifyServicePage() {
 
       if (response.status === 200) {
         await swal((t("alerts.service.serviceModifiedTitle")), (t("alerts.service.serviceModifiedMessage")), 'success');
-        navigate(-2);
+        window.location.href = "/services/";
       }
     } catch (error) {
       // @ts-ignore
@@ -116,23 +120,42 @@ function ModifyServicePage() {
                     <img src={pen} alt="Edit" className="pen-icon" />
                     <input
                         type="text"
-                        id="serviceName"
+                        id="serviceName_en"
                         name="serviceName"
                         placeholder={t("servicesAdminPage.serviceName")}
                         required
-                        value={serviceName}
-                        onChange={(e) => setServiceName(e.target.value)}
+                        defaultValue={getValuesFromJSON("en", serviceName)}
                     />
                   </div>
                   <div className="grid-item input-container">
                     <img src={pen} alt="Edit" className="pen-icon" />
                     <textarea
-                        id="serviceDescription"
+                        id="serviceDescription_en"
                         name="serviceDescription"
                         placeholder="Description"
                         required
-                        value={serviceDescription}
-                        onChange={(e) => setServiceDescription(e.target.value)}
+                        defaultValue={getValuesFromJSON("en", serviceDescription)}
+                    />
+                  </div>
+                  <div className="grid-item input-container">
+                    <img src={pen} alt="Edit" className="pen-icon" />
+                    <input
+                        type="text"
+                        id="serviceName_fr"
+                        name="serviceName"
+                        placeholder={t("servicesAdminPage.serviceName")}
+                        required
+                        defaultValue={getValuesFromJSON("fr", serviceName)}
+                    />
+                  </div>
+                  <div className="grid-item input-container">
+                    <img src={pen} alt="Edit" className="pen-icon" />
+                    <textarea
+                        id="serviceDescription_fr"
+                        name="serviceDescription"
+                        placeholder="Description"
+                        required
+                        defaultValue={getValuesFromJSON("fr", serviceDescription)}
                     />
                   </div>
                 </div>
@@ -200,9 +223,10 @@ function ModifyServicePage() {
               <SyncLoader className={"spinner"} color="#054AEB"/>
             </div>
 
+            {isLoading ? "" :
             <div className="submit-button-container">
               <input type="submit" value={t("save")} className="submit-button"/>
-            </div>
+            </div>}
           </form>
           <div className="custom-row text-center">
             <button

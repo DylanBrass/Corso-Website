@@ -122,7 +122,7 @@ function NavigationBar() {
                                                  className={"d-none d-lg-block"}/>
                                         </Link>
                                         <Nav.Link href={"/profile"} id={"profile-text"}
-                                                  className={"d-block d-lg-none item item-nav-text"}>{t("navigation.profile")}</Nav.Link>
+                                                  className={"d-block d-lg-none item item-nav-text"}>{t("profilePage.profile")}</Nav.Link>
                                     </div>
                                 }
                             </Nav.Item>

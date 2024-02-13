@@ -22,6 +22,8 @@ import {
 import {useAuth} from "../../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
 import "./Reports.css";
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
+import i18n from "i18next";
 
 
 const checkIfDatesAreMoreOrEqualThanTwoMonths = (start: string, end: string) => {
@@ -36,9 +38,6 @@ const checkIfDatesAreMoreOrEqualThanTwoMonths = (start: string, end: string) => 
     //remove two months from the end date
     endDate.setMonth(endDate.getMonth() - 2)
 
-    console.log((endDate))
-    console.log(startDate)
-    console.log(endDate > startDate)
 
 
     return endDate > startDate
@@ -65,7 +64,10 @@ const CustomTooltip = ({active, payload, label}) => {
                 <p className="label">{`${checkIfDatesAreMoreOrEqualThanTwoMonths((document.getElementById("start") as HTMLInputElement).value, (document.getElementById("end") as HTMLInputElement).value) ? label.substring(0, 7) : label}`}</p>
                 {
                     payload.map((service: any, index: number) => (
-                        <p key={index} className="label">{`${service.name}: ${service.value}`}</p>
+
+                        <p key={index}
+                           className="label">{`${getValuesFromJSON(i18n.language, service.name)}: ${service.value}`}</p>
+
                     ))
                 }
             </div>
@@ -110,7 +112,6 @@ export default function OrderPerService() {
 
             }
         ).catch((e: any) => {
-            console.error(e);
             // @ts-ignore
             swal("Error", "Error fetching data: " + e.response.data.message, "error");
             // @ts-ignore
@@ -122,7 +123,6 @@ export default function OrderPerService() {
                 setTotalOrdersPerService(res);
             }
         ).catch((e: any) => {
-            console.error(e);
             // @ts-ignore
             swal("Error", "Error fetching data: " + e.response.data.message, "error");
             // @ts-ignore
@@ -158,8 +158,8 @@ export default function OrderPerService() {
                 </button>
 
                 <h3>{totalOrdersPerService.reduce((a: any, b: any) => a + b.totalOrderRequest, 0)}
-                {" " + t("reports.totalOrdersFrom") + " "}
-                     {(document.getElementById("start") as HTMLInputElement)?.value} {t("to")} {(document.getElementById("end") as HTMLInputElement)?.value}</h3>
+                    {" " + t("reports.totalOrdersFrom") + " "}
+                    {(document.getElementById("start") as HTMLInputElement)?.value} {t("to")} {(document.getElementById("end") as HTMLInputElement)?.value}</h3>
             </center>
 
             {diagramType === 0 &&
@@ -177,7 +177,6 @@ export default function OrderPerService() {
                         />
                         <YAxis
                             domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
-
                         />
                         <Tooltip
                             content={
@@ -194,7 +193,7 @@ export default function OrderPerService() {
                         />
                         {allServices.map((service: any, index: number) => (
                             <Bar key={index} dataKey={service} stackId="a" fill={stringToColour(service)}
-                                 name={service}
+                                 name={getValuesFromJSON(i18n.language, service)}
                             />
                         ))}
                     </BarChart>
@@ -223,7 +222,7 @@ export default function OrderPerService() {
                                     return <span style={{
                                         color: "black",
                                         fontWeight: "bold"
-                                    }}>{value}</span>
+                                    }}>{getValuesFromJSON(i18n.language, value)}</span>
                                 }}
                         />
                         {allServices.map((service: any, index: number) => (
@@ -258,7 +257,7 @@ export default function OrderPerService() {
                                     return <span style={{
                                         color: "black",
                                         fontWeight: "bold"
-                                    }}>{value}</span>
+                                    }}>{getValuesFromJSON(i18n.language, value)}</span>
                                 }}
                         /> {allServices.map((service: any, index: number) => (
                         <Bar key={index} dataKey={service} fill={stringToColour(service)}/>
@@ -268,14 +267,17 @@ export default function OrderPerService() {
 
             }
             {diagramType === 3 &&
-                <ResponsiveContainer width="90%" height={600}>
+                <ResponsiveContainer width="90%" height={1000}>
                     <BarChart data={totalOrdersPerService} barSize={10}
                     >
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="serviceName"
                                angle={-70}
                                textAnchor="end"
-                               height={200}
+                               height={500}
+                               tickFormatter={value => {
+                                   return getValuesFromJSON(i18n.language, value)
+                               }}
                         />
                         <YAxis
                             dataKey={"totalOrderRequest"}
@@ -283,6 +285,7 @@ export default function OrderPerService() {
                             domain={[0, (dataMax: number) => (Math.ceil(dataMax / 10) * 10)]}
                         />
                         <Tooltip
+                            labelFormatter={(value) => getValuesFromJSON(i18n.language, value)}
                         />
                         <Bar dataKey={"totalOrderRequest"} fill={"#000000"}
                              name={t("reports.ordersTotal")}
@@ -297,7 +300,7 @@ export default function OrderPerService() {
                 <ResponsiveContainer width="90%" height={600}>
                     <PieChart>
                         <Tooltip
-                            formatter={(value, name) => [value + t("reports.totalOrders"), name]}
+                            formatter={(value, name) => [value + t("reports.totalOrders"), getValuesFromJSON(i18n.language, name)]}
                         />
                         <Pie dataKey={"totalOrderRequest"} data={totalOrdersWithoutZero(totalOrdersPerService)}
                              nameKey={"serviceName"} cx="50%" cy="50%" outerRadius={200}
@@ -306,7 +309,7 @@ export default function OrderPerService() {
                                  return <text x={entry.x} y={entry.y} fill="black"
                                               textAnchor={entry.x > entry.cx ? "start" : "end"}
                                               dominantBaseline="central">
-                                     {entry.name}
+                                     {getValuesFromJSON(i18n.language, entry.name)}
                                  </text>
                              }}
                         />

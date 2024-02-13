@@ -5,6 +5,8 @@ import {useAuth} from "../../../../security/Components/AuthProvider";
 import './AddGallery.css';
 import templateImg from "../../../../ressources/images/Upload_Image_Preview.png";
 import {useTranslation} from "react-i18next";
+import {createJSONForLanguages} from "../../../../Services/TranslationTools";
+import {SyncLoader} from "react-spinners";
 
 function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
 
@@ -14,12 +16,19 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
     const auth = useAuth();
     const {t} = useTranslation();
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const postNewGallery = (event: any) => {
 
         event.preventDefault();
 
+        setIsLoading(true)
+
+        let englishDesc = (document.getElementById("description_en") as HTMLInputElement)?.value
+        let frenchDesc = (document.getElementById("description_fr") as HTMLInputElement)?.value
+
         axios.post(process.env.REACT_APP_BE_HOST + 'api/v1/corso/galleries/carousel', {
-            description: event.target.description.value,
+            description: createJSONForLanguages(["fr","en"],[frenchDesc,englishDesc]),
             photo: newImagePreview
         }, {
             headers: {
@@ -31,8 +40,10 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                 if (r.status === 201) {
                     // @ts-ignore
                     swal(t("alerts.gallery.galleryCreatedTitle"), (t("alerts.gallery.galleryCreatedMessage")), 'success').then(() => {
-                        (document.getElementById("description") as HTMLInputElement).value = "";
-                            (document.getElementById("image") as HTMLInputElement).value = "";
+                        (document.getElementById("description_en") as HTMLInputElement).value = "";
+                        (document.getElementById("description_fr") as HTMLInputElement).value = "";
+                        (document.getElementById("image") as HTMLInputElement).value = '';
+
                         fetchGalleries();
                     })
 
@@ -44,8 +55,10 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                     // @ts-ignore
                     auth.authError(e.response.status);
                 });
-            });
+            }).finally(() =>
+            setIsLoading(false)
 
+        )
 
     }
 
@@ -58,11 +71,20 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                         <div className={"form-group col-12 col-md-6 add-image-box-left"}
                         >
                             <h3 className={"float-start"}>{t("editGalleryPage.addGallerySection.step")} 1:</h3>
-
-                            <label htmlFor="description">Description</label>
-                            <textarea className={"form-control"} id="description" rows={3}
+                            <br />
+                            <br />
+                            <label htmlFor="description">Description in English</label>
+                            <textarea className={"form-control"} id="description_en" rows={3}
                                       maxLength={120}
-                                      placeholder={t("enterDescription")}/>
+                                      placeholder={"Enter a description in English"}
+                            required/>
+
+                            <br />
+                            <label htmlFor="description">Description en français</label>
+                            <textarea className={"form-control"} id="description_fr" rows={3}
+                                      maxLength={120}
+                                      placeholder={t("Entrez une description en français")}
+                            required/>
                         </div>
                         <div className={"form-group col-12 col-md-6 add-image-box-right"}
                              style={{
@@ -75,6 +97,7 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                                        style={{
                                            display: "none",
                                        }}
+                                       required={true}
                                        accept=".jpg, .jpeg, .png, .svg"
                                        className={"form-control-file"}
                                        onChange={(event) => Cloudinary.handleImageChange(event, setNewImagePreview, 1920, 1080)}
@@ -89,7 +112,13 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                             }
 
                         </div>
+                        {isLoading ? "" :
                         <button type="submit" className={"btn btn-primary w-25 m-auto mb-4 mt-4"}>{t("submitButton")}</button>
+                        }
+
+                        <div className={isLoading ? "d-block spinner-visible text-center" : "d-none"}>
+                            <SyncLoader className={"spinner"} color="#054AEB"/>
+                        </div>
                     </form>
                 </div>
             </div>

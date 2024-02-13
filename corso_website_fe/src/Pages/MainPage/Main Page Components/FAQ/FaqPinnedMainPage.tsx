@@ -6,6 +6,8 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import "./FaqTile.css"
 import arrowImg from "../../../../ressources/images/arrow.svg"
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
+import i18n from "i18next";
 
 function FaqPinnedMainPage() {
 
@@ -63,9 +65,9 @@ function FaqPinnedMainPage() {
                                 // @ts-ignore
                                 id={value.id}
                                 // @ts-ignore
-                                question={value.question}
+                                question={getValuesFromJSON(i18n.language, value.question)}
                                 // @ts-ignore
-                                answer={value.answer}
+                                answer={getValuesFromJSON(i18n.language, value.answer)}
                             />
                         </div>
                     ))}

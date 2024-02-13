@@ -4,6 +4,8 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
+import i18n from "i18next";
 
 interface ImageData {
     galleryId: string;
@@ -90,7 +92,9 @@ function OurPreviousProjects() {
                     }}>
                         <div className="overlay">
                             <h2 className="title-z-stack">{t("mainPage.project")}</h2>
-                            <p className="description-z-stack">{image.description}</p>
+                            <p className="description-z-stack">
+                                {getValuesFromJSON(i18n.language, image.description)}
+                            </p>
                         </div>
                     </div>
                 ))}
