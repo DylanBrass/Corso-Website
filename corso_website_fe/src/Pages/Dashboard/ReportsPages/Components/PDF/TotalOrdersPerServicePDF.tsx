@@ -2,7 +2,7 @@ import ReactPDFChart from "react-pdf-charts";
 import {Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis, YAxis} from "recharts";
 import React from "react";
 import {totalOrdersWithoutZero} from "../OrdersPerService";
-import {getValuesFromJSON} from "../../../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../../../Services/TranslationTools";
 import i18n from "i18next";
 
 export default function TotalOrdersPerServicePDF({totalOrdersPerService, choice}: any) {

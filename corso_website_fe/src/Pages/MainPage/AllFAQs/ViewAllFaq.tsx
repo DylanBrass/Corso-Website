@@ -6,7 +6,7 @@ import {useAuth} from "../../../security/Components/AuthProvider";
 import "./ViewAllFaq.css"
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 function ViewAllFaq() {
     const auth = useAuth()

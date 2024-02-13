@@ -14,7 +14,7 @@ import {useAuth} from "../../../../security/Components/AuthProvider";
 import {fetchTimeByServiceReport, getOneYearAgo} from "../../../../Services/GenerateReportsService";
 import {useTranslation} from "react-i18next";
 import "./Reports.css";
-import {getValuesFromJSON} from "../../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
 import i18n from "i18next";
 
 const dataWithoutZero = (data:any) => {

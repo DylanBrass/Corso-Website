@@ -7,7 +7,7 @@ import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import pen from "../../../ressources/images/pen.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
-import {createJSONForLanguages} from "../../../Services/TranlationTools";
+import {createJSONForLanguages} from "../../../Services/TranslationTools";
 
 
 function AddAFaq() {

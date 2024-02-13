@@ -5,7 +5,7 @@ import {useAuth} from "../../../../security/Components/AuthProvider";
 import './AddGallery.css';
 import templateImg from "../../../../ressources/images/Upload_Image_Preview.png";
 import {useTranslation} from "react-i18next";
-import {createJSONForLanguages} from "../../../../Services/TranlationTools";
+import {createJSONForLanguages} from "../../../../Services/TranslationTools";
 import {SyncLoader} from "react-spinners";
 
 function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {

@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import {SyncLoader} from "react-spinners";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
-import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranlationTools";
+import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function ModifyServicePage() {
   const { serviceId } = useParams();

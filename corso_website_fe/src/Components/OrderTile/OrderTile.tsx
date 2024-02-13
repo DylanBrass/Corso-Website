@@ -4,7 +4,7 @@ import './OrderTile.css';
 import ServiceOrder from "../../ressources/Models/ServiceOrder";
 import {useTranslation} from "react-i18next";
 import i18n from "i18next";
-import {getValuesFromJSON} from "../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../Services/TranslationTools";
 
 export {};
 

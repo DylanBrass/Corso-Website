@@ -18,7 +18,7 @@ import PresentationPage from "./Components/PDF/PresentationPage";
 import TotalOrdersPerServicePDF from "./Components/PDF/TotalOrdersPerServicePDF";
 import {useTranslation} from "react-i18next";
 import i18n from "i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 
 const currentYear = new Date().getFullYear();
 

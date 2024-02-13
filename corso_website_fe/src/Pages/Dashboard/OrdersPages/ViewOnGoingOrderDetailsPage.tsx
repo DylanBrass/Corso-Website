@@ -15,7 +15,7 @@ import {SyncLoader} from "react-spinners";
 import checkToDo from "../../../ressources/images/check_notDone.png";
 import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 function ViewSpecificOrder() {

@@ -3,7 +3,7 @@ import ReactPDFChart from "react-pdf-charts";
 import React from "react";
 import {stringToColour} from "../../../../../Services/GenerateReportsService";
 import {customTickFormatter} from "../OrdersPerService";
-import {getValuesFromJSON} from "../../../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../../../Services/TranslationTools";
 import i18n from "i18next";
 
 export default function OrdersPerServicePDF({ordersPerService, allServices, choice}: any) {

@@ -11,7 +11,7 @@ import {useParams} from "react-router-dom";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import './ViewSpecificInactiveOrder.css';
 import axios from "axios";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 export default function ViewSpecificInactiveOrder() {

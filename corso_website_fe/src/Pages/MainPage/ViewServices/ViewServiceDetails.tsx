@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ViewServiceDetails.css';
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 

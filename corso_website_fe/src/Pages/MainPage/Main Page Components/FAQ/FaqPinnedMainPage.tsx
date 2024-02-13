@@ -6,7 +6,7 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import "./FaqTile.css"
 import arrowImg from "../../../../ressources/images/arrow.svg"
-import {getValuesFromJSON} from "../../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
 import i18n from "i18next";
 
 function FaqPinnedMainPage() {

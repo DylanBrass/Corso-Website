@@ -4,7 +4,7 @@ import './AllServices.css';
 import {useTranslation} from "react-i18next";
 import serviceDetailIcon from '../../../../ressources/images/Sign_in_circle.svg';
 import i18n from "i18next";
-import {getValuesFromJSON} from "../../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../../Services/TranslationTools";
 
 interface Service {
     serviceId: string;

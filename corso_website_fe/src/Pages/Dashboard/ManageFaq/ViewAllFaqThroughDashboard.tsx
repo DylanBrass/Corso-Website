@@ -9,7 +9,7 @@ import swal from "sweetalert";
 import Edit_light from "../../../ressources/images/Edit_light.svg";
 import plus from "../../../ressources/images/plus-services.svg";
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 

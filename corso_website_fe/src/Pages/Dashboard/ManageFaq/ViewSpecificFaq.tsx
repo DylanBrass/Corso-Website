@@ -7,7 +7,7 @@ import swal from "sweetalert";
 import { useAuth } from "../../../security/Components/AuthProvider";
 import "./ViewSpecificFaq.css";
 import {useTranslation} from "react-i18next";
-import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranlationTools";
+import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function ViewFaq() {
     const auth = useAuth();

@@ -11,7 +11,7 @@ import Order from "../../../ressources/Models/Order";
 import ServiceOrder from "../../../ressources/Models/ServiceOrder";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 function ViewSpecificOrderAdmin() {

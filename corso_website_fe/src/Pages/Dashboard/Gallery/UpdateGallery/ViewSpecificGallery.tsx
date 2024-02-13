@@ -11,7 +11,7 @@ import Cloudinary from "../../../../Services/Cloudinary";
 import swal from "sweetalert";
 import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
-import {createJSONForLanguages, getValuesFromJSON} from "../../../../Services/TranlationTools";
+import {createJSONForLanguages, getValuesFromJSON} from "../../../../Services/TranslationTools";
 
 function ViewSpecificGallery() {
 

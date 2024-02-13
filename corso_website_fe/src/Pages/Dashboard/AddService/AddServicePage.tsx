@@ -9,7 +9,7 @@ import {SyncLoader} from "react-spinners";
 import {useNavigate} from "react-router";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
-import {createJSONForLanguages} from "../../../Services/TranlationTools";
+import {createJSONForLanguages} from "../../../Services/TranslationTools";
 
 function AddServicePage() {
     const [serviceIconPreview, setServiceIconPreview] = useState('');

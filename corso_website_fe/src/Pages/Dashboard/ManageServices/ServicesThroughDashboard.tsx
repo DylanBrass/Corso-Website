@@ -7,7 +7,7 @@ import plus from "../../../ressources/images/plus-services.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import swal from "sweetalert";
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 interface Service {

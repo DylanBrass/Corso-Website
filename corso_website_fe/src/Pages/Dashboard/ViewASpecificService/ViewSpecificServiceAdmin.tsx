@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom";
 import Service from "../../../ressources/Models/Service";
 import engine from '../../../ressources/images/engine.png';
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 
 function ViewSpecificServiceAdmin() {

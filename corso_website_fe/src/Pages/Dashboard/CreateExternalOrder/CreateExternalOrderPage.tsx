@@ -8,7 +8,7 @@ import swal from "sweetalert";
 import searchIcon from "../../../ressources/images/Search_light.svg"
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useTranslation} from "react-i18next";
-import {getValuesFromJSON} from "../../../Services/TranlationTools";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function CreateExternalOrderPage() {
 
