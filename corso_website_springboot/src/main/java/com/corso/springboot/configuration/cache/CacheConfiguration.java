@@ -14,7 +14,10 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManagerCustomizer<ConcurrentMapCacheManager> cacheManagerCustomizer() {
-        return cacheManager -> cacheManager.setAllowNullValues(false);
+        return cacheManager -> {
+            cacheManager.setAllowNullValues(false);
+            log.info("Cache manager configured to not allow null values");
+        };
     }
 
 }
