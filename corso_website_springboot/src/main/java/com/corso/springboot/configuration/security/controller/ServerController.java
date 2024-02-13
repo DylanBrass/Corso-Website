@@ -1,31 +1,28 @@
 package com.corso.springboot.configuration.security.controller;
 
+import com.corso.springboot.configuration.cache.CacheTools;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectriqueinc.tech/"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectriqueinc.tech/"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/server")
 public class ServerController {
 
-    @Value("${frontend.url}")
-    private String frontendDomain;
+    private final CacheTools cacheTools;
 
-
-    @RequestMapping(value = "/status",method = RequestMethod.HEAD)
-    public ResponseEntity<Void> connectionVerification()  {
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(frontendDomain)).build();
+    @Scheduled(fixedRate = 12, timeUnit = TimeUnit.HOURS)
+    public void evictAllCaches() {
+        log.info("Evicting all caches");
+        cacheTools.evictAllCaches();
     }
+
 }

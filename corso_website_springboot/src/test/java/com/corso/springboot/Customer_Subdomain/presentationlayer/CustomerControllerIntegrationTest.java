@@ -602,13 +602,13 @@ class CustomerControllerIntegrationTest {
         when(emailService.sendEmail(anyString(), anyString(), anyString(), anyMap())).thenReturn(200);
 
         mockMvc.perform(post(BASE_URI_CUSTOMERS + "/orders/request")
-                .with(csrf())
+                        .with(csrf())
                         .with(oidcLogin().idToken(i -> {
                             i.subject("google|123456789");
                             i.claim("email", "email@email.com");
                         }).authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                        .content("""
                                 {
                                     "serviceId": null,
                                     "orderDescription": null,
