@@ -76,6 +76,7 @@ function OrderTile({ order, action}: { order: Order, action: () => void }) {
             order.orderStatus = order.orderStatus.replace("_", " ").toLowerCase();
             setOrderStatus(order.orderStatus)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, orderStatus])
 
     return (

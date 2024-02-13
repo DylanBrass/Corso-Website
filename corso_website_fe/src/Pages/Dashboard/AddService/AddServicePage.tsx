@@ -12,8 +12,6 @@ import {useTranslation} from "react-i18next";
 import {createJSONForLanguages} from "../../../Services/TranlationTools";
 
 function AddServicePage() {
-    const [serviceName, setServiceName] = useState('');
-    const [serviceDescription, setServiceDescription] = useState('');
     const [serviceIconPreview, setServiceIconPreview] = useState('');
     const [serviceImagePreview, setServiceImagePreview] = useState('');
     const iconFileInputRef = useRef<HTMLInputElement>(null);

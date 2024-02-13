@@ -101,6 +101,7 @@ export default function ViewSpecificInactiveOrder() {
         else {
             setOrderStatus(order.orderStatus)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, orderStatus]);
 
     return (

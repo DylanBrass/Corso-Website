@@ -6,7 +6,6 @@ import { useAuth } from '../../../security/Components/AuthProvider';
 import NavigationBar from '../../../Components/NavBar/NavigationBar';
 import pen from '../../../ressources/images/pen.svg';
 import { useParams } from 'react-router-dom';
-import {useNavigate} from "react-router";
 import {SyncLoader} from "react-spinners";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
@@ -22,7 +21,6 @@ function ModifyServicePage() {
   const imageFileInputRef = useRef<HTMLInputElement>(null);
 
   const auth = useAuth();
-  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {t} = useTranslation();
 

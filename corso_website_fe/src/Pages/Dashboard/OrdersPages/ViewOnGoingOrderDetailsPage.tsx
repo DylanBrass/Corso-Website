@@ -182,13 +182,14 @@ function ViewSpecificOrder() {
 
     useEffect(() => {
         if(i18n.language === "fr") {
-            if(order.orderStatus.toLowerCase() == "in_progress"){
+            if(order.orderStatus.toLowerCase() === "in_progress"){
                 setOrderStatus("en cours");
             }
         }
         else {
             setOrderStatus(order.orderStatus)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, orderStatus]);
 
     return (

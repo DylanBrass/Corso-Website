@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './AddAFaq.css';
 import axios from 'axios';
 import swal from 'sweetalert';

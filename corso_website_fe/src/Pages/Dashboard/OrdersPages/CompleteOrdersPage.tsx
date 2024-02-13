@@ -5,7 +5,6 @@ import CustomPagination from "../../../Components/Pagination";
 import { Order } from "../../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useTranslation} from "react-i18next";
-import i18n from "i18next";
 
 function CompletedOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);

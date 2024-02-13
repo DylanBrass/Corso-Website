@@ -15,7 +15,7 @@ const createJSONForLanguages = (langCodes: string[], texts: string[]) => {
 
 
 const getValuesFromJSON = (key : string,json: any) => {
-    if (json == undefined || json == ""){
+    if (json === undefined || json === ""){
         return json
     }
 
