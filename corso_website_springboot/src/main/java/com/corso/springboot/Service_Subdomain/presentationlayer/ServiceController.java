@@ -86,7 +86,8 @@ public class ServiceController {
             @CacheEvict(value = "service", key = "#serviceId"),
             @CacheEvict(value = "serviceTimeByService", allEntries = true),
             @CacheEvict(value = "totalRequestByService", allEntries = true),
-            @CacheEvict(value = "totalOrdersPerService", allEntries = true)
+            @CacheEvict(value = "totalOrdersPerService", allEntries = true),
+            @CacheEvict(value = "servicesCount", allEntries = true)
     })
     @PatchMapping("/{serviceId}/visibility")
     @PreAuthorize("hasAnyAuthority('Admin')")
