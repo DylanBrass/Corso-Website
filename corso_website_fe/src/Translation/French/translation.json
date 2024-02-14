@@ -85,6 +85,7 @@
 
   "profilePage": {
     "profile": "Profil",
+    "profileInformation": "Informations de profil",
     "profileInformationBlurb": "S'il vous plaît entrer vos informations ci-dessous. Ces informations seront utilisées pour remplir automatiquement le formulaire de commande. Ces informations seront enregistrées et pourront être modifiées à tout moment. Si votre e-mail n'est pas valide, nous utiliserons l'e-mail que vous avez utilisé pour vous inscrire.",
     "noneGiven": "Non fourni",
     "editProfile": "Modifier le profil",
@@ -93,7 +94,9 @@
     "gotAProblemNeedingFixing": "Vous avez un problème à résoudre?",
     "getStartedWithYourNextOrderHere": "Débutez votre prochaine commande ici!",
     "requestOrderButton": "Faire une commande",
-    "deleteInformationButton": "Supprimer les informations"
+    "deleteInformationButton": "Supprimer les informations",
+    "proceedAnyway": "Procéder quand même",
+    "goToProfile": "Aller au profil"
   },
 
   "email": {
@@ -283,7 +286,8 @@
       "profileSuccessAlertMessage": "Veuillez vérifier votre nouvelle adresse e-mail, sinon nous utiliserons celle déjà vérifiée!",
       "profileDeletedSuccessAlertMessage": "Seul votre profil par défaut a été conservé (nom d'utilisateur et courriel) !",
       "noProfileFoundAlertTitle": "Aucun profil trouvé",
-      "noProfileFoundAlertMessage": "Vous n'avez pas encore de profil !"
+      "noProfileFoundAlertMessage": "Vous n'avez pas encore de profil !",
+      "noProfileInformation": "Vous n'avez pas d'informations de profil. Pour une soumission plus rapide, veuillez remplir vos informations de profil avant de demander une commande."
     },
 
     "customerInfo": {
@@ -296,12 +300,14 @@
 
   "load": {
     "loading": "Chargement...",
+    "processing": "Traitement...",
     "sendEmailLoading": "Envoi de l'e-mail...",
     "deletingReview": "Suppression de la critique...",
     "createAccount": "Création du compte...",
     "loadingMessage1": "Cela peut prendre quelques secondes",
     "loadingMessage2": "Veuillez patienter un moment",
-    "loadingMessage3": "Nous informons nos électriciens"
+    "loadingMessage3": "Nous informons nos électriciens",
+    "loadingMessage4": "Veuillez patienter pendant que votre demande est en cours de traitement"
   },
 
   "editGalleryPage": {

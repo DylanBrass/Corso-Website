@@ -85,6 +85,7 @@
 
   "profilePage": {
     "profile": "Profile",
+    "profileInformation": "Profile Information",
     "profileInformationBlurb": "Please enter your information below. This information will be used to fill in the order form automatically. This information will be saved and can be modified at any time. If your email is invalid, we will use the email you used to signup.",
     "noneGiven": "None Given",
     "editProfile": "Edit Profile",
@@ -93,7 +94,9 @@
     "gotAProblemNeedingFixing": "Got a problem needing fixing?",
     "getStartedWithYourNextOrderHere": "Get started with your next order here!",
     "requestOrderButton": "Request Order",
-    "deleteInformationButton": "Delete Information"
+    "deleteInformationButton": "Delete Information",
+    "proceedAnyway": "Proceed Anyway",
+    "goToProfile": "Go to profile"
   },
 
   "email": {
@@ -285,8 +288,10 @@
       "profileSuccessAlertMessage": "Please verify your new email address, otherwise we will use your verified one!",
       "profileDeletedSuccessAlertMessage": "Only your default profile was kept (username and email)!",
       "noProfileFoundAlertTitle": "No Profile Found",
-      "noProfileFoundAlertMessage": "You don't have a profile yet!"
+      "noProfileFoundAlertMessage": "You don't have a profile yet!",
+      "noProfileInformation": "You do not have a profile information. For quicker submission, please fill in your profile information before requesting an order."
     },
+
 
     "customerInfo": {
       "invalidPhoneNumberAlertTitle": "Invalid Phone Number",
@@ -298,12 +303,14 @@
 
   "load": {
     "loading": "Loading...",
+    "processing": "Processing...",
     "sendEmailLoading": "Sending Email...",
     "deletingReview": "Deleting review...",
     "createAccount": "Creating Account...",
     "loadingMessage1": "This may take a few seconds",
     "loadingMessage2": "Please wait a moment",
-    "loadingMessage3": "We are notifying our electricians"
+    "loadingMessage3": "We are notifying our electricians",
+    "loadingMessage4": "Please wait while your request is being processed"
   },
 
   "editGalleryPage": {
