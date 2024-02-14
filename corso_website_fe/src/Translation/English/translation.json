@@ -264,6 +264,7 @@
       "faqNotAddedTitle": "FAQ Not Added"
     },
 
+
     "order": {
       "orderCreatedMessage": "Order created successfully!",
       "orderCreationFailedMessage": "An error occurred while creating the order! \n ",
@@ -278,7 +279,9 @@
       "failedToAcceptOrder": "Failed to accept the order with tracking number",
       "failedToDeclineOrder": "Failed to decline the order with tracking number",
       "failedToCancelOrder": "Failed to cancel the order with tracking number",
-      "noOrdersFound": "No orders found"
+      "noOrdersFound": "No orders found",
+      "missingInformation": "Missing Information",
+      "missingInformationMessage": "Please fill in all required fields before submitting your order."
     },
 
     "profile": {

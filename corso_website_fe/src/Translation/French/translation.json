@@ -261,7 +261,6 @@
       "faqAddedTitle": "FAQ Ajoutée",
       "faqNotAddedTitle": "FAQ non ajoutée"
     },
-
     "order": {
       "orderCreatedMessage": "Commande créée avec succès !",
       "orderCreationFailedMessage": "Échec de la création de la commande ! \n",
@@ -272,13 +271,14 @@
       "orderWithTrackingNumber": "Commande avec numéro de suivi",
       "hasBeenAccepted": "a été acceptée",
       "hasBeenDeclined": "a été refusée",
-      "hasBeenCancelled": "a été annulée",
+      "hasBeenCancelled": "La commande a été annulée",
       "failedToAcceptOrder": "Échec de l'acceptation de la commande avec numéro de suivi",
       "failedToDeclineOrder": "Échec du refus de la commande avec numéro de suivi",
       "failedToCancelOrder": "Échec de l'annulation de la commande avec numéro de suivi",
-      "noOrdersFound": "Aucune commande trouvée"
+      "noOrdersFound": "Aucune commande trouvée",
+      "missingInformation": "Informations manquantes",
+      "missingInformationMessage": "Veuillez remplir tous les champs obligatoires avant de soumettre votre commande."
     },
-
     "profile": {
       "profileCreatedSuccessAlertTitle": "Profil créé",
       "profileUpdatedSuccessAlertTitle": "Profil mis à jour",
