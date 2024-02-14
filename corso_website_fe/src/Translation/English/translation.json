@@ -2,9 +2,10 @@
   "to": "to",
   "delete": "Delete",
   "cancel": "Cancel",
-  "error": "Error",
   "yes": "Yes",
   "no": "No",
+  "confirm": "Confirm",
+  "error": "Error",
   "dueDate": "Due Date",
   "orderDate": "Order Date",
   "navigation": {
@@ -222,6 +223,7 @@
       "carouselUpdatedMessage": "The carousel has been updated successfully!",
       "galleryUpdatedTitle": "Gallery updated!",
       "galleryUpdatedMessage": "The gallery has been updated successfully!"
+
     },
 
     "service": {
@@ -307,7 +309,11 @@
     "edit": "Edit",
     "tip": "Tip!: compatible image types include PNG, SVG",
     "editImagePage": {
-      "editImage": "Edit Image"
+      "editImage": "Edit Image",
+      "galleryDeletedTitle": "Are you sure you want to delete this gallery?",
+      "galleryDeletedMessage": "Once deleted, you will not be able to recover this gallery!",
+      "galleryDeletedSuccessTitle": "Image deleted!"
+
     },
 
     "addGallerySection": {

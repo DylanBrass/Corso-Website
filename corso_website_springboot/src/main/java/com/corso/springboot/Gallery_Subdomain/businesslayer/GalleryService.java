@@ -20,4 +20,6 @@ public interface GalleryService {
     GalleryResponse modifyGallery(String galleryId, GalleryRequest galleryRequest) throws IOException;
 
     GalleryResponse getGalleryById(String galleryId);
+
+    void deleteGalleryById(String galleryId) throws IOException;
 }

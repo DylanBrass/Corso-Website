@@ -22,8 +22,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -180,6 +179,21 @@ class GalleryControllerIntegrationTest {
                     Assertions.assertEquals(5, galleryResponse.getImage_position());
                 });
 
+    }
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void deleteGalleryById_ShouldSucceed() throws Exception {
+        // Arrange
+        String galleryId = "62b068a9-ef01-4bfd-8ee4-437deb43c3f6";
+
+        // Mock the CloudinaryService behavior
+        Mockito.when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public-id");
+
+        mockMvc.perform(delete(BASE_URI_GALLERIES + "/carousel/" + galleryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
     }
 
 }
