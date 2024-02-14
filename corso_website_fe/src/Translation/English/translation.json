@@ -213,7 +213,11 @@
       "emailSentMessage": "The email has been sent successfully!",
       "verifiedEmailMessage": "Your email has been verified!",
       "emailAlreadySent": "Email already sent, please check your inbox, otherwise try again in 15 minutes",
-      "unverifiedEmailMessage": "Your email is not verified yet. Please check your email and click on the link to login into your account."
+      "unverifiedEmailMessage": "Your email is not verified yet. Please check your email and click on the link to login into your account.",
+      "confirmEmail": "Confirm Email",
+      "confirmEmailMessage": "This email {{email}} will be attached to your order. This will be the email that receives update emails. If you wish to proceed with this email, click OK, else click Cancel. If you wish to change this email, please update your profile information.",
+      "unverifiedEmailFound": "Unverified Email Found",
+      "unverifiedEmailFoundMessage": "This email, {{unverifiedEmail}} is not verified. Please verify your email before proceeding. If you wish to proceed anyways, the order will be linked with this email: {{email}}."
     },
 
     "gallery": {

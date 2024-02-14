@@ -90,7 +90,7 @@
     .description-z-stack {
         position: absolute;
         z-index: 2;
-        top: 73%;
+        top: 77%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: white;

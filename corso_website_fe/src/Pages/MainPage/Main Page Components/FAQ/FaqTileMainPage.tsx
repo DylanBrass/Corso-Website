@@ -9,9 +9,9 @@ function FaqTileMainPage(faq: FAQ) {
     return (
         <div className={"faq-tile-box faq-mainPage-container"}>
 
-            <div className={"row  ms-lg-4"}>
-                <div className={"col-10"}>
-                    <div className={"row"}>
+            <div className={""}>
+                <div className={""}>
+                    <div className={""}>
                         <h4>
                             {faq.question}
                         </h4>

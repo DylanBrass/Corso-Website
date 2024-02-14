@@ -33,6 +33,15 @@ function OurPreviousProjects() {
         fetchImages();
     }, []);
 
+    function truncateDescription(description: string, wordLimit: number): string {
+        const wordsArray = description.split(' ');
+        if (wordsArray.length > wordLimit) {
+            return wordsArray.slice(0, wordLimit).join(' ') + '...';
+        } else {
+            return description;
+        }
+    }
+
     const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
@@ -69,15 +78,13 @@ function OurPreviousProjects() {
                 infinite={true}
                 autoPlay={true}
                 autoPlaySpeed={3000}
-                customTransition="all 1"
+                keyBoardControl={true}
+                customTransition="transform 300ms ease-in-out"
                 transitionDuration={500}
-                containerClass="carousel-container"
-                removeArrowOnDeviceType={["tablet", "mobile"]}
-                deviceType={"desktop"}
-                dotListClass="custom-dot-list-style"
-                itemClass="carousel-item-padding-40-px"
                 showDots={true}
-
+                containerClass="carousel-container"
+                itemClass="carousel-item-padding-40-px"
+                dotListClass="custom-dot-list-style"
             >
                 {images.map((image) => (
                     <div key={image.galleryId} className="wrapper" style={{
@@ -93,7 +100,7 @@ function OurPreviousProjects() {
                         <div className="overlay">
                             <h2 className="title-z-stack">{t("mainPage.project")}</h2>
                             <p className="description-z-stack">
-                                {getValuesFromJSON(i18n.language, image.description)}
+                                {truncateDescription( getValuesFromJSON(i18n.language, image.description), 15)}
                             </p>
                         </div>
                     </div>

@@ -212,7 +212,11 @@
       "emailSentMessage": "Un e-mail a été envoyé avec succès !",
       "verifiedEmailMessage": "Votre e-mail a été vérifié avec succès !",
       "emailAlreadySent": "Un email a déjà été envoyé. Veuillez vérifier votre boîte de réception. Sinon, veuillez réessayer dans 15 minutes.",
-      "unverifiedEmailMessage": "Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre e-mail pour un lien de vérification."
+      "unverifiedEmailMessage": "Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre e-mail pour un lien de vérification.",
+      "confirmEmail": "Confirmer l'e-mail",
+      "confirmEmailMessage": "Cet e-mail {{email}} sera associé à votre commande. Il recevra les e-mails de mise à jour. Si vous souhaitez continuer avec cet e-mail, cliquez sur OK, sinon cliquez sur Annuler. Si vous souhaitez changer cet e-mail, veuillez mettre à jour vos informations de profil.",
+      "unverifiedEmailFound": "Un e-mail non vérifié a été trouvé.",
+      "unverifiedEmailFoundMessage": "Cet e-mail, {{unverifiedEmail}}, n'est pas vérifié. Veuillez vérifier votre e-mail avant de continuer. Si vous souhaitez tout de même procéder, la commande sera liée à cet e-mail : {{email}}."
     },
 
     "gallery": {
