@@ -242,5 +242,51 @@ class GalleryServiceImplUnitTest {
         assertThrows(GalleryNotFoundException.class, () -> galleryService.getGalleryById(invalidId));
     }
 
+    @Test
+    public void deleteGalleryByInvalidId_ThrowsNotFoundException() throws IOException {
+        //arrange
+        String invalidId = "invalidId";
+        Mockito.when(galleryRepository.getGalleryByGalleryId_GalleryId(invalidId)).thenReturn(null);
+
+        //act & assert
+        assertThrows(GalleryNotFoundException.class, () -> galleryService.deleteGalleryById(invalidId));
+    }
+
+    @Test
+    public void deleteGallery_ShouldSucceed() throws IOException {
+
+        // Mock dependencies
+        GalleryRepository galleryRepository = Mockito.mock(GalleryRepository.class);
+        CloudinaryService cloudinaryService = Mockito.mock(CloudinaryService.class);
+        GalleryResponseMapper galleryResponseMapper = Mockito.mock(GalleryResponseMapper.class);
+        GalleryRequestMapper galleryRequestMapper = Mockito.mock(GalleryRequestMapper.class);
+
+        GalleryServiceImpl galleryService = new GalleryServiceImpl(galleryRepository, galleryResponseMapper, galleryRequestMapper, cloudinaryService);
+
+        GalleryIdentifier galleryIdentifier = new GalleryIdentifier();
+        //arrange
+        Gallery gallery = Gallery.builder()
+                .galleryId(galleryIdentifier)
+                .description("Test Gallery 1")
+                .photo("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .image_position(1)
+                .build();
+
+        GalleryResponse galleryResponse = GalleryResponse.builder()
+                .galleryId("62b068a9-ef01-4bfd-8ee4-437deb43c3f6")
+                .description("Test Gallery 1")
+                .photo("https://res.cloudinary.com/dszhbawv7/image/upload/v1701099721/test-image-carousel-5_jhydhp.jpg")
+                .image_position(1)
+                .build();
+
+        Mockito.when(galleryRepository.getGalleryByGalleryId_GalleryId(Mockito.anyString())).thenReturn(gallery);
+        Mockito.when(cloudinaryService.extractPublicIdFromCloudinaryUrl(Mockito.anyString())).thenReturn("public_id");
+        Mockito.when(galleryRepository.save(Mockito.any(Gallery.class))).thenReturn(gallery);
+        Mockito.when(galleryResponseMapper.toGalleryResponse(Mockito.any(Gallery.class))).thenReturn(galleryResponse);
+
+        galleryService.deleteGalleryById("someGalleryId");
+
+        Mockito.verify(cloudinaryService).deleteCloudinaryImage(Mockito.anyString());
+    }
 
 }

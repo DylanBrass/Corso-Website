@@ -12,6 +12,7 @@ import swal from "sweetalert";
 import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../../Services/TranslationTools";
+import TrashDelete from "../../../../ressources/images/Trash_light.svg";
 
 function ViewSpecificGallery() {
 
@@ -77,7 +78,7 @@ function ViewSpecificGallery() {
 
             setIsLoading(false)
 
-            if(response.status === 200) {
+            if (response.status === 200) {
                 await swal(t("alerts.gallery.galleryUpdatedTitle"), t("alerts.gallery.galleryUpdatedMessage"), "success");
                 window.location.href = "/carousel/order";
             }
@@ -89,10 +90,69 @@ function ViewSpecificGallery() {
         }
 
     }
+
+
+
+    const deleteGallery = async () => {
+        const confirmDelete = await swal({
+            title: (t("editGalleryPage.editImagePage.galleryDeletedTitle")) + "?",
+            text: (t("editGalleryPage.editImagePage.galleryDeletedMessage")),
+            icon: "warning",
+            buttons: [(t("cancel")), (t("delete"))],
+            dangerMode: true,
+        });
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        try {
+            const response = await axios.delete(
+                `${process.env.REACT_APP_BE_HOST}api/v1/corso/galleries/carousel/${galleryId}`,
+                {
+                    headers: {
+                        // @ts-ignore
+                        'X-XSRF-TOKEN': auth.getXsrfToken(),
+                    },
+                }
+            );
+
+            if (response.status === 204) {
+                await swal({
+                    title: (t("editGalleryPage.editImagePage.galleryDeletedSuccessTitle")),
+                    icon: "success",
+                });
+
+                window.location.href = "/carousel/order";
+            } else {
+                console.error("Unexpected response status:", response.status);
+                swal(t("alerts.error"), 'error');
+            }
+        } catch (error) {
+            console.error("Error deleting gallery:", error);
+
+            // @ts-ignore
+            if (error.response && error.response.data && error.response.data.message) {
+                // @ts-ignore
+                swal(t("alerts.error"), error.response.data.message, 'error');
+            } else {
+                swal(t("alerts.error"), 'error');
+            }
+        }
+    }
+
+
     return (
         <div>
             <NavigationBar/>
             <div className={"manage-gallery-wrapper p-5"}>
+
+                <div className={"d-flex justify-content-center"}>
+                <button className="delete-galleryImage-btn" onClick={deleteGallery}>
+                    <img src={TrashDelete} alt="DeleteTrash"/>
+                </button>
+                </div>
+
                 <h1 className={"text-center mb-4"}>{t("editGalleryPage.editGallery")}</h1>
                 <form onSubmit={updateGallery} className={"w-75 m-auto"}>
                     <div className={"d-flex row"}>

@@ -43,6 +43,7 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                         (document.getElementById("description_en") as HTMLInputElement).value = "";
                         (document.getElementById("description_fr") as HTMLInputElement).value = "";
                         (document.getElementById("image") as HTMLInputElement).value = '';
+                        setNewImagePreview(templateImg);
 
                         fetchGalleries();
                     })
@@ -100,7 +101,8 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                                        required={true}
                                        accept=".jpg, .jpeg, .png, .svg"
                                        className={"form-control-file"}
-                                       onChange={(event) => Cloudinary.handleImageChange(event, setNewImagePreview, 1920, 1080)}
+                                       onChange={(event) =>
+                                           Cloudinary.handleImageChange(event, setNewImagePreview, 1920, 1080)}
                                        id="image"/>
                             </label>
                             <p>{t("editGalleryPage.tip")}</p>

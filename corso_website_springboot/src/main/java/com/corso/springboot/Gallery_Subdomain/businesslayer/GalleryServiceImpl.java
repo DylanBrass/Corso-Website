@@ -16,12 +16,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GalleryServiceImpl implements GalleryService{
+public class GalleryServiceImpl implements GalleryService {
 
     private final GalleryRepository galleryRepository;
 
@@ -40,26 +41,28 @@ public class GalleryServiceImpl implements GalleryService{
 
     @Override
     public List<GalleryResponse> updateGalleryOrder(List<GalleryOrderUpdateRequest> updateRequests) {
-            List<Gallery> updatedGalleries = new ArrayList<>();
+        List<Gallery> updatedGalleries = new ArrayList<>();
 
-            for (GalleryOrderUpdateRequest updateRequest : updateRequests) {
-                Gallery galleryToUpdate = galleryRepository.getGalleryByGalleryId_GalleryId(updateRequest.getGalleryId());
+        for (GalleryOrderUpdateRequest updateRequest : updateRequests) {
+            Gallery galleryToUpdate = galleryRepository.getGalleryByGalleryId_GalleryId(updateRequest.getGalleryId());
 
-                if (galleryToUpdate == null){
-                    throw new GalleryNotFoundException("Gallery not found");
-                }
-
-                Gallery updatedGallery = galleryRequestMapper.toGalleryOrderUpdateRequest(updateRequest);
-
-                updatedGallery.setId(galleryToUpdate.getId());
-                updatedGallery.setGalleryId(galleryToUpdate.getGalleryId());
-                updatedGallery.setDescription(galleryToUpdate.getDescription());
-                updatedGallery.setPhoto(galleryToUpdate.getPhoto());
-                updatedGallery.setImage_position(updateRequest.getImage_position());
-                updatedGalleries.add(updatedGallery);
+            if (galleryToUpdate == null) {
+                throw new GalleryNotFoundException("Gallery not found");
             }
 
-            return galleryResponseMapper.toGalleriesResponse(galleryRepository.saveAll(updatedGalleries));
+            Gallery updatedGallery = galleryRequestMapper.toGalleryOrderUpdateRequest(updateRequest);
+
+            updatedGallery.setId(galleryToUpdate.getId());
+            updatedGallery.setGalleryId(galleryToUpdate.getGalleryId());
+            updatedGallery.setDescription(galleryToUpdate.getDescription());
+            updatedGallery.setPhoto(galleryToUpdate.getPhoto());
+            updatedGallery.setImage_position(updateRequest.getImage_position());
+            updatedGalleries.add(updatedGallery);
+        }
+
+        galleryRepository.saveAll(updatedGalleries);
+
+        return galleryResponseMapper.toGalleriesResponse(reorderGallery());
     }
 
     @Override
@@ -83,31 +86,35 @@ public class GalleryServiceImpl implements GalleryService{
 
         gallery.setImage_position(getGalleryCount() + 1);
 
-        return galleryResponseMapper.toGalleryResponse(galleryRepository.save(gallery));
+        GalleryResponse galleryResponse = galleryResponseMapper.toGalleryResponse(galleryRepository.save(gallery));
+
+        reorderGallery();
+
+        return galleryResponse;
     }
 
     @Override
-    public GalleryResponse modifyGallery(String galleryId, GalleryRequest galleryRequest) throws IOException {
+    public GalleryResponse modifyGallery(String galleryId, GalleryRequest galleryRequest) {
         try {
             Gallery existingGallery = galleryRepository.getGalleryByGalleryId_GalleryId(galleryId);
 
-            if (existingGallery == null){
+            if (existingGallery == null) {
                 throw new GalleryNotFoundException("Gallery not found");
             }
 
             existingGallery.setDescription(galleryRequest.getDescription());
 
-            if (galleryRequest.getPhoto() != null){
+            if (galleryRequest.getPhoto() != null) {
                 String existingPhotoPublicId = cloudinary.extractPublicIdFromCloudinaryUrl(existingGallery.getPhoto());
 
-                if(!galleryRequest.getPhoto().contains("https://") && !galleryRequest.getPhoto().contains("http://")){
+                if (!galleryRequest.getPhoto().contains("https://") && !galleryRequest.getPhoto().contains("http://")) {
                     existingGallery.setPhoto(cloudinary.updateCloudinaryImage(existingPhotoPublicId, galleryRequest.getPhoto()));
                 }
             }
 
             return galleryResponseMapper.toGalleryResponse(galleryRepository.save(existingGallery));
-        }
-        catch (IOException e){
+
+        } catch (IOException e) {
             throw new RuntimeException("Failed to update images", e);
         }
     }
@@ -115,11 +122,44 @@ public class GalleryServiceImpl implements GalleryService{
     @Override
     public GalleryResponse getGalleryById(String galleryId) {
         Gallery gallery = galleryRepository.getGalleryByGalleryId_GalleryId(galleryId);
-        
-        if (gallery == null){
+
+        if (gallery == null) {
             throw new GalleryNotFoundException("Gallery not found");
         }
 
         return galleryResponseMapper.toGalleryResponse(gallery);
     }
+
+    @Override
+    public void deleteGalleryById(String galleryId) throws IOException {
+        Gallery gallery = galleryRepository.getGalleryByGalleryId_GalleryId(galleryId);
+
+        if (gallery == null) {
+            throw new GalleryNotFoundException("Gallery not found");
+        }
+
+        String publicId = cloudinary.extractPublicIdFromCloudinaryUrl(gallery.getPhoto());
+
+        cloudinary.deleteCloudinaryImage(publicId);
+
+        galleryRepository.delete(gallery);
+
+        reorderGallery();
+    }
+
+
+    public List<Gallery> reorderGallery() {
+        List<Gallery> updatedGalleries = new ArrayList<>();
+
+        galleryRepository.findAll().stream()
+                .sorted(Comparator.comparingInt(Gallery::getImage_position))
+                .forEach(gallery -> {
+                    gallery.setImage_position(updatedGalleries.size() + 1);
+                    updatedGalleries.add(gallery);
+                });
+
+
+        return galleryRepository.saveAll(updatedGalleries);
+    }
+
 }

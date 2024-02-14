@@ -66,4 +66,12 @@ public class GalleryController {
         return ResponseEntity.status(HttpStatus.OK).body(galleryService.getGalleryById(galleryId));
     }
 
+    @CacheEvict(value = "gallery", allEntries = true)
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @DeleteMapping("/carousel/{galleryId}")
+    public ResponseEntity<Void> deleteGalleryById(@PathVariable String galleryId) throws IOException {
+        galleryService.deleteGalleryById(galleryId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

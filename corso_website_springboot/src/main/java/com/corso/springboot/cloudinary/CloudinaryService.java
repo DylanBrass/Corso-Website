@@ -78,7 +78,22 @@ public class CloudinaryService {
         }
     }
 
+    public String deleteCloudinaryImage(String publicId) throws IOException {
+        try {
 
+            // Deletes the image from Cloudinary
+            @SuppressWarnings("rawtypes")
+            Map deleteResult = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            String deletedUrl = (String) deleteResult.get("result");
 
+            if (deletedUrl == null || deletedUrl.isEmpty()) {
+                throw new IllegalStateException(deletedUrl + "Failed to delete the picture from Cloudinary.");
+            }
+
+            return deletedUrl;
+        } catch (IOException e) {
+            throw new IOException("Error while deleting the image from Cloudinary.", e);
+        }
+    }
 }
 

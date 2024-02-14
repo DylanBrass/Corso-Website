@@ -5,6 +5,7 @@
   "error": "Erreur",
   "yes": "Oui",
   "no": "Non",
+  "confirm": "Confirmer",
   "dueDate": "Date d'échéance",
   "orderDate": "Date de la commande",
   "navigation": {
@@ -306,7 +307,11 @@
     "edit": "Modifier",
     "tip": "Astuce : les types d'images compatibles comprennent PNG et SVG.",
     "editImagePage": {
-      "editImage": "Modifier l'image"
+      "editImage": "Modifier l'image",
+      "galleryDeletedTitle": "Êtes-vous sûr de vouloir supprimer cette image ?",
+      "galleryDeletedMessage": "Après la suppression, cette image ne sera plus visible dans la galerie et sur la page principale !",
+      "galleryDeletedSuccessTitle": "Image supprimée!"
+
     },
 
     "addGallerySection": {

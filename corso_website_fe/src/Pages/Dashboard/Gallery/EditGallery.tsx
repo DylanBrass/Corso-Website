@@ -243,6 +243,9 @@ function EditGallery() {
         }
     }, [isSubmitClicked, images]);
 
+
+
+
     return (
         <div>
             <NavigationBar/>
