@@ -31,18 +31,41 @@ function ReviewPinned() {
     }, [auth]);
 
     const responsive = {
-        superLargeDesktop: { breakpoint: { max: 4000, min: 0 }, items: 1 },
-        desktop: { breakpoint: { max: 4000, min: 0 }, items: 1 },
-        tablet: { breakpoint: { max: 4000, min: 0 }, items: 1 },
-        mobile: { breakpoint: { max: 4000, min: 0 }, items: 1 }
+        superLargeDesktop: {
+            breakpoint: { max: 4000, min: 3000 },
+            items: 1
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 1
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 1
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1
+        }
     };
 
 
     return (
-        <div className="container review-mainPage-container">
-            <div className="row align-items-center">
+        <div style={{padding: "10px 10%"}} className="review-mainPage-container">
+            <div style={{gap: "30px"}} className="d-lg-flex flex-lg-nowrap flex-row justify-content-center align-items-center">
+
+                {/* Title and Description */}
+                <div className="testimonialHeaderContainer">
+                    <div className="border-review mb-5">
+                        <h1 className="title-reviews">{t("mainPage.testimonials")}</h1>
+                        <p className="subtitle-reviews">
+                            {t("mainPage.testimonialsBlurb")}
+                        </p>
+                    </div>
+                </div>
+
                 {/* Carousel */}
-                <div className="col-lg-6 d-flex justify-content-center">
+                <div className="w-lg-50">
                     <Carousel
                         responsive={responsive}
                         infinite={true}
@@ -51,6 +74,7 @@ function ReviewPinned() {
                         keyBoardControl={true}
                         customTransition="transform 300ms ease-in-out"
                         transitionDuration={500}
+                        arrows={false}
                         showDots={true}
                         containerClass="carousel-container"
                         dotListClass="custom-dot-list-style"
@@ -76,15 +100,7 @@ function ReviewPinned() {
                         ))}
                     </Carousel>
                 </div>
-                {/* Title and Description */}
-                <div className="col-lg-6">
-                    <div className="border-review mb-5">
-                        <h1 className="title-reviews">{t("mainPage.testimonials")}</h1>
-                        <p className="subtitle-reviews">
-                            {t("mainPage.testimonialsBlurb")}
-                        </p>
-                    </div>
-                </div>
+
             </div>
         </div>
     );

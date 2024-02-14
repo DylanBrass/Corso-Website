@@ -43,6 +43,15 @@ function AllServices() {
         }
     }
 
+    function truncateTitle(title: string, wordLimit: number): string {
+        const wordsArray = title.split(' ');
+        if (wordsArray.length > wordLimit) {
+            return wordsArray.slice(0, wordLimit).join(' ') + '...';
+        } else {
+            return title;
+        }
+    }
+
     function handleImageClick(serviceId: string) {
         window.location.href = `/ViewServiceDetails/${serviceId}`;
     }
@@ -71,20 +80,22 @@ function AllServices() {
                 <div className="row">
                     {services.map((service) => (
                         <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={service.serviceId}>
-                            <div className="service-card">
+                            <div className="service-card ">
                                 <div className="service-icon-container">
                                     <img src={service.serviceIcon} alt={`${service.serviceName} icon`} className="service-icon" />
                                 </div>
                                 <div className="service-info">
-                                    <h2 className="service-name">{`${getValuesFromJSON(i18n.language, service.serviceName)}`}</h2>
-                                    <p className="service-description">
-                                        {truncateDescription(`${getValuesFromJSON(i18n.language, service.serviceDescription)}`, 20)}
-                                    </p>
-                                    <div className="row align-items-end justify-content-end mt-5">
-                                        <div className="col-6 d-flex justify-content-start align-items-center">
+                                    <div className="service-info-text-area">
+                                        <h2 className="service-name">{truncateTitle(`${getValuesFromJSON(i18n.language, service.serviceName)}`, 4)}</h2>
+                                        <p className="service-description">
+                                            {truncateDescription(`${getValuesFromJSON(i18n.language, service.serviceDescription)}`, 15)}
+                                        </p>
+                                    </div>
+                                    <div className="row align-items-end justify-content-end justify-content-space-between flex-end mt-5">
+                                        <div className="col-8 d-flex justify-content-start">
                                             <p className="learn-more-text">{t("mainPage.learnMore")}</p>
                                         </div>
-                                        <div className="col-6 d-flex justify-content-end align-items-center">
+                                        <div className="col-4 d-flex justify-content-end">
                                             <img
                                                 src={serviceDetailIcon}
                                                 alt={`${service.serviceName} icon`}

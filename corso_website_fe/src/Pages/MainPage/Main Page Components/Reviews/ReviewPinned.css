@@ -1,12 +1,10 @@
 .review-mainPage-component {
-    width: 100%;
+
     .review-container {
         border-radius: 15px;
         background: #FFF;
         box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        padding: 20px;
-        margin: 2rem;
+        padding: 50px 50px;
     }
 
     .review-title {
@@ -19,6 +17,7 @@
         letter-spacing: 0.8px;
         text-transform: uppercase;
         text-align: left;
+        margin: 0;
     }
 
     .review-description {
@@ -65,13 +64,37 @@
     }
 
     .carousel-container {
-        width: 100%;
-        max-width: 550px;
+        width: 500px;
+        height: 350px;
         margin: auto;
+
+
+
     }
 
+    @media only screen and (max-width: 600px) {
+        .carousel-container {
+            width: 300px;
+            height: 350px;
+            margin: auto;
+        }
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .testimonialHeaderContainer{
+            width: 100%
+        }
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .testimonialHeaderContainer{
+            width: 45%
+        }
+    }
 
 }
+
+
 
 .custom-dot-list-style {
     text-align: center;

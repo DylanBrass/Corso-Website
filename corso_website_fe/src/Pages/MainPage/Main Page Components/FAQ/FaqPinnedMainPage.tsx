@@ -39,21 +39,21 @@ function FaqPinnedMainPage() {
     }, []);
 
     return (
-        <div className="faq-container faq-mainPage-container">
-            <div className="row">
-                <div className="col-md-5">
+        <div className="faq-container faq-mainPage-container d-flex justify-content-center">
+            <div style={{gap: "30px"}} className="d-flex flex-row flex-wrap justify-content-center flex-lg-nowrap">
+                <div className="custom-w-small">
                     <h1 className="faq-title-mainPage">{t("faq")}</h1>
                     <p className="faq-blurb">{t("mainPage.faqBlurb")}</p>
-                    <div className="row flex-row">
-                        <div className="col-8">
+                    <div className="d-flex flex-row gap-3">
+                        <div className="">
                             <a href="/faq" className="view-more-faq">{t("mainPage.viewMoreFaq")}</a>
                         </div>
-                        <div className="col-4 align-items-left">
+                        <div className="">
                             <img src={arrowImg} alt="arrow" className="arrow"/>
                         </div>
                     </div>
                 </div>
-                <div className="col-md-7">
+                <div className="w-50 visible-m-up">
                     {preferredFaq.map((value, index) => (
                         <div
                             // @ts-ignore
@@ -72,7 +72,6 @@ function FaqPinnedMainPage() {
                         </div>
                     ))}
                 </div>
-
             </div>
         </div>
     );

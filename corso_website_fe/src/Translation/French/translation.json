@@ -85,6 +85,7 @@
 
   "profilePage": {
     "profile": "Profil",
+    "profileInformation": "Informations de profil",
     "profileInformationBlurb": "S'il vous plaît entrer vos informations ci-dessous. Ces informations seront utilisées pour remplir automatiquement le formulaire de commande. Ces informations seront enregistrées et pourront être modifiées à tout moment. Si votre e-mail n'est pas valide, nous utiliserons l'e-mail que vous avez utilisé pour vous inscrire.",
     "noneGiven": "Non fourni",
     "editProfile": "Modifier le profil",
@@ -93,7 +94,9 @@
     "gotAProblemNeedingFixing": "Vous avez un problème à résoudre?",
     "getStartedWithYourNextOrderHere": "Débutez votre prochaine commande ici!",
     "requestOrderButton": "Faire une commande",
-    "deleteInformationButton": "Supprimer les informations"
+    "deleteInformationButton": "Supprimer les informations",
+    "proceedAnyway": "Procéder quand même",
+    "goToProfile": "Aller au profil"
   },
 
   "email": {
@@ -212,7 +215,11 @@
       "emailSentMessage": "Un e-mail a été envoyé avec succès !",
       "verifiedEmailMessage": "Votre e-mail a été vérifié avec succès !",
       "emailAlreadySent": "Un email a déjà été envoyé. Veuillez vérifier votre boîte de réception. Sinon, veuillez réessayer dans 15 minutes.",
-      "unverifiedEmailMessage": "Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre e-mail pour un lien de vérification."
+      "unverifiedEmailMessage": "Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre e-mail pour un lien de vérification.",
+      "confirmEmail": "Confirmer l'e-mail",
+      "confirmEmailMessage": "Cet e-mail {{email}} sera associé à votre commande. Il recevra les e-mails de mise à jour. Si vous souhaitez continuer avec cet e-mail, cliquez sur OK, sinon cliquez sur Annuler. Si vous souhaitez changer cet e-mail, veuillez mettre à jour vos informations de profil.",
+      "unverifiedEmailFound": "Un e-mail non vérifié a été trouvé.",
+      "unverifiedEmailFoundMessage": "Cet e-mail, {{unverifiedEmail}}, n'est pas vérifié. Veuillez vérifier votre e-mail avant de continuer. Si vous souhaitez tout de même procéder, la commande sera liée à cet e-mail : {{email}}."
     },
 
     "gallery": {
@@ -254,7 +261,6 @@
       "faqAddedTitle": "FAQ Ajoutée",
       "faqNotAddedTitle": "FAQ non ajoutée"
     },
-
     "order": {
       "orderCreatedMessage": "Commande créée avec succès !",
       "orderCreationFailedMessage": "Échec de la création de la commande ! \n",
@@ -265,13 +271,14 @@
       "orderWithTrackingNumber": "Commande avec numéro de suivi",
       "hasBeenAccepted": "a été acceptée",
       "hasBeenDeclined": "a été refusée",
-      "hasBeenCancelled": "a été annulée",
+      "hasBeenCancelled": "La commande a été annulée",
       "failedToAcceptOrder": "Échec de l'acceptation de la commande avec numéro de suivi",
       "failedToDeclineOrder": "Échec du refus de la commande avec numéro de suivi",
       "failedToCancelOrder": "Échec de l'annulation de la commande avec numéro de suivi",
-      "noOrdersFound": "Aucune commande trouvée"
+      "noOrdersFound": "Aucune commande trouvée",
+      "missingInformation": "Informations manquantes",
+      "missingInformationMessage": "Veuillez remplir tous les champs obligatoires avant de soumettre votre commande."
     },
-
     "profile": {
       "profileCreatedSuccessAlertTitle": "Profil créé",
       "profileUpdatedSuccessAlertTitle": "Profil mis à jour",
@@ -279,7 +286,8 @@
       "profileSuccessAlertMessage": "Veuillez vérifier votre nouvelle adresse e-mail, sinon nous utiliserons celle déjà vérifiée!",
       "profileDeletedSuccessAlertMessage": "Seul votre profil par défaut a été conservé (nom d'utilisateur et courriel) !",
       "noProfileFoundAlertTitle": "Aucun profil trouvé",
-      "noProfileFoundAlertMessage": "Vous n'avez pas encore de profil !"
+      "noProfileFoundAlertMessage": "Vous n'avez pas encore de profil !",
+      "noProfileInformation": "Vous n'avez pas d'informations de profil. Pour une soumission plus rapide, veuillez remplir vos informations de profil avant de demander une commande."
     },
 
     "customerInfo": {
@@ -292,12 +300,14 @@
 
   "load": {
     "loading": "Chargement...",
+    "processing": "Traitement...",
     "sendEmailLoading": "Envoi de l'e-mail...",
     "deletingReview": "Suppression de la critique...",
     "createAccount": "Création du compte...",
     "loadingMessage1": "Cela peut prendre quelques secondes",
     "loadingMessage2": "Veuillez patienter un moment",
-    "loadingMessage3": "Nous informons nos électriciens"
+    "loadingMessage3": "Nous informons nos électriciens",
+    "loadingMessage4": "Veuillez patienter pendant que votre demande est en cours de traitement"
   },
 
   "editGalleryPage": {

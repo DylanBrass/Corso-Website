@@ -28,14 +28,6 @@ function BannerMainPageAnonymous({image}) {
                                 }}>
                             {t("banner.registerNow")}
                         </button>
-                        <button className={"banner-btn mb-4"}
-                                style={{marginLeft: "10px"}}
-                                onClick={() => {
-                                    //like to request an order
-                                    //window.location.href = process.env.REACT_APP_BE_HOST + ""
-                                }}>
-                            {t("banner.requestNow")}
-                        </button>
                     </div>
 
 

@@ -7,6 +7,8 @@ import Cookies from "js-cookie";
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useTranslation} from "react-i18next";
 import './RequestOrderCustomer.css';
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
 
 function RequestOrder() {
     const {t} = useTranslation("translation");
@@ -79,11 +81,11 @@ function RequestOrder() {
                 )
             } else {
                 swal({
-                    title: "Profile Information",
-                    text: `You do not have a profile information. For quicker submission, please fill in your profile information before requesting an order.`,
+                    title: t("profilePage.profileInformation"),
+                    text: t("alerts.profile.noProfileInformation"),
                     icon: "warning",
                     // @ts-ignore
-                    buttons: ["Proceed anyway", "Go to profile"]
+                    buttons: [t("profilePage.proceedAnyway"), t("profilePage.goToProfile")]
                 }).then((willProceed) => {
                     if (willProceed) {
                         window.location.href = "/profile/edit";
@@ -92,12 +94,12 @@ function RequestOrder() {
                 document.getElementById("customerFullName")!.setAttribute("value", Cookies.get("username")!);
             }
         }).catch(e => {
-             swal({
-                    title: "Profile Information",
-                    text: `You do not have a profile information. For quicker submission, please fill in your profile information before requesting an order.`,
+                swal({
+                    title: t("profilePage.profileInformation"),
+                    text: t("alerts.profile.noProfileInformation"),
                     icon: "warning",
                     // @ts-ignore
-                    buttons: ["Proceed anyway", "Go to profile"]
+                    buttons: [t("profilePage.proceedAnyway"), t("profilePage.goToProfile")]
                 }).then((willProceed) => {
                     if (willProceed) {
                         window.location.href = "/profile/edit";
@@ -150,8 +152,8 @@ function RequestOrder() {
     const requestOrder = () => {
         if (isVerified) {
             swal({
-                title: "Confirm Email",
-                text: `This email ${email} will be attached to your order. This will be the email that receives update emails. If you wish to proceed with this email, click OK, else click Cancel. If you wish to change this email, please update your profile information.`,
+                title: t("alerts.email.confirmEmail"),
+                text: t("alerts.email.confirmEmailMessage", {email: email}),
                 icon: "info",
                 // @ts-ignore
                 buttons: true,
@@ -160,13 +162,13 @@ function RequestOrder() {
                     if (willProceed) {
                         submitOrderRequest();
                     } else {
-                        swal("Cancelled", "Your order request has been cancelled.", "error");
+                        swal(t("alerts.order.cancelledOrderTitle"), t("alerts.order.hasBeenCancelled"), "error");
                     }
                 });
         } else {
             swal({
-                title: "Unverified Email Found",
-                text: `This email, ${unverifiedEmail} is not verified. Please verify your email before proceeding. If you wish to proceed anyways, the order will be linked with this email: ${email}.`,
+                title: t("alerts.email.unverifiedEmailFound"),
+                text: t("alerts.email.unverifiedEmailFoundMessage", {unverifiedEmail: unverifiedEmail, email: email}),
                 icon: "warning",
                 // @ts-ignore
                 buttons: true,
@@ -175,18 +177,17 @@ function RequestOrder() {
                 if (willProceed) {
                     submitOrderRequest();
                 } else {
-                    swal("Cancelled", "Your order request has been cancelled.", "error");
+                    swal(t("alerts.order.cancelledOrderTitle"), t("alerts.order.hasBeenCancelled"), "error");
                 }
             });
         }
     };
 
     const submitOrderRequest = () => {
-        // Show a loading message
         swal({
             className: "", content: undefined, dangerMode: false,
-            title: "Processing...",
-            text: "Please wait while your request is being processed.",
+            title: t("load.processing"),
+            text: t("load.loadingMessage4"),
             icon: "info",
             // @ts-ignore
             buttons: false,
@@ -208,7 +209,7 @@ function RequestOrder() {
             || !customerAddress.trim() || !customerPostalCode.trim() || !customerCity.trim()
             || !customerDueDate.trim()
         ) {
-            swal("Missing Information", "Please fill in all required fields before submitting your order.", "warning");
+            swal(t("alerts.order.missingInformation"), t("alerts.order.missingInformationMessage"), "warning");
             return;
         }
 
@@ -233,7 +234,7 @@ function RequestOrder() {
         })
             .then(response => {
                 if (response.status === 201) {
-                    swal("Success!", "Order created successfully!", "success").then(() => {
+                    swal(t("alerts.success"), t("alerts.order.orderCreatedMessage"), "success").then(() => {
                         window.location.href = "/";
                     });
                 }
@@ -291,8 +292,8 @@ function RequestOrder() {
                                                 {allServices.map((service) => (
                                                     // @ts-ignore
                                                     <option key={service.serviceId} value={service.serviceId}>
-                                                        {// @ts-ignore
-                                                            service.serviceName}
+                                                        { // @ts-ignore
+                                                            getValuesFromJSON(i18n.language, service.serviceName)}
                                                     </option>
                                                 ))}
                                             </select>

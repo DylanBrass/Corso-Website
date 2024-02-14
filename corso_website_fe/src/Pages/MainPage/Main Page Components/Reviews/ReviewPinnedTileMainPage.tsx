@@ -46,7 +46,7 @@ function ReviewsPinnedTileMainPage(reviews: Reviews) {
                         {filledStars}
                         {emptyStars}
                     </div>
-                    <p className={"review-description"}>{reviews.message}</p>
+                    <p style={{marginTop : "20px"}} className="review-description">{reviews.message}</p>
                 </div>
             </div>
         </div>

@@ -25,7 +25,9 @@
         background: #FFF;
         box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
         padding: 3rem 2rem;
-        min-height: 400px;
+        min-height: 470px;
+        max-height: 470px;
+
         width: 95%;
 
     }
@@ -47,6 +49,11 @@
         font-weight: 300;
         line-height: normal;
         min-height: 50px;
+        max-height: 500px;
+    }
+
+    .service-info-text-area{
+        height:190px;
     }
 
     .learn-more-text{
