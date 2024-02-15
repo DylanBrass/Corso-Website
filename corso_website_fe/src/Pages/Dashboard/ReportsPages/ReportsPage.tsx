@@ -36,7 +36,7 @@ export default function ReportsPage() {
             <h1 className={"text-center"}>{t("reports.reports")}</h1>
             <div>
                 <center>
-                    <button className="diagram-btn" onClick={() => {
+                    <button className="btn-style" onClick={() => {
                         window.location.href = "/reports/make-pdf";
                     }}>{t("reports.makePDF")}</button>
                     <Dropdown
@@ -65,16 +65,6 @@ export default function ReportsPage() {
 
                 {selectedReport === "select" && <h1 className={"text-center"}>{t("reports.selectReport")}</h1>}
 
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
 

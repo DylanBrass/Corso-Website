@@ -14,6 +14,7 @@ import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 function ViewSpecificOrderAdmin() {
 
@@ -224,10 +225,10 @@ function ViewSpecificOrderAdmin() {
                     </div>
                     <div className="col-lg-6 col-md-12">
                         <div className="row">
-                            <button className={"accept-button"} onClick={acceptStatus}>{t("accept")}</button>
+                            <button className={"btn-style-green accept-button"} onClick={acceptStatus}>{t("accept")}</button>
                         </div>
                         <div className="row">
-                            <button className={"decline-button"} onClick={() => setOpenPopup(true)}>{t("decline")}</button>
+                            <button className={"btn-style-red decline-button"} onClick={() => setOpenPopup(true)}>{t("decline")}</button>
                             <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
                                 <div className="popup-box">
                                 {loading &&
@@ -253,7 +254,7 @@ function ViewSpecificOrderAdmin() {
                         </div>
                         <div className="row">
 
-                            <Popup trigger={<button className={"email-button"}>{t("emailClient")}</button>} modal>
+                            <Popup trigger={<button className={"btn-style email-button"}>{t("emailClient")}</button>} modal>
                                 <div className="popup-box">
                                     {loading &&
                                         <div className={"spinner-box text-center"}>

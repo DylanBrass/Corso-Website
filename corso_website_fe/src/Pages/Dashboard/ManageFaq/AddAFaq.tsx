@@ -9,6 +9,9 @@ import {useAuth} from "../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages} from "../../../Services/TranslationTools";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
+
 
 
 function AddAFaq() {
@@ -140,7 +143,7 @@ function AddAFaq() {
                         </div>
                     </div>
                     <div className="submit-button-container">
-                        <button type="submit" className="submit-button">
+                        <button type="submit" className="btn-style">
                             {t("faqsAdminPage.addFAQ")}
                         </button>
                     </div>

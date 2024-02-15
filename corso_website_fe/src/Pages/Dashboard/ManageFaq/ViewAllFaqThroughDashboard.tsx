@@ -12,6 +12,8 @@ import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 
 interface FAQ {
@@ -133,6 +135,11 @@ function ViewAllFaqThroughDashboard() {
 
                     <img src={plus} alt={"Add FAQ"} className={"goToFAQBtn"} onClick={goToaddFaq}/>
 
+                <div className="submission">
+                    <button onClick={handleSubmitViewableFaqs} className="btn-style">
+                        {t("faqsAdminPage.saveViewableFAQs")}
+                    </button>
+                </div>
                 <div className="row">
                     <div className="col-12">
                     {showMoreThanThreeMessage || showLessThanThreeMessage ? (
@@ -210,11 +217,6 @@ function ViewAllFaqThroughDashboard() {
                             </div>
                         </div>
                     ))}
-                </div>
-                <div className="submission">
-                    <button onClick={handleSubmitViewableFaqs} className="save-viewable-faqs-button">
-                        {t("faqsAdminPage.saveViewableFAQs")}
-                    </button>
                 </div>
             </div>
         </div>

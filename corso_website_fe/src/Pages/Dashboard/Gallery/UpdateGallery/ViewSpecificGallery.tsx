@@ -14,6 +14,7 @@ import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../../Services/TranslationTools";
 import TrashDelete from "../../../../ressources/images/Trash_light.svg";
 import BackButton from "../../../../Components/BackButton";
+import '../../../globalStyling/globalStyling.css';
 
 function ViewSpecificGallery() {
 
@@ -154,7 +155,7 @@ function ViewSpecificGallery() {
             <div className={"manage-gallery-wrapper p-5"}>
 
                 <div className={"d-flex justify-content-center"}>
-                <button className="delete-galleryImage-btn" onClick={deleteGallery}>
+                <button className="btn-style-red" onClick={deleteGallery}>
                     <img src={TrashDelete} alt="DeleteTrash"/>
                 </button>
                 </div>
@@ -195,7 +196,7 @@ function ViewSpecificGallery() {
 
                     </div>
                     <div className={"row"}>
-                        <label id={"button-for-file"} className={"m-auto mt-4"} htmlFor="image">Image
+                        <label id={"button-for-file"} className={" m-auto mt-4"} htmlFor="image">Image
                             <input type="file"
                                    style={{
                                        display: "none",
@@ -215,7 +216,7 @@ function ViewSpecificGallery() {
                     </div>
                     <div className={"row"}>
                         {isLoading ? "" :
-                        <button className={"btn btn-primary m-auto w-50"} type={"submit"} value={"Update"}>
+                        <button className={"btn btn-style m-auto w-50"} type={"submit"} value={"Update"}>
                             {t("update")}
                         </button>}
                     </div>

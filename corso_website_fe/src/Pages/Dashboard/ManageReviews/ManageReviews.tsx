@@ -13,6 +13,7 @@ import {PuffLoader} from 'react-spinners';
 import {Bounce, toast, ToastContainer} from "react-toastify";
 import {useTranslation} from "react-i18next";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 
 class Reviews {

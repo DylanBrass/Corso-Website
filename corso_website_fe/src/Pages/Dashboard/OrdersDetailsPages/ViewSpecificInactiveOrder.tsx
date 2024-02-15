@@ -14,6 +14,7 @@ import axios from "axios";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 export default function ViewSpecificInactiveOrder() {
     const {t} = useTranslation();
@@ -210,7 +211,7 @@ export default function ViewSpecificInactiveOrder() {
                             </div>
                             <div className={"row"}>
                                 <div className={"col-12"}>
-                                    <button className={"m-4 float-end customer-interactions-btn p-2"} onClick={() => {
+                                    <button className={"m-4 float-end btn-style-red p-2"} onClick={() => {
                                         // @ts-ignore
                                         swal((t("inactiveOrders.warning")), {
                                             buttons: {

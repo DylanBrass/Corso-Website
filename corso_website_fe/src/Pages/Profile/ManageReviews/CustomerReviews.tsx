@@ -6,6 +6,7 @@ import './CustomerReviews.css';
 import {useTranslation} from "react-i18next";
 import swal from "sweetalert";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 interface Review {
     reviewId: string;
@@ -34,7 +35,8 @@ function CustomerReviews() {
             }
         };
 
-        fetchReviews();
+        fetchReviews().then(() => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [t]);
 
     const handleNoReview = () => {

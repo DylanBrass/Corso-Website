@@ -9,6 +9,8 @@ import "./ViewSpecificFaq.css";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 function ViewFaq() {
     const auth = useAuth();
@@ -93,7 +95,7 @@ function ViewFaq() {
                 <div>
                     <div className="container view-faq-admin-container">
                         <div className={"faq-button-container"}>
-                            <button className="specific-trash-faq-img" onClick={deleteFaq}>
+                            <button className="btn-style-red" onClick={deleteFaq}>
                                 <img src={Trash_light} alt="Trash light"/>
                             </button>
                         </div>
@@ -135,7 +137,7 @@ function ViewFaq() {
                             />
                         </div>
                         <div className={"faq-button-container"}>
-                            <button className={"save-faq-button"} onClick={saveFaq}>
+                            <button className={"mt-2 btn-style"} onClick={saveFaq}>
                                 {t("save")}
                             </button>
                         </div>

@@ -8,43 +8,23 @@
         outline: none;
         cursor: pointer;
 
-        color: #000;
         text-align: center;
-        font-family: Nunito;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 200;
-        line-height: normal;
-        text-transform: uppercase;
         width: 35%;
 
-        &:hover{
-            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-        }
-
-        &:active{
-            transform: translateY(4px);
-        }
     }
 
     .email-button {
-        border-radius: 30px;
-        background: #B5BEDC;
         margin: 4vh auto;
         padding: 20px 20px 20px 20px;
     }
 
     .accept-button {
-        border-radius: 30px;
-        background-color: #C1EBB7;
         margin: 4vh auto auto;
         padding: 20px 20px 20px 20px;
 
     }
 
     .decline-button {
-        border-radius: 30px;
-        background: #E1ADAD;
         margin: 4vh auto auto;
         padding: 20px 20px 20px 20px;
 

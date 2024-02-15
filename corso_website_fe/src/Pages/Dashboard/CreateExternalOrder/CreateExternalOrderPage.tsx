@@ -10,6 +10,8 @@ import {usePlacesWidget} from "react-google-autocomplete";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 function CreateExternalOrderPage() {
 
@@ -213,7 +215,7 @@ function CreateExternalOrderPage() {
                         />
                         <input required name={"search-value"} id={"search-value"} type="text"
                                placeholder={t("userOptions.searchForUser")}/>
-                        <button type={"submit"}>
+                        <button type={"submit"} className={"btn-style"}>
                             <img src={searchIcon} alt={"Search"}/>
                         </button>
 
