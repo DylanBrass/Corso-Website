@@ -8,10 +8,11 @@ import {usePlacesWidget} from "react-google-autocomplete";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import swal from "sweetalert";
 import {useNavigate} from "react-router";
-
+import '../../globalStyling/globalStyling.css';
 import './UpdateOrder.css'
 import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function UpdateOrder() {
 
@@ -144,10 +145,15 @@ function UpdateOrder() {
         })
     }
 
+    const backButtonHref = "/orders/" + order.orderId;
 
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className={"update-order-customer-box px-5"}>
                 <h1>{t("order.updateOrder")}</h1>
                 <h2>{t("order.orderId")}: #{order.orderTrackingNumber}</h2>
@@ -244,12 +250,7 @@ function UpdateOrder() {
                         </div>
 
 
-                        <button type="submit" className={isLoading ? "d-none" : ""} style={{
-                            borderRadius: "50px",
-                            background: " #064BEC",
-                            color: "#FFF",
-                            fontFamily: "Nunito",
-                            fontSize: "20px",
+                        <button type="submit" className={ isLoading ? "d-none btn-style" : "btn-style"} style={{
                             padding: "10px 30px",
                         }}>
                             {t("order.updateOrder")}

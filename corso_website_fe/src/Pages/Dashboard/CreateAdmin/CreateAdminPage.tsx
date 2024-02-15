@@ -7,6 +7,7 @@ import swal from "sweetalert";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 
 
@@ -100,18 +101,12 @@ function CreateAdminPage() {
                                         </div>
                                         <div className="row" style={{
                                             margin: "auto",
-                                            width: "50%",
+                                            width: "70%",
                                             marginTop: "20px",
                                             marginBottom: "120px"
                                         }}>
-                                                <button className="btn btn-primary" type="submit" style={{
-                                                    borderRadius: "50px",
-                                                    background:" #064BEC",
-                                                    color: "#FFF",
-                                                    fontFamily: "Nunito",
-                                                    fontSize: "20px",
-                                                    fontWeight: "700"
-                                                }}>{t("createAdmin.addAdmin")}</button>
+                                                <button className="btn-style" type="submit">
+                                                    {t("createAdmin.addAdmin")}</button>
                                         </div>
                                     </div>
                                 </form>

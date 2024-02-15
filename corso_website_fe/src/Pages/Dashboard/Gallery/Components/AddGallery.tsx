@@ -7,6 +7,7 @@ import templateImg from "../../../../ressources/images/Upload_Image_Preview.png"
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages} from "../../../../Services/TranslationTools";
 import {SyncLoader} from "react-spinners";
+import '../../../globalStyling/globalStyling.css';
 
 function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
 
@@ -115,7 +116,7 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
 
                         </div>
                         {isLoading ? "" :
-                        <button type="submit" className={"btn btn-primary w-25 m-auto mb-4 mt-4"}>{t("submitButton")}</button>
+                        <button type="submit" className={"btn btn-style w-25 m-auto mb-4 mt-4"}>{t("submitButton")}</button>
                         }
 
                         <div className={isLoading ? "d-block spinner-visible text-center" : "d-none"}>

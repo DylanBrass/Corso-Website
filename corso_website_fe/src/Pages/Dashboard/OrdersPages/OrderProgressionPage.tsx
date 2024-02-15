@@ -14,6 +14,7 @@ import {useTranslation} from "react-i18next";
 import BackButton from "../../../Components/BackButton";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import '../../globalStyling/globalStyling.css';
 
 
 function OrderProgressionPage() {
@@ -450,7 +451,7 @@ function OrderProgressionPage() {
                                 {!updatingOrder && !loading && (
 
                                     <button
-                                        className="cancel-orderProgression-btn"
+                                        className="btn-style cancel-orderProgression-btn"
                                         type="button"
                                         disabled={updatingOrder || loading}
                                         onClick={cancelBtn}>
@@ -463,7 +464,7 @@ function OrderProgressionPage() {
                             <div className={"updateOrderBtn-divClass"}>
                                 {!updatingOrder && !loading && (
                                     <button
-                                        className="update-orderProgression-btn"
+                                        className="btn-style-green update-orderProgression-btn"
                                         onClick={(e) => updateOrderProgression(e, order.orderId, notes, order.hoursWorked)}
                                         name="updateOrderButton"
                                         type="submit"

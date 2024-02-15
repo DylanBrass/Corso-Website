@@ -18,6 +18,8 @@ import {toast} from "react-toastify";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
 import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 function ViewSpecificOrder() {
 
@@ -316,7 +318,7 @@ function ViewSpecificOrder() {
                             <div className={"col-12"}>
 
                                 {!loading && (
-                                    <button className={"m-4 float-end complete-order-btn p-2"} onClick={completeOrder}
+                                    <button className={"m-4 float-end btn-style-green p-2"} onClick={completeOrder}
                                             id="completeOrderBtn"
                                             disabled={orderCompleted}>{t("order.completeOrder")}</button>
                                 )}
@@ -326,16 +328,8 @@ function ViewSpecificOrder() {
 
                             </div>
 
-
-
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end edit-order-btn p-2"} onClick={goToEditOrder}>{t("order.editOrder")}</button>
-                            </div>
-
-
-
-                            <div className={"col-12"}>
-                                <button className={"m-4 float-end cancel-order-btn p-2"}
+                                <button className={"m-4 float-end btn-style-red p-2"}
                                         onClick={() => setOpenPopup(true)}>{t("order.cancelOrderButton")}
                                 </button>
                                 <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
@@ -362,6 +356,10 @@ function ViewSpecificOrder() {
                                     </div>
                                 </Popup>
 
+                            </div>
+
+                            <div className={"col-12"}>
+                                <button className={"m-4 float-end btn-style p-2"} onClick={goToEditOrder}>{t("order.editOrder")}</button>
                             </div>
 
                         </div>

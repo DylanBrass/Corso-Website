@@ -16,7 +16,7 @@
 .updateOrderBtn-divClass {
     display: flex;
     margin-right: 10%;
-    margin-left: 20%;
+    margin-left: 10%;
     margin-top:3.5%;
 }
 
@@ -29,20 +29,12 @@
 .update-orderProgression-btn,
 .cancel-orderProgression-btn {
     flex: 1;
-    border-radius: 15px;
-    background: #C1EBB7;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
     cursor: pointer;
     border: none;
     outline: none;
     margin-top: 5%;
 }
 
-.cancel-orderProgression-btn {
-    background: #D9D9D9;
-}
 
 .hours-worked-container {
     display: flex;
