@@ -5,13 +5,15 @@ participant "Profile Page" as ODashB
 
 participant "CreateOrderPage" as COP
 
-participant "orderRequest : OrderRequest" as Orq
+participant "orderRequestCustomer : OrderRequestCustomer" as Orq
 
 participant "CustomerController" as Oc
 
 participant "orderResponse : OrderResponse" as Orr
 
 participant "OrderService" as Os
+
+participant "EmailService" as EmailService
 
 participant "order : Order" as O
 
@@ -24,6 +26,7 @@ participant "Database" as Db
 participant "OrderResponseMapper" as OresM
 
 participant "OrderRequestMapper" as OreqM
+
 
 
 opt
@@ -54,18 +57,21 @@ activate O
 
 O -> Os : order : Order
 
+
+
+Os -> EmailService : sendEmail(String recipient, String subject, String template, Map<String, String> parameters)
+activate EmailService
+EmailService --> Os
+deactivate EmailService
+
+Os -> EmailService : sendEmailToAdmins(String subject, String template, Map<String, String> parameters)
+activate EmailService
+EmailService --> Os
+deactivate EmailService
+
 Os -> Orep: save(order)
 deactivate O
-
-Os -> EmailService : sendEmail(order.getCustomerEmail(), subject, OrderRequestConfirmation, parameters)
-activate EmailService
-EmailService --> Os
-deactivate EmailService
-
-Os -> EmailService : sendEmailToAdmins("An Order Has Been Requested", "OrderRequestConfirmationAdmins", parameters)
-activate EmailService
-EmailService --> Os
-deactivate EmailService
+activate Orep
 
 Orep -> Db: INSERT INTO orders (details) VALUES (:details);
 activate Db
