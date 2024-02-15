@@ -1,6 +1,6 @@
 
 .btn-style{
-    color: white;
+    color: white !important;
     border: none;
     padding: 10px 50px;
     text-align: center;
