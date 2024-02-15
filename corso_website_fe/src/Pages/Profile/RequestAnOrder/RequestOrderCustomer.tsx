@@ -9,6 +9,8 @@ import {useTranslation} from "react-i18next";
 import './RequestOrderCustomer.css';
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import '../../globalStyling/globalStyling.css';
+import BackButton from "../../../Components/BackButton";
 
 function RequestOrder() {
     const {t} = useTranslation("translation");
@@ -245,9 +247,15 @@ function RequestOrder() {
             });
     };
 
+    const backButtonHref = "/";
+
     return (
         <>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
             <div className={"create-order-customer-container"}>
                 <div className="container text-center mt-4 mb-4">
                     <div className="row">

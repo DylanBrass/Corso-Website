@@ -15,6 +15,7 @@ import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import {CCarousel, CCarouselItem} from "@coreui/react";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function ViewSpecificOrder() {
 
@@ -107,9 +108,15 @@ function ViewSpecificOrder() {
         setShowCancelOrderModal(!showCancelOrderModal);
     }
 
+    const backButtonHref = "/";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
             <div className="container specific-order">
                 <div className="row">
                     <h1 className="display-4 title text-center" id={"title"}>{t("order.order")} #{order.orderTrackingNumber}</h1>
@@ -287,16 +294,6 @@ function ViewSpecificOrder() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/profile/orders";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

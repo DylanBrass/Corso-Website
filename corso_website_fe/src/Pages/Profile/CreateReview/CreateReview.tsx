@@ -8,6 +8,7 @@ import logo from "../../../ressources/images/customcolor_text-logoname_transpare
 import './CreateReview.css';
 import Cookies from "js-cookie";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function CreateReview() {
 
@@ -71,12 +72,18 @@ function CreateReview() {
 
     }, []);
 
+    const backButtonHref = "/profile/reviews";
+
     return (
         <div className={"create-review-page"}>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className={"create-review-page-content"}>
                 <div className={"create-review-page-header"}>
-                    <h1>{t("reviews.leavePrivateReviewTitle")}</h1>
+                    <h1 className={"title"}>{t("reviews.leavePrivateReviewTitle")}</h1>
                     <h3>{t("reviews.leavePrivateReviewBlurb")}</h3>
                 </div>
                 <div className={"add-review-box"}>

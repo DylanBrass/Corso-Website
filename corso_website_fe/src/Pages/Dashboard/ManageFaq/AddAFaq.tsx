@@ -8,6 +8,7 @@ import pen from "../../../ressources/images/pen.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
 
 
 function AddAFaq() {
@@ -68,9 +69,15 @@ function AddAFaq() {
         }
     };
 
+    const backButtonHref = "/manage/faqs";
+
     return (
         <div>
             <NavigationBar />
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className="add-a-faq">
                 <div className="add-a-faq-title">{t("faqsAdminPage.addFAQ")}</div>
                 <form onSubmit={addAFaq}>
@@ -140,16 +147,6 @@ function AddAFaq() {
                 </form>
             </div>
             <br />
-            <div className={"text-center"}>
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/manage/faqs";
-                    }}
-                >
-                    {t("back")}
-                </button>
-            </div>
         </div>
     );
 }

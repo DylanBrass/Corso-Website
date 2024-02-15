@@ -9,6 +9,7 @@ import swal from "sweetalert";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 interface Service {
     serviceId: string;
@@ -87,9 +88,15 @@ function ServicesThroughDashboard(){
         }
     };
 
+    const backButtonHref = "/dashboard";
+
     return(
         <>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             {error && <div className="row"><div className="col-12"><p className="error">{t("alerts.error")}: {error}</p></div></div>}
             <div className="service-container">
                 <h1>{t("servicesAdminPage.allServices")}</h1>
@@ -110,16 +117,6 @@ function ServicesThroughDashboard(){
                             updateServiceStatus={updateServiceStatus}
                         />
                     ))}
-                </div>
-                <div className="custom-row text-center">
-                    <button
-                        className="back-btn"
-                        onClick={() => {
-                            window.location.href = "/dashboard";
-                        }}
-                    >
-                        {t("back")}
-                    </button>
                 </div>
             </div>
         </>

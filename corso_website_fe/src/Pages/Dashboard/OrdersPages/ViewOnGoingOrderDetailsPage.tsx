@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 function ViewSpecificOrder() {
 
@@ -192,9 +193,15 @@ function ViewSpecificOrder() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, orderStatus]);
 
+    const backButtonHref = "/dashboard";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="container specific-order">
                 <div className="row">
                     <h1 className="display-4 title text-center"
@@ -360,16 +367,6 @@ function ViewSpecificOrder() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/orders/current";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

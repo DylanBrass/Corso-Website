@@ -9,6 +9,7 @@ import AddGallery from "./Components/AddGallery";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 interface ImageData {
     galleryId: string;
@@ -243,12 +244,15 @@ function EditGallery() {
         }
     }, [isSubmitClicked, images]);
 
-
-
+    const backButtonHref = "/dashboard";
 
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="gallery-container">
                 <h1>{t("editGalleryPage.editGallery")}</h1>
                 <div className={"overflow-scroll w-100"}>
@@ -286,16 +290,6 @@ function EditGallery() {
             <AddGallery
                 fetchGalleries={fetchImages}
             />
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
-            </div>
         </div>
     );
 }

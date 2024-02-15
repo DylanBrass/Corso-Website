@@ -1,0 +1,135 @@
+
+.btn-style{
+    color: white;
+    border: none;
+    padding: 10px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 15px;
+    background: #445ca4;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+    &:hover{
+        background: #445ca4;
+        color: white;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &:active{
+        background: #445ca4;
+        color: white;
+        transform: translateY(4px);
+    }
+
+}
+
+
+.btn-style-green{
+    color: black;
+    border: none;
+    padding: 10px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 15px;
+    background: #d4d4d4;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+    &:hover{
+        background: #a4e567;
+        color: white;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &:active{
+        background: #a4e567;
+        color: white;
+        transform: translateY(4px);
+    }
+
+}
+
+.btn-style-red{
+    color: black;
+    border: none;
+    padding: 10px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 15px;
+    background: #d4d4d4;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+    &:hover{
+        background: #d02828;
+        color: white;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &:active{
+        background: #d02828;
+        color: white;
+        transform: translateY(4px);
+    }
+
+}
+
+.btn-style-yellow{
+    color: black;
+    border: none;
+    padding: 10px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 15px;
+    background: #d4d4d4;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+    &:hover{
+        background: rgba(251, 227, 75, 0.76);
+        color: black;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &:active{
+        background: rgba(251, 227, 75, 0.76);
+        color: black;
+        transform: translateY(4px);
+    }
+
+}
+
+.back-btn-title{
+    color: #4058A6;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.title {
+    color: #24252A;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 70px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+    text-align: center;
+}
+

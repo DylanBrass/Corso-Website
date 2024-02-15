@@ -10,6 +10,7 @@ import {SyncLoader} from "react-spinners";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
 
 function ModifyServicePage() {
   const { serviceId } = useParams();
@@ -107,9 +108,14 @@ function ModifyServicePage() {
     }
   };
 
+    const backButtonHref = "/adminServices/" + serviceId;
   return (
       <>
         <NavigationBar />
+        <BackButton
+            link={backButtonHref}
+            text={ t("back")}
+        />
         <div className="modify-service-page">
           <h1 className="modify-service">{t("servicesAdminPage.editService")}</h1>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -228,16 +234,6 @@ function ModifyServicePage() {
               <input type="submit" value={t("save")} className="submit-button"/>
             </div>}
           </form>
-          <div className="custom-row text-center">
-            <button
-                className="back-btn"
-                onClick={() => {
-                  window.location.href = "/adminServices/" + serviceId;
-                }}
-            >
-              {t("back")}
-            </button>
-          </div>
         </div>
       </>
   );

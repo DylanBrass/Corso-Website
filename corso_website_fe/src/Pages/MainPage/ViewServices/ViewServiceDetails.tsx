@@ -5,6 +5,7 @@ import './ViewServiceDetails.css';
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 
 interface ServiceDetails {
@@ -44,11 +45,17 @@ function ViewServiceDetails() {
         return <div>{t("load.loading")}</div>;
     }
 
+    const backButtonHref = "/";
+
     return (
         <div className="service-details-container">
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
             <div className="container">
                 <div className="row">
-                    <h1 className="display-4 title">{
+                    <h1 className="display-4 service-details-title-mainPage">{
                         getValuesFromJSON(i18n.language,serviceDetails.serviceName)
                     }</h1>
                 </div>
@@ -58,16 +65,6 @@ function ViewServiceDetails() {
                     </div>
                     <div className="col-lg-6 col-md-12 service-details">
                         <p className="lead">{getValuesFromJSON(i18n.language,serviceDetails.serviceDescription)}</p>
-                    </div>
-                    <div className="custom-row text-center">
-                        <button
-                            className="back-btn"
-                            onClick={() => {
-                                window.location.href = "/";
-                            }}
-                        >
-                            {t("back")}
-                        </button>
                     </div>
                 </div>
             </div>

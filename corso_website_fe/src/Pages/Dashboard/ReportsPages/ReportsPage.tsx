@@ -6,6 +6,7 @@ import Dropdown from "../../../Components/Dropdown/droptown";
 import OrdersPerMonth from "./Components/OrdersPerMonth";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "../../../security/Components/AuthProvider";
+import BackButton from "../../../Components/BackButton";
 
 export default function ReportsPage() {
 
@@ -23,9 +24,15 @@ export default function ReportsPage() {
         // eslint-disable-next-line
     }, []);
 
+    const backButtonHref = "/dashboard";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <h1 className={"text-center"}>{t("reports.reports")}</h1>
             <div>
                 <center>

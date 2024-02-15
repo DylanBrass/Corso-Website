@@ -9,6 +9,7 @@ import searchIcon from "../../../ressources/images/Search_light.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import "./AllOrdersPage.css"
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function AllOrdersPage() {
 
@@ -233,9 +234,15 @@ function AllOrdersPage() {
 
     }
 
+    const backButtonHref = "/dashboard";
+
     return (
         <>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"all-orders"}>
                 <h1>{t("allOrdersAdminPage.allOrders")}</h1>
@@ -366,16 +373,6 @@ function AllOrdersPage() {
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}
                                   resetKey={resetKey}/>
 
-                <div className="custom-row text-center">
-                    <button
-                        className="back-btn"
-                        onClick={() => {
-                            window.location.href = "/dashboard";
-                        }}
-                    >
-                        {t("back")}
-                    </button>
-                </div>
             </div>
         </>
     );

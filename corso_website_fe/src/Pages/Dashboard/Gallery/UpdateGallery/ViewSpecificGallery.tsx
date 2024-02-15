@@ -13,6 +13,7 @@ import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../../Services/TranslationTools";
 import TrashDelete from "../../../../ressources/images/Trash_light.svg";
+import BackButton from "../../../../Components/BackButton";
 
 function ViewSpecificGallery() {
 
@@ -141,10 +142,15 @@ function ViewSpecificGallery() {
         }
     }
 
+    const backButtonHref = "/carousel/order";
 
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className={"manage-gallery-wrapper p-5"}>
 
                 <div className={"d-flex justify-content-center"}>
@@ -214,16 +220,6 @@ function ViewSpecificGallery() {
                         </button>}
                     </div>
                 </form>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/carousel/order";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     );
