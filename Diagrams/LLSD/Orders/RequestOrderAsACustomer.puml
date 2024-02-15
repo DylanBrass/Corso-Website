@@ -7,7 +7,7 @@ participant "CreateOrderPage" as COP
 
 participant "orderRequest : OrderRequest" as Orq
 
-participant "OrderController" as Oc
+participant "CustomerController" as Oc
 
 participant "orderResponse : OrderResponse" as Orr
 
@@ -33,16 +33,16 @@ activate ODashB
 ODashB -> COP : render()
 activate COP
 
-COP -> Orq : POST /api/v1/corso/orders/customerCreateOrder
+COP -> Orq : POST /api/v1/corso/customers/orders/request
 activate Orq
 
 Orq -> Oc
 activate Oc
 
-Oc -> Os : customerCreateOrder(orderRequest)
+Oc -> Os : CustomerRequestOrder(userId, userEmail, orderRequest)
 activate Os
 
-Os -> OreqM : mapToOrder(orderRequest)
+Os -> OreqM : toOrderResponse(orderRequest)
 activate OreqM
 
 OreqM -> O: Order
@@ -54,13 +54,18 @@ activate O
 
 O -> Os : order : Order
 
-Os -> EmailService : sendEmailToAdmins(orderDetails)
+Os -> Orep: save(order)
+deactivate O
+
+Os -> EmailService : sendEmail(order.getCustomerEmail(), subject, OrderRequestConfirmation, parameters)
 activate EmailService
 EmailService --> Os
 deactivate EmailService
 
-Os -> Orep: save(order)
-deactivate O
+Os -> EmailService : sendEmailToAdmins("An Order Has Been Requested", "OrderRequestConfirmationAdmins", parameters)
+activate EmailService
+EmailService --> Os
+deactivate EmailService
 
 Orep -> Db: INSERT INTO orders (details) VALUES (:details);
 activate Db
@@ -73,7 +78,7 @@ Odb -> Orep: orderDB : Order
 
 Orep -> Os: orderDB : Order
 deactivate Orep
-Os -> OresM: mapToOrderResponse(order)
+Os -> OresM: toOrderResponse(order)
 deactivate Odb
 activate OresM
 
