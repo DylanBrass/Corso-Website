@@ -33,8 +33,23 @@ activate OrderRequest
 OrderRequest -> Controller: setCustomerOrderIdToCompletedStatus(orderId)
 activate Controller
 
+
+
+
 Controller -> OrderService: setCustomerOrderIdToCompletedStatus(orderId)
 activate OrderService
+
+OrderService -> OrderRepository: getOrderByOrderId(orderId)
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE id = orderId
+activate Database
+
+Database --> OrderRepository: order: Order
+deactivate Database
+
+OrderRepository --> OrderService: order: Order
+deactivate OrderRepository
 
 OrderService -> EmailService: sendEmail(admin: UserInfoResponse.getEmail, String, String, Map<String, String>)
 activate EmailService
