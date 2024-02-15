@@ -1,0 +1,90 @@
+@startuml
+
+actor Admin as User
+
+participant OrdersPage as "<<View>>\nOrdersPage"
+participant CurrentOrdersPage as "<<View>>\nViewOngoingOrderDetailsPage"
+participant OrderRequest as "orderRequest: OrderRequest"
+participant Controller as "<<Controller>>\nOrderController"
+participant OrderService as "<<Service>>\nOrderService"
+participant EmailService as "<<Service>>\nEmailService"
+participant Response as "orderResponse: OrderResponse"
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+participant Order as "order: Order"
+participant Database as "<<Database>>\nDatabase"
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+
+ref over OrdersPage, CurrentOrdersPage, OrderRequest, Controller, OrderService, EmailService, Response, OrderRepository, Order, Database, OrderResponseMapper, OrderRequestMapper
+    CompleteOrder
+end ref
+
+opt
+
+--> OrdersPage: updateOrderStatus
+activate OrdersPage
+
+OrdersPage -> CurrentOrdersPage: render()
+activate CurrentOrdersPage
+
+CurrentOrdersPage -> OrderRequest: PATCH /api/v1/corso/orders/manage/completedOrder/{orderId} HTTP/1.1
+activate OrderRequest
+
+OrderRequest -> Controller: setCustomerOrderIdToCompletedStatus(orderId)
+activate Controller
+
+Controller -> OrderService: setCustomerOrderIdToCompletedStatus(orderId)
+activate OrderService
+
+OrderService -> EmailService: sendEmail(admin: UserInfoResponse.getEmail, String, String, Map<String, String>)
+activate EmailService
+
+EmailService --> OrderService: int
+deactivate EmailService
+
+OrderService -> OrderRequestMapper: maptoOrderRequest: order: Order
+activate OrderRequestMapper
+
+OrderRequestMapper --> Order: order: Order
+activate Order
+
+deactivate OrderRequestMapper
+
+Order --> OrderService: order: Order
+
+OrderService -> OrderRepository: save(order)
+deactivate Order
+
+activate OrderRepository
+
+OrderRepository -> Database: UPDATE INTO orders SET status = order.getOrderStatus() WHERE id = order.getId()
+activate Database
+
+Database --> Order
+deactivate Database
+activate Order
+
+Order -> OrderRepository: order: Order
+
+OrderRepository --> OrderService: order: Order
+deactivate OrderRepository
+
+OrderService -> OrderResponseMapper: maptoOrders
+deactivate Order
+activate OrderResponseMapper
+
+OrderResponseMapper -> Response: orderResponse: OrderResponse
+deactivate OrderResponseMapper
+activate Response
+
+Response --> OrderService: orderResponse: OrderResponse
+
+OrderService --> Controller: orderResponse: OrderResponse
+
+Controller --> CurrentOrdersPage: orderResponse: OrderResponse
+
+CurrentOrdersPage -> OrdersPage: render()
+
+end opt
+
+@enduml
