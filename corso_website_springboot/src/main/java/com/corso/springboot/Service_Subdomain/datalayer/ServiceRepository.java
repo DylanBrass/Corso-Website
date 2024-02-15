@@ -26,6 +26,7 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, String> 
                                                                                                              LEFT JOIN orders o
                                                                                                                        ON s.service_id = o.service_id
                                                                                                     WHERE (o.order_status = 'IN_PROGRESS'
+                                                                                                    OR o.order_status = 'CANCELLED'
                                                                                                         OR o.order_status = 'COMPLETED')
                                                                                                       AND o.order_date BETWEEN :date_start AND :date_end
                                                                                                     GROUP BY s.service_id, s.service_name) as report
@@ -45,7 +46,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, String> 
                       JOIN (SELECT service_id, order_status, order_date
                                  FROM orders
                                  WHERE order_date BETWEEN :start_date AND :end_date
-                                   AND order_status != 'CANCELLED'
                                    AND order_status != 'DECLINED') o
                                 ON s.service_id = o.service_id
              GROUP BY s.service_id, s.service_name, IFNULL(order_date, 'No Orders')

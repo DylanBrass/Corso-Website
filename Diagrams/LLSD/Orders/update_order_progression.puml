@@ -2,10 +2,10 @@
 
 actor Admin as User
 
-participant OrderPage as "<<View>>\nOrdersPage"
-participant CurrentOrdersPage as "<<View>>\nCurrentOrdersPage"
-participant OrderRequest as "orderRequest: OrderRequest"
-participant Controller as "<<Controller>>\nController"
+participant OrdersPage as "<<View>>\nOrdersPage"
+participant CurrentOrdersPage as "<<View>>\nOrderProgressionPage"
+participant OrderRequest as "orderProgressionRequest: OrderProgressionRequest"
+participant Controller as "<<Controller>>\nOrderController"
 participant OrderService as "<<Service>>\nOrderService"
 participant EmailService as "<<Service>>\nEmailService"
 participant Response as "response: OrderResponse"
@@ -27,7 +27,7 @@ activate OrdersPage
 OrdersPage -> CurrentOrdersPage: render()
 activate CurrentOrdersPage
 
-CurrentOrdersPage -> OrderRequest: PATCH /api/v1/corso/orders/{orderId}/progression HTTP/1.1
+CurrentOrdersPage -> OrderRequest: PATCH /api/v1/corso/orders/manage/updateProgression/{orderId} HTTP/1.1
 activate OrderRequest
 
 OrderRequest -> Controller: updateOrderProgression(orderId, orderRequest)
@@ -57,7 +57,7 @@ deactivate Order
 
 activate OrderRepository
 
-OrderRepository -> Database: UPDATE INTO orders SET status = order.getStatus() WHERE id = order.getId()
+OrderRepository -> Database: UPDATE INTO orders SET progression = order.getOrderProgression() WHERE id = order.getId()
 activate Database
 
 Database --> Order
