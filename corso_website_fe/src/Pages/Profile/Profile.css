@@ -1,3 +1,4 @@
+
 .profile-page {
     background: #F3F3F3;
     height: 100vh;
@@ -175,4 +176,22 @@
     @media screen and (max-width: 1440px) {
         width: 100% !important;
     }
+}
+
+.carousel-control-next-icon::before {
+    content: '';
+    display: inline-block;
+    border-left: 8px solid blue; /* Arrow color */
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-left: -1px; /* Adjust as necessary */
+}
+
+.carousel-control-prev-icon::before {
+    content: '';
+    display: inline-block;
+    border-right: 8px solid blue; /* Arrow color, pointing left */
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-right: -1px; /* Adjust as necessary */
 }

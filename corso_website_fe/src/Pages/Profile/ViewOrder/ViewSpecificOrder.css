@@ -8,38 +8,7 @@
         outline: none;
         cursor: pointer;
 
-        color: #000;
-        text-align: center;
-        font-family: Nunito;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 200;
-        line-height: normal;
-        text-transform: uppercase;
         width: 35%;
-    }
-
-    .email-button {
-        border-radius: 30px;
-        background: #B5BEDC;
-        margin: 4vh auto;
-        padding: 20px 20px 20px 20px;
-    }
-
-    .accept-button {
-        border-radius: 30px;
-        background-color: #C1EBB7;
-        margin: 4vh auto auto;
-        padding: 20px 20px 20px 20px;
-
-    }
-
-    .decline-button {
-        border-radius: 30px;
-        background: #E1ADAD;
-        margin: 4vh auto auto;
-        padding: 20px 20px 20px 20px;
-
     }
 
     .request-info-box {
