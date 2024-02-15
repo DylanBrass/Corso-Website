@@ -8,6 +8,8 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
+
 function ViewAllFaq() {
     const auth = useAuth()
 
@@ -36,15 +38,21 @@ function ViewAllFaq() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const backButtonHref = "/"
+
     return (
 
-        <div>
+        <div className={"remove-gutters"}>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
             <div className={"text-center"}>
-                <div className={"row"}>
-                    <span className={"faq-title "}>Faq</span>
+                <div className={"row remove-gutters"}>
+                    <span className={"title"}>Faq</span>
                 </div>
-                <div className={"tiles-container"}>
+                <div className={"tiles-container remove-gutters"}>
                     {faqs.map((value) => (
                         <FaqTileFaqPage
                             //@ts-ignore
@@ -57,16 +65,6 @@ function ViewAllFaq() {
                             answer={getValuesFromJSON(i18n.language, value.answer)}
                         />
                     ))}
-                </div>
-                <div className="custom-row text-center">
-                    <button
-                        className="back-btn"
-                        onClick={() => {
-                            window.location.href = "/";
-                        }}
-                    >
-                        {t("back")}
-                    </button>
                 </div>
             </div>
         </div>

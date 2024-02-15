@@ -15,6 +15,8 @@ import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import {CCarousel, CCarouselItem} from "@coreui/react";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 function ViewSpecificOrder() {
 
@@ -107,9 +109,15 @@ function ViewSpecificOrder() {
         setShowCancelOrderModal(!showCancelOrderModal);
     }
 
+    const backButtonHref = "/";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
             <div className="container specific-order">
                 <div className="row">
                     <h1 className="display-4 title text-center" id={"title"}>{t("order.order")} #{order.orderTrackingNumber}</h1>
@@ -205,7 +213,7 @@ function ViewSpecificOrder() {
                             </div>
                             <div className={"row"}>
                                 <div className={"col-12"}>
-                                    <button className={"m-4 float-end customer-interactions-btn p-2"} onClick={() => {
+                                    <button className={"m-4 float-end btn-style p-2"} onClick={() => {
                                         window.location.href = `/profile/reviews/create`;
                                     }}>{t("reviews.leaveAReview")}
                                     </button>
@@ -215,7 +223,7 @@ function ViewSpecificOrder() {
 
 
                                         <button id={"edit-request"}
-                                                className={"m-4 float-end customer-interactions-btn p-2"}
+                                                className={"m-4 float-end btn-style p-2"}
                                                 onClick={() => {
                                                     window.location.href = `/profile/manage/orders/${orderId}`;
                                                 }
@@ -230,7 +238,7 @@ function ViewSpecificOrder() {
                                 {order.orderStatus.toLowerCase() === "pending" &&
 
                                     <Popup trigger={<div className={"col-12"}>
-                                        <button className={"m-4 float-end customer-interactions-btn p-2"}
+                                        <button className={"m-4 float-end btn-style-red p-2"}
                                                 onClick={handleCancelOrderModal}
                                         >{t("order.cancelOrderButton")}
                                         </button>
@@ -269,7 +277,7 @@ function ViewSpecificOrder() {
                                                     <div className="row mt-3">
                                                         <div className="col-12 text-center">
                                                             <button type="submit"
-                                                                    className="btn btn-primary send-email-btn">
+                                                                    className="btn btn-style">
                                                                 {t("submitButton")}
                                                             </button>
                                                         </div>
@@ -287,16 +295,6 @@ function ViewSpecificOrder() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/profile/orders";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

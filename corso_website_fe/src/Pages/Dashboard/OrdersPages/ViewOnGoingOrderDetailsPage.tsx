@@ -17,6 +17,9 @@ import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 function ViewSpecificOrder() {
 
@@ -192,9 +195,15 @@ function ViewSpecificOrder() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, orderStatus]);
 
+    const backButtonHref = "/dashboard";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="container specific-order">
                 <div className="row">
                     <h1 className="display-4 title text-center"
@@ -309,7 +318,7 @@ function ViewSpecificOrder() {
                             <div className={"col-12"}>
 
                                 {!loading && (
-                                    <button className={"m-4 float-end complete-order-btn p-2"} onClick={completeOrder}
+                                    <button className={"m-4 float-end btn-style-green p-2"} onClick={completeOrder}
                                             id="completeOrderBtn"
                                             disabled={orderCompleted}>{t("order.completeOrder")}</button>
                                 )}
@@ -319,16 +328,8 @@ function ViewSpecificOrder() {
 
                             </div>
 
-
-
                             <div className={"col-12"}>
-                                <button className={"m-4 float-end edit-order-btn p-2"} onClick={goToEditOrder}>{t("order.editOrder")}</button>
-                            </div>
-
-
-
-                            <div className={"col-12"}>
-                                <button className={"m-4 float-end cancel-order-btn p-2"}
+                                <button className={"m-4 float-end btn-style-red p-2"}
                                         onClick={() => setOpenPopup(true)}>{t("order.cancelOrderButton")}
                                 </button>
                                 <Popup open={openPopup} closeOnDocumentClick onClose={() => setOpenPopup(false)}>
@@ -357,19 +358,13 @@ function ViewSpecificOrder() {
 
                             </div>
 
+                            <div className={"col-12"}>
+                                <button className={"m-4 float-end btn-style p-2"} onClick={goToEditOrder}>{t("order.editOrder")}</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/orders/current";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

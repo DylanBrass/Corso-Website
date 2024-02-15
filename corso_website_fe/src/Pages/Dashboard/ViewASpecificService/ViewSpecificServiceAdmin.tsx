@@ -9,6 +9,7 @@ import engine from '../../../ressources/images/engine.png';
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 function ViewSpecificServiceAdmin() {
 
@@ -60,9 +61,15 @@ function ViewSpecificServiceAdmin() {
         window.location.href = `/modify-service/${serviceId}`;
     }
 
+    const backButtonHref = "/services";
+
     return (
         <>
             <NavigationBar />
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="engine-container">
@@ -82,16 +89,6 @@ function ViewSpecificServiceAdmin() {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="custom-row text-center">
-                    <button
-                        className="back-btn"
-                        onClick={() => {
-                            window.location.href = "/services";
-                        }}
-                    >
-                        {t("back")}
-                    </button>
                 </div>
             </div>
         </>

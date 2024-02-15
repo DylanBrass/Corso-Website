@@ -10,6 +10,9 @@ import {SyncLoader} from "react-spinners";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 function ModifyServicePage() {
   const { serviceId } = useParams();
@@ -29,7 +32,6 @@ function ModifyServicePage() {
     if (!auth.isAuthenticated || !auth.userRoles().includes('Admin')) {
       window.location.href = '/';
     } else {
-      // Fetch existing service data for modification
       fetchServiceData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,9 +109,14 @@ function ModifyServicePage() {
     }
   };
 
+    const backButtonHref = "/adminServices/" + serviceId;
   return (
       <>
         <NavigationBar />
+        <BackButton
+            link={backButtonHref}
+            text={ t("back")}
+        />
         <div className="modify-service-page">
           <h1 className="modify-service">{t("servicesAdminPage.editService")}</h1>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -225,19 +232,9 @@ function ModifyServicePage() {
 
             {isLoading ? "" :
             <div className="submit-button-container">
-              <input type="submit" value={t("save")} className="submit-button"/>
+              <input type="submit" value={t("save")} className="btn-style mb-4"/>
             </div>}
           </form>
-          <div className="custom-row text-center">
-            <button
-                className="back-btn"
-                onClick={() => {
-                  window.location.href = "/adminServices/" + serviceId;
-                }}
-            >
-              {t("back")}
-            </button>
-          </div>
         </div>
       </>
   );

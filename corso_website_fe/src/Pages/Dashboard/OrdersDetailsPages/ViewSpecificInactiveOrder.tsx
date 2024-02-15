@@ -13,6 +13,8 @@ import './ViewSpecificInactiveOrder.css';
 import axios from "axios";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 export default function ViewSpecificInactiveOrder() {
     const {t} = useTranslation();
@@ -104,9 +106,15 @@ export default function ViewSpecificInactiveOrder() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, orderStatus]);
 
+    const backButtonHref = "/orders/completed";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className="container specific-order">
                 <div className="row">
                     <h1 className="display-4 title text-center"
@@ -203,7 +211,7 @@ export default function ViewSpecificInactiveOrder() {
                             </div>
                             <div className={"row"}>
                                 <div className={"col-12"}>
-                                    <button className={"m-4 float-end customer-interactions-btn p-2"} onClick={() => {
+                                    <button className={"m-4 float-end btn-style-red p-2"} onClick={() => {
                                         // @ts-ignore
                                         swal((t("inactiveOrders.warning")), {
                                             buttons: {
@@ -221,22 +229,10 @@ export default function ViewSpecificInactiveOrder() {
                                         {t("delete")}
                                     </button>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        navigate(-1)
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

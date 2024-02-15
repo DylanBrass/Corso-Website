@@ -8,6 +8,8 @@ import {useAuth} from "../../../security/Components/AuthProvider";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
+import '../../globalStyling/globalStyling.css';
+import BackButton from "../../../Components/BackButton";
 
 
 function AddCustomerInformation() {
@@ -311,6 +313,7 @@ function AddCustomerInformation() {
         }
     };
 
+    const backButtonHref = "/profile";
     return (
         <div className={"h-100"} style={{
             backgroundColor: "#F3F3F3",
@@ -318,6 +321,10 @@ function AddCustomerInformation() {
             overflow: "hidden",
         }}>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className="profile-page">
                 <div className="profile-box mt-5 mb-5">
                     <h1>{t("profilePage.profile")}</h1>
@@ -433,15 +440,9 @@ function AddCustomerInformation() {
                              style={{margin: "auto", width: "50%", marginTop: "20px", marginBottom: "120px"}}>
                             <button id={"save-btn"}
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn btn-style"
                                     style={{
                                         margin: "auto",
-                                        borderRadius: "50px",
-                                        background: " #064BEC",
-                                        color: "#FFF",
-                                        fontFamily: "Nunito",
-                                        fontSize: "20px",
-                                        fontWeight: "700",
                                         marginBottom: "20px",
                                     }}
                                     disabled={isLoading}
@@ -456,7 +457,7 @@ function AddCustomerInformation() {
                              style={{margin: "auto", marginTop: "20px", marginBottom: "120px"}}>
                             <button
                                 type="submit"
-                                className="btn btn-primary cancel-btn"
+                                className="btn btn-style-red mb-2"
                                 id={"delete-btn"}
                                 disabled={!hasProfile}
                             >
@@ -465,16 +466,6 @@ function AddCustomerInformation() {
                         </div>
                     </form>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/profile";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

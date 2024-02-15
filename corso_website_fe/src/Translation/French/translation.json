@@ -248,7 +248,11 @@
       "deleteReviewAlertMessage": "Votre critique a été supprimée avec succès !",
       "updateReviewAlertTitle": "Critique enregistrée avec succès !",
       "updateReviewAlertMessage": "Votre critique a été enregistrée avec succès !",
-      "noReviewsFound": "Aucune critique trouvée"
+      "noReviewsFound": "Aucune critique trouvée",
+      "noReviewsTitle": "Aucune critique trouvée",
+      "noReviewsMessage": "Si vous souhaitez laisser un commentaire, veuillez cliquer sur le bouton \"Créer une critique\" ci-dessous.",
+      "goBack" : "Retour",
+      "createReview" : "Créer une critique"
     },
 
     "faq": {
@@ -491,5 +495,6 @@
   "here": "ici",
   "save": "Sauvegarder",
   "backToMainPage": "Retour à la page principale",
+  "backToDashboard": "Retour au tableau de bord",
   "itemsPerPage": "Éléments par page"
 }

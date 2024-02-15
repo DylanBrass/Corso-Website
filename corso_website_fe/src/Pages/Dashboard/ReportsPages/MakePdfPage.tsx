@@ -19,6 +19,8 @@ import TotalOrdersPerServicePDF from "./Components/PDF/TotalOrdersPerServicePDF"
 import {useTranslation} from "react-i18next";
 import i18n from "i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
+import './ReportsPage.css';
 
 const currentYear = new Date().getFullYear();
 
@@ -157,23 +159,27 @@ export default function MakePdfPage() {
         return monthName.charAt(0).toUpperCase() + monthName.slice(1);
     };
 
+    const backButtonHref = "/reports";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <center className={"mt-4"}>
-                <button className="diagram-btn" onClick={() => {
-                    window.location.href = "/reports";
-                }}>{t("reports.backToReports")}</button>
+
 
                 <div className={"text-center container"}>
                     <div className={"row"}>
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
                             <div className={"w-100"}>
 
-                                <h1>{t("reports.reportsForOrdersPerMonth")}</h1>
+                                <h1 className={"reports-page-title"}>{t("reports.reportsForOrdersPerMonth")}</h1>
                                 <h2>{t("reports.displayOrdersPerMonth")}</h2>
                                 <button onClick={addOrRemoveOrdersPerMonth}
-                                        className={displayOrdersPerMonth ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={displayOrdersPerMonth ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {displayOrdersPerMonth ? t("reports.remove") : t("reports.add")} {t("reports.ordersPerMonth")}
                                 </button>
@@ -187,7 +193,7 @@ export default function MakePdfPage() {
                                             setDisplayOrdersPerMonthChoice([...displayOrdersPerMonthChoice, 1])
                                         }
                                     }}
-                                            className={displayOrdersPerMonthChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                            className={displayOrdersPerMonthChoice.includes(1) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                     >
                                         {displayOrdersPerMonthChoice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                     </button>
@@ -197,7 +203,7 @@ export default function MakePdfPage() {
                                            id="year"/>
                                     <h2>{t("reports.displayText")}</h2>
                                     <button onClick={addOrRemoveTextForOrdersPerMonth}
-                                            className={showTextForOrdersPerMonth ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                            className={showTextForOrdersPerMonth ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                     >
                                         {showTextForOrdersPerMonth ? t("reports.remove") : t("reports.add")} {t("reports.text")}
                                     </button>
@@ -207,10 +213,10 @@ export default function MakePdfPage() {
                         <div className={"col-2"}></div>
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
                             <div className={"w-100"}>
-                                <h1>{t("reports.reportsForOrdersPerService")}</h1>
+                                <h1 className={"reports-page-title"}>{t("reports.reportsForOrdersPerService")}</h1>
                                 <h2>{t("reports.displayOrdersPerService")}</h2>
                                 <button onClick={addOrRemoveOrdersPerService}
-                                        className={displayOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={displayOrdersPerService ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {displayOrdersPerService ? t("reports.remove") : t("reports.add")} {t("reports.ordersPerService")}
                                 </button>
@@ -230,7 +236,7 @@ export default function MakePdfPage() {
                                             setPage2Choice([...page2Choice, 1])
                                         }
                                     }}
-                                            className={page2Choice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                            className={page2Choice.includes(1) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                     >
                                         {page2Choice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.stackedBarChart")}
                                     </button>
@@ -241,7 +247,7 @@ export default function MakePdfPage() {
                                             setPage2Choice([...page2Choice, 2])
                                         }
                                     }}
-                                            className={page2Choice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                            className={page2Choice.includes(2) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                     >
                                         {page2Choice.includes(2) ? t("reports.remove") : t("reports.add")} {t("reports.lineChart")}
                                     </button>
@@ -254,13 +260,13 @@ export default function MakePdfPage() {
                                         }
                                     }
                                     }
-                                            className={page2Choice.includes(3) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                            className={page2Choice.includes(3) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                     >
                                         {page2Choice.includes(3) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                     </button>
                                     <h2>{t("reports.displayText")}</h2>
                                     <button onClick={addOrRemoveTextForOrdersPerService}
-                                            className={showTextForOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                            className={showTextForOrdersPerService ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                     >
                                         {showTextForOrdersPerService ? t("reports.remove") : t("reports.add")} {t("reports.text")}
                                     </button>
@@ -274,11 +280,11 @@ export default function MakePdfPage() {
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5"}>
 
                             <div className={"w-100"}>
-                                <h3>{t("reports.reportsForTotalOrdersPerService")}</h3>
+                                <h3 className={"reports-page-title"}>{t("reports.reportsForTotalOrdersPerService")}</h3>
                                 <h4>{t("reports.displayTotalOrdersPerService")}</h4>
                                 <h4>{t("reports.chooseDates")}</h4>
                                 <button onClick={addOrRemoveTotalOrdersPerService}
-                                        className={displayTotalOrdersPerService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={displayTotalOrdersPerService ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {displayTotalOrdersPerService ? t("reports.remove") : t("reports.add")} {t("reports.totalOrdersPerService")}
                                 </button>
@@ -295,7 +301,7 @@ export default function MakePdfPage() {
                                         setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 1])
                                     }
                                 }}
-                                        className={totalOrdersPerServiceChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={totalOrdersPerServiceChoice.includes(1) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {totalOrdersPerServiceChoice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                 </button>
@@ -306,7 +312,7 @@ export default function MakePdfPage() {
                                         setTotalOrdersPerServiceChoice([...totalOrdersPerServiceChoice, 2])
                                     }
                                 }}
-                                        className={totalOrdersPerServiceChoice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={totalOrdersPerServiceChoice.includes(2) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {totalOrdersPerServiceChoice.includes(2) ? t("reports.remove") : t("reports.add")} {t("reports.pieChart")}
                                 </button>
@@ -316,10 +322,10 @@ export default function MakePdfPage() {
                         <section className={"col-12 col-md-5 shadow-lg p-3 rounded-5 mt-5 mt-md-0"}>
                             <div className={"w-100"}>
 
-                                <h1>{t("reports.reportsForTimeByService")}</h1>
+                                <h1 className={"reports-page-title"}>{t("reports.reportsForTimeByService")}</h1>
                                 <h2>{t("reports.displayTimeByService")}</h2>
                                 <button onClick={addOrRemoveTimeByService}
-                                        className={displayTimeByService ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={displayTimeByService ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {displayTimeByService ? t("reports.remove") : t("reports.add")} {t("reports.timeByService")}
                                 </button>
@@ -337,7 +343,7 @@ export default function MakePdfPage() {
                                             setTimeByServiceChoice([...timeByServiceChoice, 1])
                                         }
                                     }}
-                                    className={timeByServiceChoice.includes(1) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                    className={timeByServiceChoice.includes(1) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {timeByServiceChoice.includes(1) ? t("reports.remove") : t("reports.add")} {t("reports.barChart")}
                                 </button>
@@ -348,7 +354,7 @@ export default function MakePdfPage() {
                                         setTimeByServiceChoice([...timeByServiceChoice, 2])
                                     }
                                 }}
-                                        className={timeByServiceChoice.includes(2) ? "btn btn-danger m-2" : "btn btn-primary m-2"}
+                                        className={timeByServiceChoice.includes(2) ? "btn btn-style-red m-2" : "btn btn-style m-2"}
                                 >
                                     {timeByServiceChoice.includes(2) ? t("reports.remove") : t("reports.add")} {t("reports.pieChart")}
                                 </button>
@@ -356,7 +362,7 @@ export default function MakePdfPage() {
                         </section>
                     </div>
                 </div>
-                <button onClick={fetchData} className={"m-5 btn btn-primary"}>
+                <button onClick={fetchData} className={"m-5 btn btn-style"}>
                     {t("reports.refreshPDF")}
                 </button>
             </center>

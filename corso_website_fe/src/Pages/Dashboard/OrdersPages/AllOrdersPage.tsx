@@ -9,6 +9,8 @@ import searchIcon from "../../../ressources/images/Search_light.svg";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import "./AllOrdersPage.css"
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 function AllOrdersPage() {
 
@@ -233,9 +235,15 @@ function AllOrdersPage() {
 
     }
 
+    const backButtonHref = "/dashboard";
+
     return (
         <>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"all-orders"}>
                 <h1>{t("allOrdersAdminPage.allOrders")}</h1>
@@ -282,7 +290,7 @@ function AllOrdersPage() {
                                     />
                                     <input required name={"search-value"} id={"search-value"} type="text"
                                            placeholder={t("userOptions.searchForUser")}/>
-                                    <button type={"submit"}>
+                                    <button  type={"submit"}>
                                         <img src={searchIcon} alt={"Search"}/>
                                     </button>
 
@@ -337,7 +345,7 @@ function AllOrdersPage() {
                 </div>
                 <form onSubmit={handleSubmit} className={"m-4"}>
                     <button type={"submit"}
-                            className={"user-selection"}>{t("allOrdersAdminPage.searchWithAppliedFilters")}</button>
+                            className={"btn-style user-selection"}>{t("allOrdersAdminPage.searchWithAppliedFilters")}</button>
                 </form>
                 {orders.map(order => (
                     <OrderTile
@@ -366,16 +374,6 @@ function AllOrdersPage() {
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}
                                   resetKey={resetKey}/>
 
-                <div className="custom-row text-center">
-                    <button
-                        className="back-btn"
-                        onClick={() => {
-                            window.location.href = "/dashboard";
-                        }}
-                    >
-                        {t("back")}
-                    </button>
-                </div>
             </div>
         </>
     );

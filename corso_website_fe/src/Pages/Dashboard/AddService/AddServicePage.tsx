@@ -10,6 +10,8 @@ import {useNavigate} from "react-router";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
 
 function AddServicePage() {
     const [serviceIconPreview, setServiceIconPreview] = useState('');
@@ -78,9 +80,15 @@ function AddServicePage() {
         setIsLoading(false)
     };
 
+    const backButtonHref = "/services";
+
     return (
         <>
             <NavigationBar />
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className="add-service-page">
             <h1 className="add-service">{t("servicesAdminPage.addService")}</h1>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -195,7 +203,7 @@ function AddServicePage() {
 
                 {isLoading ? "" :
                 <div className="submit-button-container">
-                    <input type="submit" value={t("submitButton")} className="submit-button"/>
+                    <input type="submit" value={t("submitButton")} className="btn-style"/>
                 </div>}
             </form>
             </div>

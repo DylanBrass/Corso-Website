@@ -5,6 +5,7 @@ import CustomPagination from "../../../Components/Pagination";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function AllCustomerOrders() {
 
@@ -60,9 +61,15 @@ function AllCustomerOrders() {
             // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, pageSize]);
 
+
+    const backButtonHref = "/";
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
             <div className={"mb-5 container"}>
                 <div
                      className={"w-100"}>
@@ -91,16 +98,6 @@ function AllCustomerOrders() {
                         </div>
                     }
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/profile";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )

@@ -10,7 +10,7 @@
 
     .user-box {
         background: #FFF;
-        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
 
         display: flex;
         flex-direction: column;
@@ -72,7 +72,7 @@
 
 .options-box{
     background: #FFF;
-    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
 
     padding: 0;
     margin: 0;
@@ -105,7 +105,7 @@
     .option-box{
         margin: 0;
         &:hover {
-            box-shadow:inset 0px 0px 0px 1px black;
+            box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
             color: #14ACED;
             cursor: pointer;
         }
@@ -125,24 +125,7 @@
         font-weight: 200;
         line-height: normal;
     }
-    button{
-        border-radius: 20px;
-        background: #4058A6;
-        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
-        color: #FFF;
-        text-align: center;
-        font-family: Nunito;
-        font-size: 20px;
-        font-style: normal;
-        line-height: normal;
-        text-transform: uppercase;
 
-        &:hover{
-            background: #14ACED;
-            cursor: pointer;
-        }
-
-    }
 }
 
 .redirect-option{
@@ -156,7 +139,7 @@
 
 .contact-box{
     background: #FFF;
-    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
     width: 100%;
 
     .contact-title{
@@ -183,7 +166,7 @@
 .current-orders-box{
     margin-top: 1em;
     background: #FFF;
-    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
 

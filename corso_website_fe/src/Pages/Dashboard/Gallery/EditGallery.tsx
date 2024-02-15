@@ -9,6 +9,9 @@ import AddGallery from "./Components/AddGallery";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 interface ImageData {
     galleryId: string;
@@ -34,6 +37,15 @@ interface DraggableImageProps {
 
 function DraggableImage({image, index, moveImage}: DraggableImageProps) {
     const {t} = useTranslation();
+    function truncateDescription(description: string, wordLimit: number): string {
+        const wordsArray = description.split(' ');
+        if (wordsArray.length > wordLimit) {
+            return wordsArray.slice(0, wordLimit).join(' ') + '...';
+        } else {
+            return description;
+        }
+    }
+
     return (
         <Draggable key={image.galleryId} draggableId={image.galleryId} index={index}>
             {(provided, snapshot) => (
@@ -111,15 +123,15 @@ function DraggableImage({image, index, moveImage}: DraggableImageProps) {
                            maxWidth: '150px',
                        }}
                     >
-                        {getValuesFromJSON(i18n.language, image.description)}
+                        {truncateDescription( getValuesFromJSON(i18n.language, image.description), 10)}
                     </p>
-                    <button onClick={() => {
+                    <button className={"btn-style"} onClick={() => {
                         moveImage(index, 0);
                     }}>{t("editGalleryPage.moveToTop")}
                     </button>
 
                     <button
-                        className={"mt-2"}
+                        className={"btn-style mt-2"}
                         onClick={() => {
                             window.location.href = `/manage/gallery/${image.galleryId}`;
                         }}>{t("editGalleryPage.edit")}
@@ -243,12 +255,15 @@ function EditGallery() {
         }
     }, [isSubmitClicked, images]);
 
-
-
+    const backButtonHref = "/dashboard";
 
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="gallery-container">
                 <h1>{t("editGalleryPage.editGallery")}</h1>
                 <div className={"overflow-scroll w-100"}>
@@ -277,7 +292,7 @@ function EditGallery() {
                         </Droppable>
                     </DragDropContext>
                 </div>
-                <button onClick={handleSubmit} className="save-order-button">
+                <button onClick={handleSubmit} className="btn-style mt-2">
                     {t("editGalleryPage.saveOrder")}
                 </button>
             </div>
@@ -286,16 +301,6 @@ function EditGallery() {
             <AddGallery
                 fetchGalleries={fetchImages}
             />
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
-            </div>
         </div>
     );
 }

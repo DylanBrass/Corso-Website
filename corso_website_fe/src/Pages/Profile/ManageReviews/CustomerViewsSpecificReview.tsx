@@ -13,6 +13,7 @@ import {SyncLoader} from "react-spinners";
 import Popup from 'reactjs-popup';
 import {Rating} from "@mui/material";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function CustomerViewsSpecificReview() {
 
@@ -161,10 +162,15 @@ function CustomerViewsSpecificReview() {
 
     }
 
+    const backButtonHref = "/profile/reviews";
 
     return (
         <>
             <NavigationBar />
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <h1 className="review-title-view-specific-customer">{t("reviews.review")}</h1>
             <div className="container review-tile-view-specific-container">
                 <div className="row">
@@ -227,16 +233,6 @@ function CustomerViewsSpecificReview() {
                         setMessage(event.target.value)
                     }} defaultValue={message} disabled={isEdit}/>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/profile/reviews";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </>
     );

@@ -11,6 +11,10 @@ import {Bounce, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {SyncLoader} from "react-spinners";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import i18n from "i18next";
+import '../../globalStyling/globalStyling.css';
 
 
 function OrderProgressionPage() {
@@ -302,9 +306,15 @@ function OrderProgressionPage() {
         // eslint-disable-next-line
     }, [orderId])
 
+    const backButtonHref = "/dashboard";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="container specific-order">
                 <div className="row">
                     <h1 className="display-4 title text-center"
@@ -340,8 +350,9 @@ function OrderProgressionPage() {
                                     {
                                         allServices.map((service: any) => {
                                             return (
-                                                <option key={service.serviceId}
-                                                        value={service.serviceId}>{service.serviceName}</option>
+                                                <option key={service.serviceId} value={service.serviceId}>
+                                                    {getValuesFromJSON(i18n.language, service.serviceName)}
+                                                </option>
                                             )
                                         })
                                     }
@@ -440,7 +451,7 @@ function OrderProgressionPage() {
                                 {!updatingOrder && !loading && (
 
                                     <button
-                                        className="cancel-orderProgression-btn"
+                                        className="btn-style cancel-orderProgression-btn"
                                         type="button"
                                         disabled={updatingOrder || loading}
                                         onClick={cancelBtn}>
@@ -453,7 +464,7 @@ function OrderProgressionPage() {
                             <div className={"updateOrderBtn-divClass"}>
                                 {!updatingOrder && !loading && (
                                     <button
-                                        className="update-orderProgression-btn"
+                                        className="btn-style-green update-orderProgression-btn"
                                         onClick={(e) => updateOrderProgression(e, order.orderId, notes, order.hoursWorked)}
                                         name="updateOrderButton"
                                         type="submit"

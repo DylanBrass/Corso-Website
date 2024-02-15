@@ -4,6 +4,7 @@ import OrderTile, {Order} from "../../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import CustomPagination from "../../../Components/Pagination";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 
 
@@ -50,9 +51,15 @@ function PendingOrdersPage() {
         fetchOrders(page, pageSize);
     }, [page, pageSize]);
 
+    const backButtonHref = "/dashboard";
+
     return (
         <>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"mb-5"}>
                 <h1>{t("dashboardPage.pendingOrders").toUpperCase()}</h1>
@@ -67,16 +74,6 @@ function PendingOrdersPage() {
                     ))
                 }
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages}/>
-                <div className="custom-row text-center">
-                    <button
-                        className="back-btn"
-                        onClick={() => {
-                            window.location.href = "/dashboard";
-                        }}
-                    >
-                        {t("back")}
-                    </button>
-                </div>
             </div>
         </>
     );

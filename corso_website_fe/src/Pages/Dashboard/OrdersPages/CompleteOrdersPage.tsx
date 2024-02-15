@@ -5,6 +5,7 @@ import CustomPagination from "../../../Components/Pagination";
 import { Order } from "../../../Components/OrderTile/OrderTile";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 function CompletedOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -44,9 +45,15 @@ function CompletedOrdersPage() {
         fetchOrders(page, pageSize);
     }, [page, pageSize]);
 
+    const backButtonHref = "/dashboard";
+
     return (
         <>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <h1>{t("dashboardPage.completedOrders").toUpperCase()}</h1>
                 {orders.map(order => (
@@ -66,16 +73,6 @@ function CompletedOrdersPage() {
                     />
                 ))}
                 <CustomPagination onPageChange={handlePageChange} pageSize={pageSize} totalPages={totalPages} />
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </>
     );

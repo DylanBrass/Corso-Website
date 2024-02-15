@@ -9,6 +9,9 @@ import searchIcon from "../../../ressources/images/Search_light.svg"
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
+import '../../globalStyling/globalStyling.css';
+
 
 function CreateExternalOrderPage() {
 
@@ -184,10 +187,16 @@ function CreateExternalOrderPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const backButtonHref = "/dashboard";
+
     // @ts-ignore
     return (
         <div className={"text-center"}>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className={"search-banner w-100 mt-3"}>
                 <h2 className={"text-white"}>{t("userOptions.searchForUser")}</h2>
                 <div className={"search-bar m-auto"}>
@@ -206,7 +215,7 @@ function CreateExternalOrderPage() {
                         />
                         <input required name={"search-value"} id={"search-value"} type="text"
                                placeholder={t("userOptions.searchForUser")}/>
-                        <button type={"submit"}>
+                        <button type={"submit"} className={"btn-style"}>
                             <img src={searchIcon} alt={"Search"}/>
                         </button>
 
@@ -516,16 +525,6 @@ function CreateExternalOrderPage() {
                         </div>
                     </form>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     );
