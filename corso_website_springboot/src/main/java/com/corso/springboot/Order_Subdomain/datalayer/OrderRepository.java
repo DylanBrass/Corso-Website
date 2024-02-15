@@ -71,7 +71,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
                          COUNT(orders.order_id) AS total_orders
                      FROM orders
                      WHERE YEAR(orders.order_date) = :year
-                       AND orders.order_status NOT IN ('DECLINED', 'CANCELLED')
+                       AND orders.order_status NOT IN ('DECLINED')
                      GROUP BY m, y
                  ) AS report ON months.n = report.m
                  ORDER BY months.n;
