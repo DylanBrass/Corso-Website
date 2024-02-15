@@ -552,7 +552,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws MessagingException {
+        public OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
 
         if (order == null) {

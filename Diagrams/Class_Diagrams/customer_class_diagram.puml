@@ -15,6 +15,7 @@ package "Customer_Subdomain" {
             + updateOrderByOrderId(orderId: String, customerUpdateOrderRequest: OrderCustomerRequest, principal: OidcUser): ResponseEntity<OrderResponse>
             + updateCustomerReview(principal: OidcUser, reviewId: String, reviewRequest: ReviewRequest): ResponseEntity<ReviewResponse>
             + verifyCustomer(principal: OidcUser): ResponseEntity<Void>
+            + customerRequestOrder(principal: OidcUser, orderRequestCustomer: OrderRequestCustomer): ResponseEntity<OrderResponse>
         }
         class "CustomerResponse" as customerResponse {
             + userId: String
@@ -200,6 +201,19 @@ package "Order_Subdomain"{
             + DeclineOrderRequest()
         }
 
+        class "OrderRequestCustomer" as orderRequestCustomer{
+            + serviceId: String
+            - orderDescription:String
+            - customerFullName: String
+            - customerPhone: String
+            - customerAddress: String
+            - customerCity: String
+            - customerPostalCode: String
+            - customerApartmentNumber: String
+            - dueDate: String
+
+
+
 
 
     }
@@ -254,6 +268,7 @@ package "Order_Subdomain"{
             + getAllOrdersWithDefaultSettings(): List<OrderResponse>
             + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
             + countAllOverdueOrders(): Integer
+            + customerRequestOrder(userId: String, userEmail:String, orderRequestCustomer: OrderRequestCustomer): OrderResponse
 
         }
 
@@ -494,6 +509,8 @@ orderController ..> orderRequestExternal
 orderController ..> acceptOrderRequest
 
 orderController ..> declineOrderRequest
+
+orderServiceImpl ..> orderRequestCustomer
 
 orderServiceImpl ..> orderRepository
 
