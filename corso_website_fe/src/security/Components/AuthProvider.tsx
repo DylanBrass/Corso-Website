@@ -91,6 +91,7 @@ const AuthProvider = ({children}) => {
                     if (r.status === 200) {
                         Cookies.set("username", r.data.username)
                         Cookies.set("email", r.data.email)
+                        Cookies.set("isVerified", "true")
                     }
                 })
                 .catch(e => {
