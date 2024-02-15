@@ -8,6 +8,7 @@
   "confirm": "Confirmer",
   "dueDate": "Date d'échéance",
   "orderDate": "Date de la commande",
+  "invalidDateRange": "Plage de dates invalide",
   "navigation": {
     "language": "English",
     "home": "Accueil",

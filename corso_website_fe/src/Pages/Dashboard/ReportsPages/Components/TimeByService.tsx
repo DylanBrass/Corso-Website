@@ -38,6 +38,11 @@ export default function TimeByService() {
     async function fetchData() {
         const start = (document.getElementById("start") as HTMLInputElement).value;
         const end = (document.getElementById("end") as HTMLInputElement).value;
+        if(new Date(start) > new Date(end)){
+            // @ts-ignore
+            swal((t("error")), (t("invalidDateRange")) + " " + start + " " + (t("to")) + " " + end, "error");
+            return;
+        }
         fetchTimeByServiceReport(start, end).then(
             res => {
                 setData(res)

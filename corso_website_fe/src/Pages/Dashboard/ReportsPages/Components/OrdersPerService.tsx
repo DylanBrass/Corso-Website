@@ -104,6 +104,13 @@ export default function OrderPerService() {
     async function fetchData() {
         let start = (document.getElementById("start") as HTMLInputElement).value;
         let end = (document.getElementById("end") as HTMLInputElement).value;
+
+        if(new Date(start) > new Date(end)){
+            // @ts-ignore
+            swal((t("error")), (t("invalidDateRange")) + " " + start + " " + (t("to")) + " " + end, "error");
+            return;
+        }
+
         await getOrdersPerService(start, end, allServices).then(
             res => {
 
