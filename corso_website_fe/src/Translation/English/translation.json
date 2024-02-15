@@ -250,7 +250,11 @@
       "deleteReviewAlertMessage": "Your review has been successfully deleted!",
       "updateReviewAlertTitle": "Review saved successfully!",
       "updateReviewAlertMessage": "Your review has been successfully saved!",
-      "noReviewsFound": "No reviews found"
+      "noReviewsFound": "No reviews found",
+      "noReviewsTitle": "No Reviews Found",
+      "noReviewsMessage": "If you wish to leave a review, please click the create review button below",
+      "goBack" : "Go Back",
+      "createReview" : "Create Review"
     },
 
     "faq" : {
@@ -498,6 +502,7 @@
   "here": "here",
   "save": "Save",
   "backToMainPage": "Back to main page",
+  "backToDashboard": "Back to dashboard",
   "itemsPerPage": "Items per page",
   "inactiveOrders": {
     "warning": "Are you sure you want to delete this order, this order will no longer be tracked in Corso's records?",

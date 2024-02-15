@@ -58,35 +58,6 @@ tr {
 }
 
 
-.btn-style{
-    color: white;
-    border: none;
-    padding: 10px 50px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 50px;
-    background: #064BEC;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-
-
-    &:hover{
-        background: #064BEC;
-        color: white;
-        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    }
-
-    &:active{
-        background: #064BEC;
-        color: white;
-        transform: translateY(4px);
-    }
-
-}
-
-
 .dropdown-container {
     border-radius: 20px 0 0 20px;
 

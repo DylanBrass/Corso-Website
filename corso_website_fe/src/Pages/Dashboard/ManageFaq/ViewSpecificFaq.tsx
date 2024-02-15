@@ -8,6 +8,7 @@ import { useAuth } from "../../../security/Components/AuthProvider";
 import "./ViewSpecificFaq.css";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages, getValuesFromJSON} from "../../../Services/TranslationTools";
+import BackButton from "../../../Components/BackButton";
 
 function ViewFaq() {
     const auth = useAuth();
@@ -79,13 +80,16 @@ function ViewFaq() {
         }
     };
 
+    const backButtonHref = "/manage/faqs";
+
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div>
-                <div className="faq-button-container">
-                    <button className="specific-faq-back-btn" onClick={goBack}>{t("back")}</button>
-                </div>
                 <div>
                     <div className="container view-faq-admin-container">
                         <div className={"faq-button-container"}>

@@ -44,7 +44,11 @@ function FaqPinnedMainPage() {
                 <div className="custom-w-small">
                     <h1 className="faq-title-mainPage">{t("faq")}</h1>
                     <p className="faq-blurb">{t("mainPage.faqBlurb")}</p>
-                    <div className="d-flex flex-row gap-3">
+                    <div className="d-flex flex-row gap-3" style={{cursor: "pointer"}}
+                         onClick={() => {
+                             window.location.href = "/faq";
+                         }}
+                    >
                         <div className="">
                             <a href="/faq" className="view-more-faq">{t("mainPage.viewMoreFaq")}</a>
                         </div>

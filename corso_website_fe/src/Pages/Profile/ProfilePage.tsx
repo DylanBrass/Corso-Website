@@ -15,6 +15,9 @@ import Order from "../../ressources/Models/Order";
 import {CCarousel, CCarouselItem} from "@coreui/react";
 import swal from "sweetalert";
 import {useTranslation} from "react-i18next";
+import '../globalStyling/globalStyling.css';
+import BackButton from "../../Components/BackButton";
+
 
 function ProfilePage() {
 
@@ -29,6 +32,8 @@ function ProfilePage() {
 
 
     const [orders, setOrders] = useState<Order[]>([]);
+
+
 
     useEffect(() => {
         fetchOrders()
@@ -167,6 +172,8 @@ function ProfilePage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const backButtonHref = "/";
+
 
     return (
         <div className={"h-100"} style={{
@@ -175,6 +182,11 @@ function ProfilePage() {
             overflow: "hidden",
         }}>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToMainPage")}
+            />
+
             <div className="profile-page h-100">
                 <div className="row p-0 p-md-5 box-row">
                     <div className={"user-box col-12 col-lg-6 p-5"}>
@@ -211,7 +223,7 @@ function ProfilePage() {
                                             <span style={{color: "red", fontSize: "2.125rem"}}>
                                                         &#x21;
                                                 <button id={"send-verification-btn"}
-                                                        style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}
+                                                        className={"btn btn-style-yellow"}
                                                         onClick={sendVerificationEmail}>
                                                     {t("email.resendEmail")}
                                                 </button>
@@ -314,34 +326,19 @@ function ProfilePage() {
                     </div>
                     <div className={"col-12 col-md-6"}>
                         <div className={"row w-100 px-0 px-md-5 request-order-box-profile"}>
-                            <div className={"col-12 col-lg-8"}>
                                 <p>{t("profilePage.gotAProblemNeedingFixing")}</p>
                                 <p>{t("profilePage.getStartedWithYourNextOrderHere")}</p>
-                            </div>
-                            <div className={"col-12 col-lg-4"}>
                                 <button
-                                    className="request-order-btn-profile p-2"
+                                    className="btn btn-style"
                                     onClick={() => {
                                         window.location.href = "/requestOrder";
                                     }}
                                 >
-                                    {t("banner.requestAnOrderNow")}
+                                    {t("banner.requestAnOrderNow")}!
                                 </button>
-
-                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/";
-                    }}
-                >
-                    {t("backToMainPage")}
-                </button>
             </div>
         </div>
 

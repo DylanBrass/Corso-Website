@@ -11,6 +11,7 @@ import plus from "../../../ressources/images/plus-services.svg";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 
 interface FAQ {
@@ -109,9 +110,15 @@ function ViewAllFaqThroughDashboard() {
         window.location.href = '/manage/faqs/create';
     }
 
+    const backButtonHref = "/dashboard";
+
     return (
         <div className="faqs-dashboard-container">
             <NavigationBar />
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="container faqs-container">
                 <div className="row faq-header">
                     <h1 className="faq-title">{t("faqsAdminPage.allFaqs")}</h1>
@@ -209,16 +216,6 @@ function ViewAllFaqThroughDashboard() {
                         {t("faqsAdminPage.saveViewableFAQs")}
                     </button>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     );

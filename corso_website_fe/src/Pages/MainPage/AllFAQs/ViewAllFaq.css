@@ -1,14 +1,3 @@
-.faq-title{
-    color: #0A1B44;
-    font-family: Nunito;
-    font-size: 70px;
-    font-style: normal;
-    font-weight: 200;
-    line-height: normal;
-    text-transform: uppercase;
-}
-
-
 .tiles-container{
     display: flex;
     width: 80%;
@@ -28,4 +17,11 @@ a{
     line-height: normal;
     text-decoration-line: underline;
     text-transform: uppercase;
+}
+
+.remove-gutters {
+    padding-left: 0;
+    padding-right: 0;
+    --bs-gutter-x: 0rem;
+    --cui-gutter-x: 0rem;
 }

@@ -12,6 +12,7 @@ import CustomPagination from "../../../Components/Pagination";
 import {PuffLoader} from 'react-spinners';
 import {Bounce, toast, ToastContainer} from "react-toastify";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 
 class Reviews {
@@ -178,10 +179,16 @@ function ManageReviews() {
 
     };
 
+    const backButtonHref = "/dashboard";
+
     return (
 
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             <div className="container review-container">
                 <div className="row review-header">
                     <h1 className="review-title">{t("reviewsAdminPage.allReviews")}</h1>
@@ -307,17 +314,6 @@ function ManageReviews() {
                 pauseOnHover
                 theme="dark"
             />
-
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
-            </div>
         </div>
     );
 

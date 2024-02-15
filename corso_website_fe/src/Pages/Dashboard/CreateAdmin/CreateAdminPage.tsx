@@ -6,6 +6,7 @@ import "./CreateAdmin.css"
 import swal from "sweetalert";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import BackButton from "../../../Components/BackButton";
 
 
 
@@ -52,9 +53,15 @@ function CreateAdminPage() {
                     })
             })
     }
+
+    const backButtonHref = "/dashboard";
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("backToDashboard")}
+            />
             {
                 // @ts-ignore
                 //suppress when u get red error on isAuthenticated
@@ -114,16 +121,6 @@ function CreateAdminPage() {
                 </>
             }
 
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/dashboard";
-                    }}
-                >
-                    {t("back")}
-                </button>
-            </div>
         </div>
     );
 }

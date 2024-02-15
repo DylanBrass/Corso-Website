@@ -13,6 +13,7 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {getValuesFromJSON} from "../../../Services/TranslationTools";
 import i18n from "i18next";
+import BackButton from "../../../Components/BackButton";
 
 function ViewSpecificOrderAdmin() {
 
@@ -176,10 +177,15 @@ function ViewSpecificOrderAdmin() {
     const [order, setOrder] = useState(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
 
 
+    const backButtonHref = "/orders/pending";
 
     return (
         <div>
             <NavigationBar/>
+            <BackButton
+                link={backButtonHref}
+                text={ t("back")}
+            />
             <div className="container specific-order-admim">
                 <div className="row">
                     <h1 className="display-4 title">{t("order.request")} #{order.orderTrackingNumber}</h1>
@@ -300,16 +306,6 @@ function ViewSpecificOrderAdmin() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="custom-row text-center">
-                <button
-                    className="back-btn"
-                    onClick={() => {
-                        window.location.href = "/orders/pending";
-                    }}
-                >
-                    {t("back")}
-                </button>
             </div>
         </div>
     )
