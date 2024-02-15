@@ -13,15 +13,15 @@ participant OrderRepository as "<<Repository>>\nOrderRepository"
 participant Order as "order: Order"
 participant Database as "<<Database>>\nDatabase"
 participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
-participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+'participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
 
-ref over OrdersPage, CurrentOrdersPage, OrderRequest, Controller, OrderService, EmailService, Response, OrderRepository, Order, Database, OrderResponseMapper, OrderRequestMapper
-    ViewAndUpdateOrderStatus
+ref over OrdersPage, CurrentOrdersPage, OrderRequest, Controller, OrderService, EmailService, Response, OrderRepository, Order, Database, OrderResponseMapper
+    ViewAndUpdateOrderProgression
 end ref
 
 opt
 
---> OrdersPage: updateOrderStatus
+--> OrdersPage: updateOrderProgression
 activate OrdersPage
 
 OrdersPage -> CurrentOrdersPage: render()
@@ -31,10 +31,24 @@ CurrentOrdersPage -> OrderRequest: PATCH /api/v1/corso/orders/manage/updateProgr
 activate OrderRequest
 
 OrderRequest -> Controller: updateOrderProgression(orderId, orderRequest)
-activate Controller
+
+
 
 Controller -> OrderService: updateOrderProgression(orderId, orderRequest)
 activate OrderService
+
+OrderService -> OrderRepository: updateOrderProgressionById(orderId)
+activate OrderRepository
+
+OrderRepository -> Database: SELECT * FROM orders WHERE id = orderId
+activate Database
+
+Database --> OrderRepository: order: Order
+deactivate Database
+
+OrderRepository --> OrderService: order: Order
+deactivate OrderRepository
+
 
 OrderService -> EmailService: sendEmail(admin: UserInfoResponse.getEmail, String, String, Map<String, String>)
 activate EmailService
@@ -42,13 +56,13 @@ activate EmailService
 EmailService --> OrderService: int
 deactivate EmailService
 
-OrderService -> OrderRequestMapper: maptoOrderRequest: order: Order
-activate OrderRequestMapper
+'OrderService -> OrderRequestMapper: maptoOrderRequest: order: Order
+'activate OrderRequestMapper
+'
+'OrderRequestMapper --> Order: order: Order
+'activate Order
 
-OrderRequestMapper --> Order: order: Order
-activate Order
-
-deactivate OrderRequestMapper
+'deactivate OrderRequestMapper
 
 Order --> OrderService: order: Order
 
