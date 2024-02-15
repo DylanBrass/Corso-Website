@@ -2,7 +2,7 @@
 
 actor Admin as User
 
-participant OrdersPage as "<<View>>\nOrdersPage"
+participant OrderPage as "<<View>>\nOrdersPage"
 participant CurrentOrdersPage as "<<View>>\nCurrentOrdersPage"
 participant OrderRequest as "orderRequest: OrderRequest"
 participant Controller as "<<Controller>>\nController"

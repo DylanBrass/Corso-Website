@@ -4,17 +4,25 @@ actor Admin as "Admin"
 
 participant "<<View>>\nDashboard" as DashB
 
-participant "<<View>>\nAdminReportsPage" as ServiceV
+participant "<<View>>\nReportsPage" as ServiceV
+
+participant TimeByService as "<<View>>\nTimeByService"
+
+participant OrdersPerService as "<<View>>\nOrdersPerService"
+
+participant OrdersPerMonth as "<<View>>\nOrdersPerMonth"
 
 participant OrderController as "<<Controller>>\nOrderController"
 
 participant ServiceController as "<<Controller>>\nServiceController"
 
-participant ServiceTimeByResponse as "response:ServiceTimeByResponse"
+participant ServiceTimeByResponse as "responses:ServiceTimeByResponse"
+participant ServiceTimeByResponseList as "responses:List<ServiceTimeByResponse>"
 
 participant OrdersPerServiceResponse as "response:OrdersPerServiceResponse"
 
-participant OrdersPerMonthResponse as "response:OrdersPerMonthResponse"
+participant OrdersPerMonthResponse as "responses:OrdersPerMonth"
+participant OrdersPerMonthResponseList as "responses:List<OrdersPerMonth>"
 
 participant ServiceService as "<<Service>>\nServiceService"
 
@@ -30,10 +38,19 @@ participant ServiceRepository as "<<Repository>>\nServiceRepository"
 
 participant ServiceResponse as "response:ServiceResponse"
 
+participant ServiceResponsesList as "responses:List<ServiceResponse>"
+
+participant DatabaseDTOOrdersPerService as "databaseDTOOrdersPerServices: DatabaseDTOOrdersPerService"
+participant DatabaseDTOOrdersPerServiceList as "databaseDTOOrdersPerServices: List<DatabaseDTOOrdersPerService>"
+
+participant DatabaseDTOTotalOrdersPerService as "databaseDTOTotalOrdersPerServices: DatabaseDTOTotalOrdersPerService"
+
+participant DatabaseDTOTotalOrdersPerServiceList as "databaseDTOTotalOrdersPerServices: List<DatabaseDTOTotalOrdersPerService>"
+
 participant Database as "<<Database>>\nDatabase"
 
 
-Admin -> DashB: openReportsPage()
+Admin -> DashB: ReportsPage()
 activate DashB
 
 DashB -> ServiceV: render()
@@ -43,70 +60,61 @@ opt
 
 alt Selected Time-by-Service
 
-    ServiceV -> ServiceController: GET /api/v1/corso/services/time-by-service
+    ServiceV -> TimeByService : render()
+    activate TimeByService
+    TimeByService -> ServiceController: GET /api/v1/corso/services/time-by-service?date_end={?}&date_start={?}
     activate ServiceController
 
-    ServiceController -> ServiceService: getTimeByService()
+    ServiceController -> ServiceService: getServiceTimeByService(date_start, date_end)
     activate ServiceService
 
-    ServiceService -> OrderService: getOrdersByStatusForReports(Status.COMPLETED, Status.IN_PROGRESS)
-    activate OrderService
 
-    OrderService -> OrderRepository: getOrdersByStatusOrStatus(Status.COMPLETED, Status.IN_PROGRESS)
-    activate OrderRepository
-
-    OrderRepository -> Database: SELECT * FROM orders WHERE status = ':status1' OR status = ':status2';
-    activate Database
-
-    Database --> OrderRepository: orders
-    deactivate Database
-
-    OrderRepository --> OrderService: orders
-deactivate OrderRepository
-    OrderService -> OrderResponseMapper: toOrdersResponse(orders)
-
-    activate OrderResponseMapper
-
-    OrderResponseMapper --> OrdersResponse: ordersResponse
-
-    deactivate OrderResponseMapper
-
-    activate OrdersResponse
-
-    OrdersResponse --> OrderService: ordersResponse
-
-    OrderService --> ServiceService: ordersResponse
-    deactivate OrderService
-
-    ServiceService --> ServiceRepository: findAll()
+    ServiceService --> ServiceRepository: getHoursWorkedByServiceFromOrdersInRange(date_start, date_end)
     activate ServiceRepository
 
-    ServiceRepository -> Database: SELECT * FROM services;
+    ServiceRepository -> Database: SELECT s.service_id, s.service_name, IFNULL(report.hours_worked, 0) as hours_worked FROM services s LEFT JOIN (SELECT s.service_id, s.service_name, COALESCE(sum(hours_worked), 0) as hours_worked FROM services s LEFT JOIN orders o ON s.service_id = o.service_id WHERE (o.order_status = 'IN_PROGRESS' OR o.order_status = 'COMPLETED') AND o.order_date BETWEEN :date_start AND :date_end GROUP BY s.service_id, s.service_name) as report ON s.service_id = report.service_id WHERE s.is_active = 1 OR (s.is_active = 0 AND report.hours_worked > 0) ORDER BY report.hours_worked DESC;
+
+
 
     activate Database
 
-    Database --> ServiceRepository: services
+    Database --> ServiceRepository: tuples: List<Object[]>
 
     deactivate Database
 
 
 
-    ServiceRepository --> ServiceResponse: services
-    activate ServiceResponse
+
+ServiceRepository --> ServiceService: tuples: List<Object[]>
     deactivate ServiceRepository
 
-    ServiceResponse --> ServiceService: services
+        loop tuple in tuples
+
+            ServiceService -> ServiceTimeByResponse : ServiceTimeByResponse::new
+            activate ServiceTimeByResponse
+        deactivate ServiceTimeByResponse
+
+        end
 
 
-    ServiceService --> ServiceTimeByResponse: serviceTimeByResponse
-    activate ServiceTimeByResponse
+        ServiceService -> ServiceTimeByResponseList : serviceTimeByResponses: List<ServiceTimeByResponse>
+
+        activate ServiceTimeByResponseList
+
+        ServiceTimeByResponseList --> ServiceService: serviceTimeByResponses: List<ServiceTimeByResponse>
+
+
+
+
+
     deactivate OrdersResponse
     deactivate ServiceResponse
 
-    ServiceTimeByResponse --> ServiceController: serviceTimeByResponse
+    ServiceService --> ServiceController: serviceTimeByResponses
 
-    ServiceController --> ServiceV: serviceTimeByResponse
+    ServiceController --> TimeByService: serviceTimeByResponses
 
+        deactivate ServiceTimeByResponseList
 
 
 
@@ -117,47 +125,56 @@ deactivate OrderRepository
 
     deactivate ServiceTimeByResponse
 
+    deactivate TimeByService
+
 else Selected Monthly-Orders
 
-    ServiceV -> OrderController: GET /api/v1/corso/services/monthly-orders?month={?}&year={?}
+    ServiceV -> OrdersPerMonth : render()
+    activate OrdersPerMonth
+    OrdersPerMonth ->OrderController: GET /api/v1/corso/orders/orders-per-month?year={?}
     activate OrderController
 
-    OrderController ->  OrderService: getOrdersByMonthAndYear(month, year)
+    OrderController ->  OrderService: getTotalOrderRequestByMonth(year)
     activate OrderService
 
-    OrderService -> OrderRepository: getOrdersByMonthAndYear(month, year)
+    OrderService -> OrderRepository: getTotalOrderRequestByMonth(year)
     activate OrderRepository
 
-    OrderRepository -> Database: SELECT * FROM orders WHERE month = ':month' AND year = ':year';
+    OrderRepository -> Database: SELECT months.n AS date_month, IFNULL(y, :year) AS date_year, IFNULL(total_orders, 0) AS total_orders FROM (SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS months LEFT JOIN (SELECT MONTH(orders.order_date) AS m, YEAR(orders.order_date) AS y, COUNT(orders.order_id) AS total_orders FROM orders WHERE YEAR(orders.order_date) = :year AND orders.order_status NOT IN ('DECLINED', 'CANCELLED') GROUP BY m, y) AS report ON months.n = report.m ORDER BY months.n;
+
+
+
     activate Database
 
-    Database --> OrderRepository: orders
+    Database --> OrderRepository: tuples: List<Object[]>
     deactivate Database
 
-    OrderRepository --> OrderService: orders
+    OrderRepository --> OrderService: tuples: List<Object[]>
     deactivate OrderRepository
+    OrderService -> OrdersPerMonthResponseList : ordersPerMonthResponses: List<OrdersPerMonthResponse>
 
-    OrderService -> OrderResponseMapper: toOrdersResponse(orders)
+    activate OrdersPerMonthResponseList
 
-    activate OrderResponseMapper
+    OrdersPerMonthResponseList --> OrderService: ordersPerMonthResponses: List<OrdersPerMonthResponse>
 
-    OrderResponseMapper --> OrdersResponse: ordersResponse
 
-    deactivate OrderResponseMapper
+    loop tuple in tuples
 
-    activate OrdersResponse
+        OrderService -> OrdersPerMonthResponse : OrdersPerMonthResponse::new
+        activate OrdersPerMonthResponse
 
-    OrdersResponse --> OrderService: ordersResponse
+        deactivate OrdersPerMonthResponse
 
-    OrderService --> OrdersPerMonthResponse: ordersPerMonthResponse
-    activate OrdersPerMonthResponse
-    deactivate OrderService
+    end
+
+
 
     deactivate OrdersResponse
 
-    OrdersPerMonthResponse --> OrderController: ordersPerMonthResponse
+    OrderService --> OrderController: ordersPerMonthResponse
+    deactivate OrderService
 
-    OrderController --> ServiceV: ordersPerMonthResponse
+    OrderController --> OrdersPerMonth: ordersPerMonthResponse
 
     deactivate OrdersPerMonthResponse
 
@@ -165,89 +182,139 @@ else Selected Monthly-Orders
 
 
 
+
     deactivate OrderController
     deactivate OrdersResponse
+    deactivate OrdersPerMonthResponseList
+    deactivate OrdersPerMonth
 
 else Selected Orders-per-service
 
-    ServiceV -> ServiceController: GET /api/v1/corso/services/orders-per-service
+    alt if DatesBarDiagram || LineDiagram || StackedBarDiagram
+
+    ServiceV -> OrdersPerService : render()
+    activate OrdersPerService
+    OrdersPerService -> ServiceController: GET /api/v1/corso/services/orders-per-service?date_end={?}&date_start={?}
     activate ServiceController
 
-    ServiceController -> ServiceService: getOrdersPerService()
+    ServiceController -> ServiceService: getTotalOrderRequestByService(date_start, date_end)
     activate ServiceService
 
-    ServiceService -> OrderService: getAllOrders()
-    activate OrderService
-
-    OrderService -> OrderRepository: findAll()
-    activate OrderRepository
-
-    OrderRepository -> Database: SELECT * FROM orders;
-
-    activate Database
-
-    Database --> OrderRepository: orders
-
-    deactivate Database
-
-    OrderRepository --> OrderService: orders
-
-    deactivate OrderRepository
-
-    OrderService -> OrderResponseMapper: toOrdersResponse(orders)
-
-    activate OrderResponseMapper
-
-    OrderResponseMapper --> OrdersResponse: ordersResponse
-
-    deactivate OrderResponseMapper
-
-    activate OrdersResponse
-
-    OrdersResponse --> OrderService: ordersResponse
-
-    OrderService --> ServiceService: ordersResponse
-
-    deactivate OrderService
-
-    ServiceService -> ServiceRepository: findAll()
+    ServiceService --> ServiceRepository: getTotalOrderRequestByService(date_start, date_end)
 
     activate ServiceRepository
 
-    ServiceRepository -> Database: SELECT * FROM services;
+    ServiceRepository -> Database:SELECT s.service_id, s.service_name, COUNT(o.service_id) AS total_order_request, IFNULL(order_date, 'No Orders') AS date FROM services s JOIN (SELECT service_id, order_status, order_date FROM orders WHERE order_date BETWEEN :start_date AND :end_date AND order_status NOT IN ('CANCELLED', 'DECLINED')) o ON s.service_id = o.service_id GROUP BY s.service_id, s.service_name, IFNULL(order_date, 'No Orders') ORDER BY total_order_request DESC;
+
 
     activate Database
 
-    Database --> ServiceRepository: services
 
+    Database --> ServiceRepository: tuples: List<Object[]>
     deactivate Database
 
-    ServiceRepository --> ServiceResponse: services
-
-    activate ServiceResponse
+    ServiceRepository --> ServiceService: tuples: List<Object[]>
 
     deactivate ServiceRepository
 
-    ServiceResponse --> ServiceService: services
+   ServiceService -> DatabaseDTOOrdersPerServiceList : databaseDTOOrdersPerServices: List<DatabaseDTOOrdersPerService>
 
-    ServiceService --> OrdersPerServiceResponse: ordersPerServiceResponse
+    activate DatabaseDTOOrdersPerServiceList
 
-    activate OrdersPerServiceResponse
+    DatabaseDTOOrdersPerServiceList --> ServiceService: databaseDTOOrdersPerServices: List<DatabaseDTOOrdersPerService>
 
-    deactivate OrdersResponse
+    loop tuple in tuples
 
-    deactivate ServiceResponse
+        ServiceService -> DatabaseDTOOrdersPerService : DatabaseDTOOrdersPerService::new
+        activate DatabaseDTOOrdersPerService
 
-    OrdersPerServiceResponse --> ServiceController: ordersPerServiceResponse
+    end
 
-    ServiceController --> ServiceV: ordersPerServiceResponse
+    deactivate DatabaseDTOOrdersPerService
+
+
+
+
+
+    ServiceService -> ServiceService: getAllVisibleServices()
+
+
+    alt if LocalDate.parse(dateEnd).minusMonths(2).isBefore(LocalDate.parse(dateStart)) || LocalDate.parse(dateEnd).minusMonths(2).isEqual(LocalDate.parse(dateStart))
+
+        ServiceService -> ServiceService: getTotalRequestPerDates(services, groupedByDate)
+    else
+
+        ServiceService -> ServiceService: getTotalRequestPerDates(services, groupedByMonth: TreeMap<LocalDate, Long>)
+deactivate DatabaseDTOOrdersPerService
+    end
+
+
+    ServiceService --> ServiceController: jsonArrayString: String
+
+    ServiceController --> OrdersPerService: jsonArrayString: String
+
+    else if PieDiagram || BarDiagram
+
+    ServiceV  -> OrdersPerService : render()
+     OrdersPerService -> ServiceController: GET /api/v1/corso/services/total-orders-per-service?date_end={?}&date_start={?}
+
+    ServiceController -> ServiceService: getTotalOrdersPerService(date_start, date_end)
+
+    ServiceService --> ServiceRepository: getTotalOrdersPerService(date_start, date_end)
+
+    activate ServiceRepository
+
+    ServiceRepository -> Database: SELECT s.service_id, s.service_name, COUNT(o.order_id) AS order_count FROM services s LEFT JOIN (SELECT service_id, order_status, order_date, order_id FROM orders WHERE order_date BETWEEN :start_date AND :end_date AND order_status != 'DECLINED') o ON s.service_id = o.service_id WHERE is_active = 1 OR (s.service_id IN (SELECT service_id FROM orders WHERE order_date BETWEEN :start_date AND :end_date AND order_status != 'DECLINED') AND is_active = 0) GROUP BY s.service_id, s.service_name ORDER BY s.service_name;
+
+
+    activate Database
+
+    Database --> ServiceRepository: tuples: List<Object[]>
+
+    deactivate Database
+
+    ServiceRepository --> ServiceService: tuples: List<Object[]>
+
+    deactivate ServiceRepository
+    ServiceService -> DatabaseDTOTotalOrdersPerServiceList : databaseDTOTotalOrdersPerServices: List<DatabaseDTOTotalOrdersPerService>
+
+    activate DatabaseDTOTotalOrdersPerServiceList
+
+    DatabaseDTOTotalOrdersPerServiceList --> ServiceService: databaseDTOTotalOrdersPerServices: List<DatabaseDTOTotalOrdersPerService>
+
+    loop tuple in tuples
+
+    ServiceService -> DatabaseDTOTotalOrdersPerService : DatabaseDTOTotalOrdersPerService::new
+
+    activate DatabaseDTOTotalOrdersPerService
+        deactivate DatabaseDTOTotalOrdersPerService
+
+    end
+
+
+    deactivate DatabaseDTOTotalOrdersPerServiceList
+
+    ServiceService --> ServiceController: databaseDTOTotalOrdersPerServices : List<DatabaseDTOTotalOrdersPerService>
+
+    ServiceController --> OrdersPerService: databaseDTOTotalOrdersPerServices : List<DatabaseDTOTotalOrdersPerService>
 
     deactivate ServiceService
 
     deactivate ServiceController
 
-    deactivate OrdersPerServiceResponse
+    deactivate DatabaseDTOTotalOrdersPerService
 
+    deactivate DatabaseDTOTotalOrdersPerServiceList
+
+    
+
+
+
+
+
+
+
+    end
 end
 
 @enduml
