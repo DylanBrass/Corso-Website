@@ -45,7 +45,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, String> 
                       JOIN (SELECT service_id, order_status, order_date
                                  FROM orders
                                  WHERE order_date BETWEEN :start_date AND :end_date
-                                   AND order_status != 'CANCELLED'
                                    AND order_status != 'DECLINED') o
                                 ON s.service_id = o.service_id
              GROUP BY s.service_id, s.service_name, IFNULL(order_date, 'No Orders')
