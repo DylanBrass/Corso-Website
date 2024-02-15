@@ -20,11 +20,12 @@ package "Order_Subdomain"{
         }
 
 
-        class "ordersPerMonthResponse" as ordersPerMonthResponse{
-            + month: int
-            + year: int
-            + totalOrders: int
-            + orders: List<OrderResponse>
+        class "OrdersPerMonth" as ordersPerMonthResponse{
+            + month: Long
+            + year: Long
+            + totalOrders: Long
+
+            + OrdersPerMonth(tuple : Object[])
         }
 
 
@@ -105,7 +106,7 @@ package "Order_Subdomain"{
             + cancelByCustomerOrderByOrderId(orderId: String): OrderResponse
             + updateOrderByOrderId(orderId: String, userId: String, customerUpdateOrderRequest: OrderCustomerRequest): OrderResponse
             + countAllOverdueOrders(): Integer
-            + getOrdersByMonthAndYear(month: int, year: int): List<ordersPerMonthResponse>
+            + getTotalOrderRequestByMonth(year: int): List<OrdersPerMonth>
         }
 
 
@@ -137,7 +138,7 @@ package "Order_Subdomain"{
             + getAllOrdersWithDefaultSettings(): List<OrderResponse>
             + getOrderByCustomerAndStatus(userId: String, status: String, pageSize: int, offset: int): List<OrderResponse>
             + countAllOverdueOrders(): Integer
-            + getOrdersByMonthAndYear(month: int, year: int): List<ordersPerMonthResponse>
+            + getTotalOrderRequestByMonth(year: int): List<OrdersPerMonth>
 
         }
 
@@ -172,6 +173,7 @@ package "Order_Subdomain"{
             + countAllBy(): Integer
             + existsByUserId(userId: String): Boolean
             + getOrdersByStatusOrStatus(status1: String, status2: String): List<Order>
+            + getTotalOrderRequestByMonth(year: int): List<Object[]>
         }
         class OrderIdentifier {
             - orderId: String

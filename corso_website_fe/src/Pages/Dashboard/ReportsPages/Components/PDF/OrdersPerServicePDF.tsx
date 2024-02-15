@@ -14,9 +14,7 @@ export default function OrdersPerServicePDF({ordersPerService, allServices, choi
 
     console.log(allServices);
 
-    return <ReactPDFChart
-        style={{width: "100%", height: "100%"}}
-    >
+    return <ReactPDFChart>
         <div>
             {choice.includes(1) &&
                 <BarChart data={ordersPerService}

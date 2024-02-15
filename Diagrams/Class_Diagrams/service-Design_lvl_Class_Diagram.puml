@@ -14,27 +14,39 @@ package "ServiceSubdomain"{
             + countAllServices() : ResponseEntity<Integer>
             + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ResponseEntity<ServiceResponse>
             + changeServiceVisibility(serviceId : String) : ResponseEntity<ServiceResponse>
-            + getTimeByService() : ResponseEntity<List<TimeByServiceResponse>>
-            +getOrdersPerService() : ResponseEntity<List<OrdersPerServiceResponse>>
+            + getServiceTimeByService(date_start: String, date_end: String) : ResponseEntity<List<ServiceTimeByResponse>>
+            + getTotalOrderRequestByService(date_start: String, date_end: String) : ResponseEntity<String>
+            + getTotalOrdersPerService(date_start: String, date_end: String) : ResponseEntity<List<DatabaseDTOTotalOrdersPerService>>
         }
 
 
-        class "OrdersPerServiceResponse" as ordersPerServiceResponse{
+        class "DatabaseDTOTotalOrdersPerService" as ordersPerServiceResponse{
             - serviceId : String
             - serviceName: String
-            - totalOrders : int
+            - totalOrderRequest : Long
             ---
+            + DatabaseDTOTotalOrdersPerService(tuple: Object[])
+        }
+
+        class "DatabaseDTOOrdersPerService" as databaseDTOOrdersPerService{
+            - serviceId : String
+            - serviceName: String
+            - totalOrderRequest : Long
+            - date : LocalDate
+            ---
+            + DatabaseDTOOrdersPerService(tuple: Object[])
         }
 
 
 
 
 
-        class "TimeByServiceResponse" as timeByServiceResponse{
+        class "ServiceTimeByResponse" as timeByServiceResponse{
             - serviceId : String
             - serviceName: String
-            - totalHours : int
+            - hours_worked : Long
             ---
+            + ServiceTimeByResponse(tuple: Object[])
         }
 
         class "ServiceResponse" as serviceResponse{
@@ -71,8 +83,9 @@ package "ServiceSubdomain"{
             + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
             + changeServiceVisibility(serviceId : String) : ServiceResponse
             + countAllServices() : int
-            + getTimeByService() : List<TimeByServiceResponse>
-            + getOrdersPerService() : List<OrdersPerServiceResponse>
+            + getServiceTimeByService(date_start: String, date_end: String) : List<TimeByServiceResponse>
+            + getTotalOrderRequestByService(date_start: String, date_end: String) : String
+            + getTotalOrdersPerService(date_start: String, date_end: String) : List<DatabaseDTOTotalOrdersPerService>
 
         }
 
@@ -90,8 +103,9 @@ package "ServiceSubdomain"{
              + modifyService(serviceId : String, serviceRequest : ServiceRequest) : ServiceResponse
              + changeServiceVisibility(serviceId : String) : ServiceResponse
              + countAllServices() : int
-                + getTimeByService() : List<TimeByServiceResponse>
-                + getOrdersPerService() : List<OrdersPerServiceResponse>
+                + getServiceTimeByService(date_start: String, date_end: String) : List<TimeByServiceResponse>
+                + getTotalOrderRequestByService(date_start: String, date_end: String) : String
+                + getTotalOrdersPerService(date_start: String, date_end: String) : List<DatabaseDTOTotalOrdersPerService>
         }
 
         serviceImpl --> timeByServiceResponse
@@ -105,6 +119,9 @@ package "ServiceSubdomain"{
             + findByServiceIdentifier_ServiceId(serviceId : String) : Service
             + findAllByIsActive(isActive : boolean) : List<Service>
             + countAllBy() : int
+            + getHoursWorkedByServiceFromOrdersInRange(date_start: String, date_end: String) : List<Object[]>
+            + getTotalOrderRequestByService(date_start: String, date_end: String) : List<Object[]>
+            + getTotalOrdersPerService(date_start: String, date_end: String) : List<Object[]>
 
         }
 
@@ -133,14 +150,11 @@ package "ServiceSubdomain"{
 
         interface repository extends JpaRepository
 
-<<<<<<< Updated upstream
-=======
 
         serviceImpl --> service
 
         serviceImpl --> ordersPerServiceResponse
 
->>>>>>> Stashed changes
         repository --> service
 
         service --> ServiceIdentifier
@@ -187,6 +201,8 @@ package "ServiceSubdomain"{
     controller --> serviceImpl
 
     serviceImpl --> repository
+
+    serviceImpl -> databaseDTOOrdersPerService
 
 }
 

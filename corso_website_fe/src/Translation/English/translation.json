@@ -8,6 +8,7 @@
   "error": "Error",
   "dueDate": "Due Date",
   "orderDate": "Order Date",
+  "invalidDateRange": "Invalid date range",
   "navigation": {
     "language": "Français",
     "home": "Home",

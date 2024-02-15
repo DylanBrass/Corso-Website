@@ -172,7 +172,7 @@ public class ServiceServiceImpl implements ServiceService {
                     .map(DatabaseDTOOrdersPerService::new)
                     .toList();
 
-            List<ServiceResponse> services = getAllServices();
+            List<ServiceResponse> services = getAllVisibleServices();
 
             if (LocalDate.parse(dateEnd).minusMonths(2).isBefore(LocalDate.parse(dateStart))
                     || LocalDate.parse(dateEnd).minusMonths(2).isEqual(LocalDate.parse(dateStart))) {

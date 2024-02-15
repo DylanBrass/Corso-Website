@@ -59,7 +59,7 @@ export default function MakePdfPage() {
             .catch((e: any) => {
                 console.error(e);
                 // @ts-ignore
-                swal(t("alerts.error"), t("alerts.errorFetchingData")  + e.response.data.message, "error");
+                swal(t("alerts.error"), t("alerts.errorFetchingData") + e.response.data.message, "error");
                 // @ts-ignore
                 auth.authError(e.response.status)
             }))
@@ -153,7 +153,7 @@ export default function MakePdfPage() {
 
     const getMonthName = (month: string) => {
         const monthIndex = parseInt(month);
-        const monthName = new Date(Date.UTC(2000, monthIndex, 1)).toLocaleString(i18n.language, { month: 'long' });
+        const monthName = new Date(Date.UTC(2000, monthIndex, 1)).toLocaleString(i18n.language, {month: 'long'});
         return monthName.charAt(0).toUpperCase() + monthName.slice(1);
     };
 
@@ -360,172 +360,175 @@ export default function MakePdfPage() {
                     {t("reports.refreshPDF")}
                 </button>
             </center>
-            <PDFViewer width={"100%"} height={"900px"}>
-                <Document
-                    title={"Corso Reports"}
-                    author="Corso"
-                    subject="Corso Reports"
-                    keywords="corso, reports, pdf"
+            <center>
+                <PDFViewer width={"90%"} height={"900px"}>
+                    <Document
+                        title={"Corso Reports"}
+                        author="Corso"
+                        subject="Corso Reports"
+                        keywords="corso, reports, pdf"
 
-                >
+                    >
 
-                    <PresentationPage/>
-                    {displayOrdersPerMonth &&
-                        <Page size="A4">
-                            <div>
-                                <Text style={{ fontSize: 20, margin: 12 }}>
-                                    {t("reports.ordersPerMonth") + " "}
-                                    ({t("reports.in")} {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
-                                </Text>
-
-                                <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth} choice={displayOrdersPerMonthChoice} />
-
-                                {showTextForOrdersPerMonth && ordersPerMonth.map((month: any) => (
-                                    <Text style={{ fontSize: 12, margin: 12 }} key={month.month}>
-                                        {getMonthName(month.month)}: {month.totalOrders}
+                        <PresentationPage/>
+                        {displayOrdersPerMonth &&
+                            <Page size="A4">
+                                <div>
+                                    <Text style={{fontSize: 20, margin: 12}}>
+                                        {t("reports.ordersPerMonth") + " "}
+                                        ({t("reports.in")} {(document.getElementById("year") as HTMLInputElement)?.value || currentYear})
                                     </Text>
-                                ))}
-                            </div>
-                        </Page>
 
-                    }
+                                    <OrdersPerMonthPDF ordersPerMonth={ordersPerMonth}
+                                                       choice={displayOrdersPerMonthChoice}/>
 
-                    {displayOrdersPerService &&
-                        <Page size="A4">
+                                    {showTextForOrdersPerMonth && ordersPerMonth.map((month: any) => (
+                                        <Text style={{fontSize: 12, margin: 12}} key={month.month}>
+                                            {getMonthName(month.month)}: {month.totalOrders}
+                                        </Text>
+                                    ))}
+                                </div>
+                            </Page>
 
-                            <div>
-                                <Text style={{
-                                    fontSize: 20,
-                                    margin: 12
-                                }}>
-                                    {t("reports.ordersPerService") + " "}
-                                    ({t("reports.between")} {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} {t("reports.and")} {(document.getElementById("end") as HTMLInputElement)?.value})
-                                </Text>
-                                <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
-                                                     choice={page2Choice}/>
+                        }
 
-                                {showTextForOrdersPerService &&
+                        {displayOrdersPerService &&
+                            <Page size="A4">
 
-                                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                                        {orderPerService.map((service: any) => {
-                                            console.log("service", service);
-                                            return (
+                                <div>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        margin: 12
+                                    }}>
+                                        {t("reports.ordersPerService") + " "}
+                                        ({t("reports.between")} {(document.getElementById("start") as HTMLInputElement)?.value || "choose a date"} {t("reports.and")} {(document.getElementById("end") as HTMLInputElement)?.value})
+                                    </Text>
+                                    <OrdersPerServicePDF ordersPerService={orderPerService} allServices={allServices}
+                                                         choice={page2Choice}/>
+
+                                    {showTextForOrdersPerService &&
+
+                                        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                                            {orderPerService.map((service: any) => {
+                                                console.log("service", service);
+                                                return (
+                                                    <Text
+                                                        wrap={false}
+                                                        style={{
+                                                            fontSize: 12,
+                                                            margin: 12,
+                                                        }} key={service.date}>
+                                                        <Text style={{
+                                                            fontSize: 20,
+                                                            margin: 12,
+                                                        }}>
+                                                            {checkIfDatesAreMoreOrEqualThanTwoMonths(
+                                                                (document.getElementById("start") as HTMLInputElement)?.value || new Date().toISOString(),
+                                                                (document.getElementById("end") as HTMLInputElement)?.value || new Date().toISOString()
+                                                            ) ? service.date.substring(0, 7) : service.date}
+                                                        </Text>
+                                                        {"\n"}
+                                                        {Object.keys(service)
+                                                            .filter((key) => key !== "date")
+                                                            .map((key) => (
+                                                                <Text key={key}>
+                                                                    {getValuesFromJSON(i18n.language, key)}: {service[key]}
+                                                                    {"\n"}
+                                                                </Text>
+                                                            ))}
+                                                    </Text>
+                                                );
+                                            })}
+                                        </View>
+                                    }
+                                </div>
+                            </Page>
+
+                        }
+                        {displayTotalOrdersPerService &&
+                            <Page size="A4">
+
+                                <div>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        margin: 12
+                                    }}>
+                                        {t("reports.totalOrdersPerService") + " "}
+                                        ({t("reports.between")} {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} {t("reports.and")} {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
+                                    </Text>
+                                    <TotalOrdersPerServicePDF totalOrdersPerService={totalOrdersPerService}
+                                                              choice={totalOrdersPerServiceChoice}/>
+
+                                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
+                                        {totalOrdersPerService.map((service: any) => (
+                                            <Text
+                                                style={{
+                                                    fontSize: 12,
+                                                    margin: 12,
+                                                }} key={service.serviceName}>
                                                 <Text
                                                     wrap={false}
                                                     style={{
-                                                        fontSize: 12,
-                                                        margin: 12,
-                                                    }} key={service.date}>
-                                                    <Text style={{
-                                                        fontSize: 20,
-                                                        margin: 12,
+                                                        color: stringToColour(service.serviceName),
+                                                        backgroundColor: stringToColour(service.serviceName),
+                                                        padding: 5,
+                                                        margin: 5,
+                                                        borderRadius: 5,
                                                     }}>
-                                                        {checkIfDatesAreMoreOrEqualThanTwoMonths(
-                                                            (document.getElementById("start") as HTMLInputElement)?.value || new Date().toISOString(),
-                                                            (document.getElementById("end") as HTMLInputElement)?.value || new Date().toISOString()
-                                                        ) ? service.date.substring(0, 7) : service.date}
-                                                    </Text>
-                                                    {"\n"}
-                                                    {Object.keys(service)
-                                                        .filter((key) => key !== "date")
-                                                        .map((key) => (
-                                                            <Text key={key}>
-                                                                {getValuesFromJSON(i18n.language,key)}: {service[key]}
-                                                                {"\n"}
-                                                            </Text>
-                                                        ))}
+                                                    M
                                                 </Text>
-                                            );
-                                        })}
+                                                {"    "}
+                                                {getValuesFromJSON(i18n.language, service.serviceName)}: {service.totalOrderRequest} {t("reports.orders")}
+                                            </Text>
+                                        ))}
                                     </View>
-                                }
-                            </div>
-                        </Page>
+                                </div>
+                            </Page>
+                        }
+                        {displayTimeByService &&
+                            <Page size="A4">
 
-                    }
-                    {displayTotalOrdersPerService &&
-                        <Page size="A4">
+                                <div>
 
-                            <div>
-                                <Text style={{
-                                    fontSize: 20,
-                                    margin: 12
-                                }}>
-                                    {t("reports.totalOrdersPerService") + " "}
-                                    ({t("reports.between")} {(document.getElementById("startTotal") as HTMLInputElement)?.value || "choose date"} {t("reports.and")} {(document.getElementById("endTotal") as HTMLInputElement)?.value || "choose date"})
-                                </Text>
-                                <TotalOrdersPerServicePDF totalOrdersPerService={totalOrdersPerService}
-                                                          choice={totalOrdersPerServiceChoice}/>
-
-                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
-                                    {totalOrdersPerService.map((service: any) => (
-                                        <Text
-                                            style={{
-                                                fontSize: 12,
-                                                margin: 12,
-                                            }} key={service.serviceName}>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        margin: 12
+                                    }}>
+                                        {t("reports.timeByService") + " "}
+                                        ({t("reports.between")} {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} {t("reports.and")} {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
+                                    </Text>
+                                    <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
+                                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
+                                        {timeByService.map((service: any) => (
                                             <Text
-                                                wrap={false}
                                                 style={{
-                                                    color: stringToColour(service.serviceName),
-                                                    backgroundColor: stringToColour(service.serviceName),
-                                                    padding: 5,
-                                                    margin: 5,
-                                                    borderRadius: 5,
-                                                }}>
-                                                M
+                                                    fontSize: 12,
+                                                    margin: 12,
+                                                }} key={service.serviceName}>
+                                                <Text
+                                                    wrap={false}
+                                                    style={{
+                                                        color: stringToColour(service.serviceName),
+                                                        backgroundColor: stringToColour(service.serviceName),
+                                                        padding: 5,
+                                                        margin: 5,
+                                                        borderRadius: 5,
+                                                    }}>
+                                                    M
+                                                </Text>
+                                                {"    "}
+                                                {getValuesFromJSON(i18n.language, service.serviceName)}: {service.hours_worked} {t("order.hours")}
                                             </Text>
-                                            {"    "}
-                                            {getValuesFromJSON(i18n.language,service.serviceName)}: {service.totalOrderRequest} {t("reports.orders")}
-                                        </Text>
-                                    ))}
-                                </View>
-                            </div>
-                        </Page>
-                    }
-                    {displayTimeByService &&
-                        <Page size="A4">
-
-                            <div>
-
-                                <Text style={{
-                                    fontSize: 20,
-                                    margin: 12
-                                }}>
-                                    {t("reports.timeByService") + " "}
-                                    ({t("reports.between")} {(document.getElementById("startTimeBy") as HTMLInputElement)?.value || "choose date"} {t("reports.and")} {(document.getElementById("endTimeBy") as HTMLInputElement)?.value || "choose date"})
-                                </Text>
-                                <TimeByServicePDF data={timeByService} choice={timeByServiceChoice}/>
-                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}} wrap={false}>
-                                    {timeByService.map((service: any) => (
-                                        <Text
-                                            style={{
-                                                fontSize: 12,
-                                                margin: 12,
-                                            }} key={service.serviceName}>
-                                            <Text
-                                                wrap={false}
-                                                style={{
-                                                    color: stringToColour(service.serviceName),
-                                                    backgroundColor: stringToColour(service.serviceName),
-                                                    padding: 5,
-                                                    margin: 5,
-                                                    borderRadius: 5,
-                                                }}>
-                                                M
-                                            </Text>
-                                            {"    "}
-                                            {getValuesFromJSON(i18n.language,service.serviceName)}: {service.hours_worked} {t("order.hours")}
-                                        </Text>
-                                    ))}
-                                </View>
-                            </div>
-                        </Page>
-                    }
+                                        ))}
+                                    </View>
+                                </div>
+                            </Page>
+                        }
 
 
-                </Document>
-            </PDFViewer>
+                    </Document>
+                </PDFViewer>
+            </center>
         </div>
     )
 }
