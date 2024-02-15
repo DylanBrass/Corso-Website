@@ -1,7 +1,7 @@
 @startuml
 actor User
 
-participant "Order Dashboard" as ODashB
+participant "Profile Page" as ODashB
 
 participant "CreateOrderPage" as COP
 
@@ -27,7 +27,7 @@ participant "OrderRequestMapper" as OreqM
 
 
 opt
-User -> ODashB : CreateOrder
+User -> ODashB : RequestOrder
 activate ODashB
 
 ODashB -> COP : render()
