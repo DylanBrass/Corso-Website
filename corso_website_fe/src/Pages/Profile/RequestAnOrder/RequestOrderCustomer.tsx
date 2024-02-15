@@ -66,6 +66,7 @@ function RequestOrder() {
                     if (r.status === 200) {
 
                         if (r.data.verified === false) {
+                            console.log("User is not verified")
                             setUnverifiedEmail(r.data.email);
                         }
 
@@ -152,7 +153,9 @@ function RequestOrder() {
     })
 
     const requestOrder = () => {
-        if (isVerified) {
+        if (isVerified
+            || unverifiedEmail === ""
+        ) {
             swal({
                 title: t("alerts.email.confirmEmail"),
                 text: t("alerts.email.confirmEmailMessage", {email: email}),
@@ -207,7 +210,7 @@ function RequestOrder() {
         const customerApartment = (document.getElementById("customerApartment") as HTMLInputElement).value;
         const customerDueDate = (document.getElementById("customerDueDate") as HTMLInputElement).value;
 
-        if (!selectedServiceId || !orderDescription.trim() || !customerFullName.trim() || !customerPhone.trim()
+        if (!selectedServiceId || !orderDescription.trim() || !customerFullName.trim()
             || !customerAddress.trim() || !customerPostalCode.trim() || !customerCity.trim()
             || !customerDueDate.trim()
         ) {
