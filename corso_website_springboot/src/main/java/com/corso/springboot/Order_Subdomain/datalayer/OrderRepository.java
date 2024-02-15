@@ -54,7 +54,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
 
     @Query(value = """
-
             SELECT
                      months.n AS date_month,
                      IFNULL(y, :year) AS date_year,
@@ -75,7 +74,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
                      GROUP BY m, y
                  ) AS report ON months.n = report.m
                  ORDER BY months.n;
-                 
     """, nativeQuery = true
     )
     List<Object[]> getTotalOrderRequestByMonth(@Param("year") int year);

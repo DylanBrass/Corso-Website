@@ -60,9 +60,10 @@ const AuthProvider = ({children}) => {
                 }
             })
                 .then(r => {
+                    Cookies.set("isVerified", r.data.verified)
+
                     if (r.status === 200 && r.data.verified === true) {
                         console.log("User is verified")
-                        Cookies.set("isVerified", r.data.verified)
                         Cookies.set("username", r.data.name)
                         Cookies.set("email", r.data.email)
                     } else {
@@ -91,7 +92,6 @@ const AuthProvider = ({children}) => {
                     if (r.status === 200) {
                         Cookies.set("username", r.data.username)
                         Cookies.set("email", r.data.email)
-                        Cookies.set("isVerified", "true")
                     }
                 })
                 .catch(e => {
