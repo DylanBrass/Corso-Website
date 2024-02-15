@@ -82,6 +82,10 @@
         transform: translateY(4px);
     }
 
+    &:disabled{
+        color: rgba(0, 0, 0, 0);
+    }
+
 }
 
 .btn-style-yellow{
@@ -132,4 +136,3 @@
     text-transform: uppercase;
     text-align: center;
 }
-
