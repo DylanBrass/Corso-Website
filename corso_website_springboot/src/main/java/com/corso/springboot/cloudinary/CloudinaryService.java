@@ -2,26 +2,29 @@ package com.corso.springboot.cloudinary;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class CloudinaryService {
 
     private final Cloudinary cloudinary;
 
-    public CloudinaryService() {
-        cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "dszhbawv7",
-                "api_key", "533582356614965",
-                "api_secret", "katPxshTkWq5wdvRa24ukrjqrLI",
-                "secure", true));
+
+    public CloudinaryService(@Value("${cloudinary.cloud-name}") String cloudName,
+                             @Value("${cloudinary.api-key}") String apiKey,
+                             @Value("${cloudinary.api-secret}") String apiSecret) {
+
+        this.cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret));
     }
 
     public String uploadBase64Image(String base64Image) throws IOException {
@@ -78,7 +81,7 @@ public class CloudinaryService {
         }
     }
 
-    public String deleteCloudinaryImage(String publicId) throws IOException {
+    public void deleteCloudinaryImage(String publicId) throws IOException {
         try {
 
             // Deletes the image from Cloudinary
@@ -90,7 +93,6 @@ public class CloudinaryService {
                 throw new IllegalStateException(deletedUrl + "Failed to delete the picture from Cloudinary.");
             }
 
-            return deletedUrl;
         } catch (IOException e) {
             throw new IOException("Error while deleting the image from Cloudinary.", e);
         }
