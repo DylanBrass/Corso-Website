@@ -17,6 +17,8 @@ import {CCarousel, CCarouselItem} from "@coreui/react";
 import {useTranslation} from "react-i18next";
 import BackButton from "../../../Components/BackButton";
 import '../../globalStyling/globalStyling.css';
+import i18next from "i18next";
+import {getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function ViewSpecificOrder() {
 
@@ -143,7 +145,7 @@ function ViewSpecificOrder() {
                         </div>
                         <div className="row text-start">
                             <h1>Service</h1>
-                            <p>{order.service.serviceName}</p>
+                            <p>{getValuesFromJSON(i18next.language,order.service.serviceName)}</p>
                         </div>
                         {(order.orderDescription !== null && order.orderDescription !== "") &&
                             <div className="row text-start">

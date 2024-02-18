@@ -8,8 +8,11 @@ frontend:
 backend:
   url: http://localhost:8080/
 
-website:
-  domain: localhost
+cloudinary:
+  cloud_name: dszhbawv7
+  api_key: 533582356614965
+  api_secret: katPxshTkWq5wdvRa24ukrjqrLI
+
 
 logging:
   level:
@@ -52,14 +55,17 @@ spring:
       platform: h2
       mode: always
 
+cloudinary:
+  cloud_name: dszhbawv7
+  api_key: 533582356614965
+  api_secret: katPxshTkWq5wdvRa24ukrjqrLI
+
+
 frontend:
   url: http://localhost:3000/
 
 backend:
   url: http://localhost:8080/
-
-website:
-  domain: localhost
 
 logging:
   level:
@@ -78,9 +84,9 @@ spring:
     resources:
       add-mappings: false
   datasource:
-    url: jdbc:mysql:///corso-dev-db?cloudSqlInstance=corso-dev-website:northamerica-northeast1:corso-dev-website&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=corso-dev-website-user&password=f#CoFJh*p\gaL+t)&useSSL=false
-    username: corso-dev-website-user
-    password: f#CoFJh*p\gaL+t)
+    url: jdbc:mysql://CorsoWebsiteUser:AVNS_MopAriW0UWWVFdjOBlB@db-mysql-nyc3-65453-do-user-15647640-0.c.db.ondigitalocean.com:25060/corso-dev-db?ssl-mode=REQUIRED&sslCa=ca-certificate.crt
+    username: CorsoWebsiteUser
+    password: AVNS_MopAriW0UWWVFdjOBlB
   jpa:
     hibernate:
       ddl-auto: none
@@ -90,6 +96,11 @@ spring:
       mode: always
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+cloudinary:
+  cloud_name: dszhbawv7
+  api_key: 533582356614965
+  api_secret: katPxshTkWq5wdvRa24ukrjqrLI
 
 
 server:
@@ -106,8 +117,6 @@ frontend:
 backend:
   url: http://localhost:8080/
 
-website:
-  domain: localhost
 
 spring.datasource.hikari.initializationFailTimeout: 60000
 
@@ -149,8 +158,10 @@ frontend:
 backend:
   url: https://api.corsoelectriqueinc.tech/
 
-website:
-  domain: corso-dev.com
+cloudinary:
+  cloud_name: dszhbawv7
+  api_key: 533582356614965
+  api_secret: katPxshTkWq5wdvRa24ukrjqrLI
 
 logging:
   level:

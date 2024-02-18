@@ -25,7 +25,7 @@ function AddCustomerInformation() {
     const [isLoading, setIsLoading] = useState(false);
 
     const {ref} = usePlacesWidget({
-        apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
+        apiKey: process.env.REACT_APP_MAPS_API_KEY,
         onPlaceSelected: (place) => {
             try {
                 document.getElementById("city")!.setAttribute("value", place.address_components[2].long_name)
