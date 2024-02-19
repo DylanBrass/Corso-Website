@@ -115,7 +115,7 @@ Here are some guidelines on how to use two of the customer features, the others 
 <a name="credits"></a>
 ### Credits
 Meet the brilliant minds behind the magic of Corso Electrique, where professionalism meets a dash of enchantment:
-- **Dylan Brassard ([@DylanBrassard](https://github.com/DylanBrass)):** Master of the impossible, Dylan worked tirelessly on database architecture, backend development, and frontend design. His expertise also extended to implementing a secure authentication system using Auth0.
+- **Dylan Brassard ([@DylanBrassard](https://github.com/DylanBrass)):** Dylan worked on database architecture, backend development, and frontend design. He also helped implementing a secure authentication system using Auth0.
 - **Denisa Hategan ([@DenisaHategan](https://github.com/DenisaNicoletaH)):** Denisa's proficiency in both backend and frontend development added a valuable dimension to the project. Her collaborative spirit and problem-solving abilities greatly enhanced the overall quality of Corso's website.
 - **Karina Evangelista ([@KarinaEvangelista](https://github.com/KarinaSofia)):** Karina brought her skills to both the backend and frontend development, contributing to the seamless functioning of the website. Her attention to detail and dedication played a key role in shaping the user experience.
 - **Mila Kehayova ([@MilaKehayova](https://github.com/Mila5847)):** Mila made invaluable contributions to both backend and frontend development, playing a key role in crafting the website's features and functionality. Her dedication to delivering quality ensured a platform that is both robust and user-friendly.
