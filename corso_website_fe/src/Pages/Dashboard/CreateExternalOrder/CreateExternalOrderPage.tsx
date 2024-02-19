@@ -309,7 +309,7 @@ function CreateExternalOrderPage() {
                             </div>
                             <div className="col-sm-3">
 
-                                <select name="serviceId" id="serviceId" required>
+                                <select className={"w-100"} name="serviceId" id="serviceId" required>
                                     {
                                         allServices.map((service: any) => {
                                             return (

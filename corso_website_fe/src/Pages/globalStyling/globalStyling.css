@@ -2,7 +2,7 @@
 .btn-style{
     color: white !important;
     border: none;
-    padding: 10px 50px;
+    padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -31,7 +31,7 @@
 .btn-style-green{
     color: black;
     border: none;
-    padding: 10px 50px;
+    padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -59,7 +59,7 @@
 .btn-style-red{
     color: black;
     border: none;
-    padding: 10px 30px;
+    padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -80,10 +80,6 @@
         background: #d02828;
         color: white;
         transform: translateY(4px);
-    }
-
-    &:disabled{
-        color: rgba(0, 0, 0, 0);
     }
 
 }

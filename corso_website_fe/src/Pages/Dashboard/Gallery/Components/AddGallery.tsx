@@ -79,14 +79,14 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                             <textarea className={"form-control"} id="description_en" rows={3}
                                       maxLength={120}
                                       placeholder={"Enter a description in English"}
-                            required/>
+                                      required/>
 
                             <br />
                             <label htmlFor="description">Description en français</label>
                             <textarea className={"form-control"} id="description_fr" rows={3}
                                       maxLength={120}
                                       placeholder={t("Entrez une description en français")}
-                            required/>
+                                      required/>
                         </div>
                         <div className={"form-group col-12 col-md-6 add-image-box-right"}
                              style={{
@@ -109,14 +109,14 @@ function AddGallery({fetchGalleries}: { fetchGalleries: () => void }) {
                             <p>{t("editGalleryPage.tip")}</p>
                             {
                                 newImagePreview ?
-                                    <img src={newImagePreview} alt={"preview"} className={"img-fluid border m-3"} />
+                                    <img src={newImagePreview} alt={"preview"} className={"img-fluid border"} />
                                     :
-                                    <img src={templateImg} alt={"preview"} className={"img-fluid border m-3"}/>
+                                    <img src={templateImg} alt={"preview"} className={"img-fluid border"}/>
                             }
 
                         </div>
                         {isLoading ? "" :
-                        <button type="submit" className={"btn btn-style w-25 m-auto mb-4 mt-4"}>{t("submitButton")}</button>
+                            <button type="submit" className={"btn btn-style w-50 m-auto mb-4 mt-4"}>{t("submitButton")}</button>
                         }
 
                         <div className={isLoading ? "d-block spinner-visible text-center" : "d-none"}>
