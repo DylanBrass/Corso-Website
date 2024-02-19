@@ -37,7 +37,7 @@ function CreateExternalOrderPage() {
     }, [i18n.language, t]);
 
     const {ref} = usePlacesWidget({
-        apiKey: process.env.REACT_APP_MAPS_API_KEY,
+        apiKey: "AIzaSyATOXwze5SV7A2-XyRvwT9WIPJxfA2bSPk",
         onPlaceSelected: (place) => {
             try {
                 document.getElementById("customerAddress")!.setAttribute("value", place.formatted_address)
@@ -309,7 +309,7 @@ function CreateExternalOrderPage() {
                             </div>
                             <div className="col-sm-3">
 
-                                <select name="serviceId" id="serviceId" required>
+                                <select className={"w-100"} name="serviceId" id="serviceId" required>
                                     {
                                         allServices.map((service: any) => {
                                             return (
