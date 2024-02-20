@@ -20,25 +20,17 @@ public final class SpaCsrfToken extends CsrfTokenRequestAttributeHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
-        log.info("CSRF Token in handle: " + csrfToken.get().getToken());
-
-
         this.delegate.handle(request, response, csrfToken);
     }
 
     @Override
     public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
 
-
-        log.info("CSRF Token in resolveCsrfMethod: " + csrfToken.getToken());
         if (StringUtils.hasText(request.getHeader(csrfToken.getHeaderName()))) {
-            log.info("CSRF Token in resolveCsrfMethod 1: " + csrfToken.getToken());
             return super.resolveCsrfTokenValue(request, csrfToken);
         }
 
 
-
-        log.info("CSRF Token in resolveCsrfMethod 2: " + csrfToken.getToken());
         return this.delegate.resolveCsrfTokenValue(request, csrfToken);
     }
 
