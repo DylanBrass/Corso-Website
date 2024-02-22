@@ -17,7 +17,7 @@ actor "Admin" as Admin #Red
 rectangle System {
   rectangle "Reviews Subsystem" as Reviews {
     usecase "5.1 : View reviews" as UC1
-    usecase "5.2 : Leave a review on Service" as  UC2
+    usecase "5.2 : Leave a review" as  UC2
     usecase "5.3 : Manage Review" as UC3
     usecase "5.4 : Modify review Section" as UC4
   }

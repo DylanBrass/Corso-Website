@@ -84,7 +84,9 @@ function ViewSpecificOrder() {
                     // @ts-ignore
                     swal(t("alerts.order.cancelledOrderTitle"), t("alerts.order.cancelledOrderMessage"), "success")
                         .then(() => {
+                            //go to previous page and refresh
                             navigate(-1);
+                            window.location.reload();
                         })
                 }
             }).catch(

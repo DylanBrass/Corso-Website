@@ -82,11 +82,11 @@ activate allFaq
 
 allFaq --> FaqService: all:List<Faq>
 
-destroy FaqRepository
+deactivate FaqRepository
 
 FaqService -> FaqResponseMapper: mapToResponse(all)
 
-destroy allFaq
+deactivate allFaq
 
 activate FaqResponseMapper
 
@@ -97,11 +97,11 @@ activate allResponse
 allResponse --> FaqService: allResponse:List<FaqResponse>
 
 
-destroy FaqResponseMapper
+deactivate FaqResponseMapper
 
 FaqService --> FaqController: allResponse:List<FaqResponse>
 
-destroy FaqService
+deactivate FaqService
 
 alt User is Admin
 
@@ -116,9 +116,9 @@ FaqController -> ViewAllFaqPage: render(allResponse)
 end
 
 
-destroy allResponse
+deactivate allResponse
 
-destroy FaqController
+deactivate FaqController
 
 deactivate ViewAllFaqPage
 

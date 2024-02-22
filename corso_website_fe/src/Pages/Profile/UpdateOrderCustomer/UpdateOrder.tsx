@@ -128,7 +128,8 @@ function UpdateOrder() {
 
                     swal(t("alerts.order.orderUpdatedTitle"), t("alerts.order.orderUpdatedMessage"), "success")
                         .then(() => {
-                            navigate(-1)
+                            navigate(-1);
+                            window.location.reload();
                         })
                 }
 

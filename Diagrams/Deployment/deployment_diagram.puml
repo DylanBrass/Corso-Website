@@ -57,7 +57,7 @@ cloud render as "Digital Ocean \n[Deployment Node: digitalocean.com]"{
             Container(frontend, "Single-Page Application", "Container: REACT TS", "Provides a GUI interface that contains all the functionalities of the Spring boot application. Uses REACT Router to handle the multiple pages.", $sprite="react",$tags="webSite")
         }
 
-    database "Digital Ocean Database \n[Deployment Node:  MySQL Databse Cluster]" as database{
+    database "Digital Ocean Database \n[Deployment Node:  MySQL Database Cluster]" as database{
         ContainerDb(db, "Database", "Container : MySQL 8.0", "Stores all the data of the company related to orders, customers, reviews, FAQ's, galleries and services.", $sprite="mysql", $tags="My SQL Database")
     }
 }
@@ -70,9 +70,9 @@ Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable a
 Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
 
 
-api ---> database: SQL/TCP\n[JBDC]
+api ---> db: SQL/TCP\n[JBDC]
 
-api -> frontend: Makes Api calls\n[JSON/HTTPS]
+api <- frontend: Makes Api calls\n[JSON/HTTPS]
 
 api ---> cloudinary: Makes Api calls\n[JSON/HTTPS]
 
