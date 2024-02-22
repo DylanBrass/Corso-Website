@@ -3,7 +3,6 @@ import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {ProgressBar, Step} from "react-step-progress-bar";
 import check from "../../../ressources/images/check_done.png";
 import checkToDo from "../../../ressources/images/check_notDone.png";
-import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import Order from "../../../ressources/Models/Order";
 import ServiceOrder from "../../../ressources/Models/ServiceOrder";
@@ -25,7 +24,6 @@ export default function ViewSpecificInactiveOrder() {
 
     const auth = useAuth()
 
-    const navigate = useNavigate();
 
     const getOrder = async () => {
         axios.get(process.env.REACT_APP_BE_HOST + `api/v1/corso/orders/manage/${orderId}`,
@@ -71,7 +69,7 @@ export default function ViewSpecificInactiveOrder() {
             .then(res => {
                 // @ts-ignore
                 swal("Order deleted", "The order has been deleted", "success").then(() => {
-                    navigate(-1)
+                    window.location.replace(document.referrer)
                 })
             })
             .catch(err => {
