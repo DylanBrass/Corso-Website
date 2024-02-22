@@ -9,7 +9,7 @@ skinparam usecase {
     ActorFontName Courier
     ActorBackgroundColor<< Human >> Gold
 }
-actor Sec_Admin #Red
+actor "Admin" as Sec_Admin #Red
 actor  "Admin" as Admin #Red
 actor  "Customer" as User #Green
 rectangle "Corso System"{

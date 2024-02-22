@@ -68,7 +68,8 @@ function AddServicePage() {
             .then((r) => {
                 if (r.status === 201) {
                     swal(t("alerts.service.serviceCreatedTitle"), (t("alerts.service.serviceCreatedMessage")), 'success');
-                    navigate(-1)
+                    navigate(-1);
+                    window.location.reload();
                 }
             })
             .catch((e) => {

@@ -9,10 +9,14 @@ import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import {useTranslation} from "react-i18next";
 import '../../globalStyling/globalStyling.css';
 import BackButton from "../../../Components/BackButton";
+import {useNavigate} from "react-router";
 
 
 function AddCustomerInformation() {
     const auth = useAuth();
+
+    const navigate = useNavigate()
+
     const {t} = useTranslation("translation");
 
     const [hasProfile, setHasProfile] = useState(false);
@@ -164,10 +168,11 @@ function AddCustomerInformation() {
                 if (r.status === 200) {
                     if (Cookies.get("email") !== r.data.email)
                         swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success").then(r => {
-            window.location.href = "/profile";
-                        })
+                            navigate(-1);
+                            window.location.reload();                        })
                     else swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
-            window.location.href = "/profile";
+                        navigate(-1);
+                        window.location.reload();
                     })
                     Cookies.set("username", r.data.name);
 
@@ -213,7 +218,8 @@ function AddCustomerInformation() {
                         }
                         swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
-            window.location.href = "/profile";
+                                navigate(-1);
+                                window.location.reload();
                             })
                         setHasProfile(true);
                     }
