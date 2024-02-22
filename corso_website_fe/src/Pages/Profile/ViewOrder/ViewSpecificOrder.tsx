@@ -10,7 +10,6 @@ import {ProgressBar, Step} from "react-step-progress-bar";
 import "react-step-progress-bar/styles.css";
 import check from "../../../ressources/images/check_done.png";
 import checkToDo from "../../../ressources/images/check_notDone.png";
-import {useNavigate} from "react-router";
 import Popup from "reactjs-popup";
 import {SyncLoader} from "react-spinners";
 import {CCarousel, CCarouselItem} from "@coreui/react";
@@ -22,7 +21,7 @@ import {getValuesFromJSON} from "../../../Services/TranslationTools";
 
 function ViewSpecificOrder() {
 
-    const navigate = useNavigate();
+    const history = window.history;
     const {t} = useTranslation();
 
     const [order, setOrder] = useState<Order>(new Order("", "", "", new ServiceOrder("", "", ""), "", "", "", "", "", "", "", "", "", "", "", "", "", 0, 0));
@@ -85,8 +84,7 @@ function ViewSpecificOrder() {
                     swal(t("alerts.order.cancelledOrderTitle"), t("alerts.order.cancelledOrderMessage"), "success")
                         .then(() => {
                             //go to previous page and refresh
-                            navigate(-1);
-                            window.location.reload();
+                            history.back();
                         })
                 }
             }).catch(
