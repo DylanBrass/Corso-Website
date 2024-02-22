@@ -16,8 +16,6 @@ function AddCustomerInformation() {
     const auth = useAuth();
 
 
-    const history = window.history;
-
     const {t} = useTranslation("translation");
 
     const [hasProfile, setHasProfile] = useState(false);
@@ -169,11 +167,10 @@ function AddCustomerInformation() {
                 if (r.status === 200) {
                     if (Cookies.get("email") !== r.data.email)
                         swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success").then(r => {
-                            history.go(-1)
+                            window.location.href = "/profile";
                         })
                     else swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
-                        history.go(-1)
-
+                        window.location.href = "/profile";
                     })
                     Cookies.set("username", r.data.name);
 
@@ -219,7 +216,7 @@ function AddCustomerInformation() {
                         }
                         swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
-                                history.go(-1)
+                                window.location.href = "/profile";
                             })
                         setHasProfile(true);
                     }
