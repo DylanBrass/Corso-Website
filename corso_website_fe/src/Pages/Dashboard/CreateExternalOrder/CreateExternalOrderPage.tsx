@@ -141,7 +141,7 @@ function CreateExternalOrderPage() {
             "progressInformation": (document.getElementById("progressText") as HTMLInputElement).value,
         }
 
-        if (data.hoursWorked > data.estimatedDuration) {
+        if (parseInt(data.hoursWorked) > parseInt(data.estimatedDuration)) {
             swal((t("alerts.error")),(t("alerts.hoursWorkedConstraint")), "error")
             return
         }
