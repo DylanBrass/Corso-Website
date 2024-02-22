@@ -6,7 +6,6 @@ import swal from "sweetalert";
 import {usePlacesWidget} from "react-google-autocomplete";
 import {useAuth} from "../../../security/Components/AuthProvider";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
-import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import '../../globalStyling/globalStyling.css';
 import BackButton from "../../../Components/BackButton";
@@ -20,7 +19,6 @@ function AddCustomerInformation() {
 
     const [isVerified, setIsVerified] = useState(false);
 
-    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -166,10 +164,10 @@ function AddCustomerInformation() {
                 if (r.status === 200) {
                     if (Cookies.get("email") !== r.data.email)
                         swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success").then(r => {
-                            navigate(-1)
+            window.location.href = "/profile";
                         })
                     else swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
-                        navigate(-1)
+            window.location.href = "/profile";
                     })
                     Cookies.set("username", r.data.name);
 
@@ -215,7 +213,7 @@ function AddCustomerInformation() {
                         }
                         swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
-                                navigate(-1)
+            window.location.href = "/profile";
                             })
                         setHasProfile(true);
                     }
