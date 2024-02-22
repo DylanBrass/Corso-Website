@@ -7,7 +7,6 @@ import {useParams} from "react-router-dom";
 import {usePlacesWidget} from "react-google-autocomplete";
 import NavigationBar from "../../../Components/NavBar/NavigationBar";
 import swal from "sweetalert";
-import {useNavigate} from "react-router";
 import '../../globalStyling/globalStyling.css';
 import './UpdateOrder.css'
 import {SyncLoader} from "react-spinners";
@@ -19,7 +18,6 @@ function UpdateOrder() {
     const auth = useAuth();
     const {t} = useTranslation();
 
-    const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -128,8 +126,7 @@ function UpdateOrder() {
 
                     swal(t("alerts.order.orderUpdatedTitle"), t("alerts.order.orderUpdatedMessage"), "success")
                         .then(() => {
-                            navigate(-1);
-                            window.location.reload();
+                            window.location.replace(document.referrer);
                         })
                 }
 
