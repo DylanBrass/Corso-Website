@@ -6,7 +6,6 @@ import { useAuth } from '../../../security/Components/AuthProvider';
 import NavigationBar from '../../../Components/NavBar/NavigationBar';
 import pen from '../../../ressources/images/pen.svg';
 import {SyncLoader} from "react-spinners";
-import {useNavigate} from "react-router";
 import Cloudinary from "../../../Services/Cloudinary";
 import {useTranslation} from "react-i18next";
 import {createJSONForLanguages} from "../../../Services/TranslationTools";
@@ -22,7 +21,6 @@ function AddServicePage() {
     const auth = useAuth();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const navigate = useNavigate()
 
     const {t} = useTranslation();
 
@@ -68,8 +66,8 @@ function AddServicePage() {
             .then((r) => {
                 if (r.status === 201) {
                     swal(t("alerts.service.serviceCreatedTitle"), (t("alerts.service.serviceCreatedMessage")), 'success');
-                    navigate(-1);
-                    window.location.reload();
+                    window.location.replace(document.referrer);
+
                 }
             })
             .catch((e) => {
