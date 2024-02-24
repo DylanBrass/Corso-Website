@@ -4,9 +4,8 @@ title Create an account use case DLSD
 
 actor User
 
-participant HomePage as "<<view>>\nHomePage"
 
-participant RegisterPage as "<<view>>\nRegisterNowPage"
+participant RegisterPage as "<<view>>\nAddCustomerInformation"
 
 participant CustomerRequest as "customerRequest: CustomerRequest"
 
@@ -26,11 +25,15 @@ participant CustomerResponseMapper as "<<Mapper>>\nCustomerResponseMapper"
 
 participant CustomerRequestMapper as "<<Mapper>>\nCustomerRequestMapper"
 
-User -> HomePage : CreateCustomerAccount()
-activate HomePage
-HomePage -> RegisterPage : render()
+ref over User, HomePage, RegisterPage, CustomerRequest, CustomerController, CustomerService, Response, CustomerRepository, Customer, Database, CustomerResponseMapper, CustomerRequestMapper
+
+ViewAccount
+
+end ref
+
+
+User -> RegisterPage : handleSubmit()
 activate RegisterPage
-User -> RegisterPage : SubmitCreateAccountForm()
 
 RegisterPage -> CustomerRequest : POST /api/v1/corso/customers
 
@@ -54,14 +57,14 @@ CustomerRequestMapper -> Customer : customer: Customer
 activate Customer
 
 Customer --> CustomerService : customer: Customer
-destroy CustomerRequest
-destroy CustomerRequestMapper
+deactivate CustomerRequest
+deactivate CustomerRequestMapper
 
 CustomerService -> CustomerRepository : save(customer)
 activate CustomerRepository
 
 CustomerRepository -> Database : INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-destroy Customer
+deactivate Customer
 activate Database
 
 Database --> CustomerRepository : Customer
@@ -69,31 +72,30 @@ Database --> CustomerRepository : Customer
 deactivate Database
 
 CustomerRepository --> Customer : Customer
-destroy CustomerRepository
+deactivate CustomerRepository
 activate Customer
 
 Customer --> CustomerService : customer: Customer
 
 CustomerService -> CustomerResponseMapper : toResponse(customer)
-destroy Customer
+deactivate Customer
 activate CustomerResponseMapper
 
 CustomerResponseMapper -> Response : CustomerResponse
-destroy CustomerResponseMapper
+deactivate CustomerResponseMapper
 
 activate Response
 Response --> CustomerService : response: CustomerResponse
 
 CustomerService --> CustomerController : response: CustomerResponse
 
-destroy CustomerService
+deactivate CustomerService
 
 
-CustomerController --> HomePage : response: CustomerResponse
+CustomerController --> RegisterPage : response: CustomerResponse
 
-destroy Response
-destroy CustomerController
+deactivate Response
+deactivate CustomerController
 
-User -> HomePage : BackToHomePage()
 
 @endpuml

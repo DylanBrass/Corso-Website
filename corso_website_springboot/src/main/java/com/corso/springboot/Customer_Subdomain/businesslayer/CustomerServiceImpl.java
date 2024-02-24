@@ -35,16 +35,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final VerificationTokenRepository verificationTokenRepository;
 
-    @Value("${backend.url}")
-    private String backendDomain;
-
     @Value("${frontend.url}")
     private String frontendDomain;
 
 
     @Override
     public CustomerResponse getCustomerByUserId(String userId) {
-        Customer customer = customerRepository.getCustomerByUserId(userId);
+            Customer customer = customerRepository.getCustomerByUserId(userId);
 
         if (customer == null)
             throw new CustomerNotFoundException("Customer not found");
