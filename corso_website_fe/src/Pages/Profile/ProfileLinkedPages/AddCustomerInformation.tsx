@@ -216,11 +216,8 @@ function AddCustomerInformation() {
                         }
                         swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
-<<<<<<< Updated upstream
                                 window.location.replace(document.referrer);
-=======
-                                window.location.href = "/profile";
->>>>>>> Stashed changes
+
                             })
                         setHasProfile(true);
                     }
