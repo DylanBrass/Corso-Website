@@ -1,0 +1,47 @@
+@startuml
+
+title Update Customer Account use case DLSD
+
+actor OidcUser
+participant CustomerRequest as "customerRequest: CustomerRequest"
+participant CustomerController as "<<Controller>>\nCustomerController"
+participant CustomerService as "<<Service>>\nCustomerService"
+participant CustomerRepository as "<<Repository>>\nCustomerRepository"
+participant Customer as "customer: Customer"
+participant CustomerResponseMapper as "<<Mapper>>\nCustomerResponseMapper"
+participant ResponseEntity as "ResponseEntity<CustomerResponse>"
+
+OidcUser -> CustomerController : updateCustomer(principal, customerRequest)
+activate OidcUser
+
+CustomerController -> CustomerService : updateCustomer(customerRequest, userId, email)
+activate CustomerController
+
+CustomerService -> CustomerRepository : getCustomerByUserId(userId)
+activate CustomerService
+activate CustomerRepository
+
+CustomerRepository -> Database : SELECT * FROM customers WHERE user_id = ?
+deactivate Database
+
+Database --> CustomerRepository : Customer
+deactivate Database
+
+CustomerRepository --> CustomerService : customer
+deactivate CustomerRepository
+
+CustomerService -> CustomerResponseMapper : toResponse(customer)
+activate CustomerResponseMapper
+CustomerResponseMapper -> ResponseEntity : CustomerResponse
+
+activate ResponseEntity
+ResponseEntity --> CustomerController : ResponseEntity<CustomerResponse>
+deactivate CustomerResponseMapper
+
+deactivate ResponseEntity
+
+CustomerController --> OidcUser : ResponseEntity<CustomerResponse>
+deactivate CustomerController
+deactivate CustomerService
+
+@enduml

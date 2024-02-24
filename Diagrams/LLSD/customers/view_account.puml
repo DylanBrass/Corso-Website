@@ -35,7 +35,8 @@ end ref
 User -> RegisterPage : handleSubmit()
 activate RegisterPage
 
-RegisterPage -> CustomerRequest : POST /api/v1/corso/customers
+RegisterPage -> CustomerRequest : GET /api/v1/corso/customers
+
 
 activate CustomerRequest
 
@@ -71,7 +72,7 @@ deactivate CustomerRequest
 deactivate CustomerRequestMapper
 
 CustomerService -> CustomerRepository : save(customer)
-activate CustomerRepository
+activate CustomerRepositorygetCustomerByUserId(userId)
 
 CustomerRepository -> Database : INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 deactivate Customer
