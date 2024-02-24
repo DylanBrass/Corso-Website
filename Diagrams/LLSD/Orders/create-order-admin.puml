@@ -1,0 +1,150 @@
+@startuml
+
+title Manage Order use case DLSD
+
+actor Admin 
+
+participant Dashboard as "<<view>>\nDashboard"
+
+participant AddOrder as "<<view>>\nCreateExternalOrderPage"
+
+participant OrderRequest as "orderRequest: OrderRequestExternal"
+
+participant OrderController as "<<Controller>>\nOrderController"
+
+participant ServiceService as "<<Service>>\nServiceService"
+
+participant OrderService as "<<Service>>\nOrderService"
+
+participant auth0ManagementService as "<<Service>>\nAuth0ManagementService"
+
+participant Response as "response: OrderResponse"
+
+participant ServiceRepository as "<<Repository>>\nServiceRepository"
+
+participant OrderRepository as "<<Repository>>\nOrderRepository"
+
+participant Order as "order: Order"
+
+participant UserInfoResponse as "userInfo: UserInfoResponse"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant OrderResponseMapper as "<<Mapper>>\nOrderResponseMapper"
+
+participant OrderRequestMapper as "<<Mapper>>\nOrderRequestMapper"
+
+Admin -> Dashboard : AddOrder()
+activate Dashboard
+Dashboard -> AddOrder : render()
+activate AddOrder
+Admin -> AddOrder : createOrder()
+
+AddOrder -> OrderRequest : POST /api/v1/corso/orders/external
+
+activate OrderRequest
+
+OrderRequest -> OrderController : orderRequest: OrderRequestExternal
+
+activate OrderController
+
+
+OrderController -> OrderService : createOrderExternal(orderRequest)
+
+activate OrderService
+
+OrderService -> ServiceService : getServiceByServiceId(orderRequest.getServiceId())
+
+activate ServiceService
+
+ServiceService -> ServiceRepository : findByServiceIdentifier_ServiceId(orderRequest.getServiceId())
+
+activate ServiceRepository
+
+ServiceRepository -> Database : SELECT * FROM service WHERE service_id = orderRequest.getServiceId()
+
+activate Database
+
+Database --> ServiceRepository : service
+
+deactivate Database
+
+ServiceRepository --> ServiceService : service
+
+deactivate ServiceRepository
+
+ServiceService --> OrderService : service
+
+deactivate ServiceService
+
+OrderService -> OrderRequestMapper: requestModelToOrder(orderRequest)
+
+activate OrderRequestMapper
+
+OrderRequestMapper --> Order : order
+activate Order
+
+Order --> OrderService : order
+
+deactivate OrderRequestMapper
+
+alt if (orderRequestExternal.getUserId() != null || !orderRequestExternal.getUserId().isEmpty())
+
+OrderService -> auth0ManagementService : getUserInfo(orderRequestExternal.getUserId())
+
+activate auth0ManagementService
+
+auth0ManagementService -> UserInfoResponse
+
+activate UserInfoResponse
+
+UserInfoResponse --> OrderService: userInfo
+
+deactivate UserInfoResponse
+
+deactivate auth0ManagementService
+
+end
+
+OrderService -> OrderRepository : save(order)
+
+activate OrderRepository
+
+OrderRepository -> Database : INSERT INTO order (order_id, service_id, user_id, status, created_at, updated_at) VALUES (order.getOrderId(), order.getServiceId(), order.getUserId(), order.getStatus(), order.getCreatedAt(), order.getUpdatedAt())
+
+activate Database
+
+Database --> OrderRepository : order
+
+deactivate Database
+
+OrderRepository --> OrderService : order
+
+deactivate OrderRepository
+
+OrderService -> OrderResponseMapper : orderToResponse(order)
+
+activate OrderResponseMapper
+
+OrderResponseMapper --> Response : response
+
+activate Response
+
+deactivate OrderResponseMapper
+
+Response --> OrderController : response
+
+deactivate OrderService
+
+OrderController --> OrderRequest : response
+
+deactivate OrderController
+
+OrderRequest --> AddOrder : response
+
+deactivate OrderRequest
+
+
+
+
+@endpuml

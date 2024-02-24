@@ -43,8 +43,6 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal OidcUser principal) {
         String userId = principal.getSubject();
 
-        log.info("Delete customer with userId: {}", userId);
-
         customerService.deleteCustomer(userId);
 
         return ResponseEntity.noContent().build();
@@ -54,7 +52,6 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerResponse> getCustomerByUserId(@AuthenticationPrincipal OidcUser principal, @RequestParam Map<String, String> requestParams) {
-        log.info("Get customer with userId: {}", principal.getSubject());
 
         if (requestParams.containsKey("simpleCheck") && requestParams.get("simpleCheck").equals("true")) {
             if (customerService.checkIfCustomerExists(principal.getSubject()))
@@ -75,7 +72,6 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> createCustomer(@AuthenticationPrincipal OidcUser principal,
                                                            @Valid @RequestBody CustomerRequest customerRequest) throws MessagingException {
         String userId = principal.getSubject();
-        log.info("Create customer with userId: {}", userId);
         String email = principal.getEmail();
 
         CustomerResponse customerResponse = customerService.createCustomer(customerRequest, userId, email);
@@ -89,7 +85,6 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> updateCustomer(@AuthenticationPrincipal OidcUser principal,
                                                            @Valid @RequestBody CustomerRequest customerRequest) throws MessagingException {
         String userId = principal.getSubject();
-        log.info("Update customer with userId: {}", userId);
         String email = principal.getEmail();
 
         CustomerResponse customerResponse = customerService.updateCustomer(customerRequest, userId, email);
@@ -103,7 +98,6 @@ public class CustomerController {
     public ResponseEntity<List<OrderResponse>> getCustomerWithOrders(@AuthenticationPrincipal OidcUser principal, @RequestParam(name = "pageSize") int pageSize,
                                                                      @RequestParam(name = "offset") int offset) {
         String userId = principal.getSubject();
-        log.info("Get customer orders with userId: {}", userId);
 
         return ResponseEntity.ok(orderService.getCustomerOrders(userId, pageSize, offset));
     }
@@ -112,7 +106,6 @@ public class CustomerController {
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderResponse> GetOrderByOrderId(@AuthenticationPrincipal OidcUser principal, @PathVariable String orderId) {
         String userId = principal.getSubject();
-        log.info("Get customer order with userId: {}", userId);
 
         return ResponseEntity.ok(orderService.getOrderByIdAndUserId(orderId, userId));
     }
@@ -121,7 +114,6 @@ public class CustomerController {
     @DeleteMapping(value = "/orders/{orderId}", consumes = "application/json")
     public ResponseEntity<Void> DeleteOrderByOrderId(@PathVariable String orderId, @RequestBody CustomerCancelOrderRequest cancelOrderRequest, @AuthenticationPrincipal OidcUser principal) throws MessagingException {
         String userId = principal.getSubject();
-        log.info("Delete customer order with userId: {}", userId);
 
         orderService.cancelByCustomerOrderByOrderId(orderId, userId, cancelOrderRequest);
 
@@ -133,7 +125,6 @@ public class CustomerController {
     @PatchMapping("/orders/{orderId}")
     public ResponseEntity<OrderResponse> UpdateOrderByOrderId(@PathVariable String orderId, @RequestBody OrderCustomerRequest customerUpdateOrderRequest, @AuthenticationPrincipal OidcUser principal) throws MessagingException {
         String userId = principal.getSubject();
-        log.info("Update customer order with userId: {}", userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(orderService.updateOrderByOrderId(orderId, userId, customerUpdateOrderRequest));
     }
@@ -143,7 +134,6 @@ public class CustomerController {
     @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<ReviewResponse> updateCustomerReview(@AuthenticationPrincipal OidcUser principal, @PathVariable String reviewId, @RequestBody ReviewRequest reviewUpdateRequest) throws MessagingException, IOException, InterruptedException {
         String userId = principal.getSubject();
-        log.info("Update review with userId: {}", userId);
         return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateCustomerReview(reviewId, userId, reviewUpdateRequest));
     }
 
@@ -152,7 +142,6 @@ public class CustomerController {
     @PreAuthorize("hasAnyAuthority('Customer')")
     public ResponseEntity<Void> verifyCustomer(@AuthenticationPrincipal OidcUser principal) throws MessagingException {
         String userId = principal.getSubject();
-        log.info("Verify customer with userId: {}", userId);
 
         customerService.verifyCustomer(userId);
 

@@ -1,0 +1,59 @@
+@startuml
+
+actor CustomerUser as "Customer"
+
+actor CustomerUser as "Customer"
+
+participant "<<View>>\nAddCustomerInformation" as ACI
+
+participant CustomerController as "<<Controller>>\nCustomerController"
+
+participant CustomerService as "<<Service>>\nCustomerService"
+
+participant CustomerRepository as "<<Repository>>\nCustomerRepository"
+
+participant Customer as "customer: Customer"
+
+participant Database as "<<Database>>\nDatabase"
+
+ref over CustomerUser, ACI, CustomerController, CustomerService, CustomerRepository, Database
+
+ViewAccount
+
+end ref
+
+CustomerUser -> ACI: deleteProfile(event)
+
+activate ACI
+
+ACI -> CustomerController: DELETE /api/v1/corso/customers
+
+activate CustomerController
+
+CustomerController -> CustomerService: deleteCustomer(principal.getSubject())
+
+activate CustomerService
+
+CustomerService -> CustomerRepository: deleteCustomerByUserId(principal.getSubject())
+
+activate CustomerRepository
+
+CustomerRepository -> Database: DELETE FROM customer WHERE user_id = ?
+
+activate Database
+
+
+deactivate Database
+
+CustomerRepository -> CustomerService: void
+
+deactivate CustomerRepository
+
+CustomerService -> CustomerController: void
+
+deactivate CustomerService
+
+CustomerController -> ACI: 204
+
+
+@enduml

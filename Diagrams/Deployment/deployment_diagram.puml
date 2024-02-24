@@ -67,7 +67,7 @@ cloud render as "Digital Ocean \n[Deployment Node: digitalocean.com]"{
 
 Container_Ext(cloudinary, "Cloudinary Service", "REST API", "Cloudinary's image hosting service and API.", $sprite="npm_original_wordmark", $tags="ext_service")
 Container_Ext(auth, "Auth0", "SaaS", "Auth0 is an easy to implement, adaptable authentication and authorization platform.", $sprite="auth0", $tags="ext_service")
-Container_Ext(email, "Gmail SMTP System", "Email Service", "The google SMTP emailing system.", $sprite="google", $tags="ext_service")
+Container_Ext(email, "Gmail SMTP System", "Email Service", "The Google SMTP emailing system.", $sprite="google", $tags="ext_service")
 
 
 api ---> db: SQL/TCP\n[JBDC]

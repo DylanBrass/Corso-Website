@@ -1,0 +1,129 @@
+@startuml
+
+participant Admin as A
+
+participant "<<View>>\nManageAllServices" as D
+
+participant "<<View>>\nAddServicePage" as ASP
+
+
+participant "serviceRequest : ServiceRequest" as Sq
+
+participant "<<Controller>>\nServiceController" as Sc
+
+participant "serviceResponse : ServiceResponse" as Sr
+
+participant "<<Service>>\nCloudinaryService" as Cs
+
+participant "<<Service>>\nServiceService" as Ss
+
+
+participant "service : Service" as S
+
+
+participant "<<Repository>>\nServiceRepository" as Srep
+
+participant "serviceDb : Service" as Sdb
+
+participant "Database" as Db
+
+participant "ServiceResponseMapper" as SresM
+
+participant "ServiceRequestMapper" as SreqM
+
+
+ref over D, ASP, Sq, Sc, Sr, Cs, Ss, S, Srep, Sdb, Db, SresM, SreqM
+ViewServices
+end ref
+
+A -> D : addService()
+
+activate D
+
+D -> ASP : render()
+activate ASP
+
+deactivate D
+
+A -> ASP : handleSubmit(event)
+
+ASP -> Sq : POST /api/v1/corso/services
+activate Sq
+
+Sq -> Sc
+activate Sc
+
+Sc -> Ss : createService(serviceRequest)
+activate Ss
+
+Ss -> Cs : uploadBase64Image(serviceRequest.getServiceIcon())
+activate Cs
+
+Cs --> Ss : iconUrl:String
+deactivate Cs
+
+Ss -> Cs : uploadBase64Image(serviceRequest.getServiceImage())
+
+activate Cs
+
+Cs --> Ss : imageUrl:String
+deactivate Cs
+
+
+Ss -> SreqM: toService(serviceRequest)
+
+activate SreqM
+
+SreqM --> S
+activate S
+
+S --> Ss : service : Service
+deactivate SreqM
+
+Ss --> Srep : save(service)
+
+activate Srep
+
+Srep --> Db : insert into service values(service)
+deactivate S
+activate Db
+
+Db --> Sdb : service:Service
+
+activate Sdb
+
+Sdb --> Srep: service:Service
+
+Srep --> Ss : serviceDb:Service
+
+Ss --> SresM : toServiceResponse(serviceDb)
+
+activate SresM
+
+SresM --> Sr : serviceResponse
+
+Sr --> Sc : serviceResponse
+
+Sc --> ASP : serviceResponse
+
+deactivate SresM
+
+deactivate Sdb
+
+deactivate Srep
+
+deactivate Ss
+
+
+deactivate Sr
+
+
+
+
+
+
+
+
+
+
+@enduml

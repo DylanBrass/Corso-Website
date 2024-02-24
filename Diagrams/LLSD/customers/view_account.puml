@@ -1,0 +1,111 @@
+@startuml
+
+title Create an account use case DLSD
+
+actor User
+
+
+participant RegisterPage as "<<view>>\nAddCustomerInformation"
+
+participant CustomerRequest as "customerRequest: CustomerRequest"
+
+participant CustomerController as "<<Controller>>\nCustomerController"
+
+participant CustomerService as "<<Service>>\nCustomerService"
+
+participant Response as "response: CustomerResponse"
+
+participant CustomerRepository as "<<Repository>>\nCustomerRepository"
+
+participant Customer as "customer: Customer"
+
+participant Database as "<<Database>>\nDatabase"
+
+participant CustomerResponseMapper as "<<Mapper>>\nCustomerResponseMapper"
+
+participant CustomerRequestMapper as "<<Mapper>>\nCustomerRequestMapper"
+
+ref over User, HomePage, RegisterPage, CustomerRequest, CustomerController, CustomerService, Response, CustomerRepository, Customer, Database, CustomerResponseMapper, CustomerRequestMapper
+
+ViewAccount
+
+end ref
+
+
+User -> RegisterPage : handleSubmit()
+activate RegisterPage
+
+RegisterPage -> CustomerRequest : POST /api/v1/corso/customers
+
+activate CustomerRequest
+
+CustomerRequest -> CustomerController : customerRequest: CustomerRequest
+
+activate CustomerController
+
+
+CustomerController -> CustomerService : createCustomerAccount(customerRequest)
+
+activate CustomerService
+
+CustomerService -> CustomerRepository : getCustomerByUserId(customer)
+
+activate CustomerRepository
+
+CustomerRepository -> Database : SELECT * FROM customers WHERE user_id = ?
+
+activate Database
+
+Database --> CustomerRepository : Customer
+
+deactivate Database
+
+CustomerRepository --> CustomerService : customer: Customer
+
+deactivate CustomerRepository
+
+
+
+
+deactivate CustomerRequest
+deactivate CustomerRequestMapper
+
+CustomerService -> CustomerRepository : save(customer)
+activate CustomerRepository
+
+CustomerRepository -> Database : INSERT INTO customers (id, user_id, name, email, phone, address, postal_code, apartment_number, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+deactivate Customer
+activate Database
+
+Database --> CustomerRepository : Customer
+
+deactivate Database
+
+CustomerRepository --> Customer : Customer
+deactivate CustomerRepository
+activate Customer
+
+Customer --> CustomerService : customer: Customer
+
+CustomerService -> CustomerResponseMapper : toResponse(customer)
+deactivate Customer
+activate CustomerResponseMapper
+
+CustomerResponseMapper -> Response : CustomerResponse
+deactivate CustomerResponseMapper
+
+activate Response
+Response --> CustomerService : response: CustomerResponse
+
+CustomerService --> CustomerController : response: CustomerResponse
+
+deactivate CustomerService
+
+
+CustomerController --> RegisterPage : response: CustomerResponse
+
+deactivate Response
+deactivate CustomerController
+
+
+@endpuml
