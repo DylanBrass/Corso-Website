@@ -35,7 +35,7 @@ end ref
 User -> RegisterPage : handleSubmit()
 activate RegisterPage
 
-RegisterPage -> CustomerRequest : POST /api/v1/corso/customers
+RegisterPage -> CustomerRequest : GET /api/v1/corso/customers
 
 activate CustomerRequest
 

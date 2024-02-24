@@ -167,10 +167,17 @@ function AddCustomerInformation() {
                 if (r.status === 200) {
                     if (Cookies.get("email") !== r.data.email)
                         swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success").then(r => {
+<<<<<<< Updated upstream
                             window.location.replace(document.referrer);
                         })
                     else swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
                         window.location.replace(document.referrer);
+=======
+                            window.location.href = "/profile";
+                        })
+                    else swal(t("alerts.profile.profileUpdatedSuccessAlertTitle"), "", "success").then(r => {
+                        window.location.href = "/profile";
+>>>>>>> Stashed changes
                     })
                     Cookies.set("username", r.data.name);
 
@@ -216,7 +223,11 @@ function AddCustomerInformation() {
                         }
                         swal(t("alerts.profile.profileCreatedSuccessAlertTitle"), t("alerts.profile.profileSuccessAlertMessage"), "success")
                             .then(r => {
+<<<<<<< Updated upstream
                                 window.location.replace(document.referrer);
+=======
+                                window.location.href = "/profile";
+>>>>>>> Stashed changes
                             })
                         setHasProfile(true);
                     }
