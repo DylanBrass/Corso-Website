@@ -100,7 +100,7 @@ function ManageReviews() {
                     }
                     if (error.response.status === 409) {
                         // @ts-ignore
-                        swal(t("alerts.warningAlertTitle"), error.response.data.message, "warning")
+                        swal(t("alerts.warningAlertTitle"), t("alerts.review.reviewAlreadyPinned"), "warning")
                     }
                 }).finally(() => {
                     

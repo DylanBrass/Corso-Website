@@ -237,7 +237,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getOrderByOrderId(String orderId) {
-        Order order = orderRepository.findByOrderId_OrderId(orderId);
+        Order order;
+        if (orderId.length() != 36)
+            order = orderRepository.findByOrderTrackingNumber_OrderTrackingNumber(orderId);
+        else
+             order = orderRepository.findByOrderId_OrderId(orderId);
+
+
         return getOrderResponse(orderId, order);
     }
 
@@ -456,7 +462,6 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceNotFoundException("Service not found with id: " + orderProgressionRequest.getServiceId());
 
 
-
         orderResponse.setService(service);
 
         return orderResponse;
@@ -486,8 +491,6 @@ public class OrderServiceImpl implements OrderService {
         parameters.put("previousHoursWorked", String.valueOf(order.getHoursWorked()));
 
         parameters.put("previousEstimatedDuration", String.valueOf(order.getEstimatedDuration()));
-
-
 
 
         //New order details
@@ -544,15 +547,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
 
-
-
         orderRepository.delete(order);
 
     }
 
 
     @Override
-        public OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws MessagingException {
+    public OrderResponse setCustomerOrderIdToCompletedStatus(String orderId) throws MessagingException {
         Order order = orderRepository.findByOrderId_OrderId(orderId);
 
         if (order == null) {
@@ -576,14 +577,12 @@ public class OrderServiceImpl implements OrderService {
                 "\n" +
                 "\n" +
                 "\n" +
-                "\n"+
+                "\n" +
                 "Cher(e) " + order.getCustomerFullName() + ",\n\n" +
-                "Nous sommes heureux de vous informer que votre commande avec l'ID: " + order.getOrderTrackingNumber().getOrderTrackingNumber()  + " a été complétée.\n\n" +
+                "Nous sommes heureux de vous informer que votre commande avec l'ID: " + order.getOrderTrackingNumber().getOrderTrackingNumber() + " a été complétée.\n\n" +
                 "Merci de nous avoir choisi.\n\n" +
                 "Sincèrement,\n" +
                 "Corso Electric Inc.";
-
-
 
 
         emailService.sendEmail(recipient, subject, text);
@@ -673,7 +672,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse CustomerRequestOrder(String userId, String userEmail, OrderRequestCustomer orderRequestCustomer) throws MessagingException{
+    public OrderResponse CustomerRequestOrder(String userId, String userEmail, OrderRequestCustomer orderRequestCustomer) throws MessagingException {
 
         if (serviceService.getServiceByServiceId(orderRequestCustomer.getServiceId()) == null) {
             throw new ServiceNotFoundException("Service not found");

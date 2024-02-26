@@ -79,4 +79,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     List<Object[]> getTotalOrderRequestByMonth(@Param("year") int year);
 
 
+    Order findByOrderTrackingNumber_OrderTrackingNumber(String orderTrackingNumber);
+
 }

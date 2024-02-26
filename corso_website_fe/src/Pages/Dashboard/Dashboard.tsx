@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import SearchOrder from "../../Components/Dashboard/SearchOrder";
 
 function Dashboard() {
 
@@ -330,6 +331,8 @@ function Dashboard() {
         }}>
             <NavigationBar/>
             <h1 className={"w-100"}>{t("dashboardPage.welcomeBack")} {Cookies.get("username")}</h1>
+
+            <SearchOrder/>
 
             <div className={"admin-dashboard container"} style={{}}>
                 <div className={"row d-flex align-items-stretch mt-0 mt-lg-4"}>

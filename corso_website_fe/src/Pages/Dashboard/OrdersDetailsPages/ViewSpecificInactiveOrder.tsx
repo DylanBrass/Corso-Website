@@ -121,6 +121,12 @@ export default function ViewSpecificInactiveOrder() {
                 <div className="row">
                     <div className="col-lg-6 col-md-12 request-info-box">
                         <div className="row text-start">
+                            <h1>{t("order.orderStatus")}</h1>
+                            <p className={"text-capitalize"}>{
+                                orderStatus.replace("_", " ").toLowerCase()
+                            }</p>
+                        </div>
+                        <div className="row text-start">
                             <h1>Client</h1>
                             <p>{order.customerFullName}</p>
                         </div>
@@ -147,12 +153,7 @@ export default function ViewSpecificInactiveOrder() {
                                 <p>{order.orderDescription}</p>
                             </div>
                         }
-                        <div className="row text-start">
-                            <h1>{t("order.orderStatus")}</h1>
-                            <p className={"text-capitalize"}>{
-                                orderStatus.replace("_", " ").toLowerCase()
-                            }</p>
-                        </div>
+
                     </div>
                     <div className="col-lg-6 col-md-12">
                         <div className={"row"}>

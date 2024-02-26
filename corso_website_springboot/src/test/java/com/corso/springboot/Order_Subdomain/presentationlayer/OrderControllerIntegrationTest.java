@@ -407,5 +407,23 @@ public class OrderControllerIntegrationTest {
                 .expectBody().jsonPath("$.message").isEqualTo("Order cannot be deleted, it is not in cancelled, declined or completed status! : IN_PROGRESS");
     }
 
+
+    @Test
+    @WithMockUser(authorities = "Admin")
+    public void getOrderById_thenReturnOrder() {
+        //arrange
+        String order_tracking_number = "T1YX4S";
+        String orderId = "ac5ca2b4-d53c-4516-8d4b-17665b46f411";
+        //act
+        webTestClient.get()
+                .uri(BASE_URI_ORDERS + "/manage/" + order_tracking_number)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.orderId").isEqualTo(orderId);
+    }
+
+    
+
 }
 
