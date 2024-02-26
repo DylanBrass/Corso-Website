@@ -1,4 +1,7 @@
 {
+  "search": "Rechercher",
+  "orderNotFound": "Commande non trouvée",
+  "enterOrderNumber": "Entrez le numéro de commande",
   "to": "à",
   "delete": "Supprimer",
   "cancel": "Annuler",
@@ -243,6 +246,8 @@
     },
 
     "review": {
+      "alreadyLeftReview": "Vous avez déjà laissé une critique cette semaine !",
+      "reviewAlreadyPinned": "Cette critique est déjà épinglée !",
       "submitReviewSuccessMessage": "Votre critique a été soumise !",
       "deleteReviewAlertTitle": "Critique supprimée avec succès !",
       "deleteReviewAlertMessage": "Votre critique a été supprimée avec succès !",
@@ -359,6 +364,7 @@
   },
 
   "allOrdersAdminPage" : {
+    "specificOrderByTracking": "Commande spécifique par numéro de suivi",
     "allOrders": "Toutes les commandes",
     "filterByStatus": "Filtrer par statut",
     "searchWithAppliedFilters": "Recherche avec filtres appliqués",

@@ -58,8 +58,19 @@ function CreateReview() {
                 }
 
                 if (err.response.status >= 400 && err.response.status < 500) {
-                    // @ts-ignore
-                    swal(err.response.data.message, "", "error");
+                    if(err.response.data.message.includes("No orders")){
+                        // @ts-ignore
+                        swal(t("alerts.warningAlertTitle"), t("alerts.review.noOrders"), "warning").then(
+                            () => window.location.href = '/profile'
+                        )
+                    }else if (err.response.data.message.includes("You have already left a review this week!")) {
+                        // @ts-ignore
+                        swal(t("alerts.warningAlertTitle"), t("alerts.review.alreadyLeftReview"), "warning").then(
+                            () => window.location.href = '/profile/reviews'
+                        )
+
+                    }
+
                 }
 
             })

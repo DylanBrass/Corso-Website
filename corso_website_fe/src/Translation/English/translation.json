@@ -1,4 +1,7 @@
 {
+  "search": "Search",
+  "orderNotFound": "Order not found",
+  "enterOrderNumber": "Enter Order Tracking Number",
   "to": "to",
   "delete": "Delete",
   "cancel": "Cancel",
@@ -198,7 +201,6 @@
     "declined": "Declined!",
     "enter3CharMinWarning": "Enter at least 3 characters!",
     "hoursWorkedConstraint": "Hours worked cannot be greater than estimated duration!",
-
     "warningAlertTitle": "Warning!",
     "errorAlertMessage": "A or multiple errors present !\n",
     "somethingWentWrong": "Something went wrong",
@@ -245,6 +247,8 @@
     },
 
     "review": {
+      "alreadyLeftReview": "You have already left a review this week!",
+      "reviewAlreadyPinned": "Review already pinned",
       "submitReviewSuccessMessage": "Your review has been submitted!",
       "deleteReviewAlertTitle": "Review deleted successfully!",
       "deleteReviewAlertMessage": "Your review has been successfully deleted!",
@@ -365,6 +369,7 @@
   },
 
   "allOrdersAdminPage" : {
+    "specificOrderByTracking": "Specific Order by Tracking Number",
     "allOrders": "All Orders",
     "filterByStatus": "Filter by Status",
     "searchWithAppliedFilters": "Search with applied filters",

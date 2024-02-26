@@ -11,6 +11,7 @@ import "./AllOrdersPage.css"
 import {useTranslation} from "react-i18next";
 import BackButton from "../../../Components/BackButton";
 import '../../globalStyling/globalStyling.css';
+import SearchOrder from "../../../Components/Dashboard/SearchOrder";
 
 function AllOrdersPage() {
 
@@ -184,7 +185,7 @@ function AllOrdersPage() {
 
             // @ts-ignore
             if (error.response === undefined) {
-                await swal(t("alerts.errorFetchingData"), "", "error")
+                await swal("", t("alerts.errorFetchingData"), "error")
                 return
             }
 
@@ -242,10 +243,14 @@ function AllOrdersPage() {
             <NavigationBar/>
             <BackButton
                 link={backButtonHref}
-                text={ t("backToDashboard")}
+                text={t("backToDashboard")}
             />
+
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
                  className={"all-orders"}>
+                <h1>{t("allOrdersAdminPage.specificOrderByTracking")}</h1>
+                <SearchOrder/>
+
                 <h1>{t("allOrdersAdminPage.allOrders")}</h1>
                 <div
                     className={"all-orders-search w-100 row text-center"}>
@@ -290,7 +295,7 @@ function AllOrdersPage() {
                                     />
                                     <input required name={"search-value"} id={"search-value"} type="text"
                                            placeholder={t("userOptions.searchForUser")}/>
-                                    <button  type={"submit"}>
+                                    <button type={"submit"}>
                                         <img src={searchIcon} alt={"Search"}/>
                                     </button>
 
