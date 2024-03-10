@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectriqueinc.tech/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https:// corsoelectriqueinc.ca/"},allowCredentials = "true")
 @RestController
 @RequestMapping("api/v1/corso/galleries")
 public class GalleryController {

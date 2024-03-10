@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectriqueinc.tech/"})
+@CrossOrigin(origins = {"http://localhost:3000", "https:// corsoelectriqueinc.ca/"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/server")

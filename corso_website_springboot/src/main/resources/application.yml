@@ -153,10 +153,10 @@ server:
   port: 8080
 
 frontend:
-  url: https://corsoelectriqueinc.tech/
+  url: https:// corsoelectriqueinc.ca/
 
 backend:
-  url: https://api.corsoelectriqueinc.tech/
+  url: https://api. corsoelectriqueinc.ca/
 
 cloudinary:
   cloud_name: dszhbawv7
