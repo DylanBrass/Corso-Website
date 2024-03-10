@@ -84,9 +84,9 @@ spring:
     resources:
       add-mappings: false
   datasource:
-    url: jdbc:mysql://website-user:AVNS_DsxjhozRrt4QndxCvLf@corso-website-db-do-user-15646048-0.c.db.ondigitalocean.com:25060/corso-prod?ssl-mode=REQUIRED&sslCa=ca-certificate.crt
-    username: website-user
-    password: AVNS_DsxjhozRrt4QndxCvLf
+    url: jdbc:mysql://websiteUser:AVNS_-2VNFhLgZte4opNsz-j@corso-website-db-do-user-15646048-0.c.db.ondigitalocean.com:25060/corso-prod?ssl-mode=REQUIRED&sslCa=ca-certificate.crt
+    username: websiteUser
+    password: AVNS_-2VNFhLgZte4opNsz-j
   jpa:
     hibernate:
       ddl-auto: none
@@ -129,9 +129,9 @@ spring:
     resources:
       add-mappings: false
   datasource:
-    url: jdbc:mysql://website-user:AVNS_DsxjhozRrt4QndxCvLf@corso-website-db-do-user-15646048-0.c.db.ondigitalocean.com:25060/corso-prod?ssl-mode=REQUIRED&sslCa=ca-certificate.crt
-    username: website-user
-    password: AVNS_DsxjhozRrt4QndxCvLf
+    url: jdbc:mysql://websiteUser:AVNS_-2VNFhLgZte4opNsz-j@corso-website-db-do-user-15646048-0.c.db.ondigitalocean.com:25060/corso-prod?ssl-mode=REQUIRED&sslCa=ca-certificate.crt
+    username: websiteUser
+    password: AVNS_-2VNFhLgZte4opNsz-j
 
 
   jpa:
