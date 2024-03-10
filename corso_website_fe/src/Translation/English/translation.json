@@ -21,6 +21,7 @@
   },
 
   "banner": {
+    "contactUs": "Click here to contact Us",
     "anonymousBannerWelcome": "Welcome to Corso",
     "greetingCustomer": "Hello",
     "anonymousBannerRegisterPrompt": "Register today to have us as your trusted electrician",

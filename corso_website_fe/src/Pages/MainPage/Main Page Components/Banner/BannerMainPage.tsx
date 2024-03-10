@@ -45,27 +45,31 @@ function BannerMainPage({image}) {
             backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0)), url(${image})`
         }}>
             <div className={"row row-banner m-4 m-s-0"}>
-            <h1 id={"greeting"} className={"mt-5 anonymous-banner-title"}>{t("banner.greetingCustomer")} {name}!</h1>
-
+                <h1 id={"greeting"}
+                    className={"mt-5 anonymous-banner-title"}>{t("banner.greetingCustomer")} {name}!</h1>
+                <p>
+                <a href={"mailto:corsoelectriqueinc@gmail.com"}
+                   className={"banner-btn mb-4 text-white fw-bold"}>{t("banner.contactUs")}</a>
+                </p>
                 <div className={"col-12 d-flex flex-column flex-md-row"}>
-                        <button className={"banner-btn mb-4"}
-                                onClick={() => {
-                                    window.location.href = "/profile/orders"
-                                }}>{t("banner.pastOrders")}
-                        </button>
-                        <button className={"banner-btn mb-4 ms-md-4"}
-                                onClick={() => {
-                                    window.location.href = "/profile/orders"
-                                }}>{t("banner.viewCurrentOrders")}
-                        </button>
-                        <button className={"banner-btn mb-4 ms-md-4"}
-                                onClick={() => {
-                                    window.location.href = "/requestOrder"
-                                }}>{t("banner.requestAnOrderNow")}
-                        </button>
-                    </div>
-
+                    <button className={"banner-btn mb-4"}
+                            onClick={() => {
+                                window.location.href = "/profile/orders"
+                            }}>{t("banner.pastOrders")}
+                    </button>
+                    <button className={"banner-btn mb-4 ms-md-4"}
+                            onClick={() => {
+                                window.location.href = "/profile/orders"
+                            }}>{t("banner.viewCurrentOrders")}
+                    </button>
+                    <button className={"banner-btn mb-4 ms-md-4"}
+                            onClick={() => {
+                                window.location.href = "/requestOrder"
+                            }}>{t("banner.requestAnOrderNow")}
+                    </button>
                 </div>
+
+            </div>
         </div>
     )
 }
