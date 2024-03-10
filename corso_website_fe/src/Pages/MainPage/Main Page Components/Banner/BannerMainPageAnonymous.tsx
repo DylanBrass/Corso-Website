@@ -16,13 +16,16 @@ function BannerMainPageAnonymous({image}) {
                 <div className={"row d-lg-flex"}>
                     <div className={" d-lg-block"}>
                         <h1 className={"mt-5 anonymous-banner-title"}>{t("banner.anonymousBannerWelcome")}</h1>
+                        <a href={"mailto:corsoelectriqueinc@gmail.com"}
+                           className={"banner-btn mb-4 text-white fw-bold"}>{t("banner.contactUs")}</a>
+
                         <p className={"anonymous-banner-subtitle"}>{t("banner.anonymousBannerRegisterPrompt")}</p>
                     </div>
                 </div>
 
                 <div className={"row"}>
                     <div className={"col-12"}>
-                        <button className={"banner-btn mb-4"}
+                    <button className={"banner-btn mb-4"}
                                 onClick={() => {
                                     window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
                                 }}>
