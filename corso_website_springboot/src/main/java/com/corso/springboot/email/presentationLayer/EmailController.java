@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://corsoelectriqueinc.tech/"},allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","https:// corsoelectriqueinc.ca/"},allowCredentials = "true")
 @Slf4j
 @RestController
 @RequiredArgsConstructor

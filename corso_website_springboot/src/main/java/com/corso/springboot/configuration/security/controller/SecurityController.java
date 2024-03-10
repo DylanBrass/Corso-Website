@@ -22,7 +22,7 @@ import java.net.URI;
 
 @Slf4j
 @Generated
-@CrossOrigin(origins = {"http://localhost:3000", "https://corsoelectriqueinc.tech/"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https:// corsoelectriqueinc.ca/"}, allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/corso/security")
