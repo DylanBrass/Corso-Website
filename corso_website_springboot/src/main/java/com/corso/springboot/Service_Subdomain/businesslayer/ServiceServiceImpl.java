@@ -77,7 +77,7 @@ public class ServiceServiceImpl implements ServiceService {
 
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload images", e);
+            throw new RuntimeException("Failed to upload images");
         }
     }
 
@@ -121,7 +121,7 @@ public class ServiceServiceImpl implements ServiceService {
             // Preparing the response
             return serviceResponseMapper.toServiceResponse(serviceRepository.save(existingServiceEntity));
         } catch (IOException e) {
-            throw new RuntimeException("Failed to update images.", e);
+            throw new RuntimeException("Failed to update images.");
         }
     }
 
@@ -157,7 +157,7 @@ public class ServiceServiceImpl implements ServiceService {
                     .map(ServiceTimeByResponse::new)
                     .toList();
         } catch (Exception e) {
-            throw new ServiceBadRequestException("Failed to generate time by service report :" + e.getMessage());
+            throw new ServiceBadRequestException("Failed to generate time by service report");
         }
     }
 
@@ -214,7 +214,7 @@ public class ServiceServiceImpl implements ServiceService {
 
             }
         } catch (Exception e) {
-            throw new ServiceBadRequestException("Failed to generate total order request by service report :" + e.getMessage());
+            throw new ServiceBadRequestException("Failed to generate total order request by service report");
         }
     }
 
@@ -232,7 +232,7 @@ public class ServiceServiceImpl implements ServiceService {
 
 
         } catch (Exception e) {
-            throw new ServiceBadRequestException("Failed to generate total orders per service report :" + e.getMessage());
+            throw new ServiceBadRequestException("Failed to generate total orders per service report");
         }
 
     }

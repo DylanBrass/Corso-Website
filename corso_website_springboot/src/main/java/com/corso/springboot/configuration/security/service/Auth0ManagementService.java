@@ -135,7 +135,7 @@ public class Auth0ManagementService {
 
             log.info("Response: " + response.body());
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unknown Error");
         }
 
     }
@@ -389,7 +389,7 @@ public class Auth0ManagementService {
             return ResponseEntity.ok().body(total);
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unknown Error");
         }
 
 
@@ -408,14 +408,14 @@ public class Auth0ManagementService {
                 try {
                     admins.add(getUserInfo(node.path("user_id").asText()));
                 } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Unknown Error");
                 }
             });
 
             return admins;
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unknown Error");
         }
     }
 
