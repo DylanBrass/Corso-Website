@@ -50,7 +50,7 @@ public class CloudinaryService {
 
             return url;
         } catch (IOException e) {
-            throw new IOException("Error while uploading the image to Cloudinary.", e);
+            throw new IOException("Error while uploading the image to Cloudinary.");
         }
     }
 
@@ -77,7 +77,7 @@ public class CloudinaryService {
 
             return updatedUrl;
         } catch (IOException e) {
-            throw new IOException("Error while updating the image in Cloudinary.", e);
+            throw new IOException("Error while updating the image in Cloudinary.");
         }
     }
 

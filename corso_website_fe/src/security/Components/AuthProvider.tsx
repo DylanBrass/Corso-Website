@@ -130,7 +130,7 @@ const AuthProvider = ({children}) => {
                 window.location.href = process.env.REACT_APP_BE_HOST + "oauth2/authorization/okta"
             }
         } else if (status === 403) {
-            window.location.href = "/403"
+            window.location.href = "/"
         }
     }
 

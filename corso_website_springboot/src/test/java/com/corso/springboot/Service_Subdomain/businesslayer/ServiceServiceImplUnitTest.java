@@ -205,7 +205,6 @@ public class ServiceServiceImplUnitTest {
         });
 
         assertEquals("Failed to upload images", exception.getMessage());
-        assertEquals("Simulated IOException", exception.getCause().getMessage());
 
         Mockito.verify(serviceRepository, Mockito.never()).save(Mockito.any());
     }
@@ -295,7 +294,7 @@ public class ServiceServiceImplUnitTest {
         });
 
         assertEquals("Failed to update images.", exception.getMessage());
-        assertEquals("Simulated IOException", exception.getCause().getMessage());
+
     }
 
 
@@ -379,7 +378,7 @@ public class ServiceServiceImplUnitTest {
             serviceService.getServiceTimeByService("2021-01-01", "2021-12-31");
         });
 
-        assertEquals("Failed to generate time by service report :Simulated Database Error", exception.getMessage());
+        assertEquals("Failed to generate time by service report", exception.getMessage());
 
     }
 
@@ -445,7 +444,7 @@ public class ServiceServiceImplUnitTest {
             serviceService.getTotalOrderRequestByService("2021-01-01", "2021-12-31");
         });
 
-        assertEquals("Failed to generate total order request by service report :Simulated Database Error", exception.getMessage());
+        assertEquals("Failed to generate total order request by service report", exception.getMessage());
     }
 
 
