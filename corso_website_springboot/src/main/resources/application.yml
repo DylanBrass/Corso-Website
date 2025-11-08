@@ -98,9 +98,9 @@ spring:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 cloudinary:
-  cloud_name: dszhbawv7
-  api_key: 533582356614965
-  api_secret: katPxshTkWq5wdvRa24ukrjqrLI
+  cloud_name: 
+  api_key: 
+  api_secret: 
 
 
 server:
@@ -159,9 +159,9 @@ backend:
   url: https://api.corsoelectriqueinc.ca/
 
 cloudinary:
-  cloud_name: dszhbawv7
-  api_key: 533582356614965
-  api_secret: katPxshTkWq5wdvRa24ukrjqrLI
+  cloud_name: 
+  api_key: 
+  api_secret: 
 
 logging:
   level:
